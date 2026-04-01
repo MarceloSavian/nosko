@@ -84,4 +84,15 @@ describe('CustomerRepository', () => {
       assert.notEqual(result.verifiedAt, null);
     });
   });
+
+  describe('updatePassword()', () => {
+    it('should update the password hash', async () => {
+      const customer = await sut.insert({ email: 'pwupdate@test.com', passwordHash: 'old-hash' });
+
+      await sut.updatePassword(customer.id, 'new-hash');
+
+      const updated = await sut.findByEmailWithPassword('pwupdate@test.com');
+      assert.equal(updated?.passwordHash, 'new-hash');
+    });
+  });
 });

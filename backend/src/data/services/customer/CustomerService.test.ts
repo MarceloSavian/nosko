@@ -238,4 +238,121 @@ describe('CustomerService', () => {
       assert.deepEqual(result, { accessToken: 'test-token' });
     });
   });
+
+  describe('resendVerification()', () => {
+    it('should throw CustomerNotFoundError if customer does not exist', async () => {
+      const { sut } = makeSut();
+      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
+
+      await assert.rejects(
+        async () => sut.resendVerification({ email: 'test@test.com' }),
+        new CustomerNotFoundError(),
+      );
+    });
+
+    it('should throw EmailAlreadyVerifiedError if customer is already verified', async () => {
+      const { sut } = makeSut();
+      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => verifiedCustomer);
+
+      await assert.rejects(
+        async () => sut.resendVerification({ email: 'test@test.com' }),
+        new EmailAlreadyVerifiedError(),
+      );
+    });
+
+    it('should delete old tokens and send a new verification email', async () => {
+      const { sut } = makeSut();
+      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
+      mockTokenRepository.deleteByCustomerAndType.mock.mockImplementationOnce(async () => undefined);
+      mockTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
+      mockEmailService.send.mock.mockImplementationOnce(async () => undefined);
+
+      await sut.resendVerification({ email: 'test@test.com' });
+
+      assert.equal(mockTokenRepository.deleteByCustomerAndType.mock.callCount(), 1);
+      assert.equal(mockTokenRepository.insert.mock.callCount(), 1);
+      assert.equal(mockEmailService.send.mock.callCount(), 1);
+    });
+  });
+
+  describe('requestPasswordReset()', () => {
+    it('should return silently if customer does not exist', async () => {
+      const { sut } = makeSut();
+      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
+
+      await assert.doesNotReject(
+        async () => sut.requestPasswordReset({ email: 'nonexistent@test.com' }),
+      );
+
+      assert.equal(mockEmailService.send.mock.callCount(), 0);
+    });
+
+    it('should delete old tokens and send a reset email', async () => {
+      const { sut } = makeSut();
+      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
+      mockTokenRepository.deleteByCustomerAndType.mock.mockImplementationOnce(async () => undefined);
+      mockTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
+      mockEmailService.send.mock.mockImplementationOnce(async () => undefined);
+
+      await sut.requestPasswordReset({ email: 'test@test.com' });
+
+      assert.equal(mockTokenRepository.deleteByCustomerAndType.mock.callCount(), 1);
+      assert.equal(mockTokenRepository.insert.mock.callCount(), 1);
+      assert.equal(mockEmailService.send.mock.callCount(), 1);
+      assert.equal(mockEmailService.send.mock.calls[0]?.arguments[1], 'Reset your password');
+    });
+  });
+
+  describe('resetPassword()', () => {
+    const validToken = { id: 'token-id', expiresAt: new Date(Date.now() + 60_000) };
+
+    it('should throw CustomerNotFoundError if customer does not exist', async () => {
+      const { sut } = makeSut();
+      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
+
+      await assert.rejects(
+        async () => sut.resetPassword({ email: 'test@test.com', code: '123456', newPassword: 'newpass123' }),
+        new CustomerNotFoundError(),
+      );
+    });
+
+    it('should throw InvalidVerificationCodeError if token is not found', async () => {
+      const { sut } = makeSut();
+      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
+      mockTokenRepository.find.mock.mockImplementationOnce(async () => null);
+
+      await assert.rejects(
+        async () => sut.resetPassword({ email: 'test@test.com', code: '000000', newPassword: 'newpass123' }),
+        new InvalidVerificationCodeError(),
+      );
+    });
+
+    it('should throw VerificationCodeExpiredError if token is expired', async () => {
+      const { sut } = makeSut();
+      const expiredToken = { id: 'token-id', expiresAt: new Date(Date.now() - 60_000) };
+      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
+      mockTokenRepository.find.mock.mockImplementationOnce(async () => expiredToken);
+      mockTokenRepository.delete.mock.mockImplementationOnce(async () => undefined);
+
+      await assert.rejects(
+        async () => sut.resetPassword({ email: 'test@test.com', code: '123456', newPassword: 'newpass123' }),
+        new VerificationCodeExpiredError(),
+      );
+    });
+
+    it('should hash new password and update customer', async () => {
+      const { sut } = makeSut();
+      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
+      mockTokenRepository.find.mock.mockImplementationOnce(async () => validToken);
+      mockHasher.hash.mock.mockImplementationOnce(async () => 'new-hashed-password');
+      mockCustomerRepository.updatePassword.mock.mockImplementationOnce(async () => undefined);
+      mockTokenRepository.delete.mock.mockImplementationOnce(async () => undefined);
+
+      await sut.resetPassword({ email: 'test@test.com', code: '123456', newPassword: 'newpass123' });
+
+      assert.equal(mockHasher.hash.mock.calls[0]?.arguments[0], 'newpass123');
+      assert.equal(mockCustomerRepository.updatePassword.mock.callCount(), 1);
+      assert.equal(mockTokenRepository.delete.mock.callCount(), 1);
+    });
+  });
 });

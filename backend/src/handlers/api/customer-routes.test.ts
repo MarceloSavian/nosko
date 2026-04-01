@@ -4,16 +4,19 @@ import type { APIGatewayProxyEventV2 } from 'aws-lambda';
 import { mockCustomerService } from '../../test/mocks/MockCustomerService.js';
 import { resetMock } from '../../test/helpers/resetMock.js';
 import { BaseError } from '../../shared/error.js';
-import { makeCustomerHandler, makeLoginRoute, makeSignupRoute, makeVerifyEmailRoute, routeHandler } from './customer-routes.js';
+import { makeCustomerHandler, makeLoginRoute, makeRequestPasswordResetRoute, makeResendVerificationRoute, makeResetPasswordRoute, makeSignupRoute, makeVerifyEmailRoute, routeHandler } from './customer-routes.js';
 
 describe('customer-routes', () => {
   const makeSut = () => {
     const signup = makeSignupRoute(mockCustomerService);
     const login = makeLoginRoute(mockCustomerService);
     const verifyEmail = makeVerifyEmailRoute(mockCustomerService);
+    const resendVerification = makeResendVerificationRoute(mockCustomerService);
+    const requestPasswordReset = makeRequestPasswordResetRoute(mockCustomerService);
+    const resetPassword = makeResetPasswordRoute(mockCustomerService);
     const routes = { 'POST /signup': signup };
 
-    return { signup, login, verifyEmail, routes };
+    return { signup, login, verifyEmail, resendVerification, requestPasswordReset, resetPassword, routes };
   };
 
   beforeEach(() => {
@@ -177,6 +180,92 @@ describe('customer-routes', () => {
       }));
 
       assert.equal(result.statusCode, 400);
+    });
+  });
+
+  describe('makeResendVerificationRoute()', () => {
+    it('should return 200 on success', async () => {
+      const { resendVerification } = makeSut();
+
+      const result = await resendVerification(makeEvent({
+        routeKey: 'POST /resend-verification',
+        body: JSON.stringify({ email: 'test@test.com' }),
+      }));
+
+      assert.equal(result.statusCode, 200);
+    });
+
+    it('should return 400 for invalid input', async () => {
+      const { resendVerification } = makeSut();
+
+      const result = await resendVerification(makeEvent({
+        routeKey: 'POST /resend-verification',
+        body: JSON.stringify({ email: 'not-an-email' }),
+      }));
+
+      assert.equal(result.statusCode, 400);
+    });
+  });
+
+  describe('makeRequestPasswordResetRoute()', () => {
+    it('should return 200 on success', async () => {
+      const { requestPasswordReset } = makeSut();
+
+      const result = await requestPasswordReset(makeEvent({
+        routeKey: 'POST /request-password-reset',
+        body: JSON.stringify({ email: 'test@test.com' }),
+      }));
+
+      assert.equal(result.statusCode, 200);
+    });
+
+    it('should return 400 for invalid input', async () => {
+      const { requestPasswordReset } = makeSut();
+
+      const result = await requestPasswordReset(makeEvent({
+        routeKey: 'POST /request-password-reset',
+        body: JSON.stringify({ email: 'not-an-email' }),
+      }));
+
+      assert.equal(result.statusCode, 400);
+    });
+  });
+
+  describe('makeResetPasswordRoute()', () => {
+    it('should return 200 on success', async () => {
+      const { resetPassword } = makeSut();
+
+      const result = await resetPassword(makeEvent({
+        routeKey: 'POST /reset-password',
+        body: JSON.stringify({ email: 'test@test.com', code: '123456', newPassword: 'newpass123' }),
+      }));
+
+      assert.equal(result.statusCode, 200);
+    });
+
+    it('should return 400 for invalid input', async () => {
+      const { resetPassword } = makeSut();
+
+      const result = await resetPassword(makeEvent({
+        routeKey: 'POST /reset-password',
+        body: JSON.stringify({ email: 'test@test.com', code: '12', newPassword: 'short' }),
+      }));
+
+      assert.equal(result.statusCode, 400);
+    });
+
+    it('should return error when service throws', async () => {
+      const { resetPassword } = makeSut();
+      mockCustomerService.resetPassword.mock.mockImplementationOnce(() => {
+        throw new BaseError('Customer not found', 404);
+      });
+
+      const result = await resetPassword(makeEvent({
+        routeKey: 'POST /reset-password',
+        body: JSON.stringify({ email: 'test@test.com', code: '123456', newPassword: 'newpass123' }),
+      }));
+
+      assert.equal(result.statusCode, 404);
     });
   });
 

@@ -32,6 +32,26 @@ export type CustomerSchema = z.infer<typeof customerSchema>;
 
 export type LoginResult = { accessToken: string };
 
+export const resendVerificationInputSchema = z.object({
+  email: z.string().email('Invalid email'),
+});
+
+export type ResendVerificationInput = z.infer<typeof resendVerificationInputSchema>;
+
+export const requestPasswordResetInputSchema = z.object({
+  email: z.string().email('Invalid email'),
+});
+
+export type RequestPasswordResetInput = z.infer<typeof requestPasswordResetInputSchema>;
+
+export const resetPasswordInputSchema = z.object({
+  email: z.string().email('Invalid email'),
+  code: z.string().length(6, 'Code must be 6 digits'),
+  newPassword: z.string().min(8, 'Password must be at least 8 characters'),
+});
+
+export type ResetPasswordInput = z.infer<typeof resetPasswordInputSchema>;
+
 export const TokenType = {
   EMAIL_VERIFICATION: 'EMAIL_VERIFICATION',
   PASSWORD_RESET: 'PASSWORD_RESET',

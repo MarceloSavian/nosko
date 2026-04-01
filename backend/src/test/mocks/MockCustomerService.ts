@@ -1,6 +1,15 @@
 import { mock } from 'node:test';
 import type { ICustomerService } from '../../domain/usecases/customer/ICustomerService.js';
-import type { CustomerSchema, LoginResult, SignupInput, LoginInput, VerifyEmailInput } from '../../domain/models/customer/Customer.js';
+import type {
+  CustomerSchema,
+  LoginInput,
+  LoginResult,
+  RequestPasswordResetInput,
+  ResendVerificationInput,
+  ResetPasswordInput,
+  SignupInput,
+  VerifyEmailInput,
+} from '../../domain/models/customer/Customer.js';
 
 class MockCustomerService implements ICustomerService {
   signup = mock.fn(async (_input: SignupInput): Promise<CustomerSchema> => ({
@@ -16,6 +25,9 @@ class MockCustomerService implements ICustomerService {
     verifiedAt: null,
     createdAt: '',
   }));
+  resendVerification = mock.fn(async (_input: ResendVerificationInput): Promise<void> => {});
+  requestPasswordReset = mock.fn(async (_input: RequestPasswordResetInput): Promise<void> => {});
+  resetPassword = mock.fn(async (_input: ResetPasswordInput): Promise<void> => {});
 }
 
 export const mockCustomerService = new MockCustomerService();
