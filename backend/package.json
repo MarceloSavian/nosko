@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test": "node --import tsx --test 'src/**/*.test.ts'",
-    "test:coverage": "c8 --all --src src --exclude 'src/**/*.test.ts' --exclude 'src/test/**' --exclude 'src/data/domain/**' --exclude 'src/domain/usecases/**' --exclude 'src/handlers/domain/**' node --import tsx --test 'src/**/*.test.ts'",
+    "test:coverage": "c8 --all --src src --exclude 'src/**/*.test.ts' --exclude 'src/test/**' --exclude 'src/data/domain/**' --exclude 'src/domain/usecases/**' --exclude 'src/handlers/domain/**' --exclude 'src/handlers/factories/**' --exclude 'src/handlers/api/*-v*.ts' node --import tsx --test 'src/**/*.test.ts'",
     "test:watch": "node --import tsx --test --watch 'src/**/*.test.ts'",
     "check": "biome check .",
     "check:fix": "biome check --write .",
