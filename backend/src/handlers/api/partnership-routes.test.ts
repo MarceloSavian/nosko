@@ -1,38 +1,20 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
-import type { IPartnershipService } from '../../domain/usecases/partnership/IPartnershipService.js';
 import { BaseError } from '../../shared/error.js';
 import { resetMock } from '../../test/helpers/resetMock.js';
 import { mockJwtService } from '../../test/mocks/MockJwtService.js';
+import { mockPartnershipService } from '../../test/mocks/MockPartnershipService.js';
 import {
   makeGetPartnershipRoute,
   makeInvitePartnerRoute,
   makePartnershipHandler,
 } from './partnership-routes.js';
 
-const mockPartnershipService = {
-  invitePartner: mock.fn(async () => ({})),
-  listInvitations: mock.fn(async () => []),
-  acceptInvitation: mock.fn(async () => ({})),
-  declineInvitation: mock.fn(async () => {}),
-  cancelInvitation: mock.fn(async () => {}),
-  getPartnership: mock.fn(async () => ({})),
-  dissolvePartnership: mock.fn(async () => {}),
-  getContributionRules: mock.fn(async () => null),
-  setContributionRules: mock.fn(async () => ({})),
-  getSharedAccounts: mock.fn(async () => []),
-  setSharedAccounts: mock.fn(async () => []),
-} as unknown as IPartnershipService & Record<string, ReturnType<typeof mock.fn>>;
-
 describe('partnership-routes', () => {
   beforeEach(() => {
     resetMock(mockJwtService);
-    for (const key of Object.keys(mockPartnershipService)) {
-      (mockPartnershipService as Record<string, ReturnType<typeof mock.fn>>)[
-        key
-      ]?.mock.resetCalls();
-    }
+    resetMock(mockPartnershipService);
   });
 
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
@@ -47,9 +29,7 @@ describe('partnership-routes', () => {
     it('should return 201 with invitation', async () => {
       const route = makeInvitePartnerRoute(mockPartnershipService);
       const invitation = { id: '1', inviteeEmail: 'partner@test.com', status: 'PENDING' };
-      (
-        mockPartnershipService.invitePartner as unknown as ReturnType<typeof mock.fn>
-      ).mock.mockImplementationOnce(async () => invitation);
+      mock.method(mockPartnershipService, 'invitePartner', async () => invitation);
 
       const result = await route(
         makeEvent({ body: JSON.stringify({ email: 'partner@test.com' }) }),
@@ -65,9 +45,7 @@ describe('partnership-routes', () => {
     it('should return 200 with partnership', async () => {
       const route = makeGetPartnershipRoute(mockPartnershipService);
       const partnership = { id: '1', customerAId: 'a', customerBId: 'b' };
-      (
-        mockPartnershipService.getPartnership as unknown as ReturnType<typeof mock.fn>
-      ).mock.mockImplementationOnce(async () => partnership);
+      mock.method(mockPartnershipService, 'getPartnership', async () => partnership);
 
       const result = await route(makeEvent(), 'customer-id');
 
@@ -77,9 +55,7 @@ describe('partnership-routes', () => {
 
     it('should return 404 when no partnership', async () => {
       const route = makeGetPartnershipRoute(mockPartnershipService);
-      (
-        mockPartnershipService.getPartnership as unknown as ReturnType<typeof mock.fn>
-      ).mock.mockImplementationOnce(async () => {
+      mock.method(mockPartnershipService, 'getPartnership', async () => {
         throw new BaseError('Partnership not found', 404);
       });
 

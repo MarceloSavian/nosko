@@ -1,21 +1,15 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
-import type { IInstitutionService } from '../../domain/usecases/institution/IInstitutionService.js';
 import { resetMock } from '../../test/helpers/resetMock.js';
+import { mockInstitutionService } from '../../test/mocks/MockInstitutionService.js';
 import { mockJwtService } from '../../test/mocks/MockJwtService.js';
 import { makeInstitutionHandler, makeListInstitutionsRoute } from './institution-routes.js';
-
-const mockInstitutionService = {
-  listInstitutions: mock.fn(async () => []),
-} as unknown as IInstitutionService & {
-  listInstitutions: ReturnType<typeof mock.fn>;
-};
 
 describe('institution-routes', () => {
   beforeEach(() => {
     resetMock(mockJwtService);
-    mockInstitutionService.listInstitutions.mock.resetCalls();
+    resetMock(mockInstitutionService);
   });
 
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
@@ -29,7 +23,7 @@ describe('institution-routes', () => {
     it('should return 200 with institutions', async () => {
       const route = makeListInstitutionsRoute(mockInstitutionService);
       const institutions = [{ id: '1', name: 'Chase', countryCode: 'US', logoUrl: null }];
-      mockInstitutionService.listInstitutions.mock.mockImplementationOnce(async () => institutions);
+      mock.method(mockInstitutionService, 'listInstitutions', async () => institutions);
 
       const result = await route(makeEvent(), 'customer-id');
 

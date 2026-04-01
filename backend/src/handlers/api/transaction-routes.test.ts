@@ -1,30 +1,19 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
-import type { ITransactionService } from '../../domain/usecases/transaction/ITransactionService.js';
 import { resetMock } from '../../test/helpers/resetMock.js';
 import { mockJwtService } from '../../test/mocks/MockJwtService.js';
+import { mockTransactionService } from '../../test/mocks/MockTransactionService.js';
 import {
   makeCreateTransactionRoute,
   makeListTransactionsRoute,
   makeTransactionHandler,
 } from './transaction-routes.js';
 
-const mockTransactionService = {
-  listTransactions: mock.fn(async () => []),
-  createTransaction: mock.fn(async () => ({})),
-  updateTransaction: mock.fn(async () => ({})),
-  deleteTransaction: mock.fn(async () => {}),
-} as unknown as ITransactionService & Record<string, ReturnType<typeof mock.fn>>;
-
 describe('transaction-routes', () => {
   beforeEach(() => {
     resetMock(mockJwtService);
-    for (const key of Object.keys(mockTransactionService)) {
-      (mockTransactionService as Record<string, ReturnType<typeof mock.fn>>)[
-        key
-      ]?.mock.resetCalls();
-    }
+    resetMock(mockTransactionService);
   });
 
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
@@ -40,9 +29,7 @@ describe('transaction-routes', () => {
     it('should return 200 with transactions', async () => {
       const route = makeListTransactionsRoute(mockTransactionService);
       const transactions = [{ id: '1', amount: '-50.00' }];
-      (
-        mockTransactionService.listTransactions as unknown as ReturnType<typeof mock.fn>
-      ).mock.mockImplementationOnce(async () => transactions);
+      mock.method(mockTransactionService, 'listTransactions', async () => transactions);
 
       const result = await route(makeEvent(), 'customer-id');
 
@@ -55,9 +42,7 @@ describe('transaction-routes', () => {
     it('should return 201 with created transaction', async () => {
       const route = makeCreateTransactionRoute(mockTransactionService);
       const tx = { id: '1', amount: '-50.00' };
-      (
-        mockTransactionService.createTransaction as unknown as ReturnType<typeof mock.fn>
-      ).mock.mockImplementationOnce(async () => tx);
+      mock.method(mockTransactionService, 'createTransaction', async () => tx);
 
       const result = await route(
         makeEvent({

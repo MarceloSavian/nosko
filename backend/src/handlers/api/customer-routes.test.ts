@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { beforeEach, describe, it } from 'node:test';
+import { beforeEach, describe, it, mock } from 'node:test';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
 import { BaseError } from '../../shared/error.js';
 import { resetMock } from '../../test/helpers/resetMock.js';
@@ -69,7 +69,7 @@ describe('customer-routes', () => {
 
     it('should dispatch to the matched route', async () => {
       const { routes } = makeSut();
-      mockCustomerService.signup.mock.mockImplementationOnce(() => Promise.resolve(customer));
+      mock.method(mockCustomerService, 'signup', () => Promise.resolve(customer));
 
       const result = await routeHandler(routes, makeEvent());
 
@@ -80,7 +80,7 @@ describe('customer-routes', () => {
   describe('makeSignupRoute()', () => {
     it('should return 201 with customer data on success', async () => {
       const { signup } = makeSut();
-      mockCustomerService.signup.mock.mockImplementationOnce(() => Promise.resolve(customer));
+      mock.method(mockCustomerService, 'signup', () => Promise.resolve(customer));
 
       const result = await signup(makeEvent());
 
@@ -100,7 +100,7 @@ describe('customer-routes', () => {
 
     it('should return 400 when the service throws a BaseError', async () => {
       const { signup } = makeSut();
-      mockCustomerService.signup.mock.mockImplementationOnce(() => {
+      mock.method(mockCustomerService, 'signup', () => {
         throw new BaseError('Email already registered', 400);
       });
 
@@ -112,7 +112,7 @@ describe('customer-routes', () => {
 
     it('should return 500 when the service throws an unexpected error', async () => {
       const { signup } = makeSut();
-      mockCustomerService.signup.mock.mockImplementationOnce(() => {
+      mock.method(mockCustomerService, 'signup', () => {
         throw new Error('database connection lost');
       });
 
@@ -133,7 +133,7 @@ describe('customer-routes', () => {
   describe('makeLoginRoute()', () => {
     it('should return 200 with access token on success', async () => {
       const { login } = makeSut();
-      mockCustomerService.login.mock.mockImplementationOnce(() =>
+      mock.method(mockCustomerService, 'login', () =>
         Promise.resolve({ accessToken: 'test-token' }),
       );
 
@@ -150,7 +150,7 @@ describe('customer-routes', () => {
 
     it('should return 401 when service throws InvalidCredentialsError', async () => {
       const { login } = makeSut();
-      mockCustomerService.login.mock.mockImplementationOnce(() => {
+      mock.method(mockCustomerService, 'login', () => {
         throw new BaseError('Invalid credentials', 401);
       });
 
@@ -181,9 +181,7 @@ describe('customer-routes', () => {
   describe('makeVerifyEmailRoute()', () => {
     it('should return 200 with verified customer on success', async () => {
       const { verifyEmail } = makeSut();
-      mockCustomerService.verifyEmail.mock.mockImplementationOnce(() =>
-        Promise.resolve(verifiedCustomer),
-      );
+      mock.method(mockCustomerService, 'verifyEmail', () => Promise.resolve(verifiedCustomer));
 
       const result = await verifyEmail(
         makeEvent({
@@ -211,7 +209,7 @@ describe('customer-routes', () => {
 
     it('should return 400 when service throws a BaseError', async () => {
       const { verifyEmail } = makeSut();
-      mockCustomerService.verifyEmail.mock.mockImplementationOnce(() => {
+      mock.method(mockCustomerService, 'verifyEmail', () => {
         throw new BaseError('Invalid verification code', 400);
       });
 
@@ -315,7 +313,7 @@ describe('customer-routes', () => {
 
     it('should return error when service throws', async () => {
       const { resetPassword } = makeSut();
-      mockCustomerService.resetPassword.mock.mockImplementationOnce(() => {
+      mock.method(mockCustomerService, 'resetPassword', () => {
         throw new BaseError('Customer not found', 404);
       });
 
@@ -336,7 +334,7 @@ describe('customer-routes', () => {
 
   describe('makeCustomerHandler()', () => {
     it('should route POST /signup correctly', async () => {
-      mockCustomerService.signup.mock.mockImplementationOnce(() => Promise.resolve(customer));
+      mock.method(mockCustomerService, 'signup', () => Promise.resolve(customer));
 
       const handler = makeCustomerHandler(mockCustomerService);
       const result = await handler(makeEvent({ routeKey: 'POST /v1/signup' }));
@@ -345,7 +343,7 @@ describe('customer-routes', () => {
     });
 
     it('should route POST /v1/login correctly', async () => {
-      mockCustomerService.login.mock.mockImplementationOnce(() =>
+      mock.method(mockCustomerService, 'login', () =>
         Promise.resolve({ accessToken: 'test-token' }),
       );
 
@@ -361,9 +359,7 @@ describe('customer-routes', () => {
     });
 
     it('should route POST /v1/verify-email correctly', async () => {
-      mockCustomerService.verifyEmail.mock.mockImplementationOnce(() =>
-        Promise.resolve(verifiedCustomer),
-      );
+      mock.method(mockCustomerService, 'verifyEmail', () => Promise.resolve(verifiedCustomer));
 
       const handler = makeCustomerHandler(mockCustomerService);
       const result = await handler(

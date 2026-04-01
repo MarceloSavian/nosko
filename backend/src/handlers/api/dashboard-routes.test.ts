@@ -1,24 +1,15 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
-import type { IDashboardService } from '../../domain/usecases/dashboard/IDashboardService.js';
 import { resetMock } from '../../test/helpers/resetMock.js';
+import { mockDashboardService } from '../../test/mocks/MockDashboardService.js';
 import { mockJwtService } from '../../test/mocks/MockJwtService.js';
 import { makeDashboardHandler, makeGetDashboardRoute } from './dashboard-routes.js';
-
-const mockDashboardService = {
-  getDashboard: mock.fn(async () => ({
-    yearMonth: '',
-    totalSpending: '0',
-    budgetSummary: [],
-    recentTransactions: [],
-  })),
-} as unknown as IDashboardService & { getDashboard: ReturnType<typeof mock.fn> };
 
 describe('dashboard-routes', () => {
   beforeEach(() => {
     resetMock(mockJwtService);
-    mockDashboardService.getDashboard.mock.resetCalls();
+    resetMock(mockDashboardService);
   });
 
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
@@ -38,7 +29,7 @@ describe('dashboard-routes', () => {
         budgetSummary: [],
         recentTransactions: [],
       };
-      mockDashboardService.getDashboard.mock.mockImplementationOnce(async () => data);
+      mock.method(mockDashboardService, 'getDashboard', async () => data);
 
       const result = await route(makeEvent(), 'customer-id');
 
