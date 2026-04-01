@@ -20,7 +20,7 @@ describe('institution-routes', () => {
 
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
     ({
-      routeKey: 'GET /institutions',
+      routeKey: 'GET /v1/institutions',
       headers: { authorization: 'Bearer valid-token' },
       ...overrides,
     }) as unknown as APIGatewayProxyEventV2;

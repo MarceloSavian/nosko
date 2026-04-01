@@ -22,7 +22,7 @@ export function makeGetDashboardRoute(service: IDashboardService) {
 
 export function makeDashboardHandler(service: IDashboardService, jwtService: IJwtService) {
   const routes: ProxyRoute = {
-    'GET /dashboard': withAuth(jwtService, makeGetDashboardRoute(service)),
+    'GET /v1/dashboard': withAuth(jwtService, makeGetDashboardRoute(service)),
   };
   return (event: APIGatewayProxyEventV2) => {
     const route = routes[event.routeKey];
@@ -31,3 +31,15 @@ export function makeDashboardHandler(service: IDashboardService, jwtService: IJw
       : Promise.resolve({ statusCode: 404, body: `Request path ${event.routeKey} not found` });
   };
 }
+
+// Lambda handler
+let _handler: ((event: APIGatewayProxyEventV2) => Promise<APIGatewayProxyResult>) | undefined;
+
+export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResult> => {
+  if (!_handler) {
+    const { jwtService } = await import('../factories/auth.js');
+    const { dashboardService } = await import('../factories/dashboard.js');
+    _handler = makeDashboardHandler(dashboardService, jwtService);
+  }
+  return _handler(event);
+};

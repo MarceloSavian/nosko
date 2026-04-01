@@ -102,12 +102,12 @@ export function makeGetOverviewRoute(service: IAccountService) {
 
 export function makeAccountHandler(service: IAccountService, jwtService: IJwtService) {
   const routes: ProxyRoute = {
-    'GET /accounts': withAuth(jwtService, makeListAccountsRoute(service)),
-    'POST /accounts': withAuth(jwtService, makeCreateAccountRoute(service)),
-    'GET /accounts/overview': withAuth(jwtService, makeGetOverviewRoute(service)),
-    'GET /accounts/{id}': withAuth(jwtService, makeGetAccountRoute(service)),
-    'PUT /accounts/{id}': withAuth(jwtService, makeUpdateAccountRoute(service)),
-    'DELETE /accounts/{id}': withAuth(jwtService, makeDeleteAccountRoute(service)),
+    'GET /v1/accounts': withAuth(jwtService, makeListAccountsRoute(service)),
+    'POST /v1/accounts': withAuth(jwtService, makeCreateAccountRoute(service)),
+    'GET /v1/accounts/overview': withAuth(jwtService, makeGetOverviewRoute(service)),
+    'GET /v1/accounts/{id}': withAuth(jwtService, makeGetAccountRoute(service)),
+    'PUT /v1/accounts/{id}': withAuth(jwtService, makeUpdateAccountRoute(service)),
+    'DELETE /v1/accounts/{id}': withAuth(jwtService, makeDeleteAccountRoute(service)),
   };
   return (event: APIGatewayProxyEventV2) => {
     const route = routes[event.routeKey];
@@ -116,3 +116,15 @@ export function makeAccountHandler(service: IAccountService, jwtService: IJwtSer
       : Promise.resolve({ statusCode: 404, body: `Request path ${event.routeKey} not found` });
   };
 }
+
+// Lambda handler
+let _handler: ((event: APIGatewayProxyEventV2) => Promise<APIGatewayProxyResult>) | undefined;
+
+export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResult> => {
+  if (!_handler) {
+    const { accountService } = await import('../factories/account.js');
+    const { jwtService } = await import('../factories/auth.js');
+    _handler = makeAccountHandler(accountService, jwtService);
+  }
+  return _handler(event);
+};

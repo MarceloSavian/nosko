@@ -55,7 +55,7 @@ describe('profile-routes', () => {
 
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
     ({
-      routeKey: 'GET /me',
+      routeKey: 'GET /v1/me',
       headers: { authorization: 'Bearer valid-token' },
       ...overrides,
     }) as unknown as APIGatewayProxyEventV2;

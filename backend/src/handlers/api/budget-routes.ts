@@ -235,28 +235,37 @@ export function makeBudgetHandler(
 ) {
   const routes: ProxyRoute = {
     // Categories
-    'GET /budget-categories': withAuth(jwtService, makeListCategoriesRoute(categoryService)),
-    'POST /budget-categories': withAuth(jwtService, makeCreateCategoryRoute(categoryService)),
-    'PUT /budget-categories/{id}': withAuth(jwtService, makeUpdateCategoryRoute(categoryService)),
-    'DELETE /budget-categories/{id}': withAuth(
+    'GET /v1/budget-categories': withAuth(jwtService, makeListCategoriesRoute(categoryService)),
+    'POST /v1/budget-categories': withAuth(jwtService, makeCreateCategoryRoute(categoryService)),
+    'PUT /v1/budget-categories/{id}': withAuth(
+      jwtService,
+      makeUpdateCategoryRoute(categoryService),
+    ),
+    'DELETE /v1/budget-categories/{id}': withAuth(
       jwtService,
       makeDeleteCategoryRoute(categoryService),
     ),
     // Personal plans
-    'GET /budget-plans': withAuth(jwtService, makeGetPersonalPlanRoute(planService)),
-    'POST /budget-plans': withAuth(jwtService, makeCreatePersonalPlanRoute(planService)),
-    'DELETE /budget-plans/{id}': withAuth(jwtService, makeDeletePersonalPlanRoute(planService)),
+    'GET /v1/budget-plans': withAuth(jwtService, makeGetPersonalPlanRoute(planService)),
+    'POST /v1/budget-plans': withAuth(jwtService, makeCreatePersonalPlanRoute(planService)),
+    'DELETE /v1/budget-plans/{id}': withAuth(jwtService, makeDeletePersonalPlanRoute(planService)),
     // Joint plans
-    'GET /partnership/budget-plans': withAuth(jwtService, makeGetJointPlanRoute(planService)),
-    'POST /partnership/budget-plans': withAuth(jwtService, makeCreateJointPlanRoute(planService)),
-    'DELETE /partnership/budget-plans/{id}': withAuth(
+    'GET /v1/partnership/budget-plans': withAuth(jwtService, makeGetJointPlanRoute(planService)),
+    'POST /v1/partnership/budget-plans': withAuth(
+      jwtService,
+      makeCreateJointPlanRoute(planService),
+    ),
+    'DELETE /v1/partnership/budget-plans/{id}': withAuth(
       jwtService,
       makeDeleteJointPlanRoute(planService),
     ),
     // Items
-    'POST /budget-plans/{planId}/items': withAuth(jwtService, makeAddItemRoute(planService)),
-    'PUT /budget-plans/{planId}/items/{id}': withAuth(jwtService, makeUpdateItemRoute(planService)),
-    'DELETE /budget-plans/{planId}/items/{id}': withAuth(
+    'POST /v1/budget-plans/{planId}/items': withAuth(jwtService, makeAddItemRoute(planService)),
+    'PUT /v1/budget-plans/{planId}/items/{id}': withAuth(
+      jwtService,
+      makeUpdateItemRoute(planService),
+    ),
+    'DELETE /v1/budget-plans/{planId}/items/{id}': withAuth(
       jwtService,
       makeDeleteItemRoute(planService),
     ),
@@ -268,3 +277,15 @@ export function makeBudgetHandler(
       : Promise.resolve({ statusCode: 404, body: `Request path ${event.routeKey} not found` });
   };
 }
+
+// Lambda handler
+let _handler: ((event: APIGatewayProxyEventV2) => Promise<APIGatewayProxyResult>) | undefined;
+
+export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResult> => {
+  if (!_handler) {
+    const { jwtService } = await import('../factories/auth.js');
+    const { budgetCategoryService, budgetPlanService } = await import('../factories/budget.js');
+    _handler = makeBudgetHandler(budgetCategoryService, budgetPlanService, jwtService);
+  }
+  return _handler(event);
+};

@@ -81,10 +81,10 @@ export function makeDeleteTransactionRoute(service: ITransactionService) {
 
 export function makeTransactionHandler(service: ITransactionService, jwtService: IJwtService) {
   const routes: ProxyRoute = {
-    'GET /transactions': withAuth(jwtService, makeListTransactionsRoute(service)),
-    'POST /transactions': withAuth(jwtService, makeCreateTransactionRoute(service)),
-    'PUT /transactions/{id}': withAuth(jwtService, makeUpdateTransactionRoute(service)),
-    'DELETE /transactions/{id}': withAuth(jwtService, makeDeleteTransactionRoute(service)),
+    'GET /v1/transactions': withAuth(jwtService, makeListTransactionsRoute(service)),
+    'POST /v1/transactions': withAuth(jwtService, makeCreateTransactionRoute(service)),
+    'PUT /v1/transactions/{id}': withAuth(jwtService, makeUpdateTransactionRoute(service)),
+    'DELETE /v1/transactions/{id}': withAuth(jwtService, makeDeleteTransactionRoute(service)),
   };
   return (event: APIGatewayProxyEventV2) => {
     const route = routes[event.routeKey];
@@ -93,3 +93,15 @@ export function makeTransactionHandler(service: ITransactionService, jwtService:
       : Promise.resolve({ statusCode: 404, body: `Request path ${event.routeKey} not found` });
   };
 }
+
+// Lambda handler
+let _handler: ((event: APIGatewayProxyEventV2) => Promise<APIGatewayProxyResult>) | undefined;
+
+export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResult> => {
+  if (!_handler) {
+    const { jwtService } = await import('../factories/auth.js');
+    const { transactionService } = await import('../factories/transaction.js');
+    _handler = makeTransactionHandler(transactionService, jwtService);
+  }
+  return _handler(event);
+};
