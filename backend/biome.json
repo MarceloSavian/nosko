@@ -24,5 +24,17 @@
   },
   "files": {
     "ignore": ["node_modules", "dist", "coverage"]
-  }
+  },
+  "overrides": [
+    {
+      "include": ["**/*.test.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noNonNullAssertion": "off"
+          }
+        }
+      }
+    }
+  ]
 }
