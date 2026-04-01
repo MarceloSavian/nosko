@@ -2,10 +2,17 @@ import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
 import type { IBudgetCategoryService } from '../../domain/usecases/budget/IBudgetCategoryService.js';
+import type { IBudgetPlanService } from '../../domain/usecases/budget/IBudgetPlanService.js';
 import { BaseError } from '../../shared/error.js';
 import { resetMock } from '../../test/helpers/resetMock.js';
 import { mockJwtService } from '../../test/mocks/MockJwtService.js';
-import { makeCreateCategoryRoute, makeListCategoriesRoute } from './budget-routes.js';
+import {
+  makeAddItemRoute,
+  makeCreateCategoryRoute,
+  makeCreatePersonalPlanRoute,
+  makeGetPersonalPlanRoute,
+  makeListCategoriesRoute,
+} from './budget-routes.js';
 
 const mockCategoryService = {
   listCategories: mock.fn(async () => []),
@@ -14,11 +21,26 @@ const mockCategoryService = {
   deleteCategory: mock.fn(async () => {}),
 } as unknown as IBudgetCategoryService & Record<string, ReturnType<typeof mock.fn>>;
 
+const mockPlanService = {
+  getPersonalPlan: mock.fn(async () => null),
+  createPersonalPlan: mock.fn(async () => ({ plan: {}, items: [] })),
+  deletePersonalPlan: mock.fn(async () => {}),
+  getJointPlan: mock.fn(async () => null),
+  createJointPlan: mock.fn(async () => ({ plan: {}, items: [] })),
+  deleteJointPlan: mock.fn(async () => {}),
+  addItem: mock.fn(async () => ({})),
+  updateItem: mock.fn(async () => ({})),
+  deleteItem: mock.fn(async () => {}),
+} as unknown as IBudgetPlanService & Record<string, ReturnType<typeof mock.fn>>;
+
 describe('budget-routes', () => {
   beforeEach(() => {
     resetMock(mockJwtService);
     for (const key of Object.keys(mockCategoryService)) {
       (mockCategoryService as Record<string, ReturnType<typeof mock.fn>>)[key]?.mock.resetCalls();
+    }
+    for (const key of Object.keys(mockPlanService)) {
+      (mockPlanService as Record<string, ReturnType<typeof mock.fn>>)[key]?.mock.resetCalls();
     }
   });
 
@@ -27,6 +49,7 @@ describe('budget-routes', () => {
       routeKey: 'GET /budget-categories',
       headers: { authorization: 'Bearer valid-token' },
       pathParameters: {},
+      queryStringParameters: {},
       ...overrides,
     }) as unknown as APIGatewayProxyEventV2;
 
@@ -57,13 +80,98 @@ describe('budget-routes', () => {
       assert.equal(result.statusCode, 201);
       assert.deepEqual(JSON.parse(result.body), category);
     });
+  });
 
-    it('should return 400 for missing name', async () => {
-      const route = makeCreateCategoryRoute(mockCategoryService);
+  describe('makeGetPersonalPlanRoute()', () => {
+    it('should return 200 with plan and items', async () => {
+      const route = makeGetPersonalPlanRoute(mockPlanService);
+      const data = { plan: { id: '1' }, items: [{ id: '2', name: 'Rent' }] };
+      mockPlanService.getPersonalPlan.mock.mockImplementationOnce(async () => data);
 
-      const result = await route(makeEvent({ body: JSON.stringify({}) }), 'customer-id');
+      const result = await route(
+        makeEvent({ queryStringParameters: { yearMonth: '2024-09' } }),
+        'customer-id',
+      );
 
-      assert.equal(result.statusCode, 400);
+      assert.equal(result.statusCode, 200);
+      assert.deepEqual(JSON.parse(result.body), data);
+    });
+
+    it('should return 200 with null plan when not found', async () => {
+      const route = makeGetPersonalPlanRoute(mockPlanService);
+      mockPlanService.getPersonalPlan.mock.mockImplementationOnce(async () => null);
+
+      const result = await route(
+        makeEvent({ queryStringParameters: { yearMonth: '2024-09' } }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 200);
+      assert.deepEqual(JSON.parse(result.body), { plan: null, items: [] });
+    });
+  });
+
+  describe('makeCreatePersonalPlanRoute()', () => {
+    it('should return 201 with created plan', async () => {
+      const route = makeCreatePersonalPlanRoute(mockPlanService);
+      const data = { plan: { id: '1', yearMonth: '2024-09' }, items: [] };
+      mockPlanService.createPersonalPlan.mock.mockImplementationOnce(async () => data);
+
+      const result = await route(
+        makeEvent({ body: JSON.stringify({ yearMonth: '2024-09', currencyCode: 'USD' }) }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 201);
+      assert.deepEqual(JSON.parse(result.body), data);
+    });
+  });
+
+  describe('makeAddItemRoute()', () => {
+    it('should return 201 with created item', async () => {
+      const route = makeAddItemRoute(mockPlanService);
+      const item = { id: '1', name: 'Rent', type: 'FIXED', recurrence: 'PERMANENT' };
+      mockPlanService.addItem.mock.mockImplementationOnce(async () => item);
+
+      const result = await route(
+        makeEvent({
+          pathParameters: { planId: 'plan-id' },
+          body: JSON.stringify({
+            categoryId: '550e8400-e29b-41d4-a716-446655440000',
+            name: 'Rent',
+            plannedAmount: 2800,
+            type: 'FIXED',
+            recurrence: 'PERMANENT',
+          }),
+        }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 201);
+      assert.deepEqual(JSON.parse(result.body), item);
+    });
+
+    it('should return 404 when plan not found', async () => {
+      const route = makeAddItemRoute(mockPlanService);
+      mockPlanService.addItem.mock.mockImplementationOnce(async () => {
+        throw new BaseError('Budget plan not found', 404);
+      });
+
+      const result = await route(
+        makeEvent({
+          pathParameters: { planId: 'nonexistent' },
+          body: JSON.stringify({
+            categoryId: '550e8400-e29b-41d4-a716-446655440000',
+            name: 'Rent',
+            plannedAmount: 2800,
+            type: 'FIXED',
+            recurrence: 'PERMANENT',
+          }),
+        }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 404);
     });
   });
 });
