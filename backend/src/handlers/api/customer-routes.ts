@@ -99,12 +99,12 @@ export function makeResetPasswordRoute(service: ICustomerService) {
 
 export function makeCustomerHandler(service: ICustomerService) {
   const routes: ProxyRoute = {
-    'POST /signup': makeSignupRoute(service),
-    'POST /login': makeLoginRoute(service),
-    'POST /verify-email': makeVerifyEmailRoute(service),
-    'POST /resend-verification': makeResendVerificationRoute(service),
-    'POST /request-password-reset': makeRequestPasswordResetRoute(service),
-    'POST /reset-password': makeResetPasswordRoute(service),
+    'POST /v1/signup': makeSignupRoute(service),
+    'POST /v1/login': makeLoginRoute(service),
+    'POST /v1/verify-email': makeVerifyEmailRoute(service),
+    'POST /v1/resend-verification': makeResendVerificationRoute(service),
+    'POST /v1/request-password-reset': makeRequestPasswordResetRoute(service),
+    'POST /v1/reset-password': makeResetPasswordRoute(service),
   };
   return (event: APIGatewayProxyEventV2) => routeHandler(routes, event);
 }

@@ -81,10 +81,10 @@ export function makeDeleteTransactionRoute(service: ITransactionService) {
 
 export function makeTransactionHandler(service: ITransactionService, jwtService: IJwtService) {
   const routes: ProxyRoute = {
-    'GET /transactions': withAuth(jwtService, makeListTransactionsRoute(service)),
-    'POST /transactions': withAuth(jwtService, makeCreateTransactionRoute(service)),
-    'PUT /transactions/{id}': withAuth(jwtService, makeUpdateTransactionRoute(service)),
-    'DELETE /transactions/{id}': withAuth(jwtService, makeDeleteTransactionRoute(service)),
+    'GET /v1/transactions': withAuth(jwtService, makeListTransactionsRoute(service)),
+    'POST /v1/transactions': withAuth(jwtService, makeCreateTransactionRoute(service)),
+    'PUT /v1/transactions/{id}': withAuth(jwtService, makeUpdateTransactionRoute(service)),
+    'DELETE /v1/transactions/{id}': withAuth(jwtService, makeDeleteTransactionRoute(service)),
   };
   return (event: APIGatewayProxyEventV2) => {
     const route = routes[event.routeKey];

@@ -22,7 +22,7 @@ export function makeGetDashboardRoute(service: IDashboardService) {
 
 export function makeDashboardHandler(service: IDashboardService, jwtService: IJwtService) {
   const routes: ProxyRoute = {
-    'GET /dashboard': withAuth(jwtService, makeGetDashboardRoute(service)),
+    'GET /v1/dashboard': withAuth(jwtService, makeGetDashboardRoute(service)),
   };
   return (event: APIGatewayProxyEventV2) => {
     const route = routes[event.routeKey];

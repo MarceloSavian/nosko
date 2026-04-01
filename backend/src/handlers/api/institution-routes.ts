@@ -21,7 +21,7 @@ export function makeListInstitutionsRoute(service: IInstitutionService) {
 
 export function makeInstitutionHandler(service: IInstitutionService, jwtService: IJwtService) {
   const routes: ProxyRoute = {
-    'GET /institutions': withAuth(jwtService, makeListInstitutionsRoute(service)),
+    'GET /v1/institutions': withAuth(jwtService, makeListInstitutionsRoute(service)),
   };
   return (event: APIGatewayProxyEventV2) => {
     const route = routes[event.routeKey];

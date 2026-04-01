@@ -23,7 +23,7 @@ describe('customer-routes', () => {
     const resendVerification = makeResendVerificationRoute(mockCustomerService);
     const requestPasswordReset = makeRequestPasswordResetRoute(mockCustomerService);
     const resetPassword = makeResetPasswordRoute(mockCustomerService);
-    const routes = { 'POST /signup': signup };
+    const routes = { 'POST /v1/signup': signup };
 
     return {
       signup,
@@ -42,7 +42,7 @@ describe('customer-routes', () => {
 
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
     ({
-      routeKey: 'POST /signup',
+      routeKey: 'POST /v1/signup',
       body: JSON.stringify({ email: 'test@test.com', password: 'password123' }),
       ...overrides,
     }) as unknown as APIGatewayProxyEventV2;
@@ -136,7 +136,7 @@ describe('customer-routes', () => {
 
       const result = await login(
         makeEvent({
-          routeKey: 'POST /login',
+          routeKey: 'POST /v1/login',
           body: JSON.stringify({ email: 'test@test.com', password: 'password123' }),
         }),
       );
@@ -153,7 +153,7 @@ describe('customer-routes', () => {
 
       const result = await login(
         makeEvent({
-          routeKey: 'POST /login',
+          routeKey: 'POST /v1/login',
           body: JSON.stringify({ email: 'test@test.com', password: 'wrong' }),
         }),
       );
@@ -166,7 +166,7 @@ describe('customer-routes', () => {
 
       const result = await login(
         makeEvent({
-          routeKey: 'POST /login',
+          routeKey: 'POST /v1/login',
           body: JSON.stringify({ email: 'not-an-email' }),
         }),
       );
@@ -184,7 +184,7 @@ describe('customer-routes', () => {
 
       const result = await verifyEmail(
         makeEvent({
-          routeKey: 'POST /verify-email',
+          routeKey: 'POST /v1/verify-email',
           body: JSON.stringify({ email: 'test@test.com', code: '123456' }),
         }),
       );
@@ -198,7 +198,7 @@ describe('customer-routes', () => {
 
       const result = await verifyEmail(
         makeEvent({
-          routeKey: 'POST /verify-email',
+          routeKey: 'POST /v1/verify-email',
           body: JSON.stringify({ email: 'test@test.com', code: '12' }),
         }),
       );
@@ -214,7 +214,7 @@ describe('customer-routes', () => {
 
       const result = await verifyEmail(
         makeEvent({
-          routeKey: 'POST /verify-email',
+          routeKey: 'POST /v1/verify-email',
           body: JSON.stringify({ email: 'test@test.com', code: '000000' }),
         }),
       );
@@ -229,7 +229,7 @@ describe('customer-routes', () => {
 
       const result = await resendVerification(
         makeEvent({
-          routeKey: 'POST /resend-verification',
+          routeKey: 'POST /v1/resend-verification',
           body: JSON.stringify({ email: 'test@test.com' }),
         }),
       );
@@ -242,7 +242,7 @@ describe('customer-routes', () => {
 
       const result = await resendVerification(
         makeEvent({
-          routeKey: 'POST /resend-verification',
+          routeKey: 'POST /v1/resend-verification',
           body: JSON.stringify({ email: 'not-an-email' }),
         }),
       );
@@ -257,7 +257,7 @@ describe('customer-routes', () => {
 
       const result = await requestPasswordReset(
         makeEvent({
-          routeKey: 'POST /request-password-reset',
+          routeKey: 'POST /v1/request-password-reset',
           body: JSON.stringify({ email: 'test@test.com' }),
         }),
       );
@@ -270,7 +270,7 @@ describe('customer-routes', () => {
 
       const result = await requestPasswordReset(
         makeEvent({
-          routeKey: 'POST /request-password-reset',
+          routeKey: 'POST /v1/request-password-reset',
           body: JSON.stringify({ email: 'not-an-email' }),
         }),
       );
@@ -285,7 +285,7 @@ describe('customer-routes', () => {
 
       const result = await resetPassword(
         makeEvent({
-          routeKey: 'POST /reset-password',
+          routeKey: 'POST /v1/reset-password',
           body: JSON.stringify({
             email: 'test@test.com',
             code: '123456',
@@ -302,7 +302,7 @@ describe('customer-routes', () => {
 
       const result = await resetPassword(
         makeEvent({
-          routeKey: 'POST /reset-password',
+          routeKey: 'POST /v1/reset-password',
           body: JSON.stringify({ email: 'test@test.com', code: '12', newPassword: 'short' }),
         }),
       );
@@ -318,7 +318,7 @@ describe('customer-routes', () => {
 
       const result = await resetPassword(
         makeEvent({
-          routeKey: 'POST /reset-password',
+          routeKey: 'POST /v1/reset-password',
           body: JSON.stringify({
             email: 'test@test.com',
             code: '123456',
@@ -336,12 +336,12 @@ describe('customer-routes', () => {
       mockCustomerService.signup.mock.mockImplementationOnce(() => Promise.resolve(customer));
 
       const handler = makeCustomerHandler(mockCustomerService);
-      const result = await handler(makeEvent({ routeKey: 'POST /signup' }));
+      const result = await handler(makeEvent({ routeKey: 'POST /v1/signup' }));
 
       assert.equal(result.statusCode, 201);
     });
 
-    it('should route POST /login correctly', async () => {
+    it('should route POST /v1/login correctly', async () => {
       mockCustomerService.login.mock.mockImplementationOnce(() =>
         Promise.resolve({ accessToken: 'test-token' }),
       );
@@ -349,7 +349,7 @@ describe('customer-routes', () => {
       const handler = makeCustomerHandler(mockCustomerService);
       const result = await handler(
         makeEvent({
-          routeKey: 'POST /login',
+          routeKey: 'POST /v1/login',
           body: JSON.stringify({ email: 'test@test.com', password: 'password123' }),
         }),
       );
@@ -357,7 +357,7 @@ describe('customer-routes', () => {
       assert.equal(result.statusCode, 200);
     });
 
-    it('should route POST /verify-email correctly', async () => {
+    it('should route POST /v1/verify-email correctly', async () => {
       mockCustomerService.verifyEmail.mock.mockImplementationOnce(() =>
         Promise.resolve(verifiedCustomer),
       );
@@ -365,7 +365,7 @@ describe('customer-routes', () => {
       const handler = makeCustomerHandler(mockCustomerService);
       const result = await handler(
         makeEvent({
-          routeKey: 'POST /verify-email',
+          routeKey: 'POST /v1/verify-email',
           body: JSON.stringify({ email: 'test@test.com', code: '123456' }),
         }),
       );

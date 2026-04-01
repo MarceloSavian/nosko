@@ -85,11 +85,11 @@ export function makeProfileHandler(
   jwtService: IJwtService,
 ) {
   const routes: ProxyRoute = {
-    'GET /me': withAuth(jwtService, makeGetProfileRoute(service)),
-    'PUT /me': withAuth(jwtService, makeUpdateProfileRoute(service)),
-    'DELETE /me': withAuth(jwtService, makeDeleteAccountRoute(service)),
-    'GET /me/currencies': withAuth(jwtService, makeGetCurrenciesRoute(currencyService)),
-    'PUT /me/currencies': withAuth(jwtService, makeSetCurrenciesRoute(currencyService)),
+    'GET /v1/me': withAuth(jwtService, makeGetProfileRoute(service)),
+    'PUT /v1/me': withAuth(jwtService, makeUpdateProfileRoute(service)),
+    'DELETE /v1/me': withAuth(jwtService, makeDeleteAccountRoute(service)),
+    'GET /v1/me/currencies': withAuth(jwtService, makeGetCurrenciesRoute(currencyService)),
+    'PUT /v1/me/currencies': withAuth(jwtService, makeSetCurrenciesRoute(currencyService)),
   };
   return (event: APIGatewayProxyEventV2) => {
     const route = routes[event.routeKey];

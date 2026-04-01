@@ -173,32 +173,38 @@ export function makeSetSharedAccountsRoute(service: IPartnershipService) {
 
 export function makePartnershipHandler(service: IPartnershipService, jwtService: IJwtService) {
   const routes: ProxyRoute = {
-    'POST /partnership/invite': withAuth(jwtService, makeInvitePartnerRoute(service)),
-    'GET /partnership/invitations': withAuth(jwtService, makeListInvitationsRoute(service)),
-    'POST /partnership/invitations/{id}/accept': withAuth(
+    'POST /v1/partnership/invite': withAuth(jwtService, makeInvitePartnerRoute(service)),
+    'GET /v1/partnership/invitations': withAuth(jwtService, makeListInvitationsRoute(service)),
+    'POST /v1/partnership/invitations/{id}/accept': withAuth(
       jwtService,
       makeAcceptInvitationRoute(service),
     ),
-    'POST /partnership/invitations/{id}/decline': withAuth(
+    'POST /v1/partnership/invitations/{id}/decline': withAuth(
       jwtService,
       makeDeclineInvitationRoute(service),
     ),
-    'DELETE /partnership/invitations/{id}': withAuth(
+    'DELETE /v1/partnership/invitations/{id}': withAuth(
       jwtService,
       makeCancelInvitationRoute(service),
     ),
-    'GET /partnership': withAuth(jwtService, makeGetPartnershipRoute(service)),
-    'DELETE /partnership': withAuth(jwtService, makeDissolvePartnershipRoute(service)),
-    'GET /partnership/contribution-rules': withAuth(
+    'GET /v1/partnership': withAuth(jwtService, makeGetPartnershipRoute(service)),
+    'DELETE /v1/partnership': withAuth(jwtService, makeDissolvePartnershipRoute(service)),
+    'GET /v1/partnership/contribution-rules': withAuth(
       jwtService,
       makeGetContributionRulesRoute(service),
     ),
-    'PUT /partnership/contribution-rules': withAuth(
+    'PUT /v1/partnership/contribution-rules': withAuth(
       jwtService,
       makeSetContributionRulesRoute(service),
     ),
-    'GET /partnership/shared-accounts': withAuth(jwtService, makeGetSharedAccountsRoute(service)),
-    'PUT /partnership/shared-accounts': withAuth(jwtService, makeSetSharedAccountsRoute(service)),
+    'GET /v1/partnership/shared-accounts': withAuth(
+      jwtService,
+      makeGetSharedAccountsRoute(service),
+    ),
+    'PUT /v1/partnership/shared-accounts': withAuth(
+      jwtService,
+      makeSetSharedAccountsRoute(service),
+    ),
   };
   return (event: APIGatewayProxyEventV2) => {
     const route = routes[event.routeKey];

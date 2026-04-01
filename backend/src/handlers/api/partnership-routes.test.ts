@@ -37,7 +37,7 @@ describe('partnership-routes', () => {
 
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
     ({
-      routeKey: 'GET /partnership',
+      routeKey: 'GET /v1/partnership',
       headers: { authorization: 'Bearer valid-token' },
       pathParameters: {},
       ...overrides,
