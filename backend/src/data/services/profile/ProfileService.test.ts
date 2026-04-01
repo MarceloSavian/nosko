@@ -14,6 +14,9 @@ describe('ProfileService', () => {
   const customer = {
     id: 'customer-id',
     email: 'test@test.com',
+    name: 'Alex',
+    language: 'en',
+    avatarUrl: null,
     verifiedAt: '2024-01-01T01:00:00.000Z',
     createdAt: '2024-01-01T00:00:00.000Z',
   };
@@ -39,6 +42,51 @@ describe('ProfileService', () => {
 
       await assert.rejects(
         async () => sut.getProfile('nonexistent-id'),
+        new CustomerNotFoundError(),
+      );
+    });
+  });
+
+  describe('updateProfile()', () => {
+    it('should update and return the customer', async () => {
+      const { sut } = makeSut();
+      const updated = { ...customer, name: 'Updated Name' };
+      mockCustomerRepository.findById.mock.mockImplementationOnce(async () => customer);
+      mockCustomerRepository.updateProfile.mock.mockImplementationOnce(async () => updated);
+
+      const result = await sut.updateProfile('customer-id', { name: 'Updated Name' });
+
+      assert.deepEqual(result, updated);
+      assert.equal(mockCustomerRepository.updateProfile.mock.calls[0]?.arguments[0], 'customer-id');
+    });
+
+    it('should throw CustomerNotFoundError when customer does not exist', async () => {
+      const { sut } = makeSut();
+      mockCustomerRepository.findById.mock.mockImplementationOnce(async () => null);
+
+      await assert.rejects(
+        async () => sut.updateProfile('nonexistent-id', { name: 'Test' }),
+        new CustomerNotFoundError(),
+      );
+    });
+  });
+
+  describe('deleteAccount()', () => {
+    it('should delete the customer', async () => {
+      const { sut } = makeSut();
+      mockCustomerRepository.findById.mock.mockImplementationOnce(async () => customer);
+
+      await sut.deleteAccount('customer-id');
+
+      assert.equal(mockCustomerRepository.delete.mock.calls[0]?.arguments[0], 'customer-id');
+    });
+
+    it('should throw CustomerNotFoundError when customer does not exist', async () => {
+      const { sut } = makeSut();
+      mockCustomerRepository.findById.mock.mockImplementationOnce(async () => null);
+
+      await assert.rejects(
+        async () => sut.deleteAccount('nonexistent-id'),
         new CustomerNotFoundError(),
       );
     });
