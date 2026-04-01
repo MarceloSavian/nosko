@@ -31,7 +31,7 @@ describe('account-routes', () => {
 
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
     ({
-      routeKey: 'GET /v1/accounts',
+      routeKey: 'GET /accounts',
       headers: { authorization: 'Bearer valid-token' },
       pathParameters: {},
       ...overrides,

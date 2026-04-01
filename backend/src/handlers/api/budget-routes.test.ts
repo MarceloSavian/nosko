@@ -46,7 +46,7 @@ describe('budget-routes', () => {
 
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
     ({
-      routeKey: 'GET /v1/budget-categories',
+      routeKey: 'GET /budget-categories',
       headers: { authorization: 'Bearer valid-token' },
       pathParameters: {},
       queryStringParameters: {},

@@ -29,7 +29,7 @@ describe('transaction-routes', () => {
 
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
     ({
-      routeKey: 'GET /v1/transactions',
+      routeKey: 'GET /transactions',
       headers: { authorization: 'Bearer valid-token' },
       pathParameters: {},
       queryStringParameters: {},

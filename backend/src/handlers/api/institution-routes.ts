@@ -21,7 +21,7 @@ export function makeListInstitutionsRoute(service: IInstitutionService) {
 
 export function makeInstitutionHandler(service: IInstitutionService, jwtService: IJwtService) {
   const routes: ProxyRoute = {
-    'GET /v1/institutions': withAuth(jwtService, makeListInstitutionsRoute(service)),
+    'GET /institutions': withAuth(jwtService, makeListInstitutionsRoute(service)),
   };
   return (event: APIGatewayProxyEventV2) => {
     const route = routes[event.routeKey];
@@ -30,15 +30,3 @@ export function makeInstitutionHandler(service: IInstitutionService, jwtService:
       : Promise.resolve({ statusCode: 404, body: `Request path ${event.routeKey} not found` });
   };
 }
-
-// Lambda handler
-let _handler: ((event: APIGatewayProxyEventV2) => Promise<APIGatewayProxyResult>) | undefined;
-
-export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResult> => {
-  if (!_handler) {
-    const { jwtService } = await import('../factories/auth.js');
-    const { institutionService } = await import('../factories/institution.js');
-    _handler = makeInstitutionHandler(institutionService, jwtService);
-  }
-  return _handler(event);
-};

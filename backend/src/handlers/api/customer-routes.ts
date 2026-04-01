@@ -99,23 +99,12 @@ export function makeResetPasswordRoute(service: ICustomerService) {
 
 export function makeCustomerHandler(service: ICustomerService) {
   const routes: ProxyRoute = {
-    'POST /v1/signup': makeSignupRoute(service),
-    'POST /v1/login': makeLoginRoute(service),
-    'POST /v1/verify-email': makeVerifyEmailRoute(service),
-    'POST /v1/resend-verification': makeResendVerificationRoute(service),
-    'POST /v1/request-password-reset': makeRequestPasswordResetRoute(service),
-    'POST /v1/reset-password': makeResetPasswordRoute(service),
+    'POST /signup': makeSignupRoute(service),
+    'POST /login': makeLoginRoute(service),
+    'POST /verify-email': makeVerifyEmailRoute(service),
+    'POST /resend-verification': makeResendVerificationRoute(service),
+    'POST /request-password-reset': makeRequestPasswordResetRoute(service),
+    'POST /reset-password': makeResetPasswordRoute(service),
   };
   return (event: APIGatewayProxyEventV2) => routeHandler(routes, event);
 }
-
-// Lambda handler
-let _handler: ((event: APIGatewayProxyEventV2) => Promise<APIGatewayProxyResult>) | undefined;
-
-export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResult> => {
-  if (!_handler) {
-    const { customerService } = await import('../factories/customer.js');
-    _handler = makeCustomerHandler(customerService);
-  }
-  return _handler(event);
-};

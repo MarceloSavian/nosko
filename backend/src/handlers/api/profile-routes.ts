@@ -85,11 +85,11 @@ export function makeProfileHandler(
   jwtService: IJwtService,
 ) {
   const routes: ProxyRoute = {
-    'GET /v1/me': withAuth(jwtService, makeGetProfileRoute(service)),
-    'PUT /v1/me': withAuth(jwtService, makeUpdateProfileRoute(service)),
-    'DELETE /v1/me': withAuth(jwtService, makeDeleteAccountRoute(service)),
-    'GET /v1/me/currencies': withAuth(jwtService, makeGetCurrenciesRoute(currencyService)),
-    'PUT /v1/me/currencies': withAuth(jwtService, makeSetCurrenciesRoute(currencyService)),
+    'GET /me': withAuth(jwtService, makeGetProfileRoute(service)),
+    'PUT /me': withAuth(jwtService, makeUpdateProfileRoute(service)),
+    'DELETE /me': withAuth(jwtService, makeDeleteAccountRoute(service)),
+    'GET /me/currencies': withAuth(jwtService, makeGetCurrenciesRoute(currencyService)),
+    'PUT /me/currencies': withAuth(jwtService, makeSetCurrenciesRoute(currencyService)),
   };
   return (event: APIGatewayProxyEventV2) => {
     const route = routes[event.routeKey];
@@ -98,15 +98,3 @@ export function makeProfileHandler(
       : Promise.resolve({ statusCode: 404, body: `Request path ${event.routeKey} not found` });
   };
 }
-
-// Lambda handler
-let _handler: ((event: APIGatewayProxyEventV2) => Promise<APIGatewayProxyResult>) | undefined;
-
-export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResult> => {
-  if (!_handler) {
-    const { currencyService, profileService } = await import('../factories/profile.js');
-    const { jwtService } = await import('../factories/auth.js');
-    _handler = makeProfileHandler(profileService, currencyService, jwtService);
-  }
-  return _handler(event);
-};

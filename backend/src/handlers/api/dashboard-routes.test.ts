@@ -23,7 +23,7 @@ describe('dashboard-routes', () => {
 
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
     ({
-      routeKey: 'GET /v1/dashboard',
+      routeKey: 'GET /dashboard',
       headers: { authorization: 'Bearer valid-token' },
       queryStringParameters: { yearMonth: '2024-09' },
       ...overrides,
