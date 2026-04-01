@@ -113,7 +113,9 @@ export class BudgetPlanService implements IBudgetPlanService {
   }
 
   private getPreviousMonth(yearMonth: string): string {
-    const [year, month] = yearMonth.split('-').map(Number);
+    const parts = yearMonth.split('-').map(Number);
+    const year = parts[0] as number;
+    const month = parts[1] as number;
     if (month === 1) return `${year - 1}-12`;
     return `${year}-${String(month - 1).padStart(2, '0')}`;
   }

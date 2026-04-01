@@ -50,6 +50,9 @@ describe('customer-routes', () => {
   const customer = {
     id: 'id-1',
     email: 'test@test.com',
+    name: null,
+    language: 'en',
+    avatarUrl: null,
     verifiedAt: null,
     createdAt: '2024-01-01T00:00:00.000Z',
   };

@@ -57,7 +57,9 @@ describe('budget-routes', () => {
     it('should return 200 with categories', async () => {
       const route = makeListCategoriesRoute(mockCategoryService);
       const categories = [{ id: '1', name: 'Food', icon: null, isSystem: true }];
-      mockCategoryService.listCategories.mock.mockImplementationOnce(async () => categories);
+      (
+        mockCategoryService.listCategories as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => categories);
 
       const result = await route(makeEvent(), 'customer-id');
 
@@ -70,7 +72,9 @@ describe('budget-routes', () => {
     it('should return 201 with created category', async () => {
       const route = makeCreateCategoryRoute(mockCategoryService);
       const category = { id: '1', name: 'Custom', icon: null, isSystem: false };
-      mockCategoryService.createCategory.mock.mockImplementationOnce(async () => category);
+      (
+        mockCategoryService.createCategory as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => category);
 
       const result = await route(
         makeEvent({ body: JSON.stringify({ name: 'Custom' }) }),
@@ -86,7 +90,9 @@ describe('budget-routes', () => {
     it('should return 200 with plan and items', async () => {
       const route = makeGetPersonalPlanRoute(mockPlanService);
       const data = { plan: { id: '1' }, items: [{ id: '2', name: 'Rent' }] };
-      mockPlanService.getPersonalPlan.mock.mockImplementationOnce(async () => data);
+      (
+        mockPlanService.getPersonalPlan as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => data);
 
       const result = await route(
         makeEvent({ queryStringParameters: { yearMonth: '2024-09' } }),
@@ -99,7 +105,9 @@ describe('budget-routes', () => {
 
     it('should return 200 with null plan when not found', async () => {
       const route = makeGetPersonalPlanRoute(mockPlanService);
-      mockPlanService.getPersonalPlan.mock.mockImplementationOnce(async () => null);
+      (
+        mockPlanService.getPersonalPlan as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => null);
 
       const result = await route(
         makeEvent({ queryStringParameters: { yearMonth: '2024-09' } }),
@@ -115,7 +123,9 @@ describe('budget-routes', () => {
     it('should return 201 with created plan', async () => {
       const route = makeCreatePersonalPlanRoute(mockPlanService);
       const data = { plan: { id: '1', yearMonth: '2024-09' }, items: [] };
-      mockPlanService.createPersonalPlan.mock.mockImplementationOnce(async () => data);
+      (
+        mockPlanService.createPersonalPlan as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => data);
 
       const result = await route(
         makeEvent({ body: JSON.stringify({ yearMonth: '2024-09', currencyCode: 'USD' }) }),
@@ -131,7 +141,9 @@ describe('budget-routes', () => {
     it('should return 201 with created item', async () => {
       const route = makeAddItemRoute(mockPlanService);
       const item = { id: '1', name: 'Rent', type: 'FIXED', recurrence: 'PERMANENT' };
-      mockPlanService.addItem.mock.mockImplementationOnce(async () => item);
+      (
+        mockPlanService.addItem as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => item);
 
       const result = await route(
         makeEvent({
@@ -153,7 +165,9 @@ describe('budget-routes', () => {
 
     it('should return 404 when plan not found', async () => {
       const route = makeAddItemRoute(mockPlanService);
-      mockPlanService.addItem.mock.mockImplementationOnce(async () => {
+      (
+        mockPlanService.addItem as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => {
         throw new BaseError('Budget plan not found', 404);
       });
 

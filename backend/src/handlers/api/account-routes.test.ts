@@ -41,7 +41,9 @@ describe('account-routes', () => {
     it('should return 200 with accounts', async () => {
       const route = makeListAccountsRoute(mockAccountService);
       const accounts = [{ id: '1', accountName: 'Checking' }];
-      mockAccountService.listAccounts.mock.mockImplementationOnce(async () => accounts);
+      (
+        mockAccountService.listAccounts as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => accounts);
 
       const result = await route(makeEvent(), 'customer-id');
 
@@ -53,7 +55,9 @@ describe('account-routes', () => {
   describe('makeGetAccountRoute()', () => {
     it('should return 404 when not found', async () => {
       const route = makeGetAccountRoute(mockAccountService);
-      mockAccountService.getAccount.mock.mockImplementationOnce(async () => {
+      (
+        mockAccountService.getAccount as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => {
         throw new BaseError('Bank account not found', 404);
       });
 
@@ -70,7 +74,9 @@ describe('account-routes', () => {
     it('should return 201 with created account', async () => {
       const route = makeCreateAccountRoute(mockAccountService);
       const account = { id: '1', accountName: 'New Account' };
-      mockAccountService.createAccount.mock.mockImplementationOnce(async () => account);
+      (
+        mockAccountService.createAccount as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => account);
 
       const result = await route(
         makeEvent({
@@ -92,7 +98,9 @@ describe('account-routes', () => {
     it('should return 200 with overview', async () => {
       const route = makeGetOverviewRoute(mockAccountService);
       const overview = { totalsByCurrency: [{ currencyCode: 'USD', total: '1000.00' }] };
-      mockAccountService.getOverview.mock.mockImplementationOnce(async () => overview);
+      (
+        mockAccountService.getOverview as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => overview);
 
       const result = await route(makeEvent(), 'customer-id');
 

@@ -4,11 +4,13 @@ import {
   AlreadyHasPartnerError,
   CannotInviteSelfError,
   InvitationNotFoundError,
+  InviteeNotRegisteredError,
   PartnershipNotFoundError,
 } from '../../../domain/errors/partnership.js';
 import { resetMock } from '../../../test/helpers/resetMock.js';
 import { mockContributionRuleRepository } from '../../../test/mocks/MockContributionRuleRepository.js';
 import { mockCustomerRepository } from '../../../test/mocks/MockCustomerRepository.js';
+import { mockEmailService } from '../../../test/mocks/MockEmailService.js';
 import { mockPartnerInvitationRepository } from '../../../test/mocks/MockPartnerInvitationRepository.js';
 import { mockPartnershipRepository } from '../../../test/mocks/MockPartnershipRepository.js';
 import { mockSharedAccountRepository } from '../../../test/mocks/MockSharedAccountRepository.js';
@@ -22,6 +24,7 @@ describe('PartnershipService', () => {
       mockPartnershipRepository,
       mockContributionRuleRepository,
       mockSharedAccountRepository,
+      mockEmailService,
     );
     return { sut };
   };
@@ -30,6 +33,16 @@ describe('PartnershipService', () => {
     id: 'customer-id',
     email: 'alex@test.com',
     name: 'Alex',
+    language: 'en',
+    avatarUrl: null,
+    verifiedAt: '2024-01-01T00:00:00.000Z',
+    createdAt: '2024-01-01T00:00:00.000Z',
+  };
+
+  const invitee = {
+    id: 'invitee-id',
+    email: 'partner@test.com',
+    name: 'Partner',
     language: 'en',
     avatarUrl: null,
     verifiedAt: '2024-01-01T00:00:00.000Z',
@@ -59,18 +72,22 @@ describe('PartnershipService', () => {
     resetMock(mockPartnershipRepository);
     resetMock(mockContributionRuleRepository);
     resetMock(mockSharedAccountRepository);
+    resetMock(mockEmailService);
   });
 
   describe('invitePartner()', () => {
-    it('should create an invitation', async () => {
+    it('should create an invitation and send email', async () => {
       const { sut } = makeSut();
       mockCustomerRepository.findById.mock.mockImplementationOnce(async () => customer);
+      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => invitee);
       mockPartnershipRepository.findByCustomerId.mock.mockImplementationOnce(async () => null);
       mockPartnerInvitationRepository.insert.mock.mockImplementationOnce(async () => invitation);
 
       const result = await sut.invitePartner('customer-id', { email: 'partner@test.com' });
 
       assert.deepEqual(result, invitation);
+      assert.equal(mockEmailService.send.mock.calls.length, 1);
+      assert.equal(mockEmailService.send.mock.calls[0]?.arguments[0], 'partner@test.com');
     });
 
     it('should throw CannotInviteSelfError when inviting own email', async () => {
@@ -83,15 +100,27 @@ describe('PartnershipService', () => {
       );
     });
 
+    it('should throw InviteeNotRegisteredError when invitee not found', async () => {
+      const { sut } = makeSut();
+      mockCustomerRepository.findById.mock.mockImplementationOnce(async () => customer);
+      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
+
+      await assert.rejects(
+        async () => sut.invitePartner('customer-id', { email: 'unknown@test.com' }),
+        new InviteeNotRegisteredError(),
+      );
+    });
+
     it('should throw AlreadyHasPartnerError when already partnered', async () => {
       const { sut } = makeSut();
       mockCustomerRepository.findById.mock.mockImplementationOnce(async () => customer);
+      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => invitee);
       mockPartnershipRepository.findByCustomerId.mock.mockImplementationOnce(
         async () => partnership,
       );
 
       await assert.rejects(
-        async () => sut.invitePartner('customer-id', { email: 'new@test.com' }),
+        async () => sut.invitePartner('customer-id', { email: 'partner@test.com' }),
         new AlreadyHasPartnerError(),
       );
     });

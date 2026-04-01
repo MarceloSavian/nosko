@@ -3,6 +3,7 @@ import {
   CannotInviteSelfError,
   InvitationNotFoundError,
   InvitationNotPendingError,
+  InviteeNotRegisteredError,
   NotPartnershipMemberError,
   PartnershipNotFoundError,
 } from '../../../domain/errors/partnership.js';
@@ -18,6 +19,7 @@ import type {
 } from '../../../domain/models/partnership/Partnership.js';
 import type { IPartnershipService } from '../../../domain/usecases/partnership/IPartnershipService.js';
 import type { ICustomerRepository } from '../../domain/customer/ICustomerRepository.js';
+import type { IEmailService } from '../../domain/email/IEmailService.js';
 import type { IContributionRuleRepository } from '../../domain/partnership/IContributionRuleRepository.js';
 import type { IPartnerInvitationRepository } from '../../domain/partnership/IPartnerInvitationRepository.js';
 import type { IPartnershipRepository } from '../../domain/partnership/IPartnershipRepository.js';
@@ -30,6 +32,7 @@ export class PartnershipService implements IPartnershipService {
     private readonly partnershipRepository: IPartnershipRepository,
     private readonly contributionRuleRepository: IContributionRuleRepository,
     private readonly sharedAccountRepository: ISharedAccountRepository,
+    private readonly emailService: IEmailService,
   ) {}
 
   async invitePartner(
@@ -39,10 +42,21 @@ export class PartnershipService implements IPartnershipService {
     const customer = await this.customerRepository.findById(customerId);
     if (customer?.email === input.email) throw new CannotInviteSelfError();
 
+    const invitee = await this.customerRepository.findByEmail(input.email);
+    if (!invitee) throw new InviteeNotRegisteredError();
+
     const existing = await this.partnershipRepository.findByCustomerId(customerId);
     if (existing) throw new AlreadyHasPartnerError();
 
-    return await this.invitationRepository.insert(customerId, input.email);
+    const invitation = await this.invitationRepository.insert(customerId, input.email);
+
+    await this.emailService.send(
+      input.email,
+      'You have been invited to join a shared ledger',
+      `<p><strong>${customer?.name ?? customer?.email}</strong> has invited you to share finances on Suomi.</p><p>Open the app to accept or decline the invitation.</p>`,
+    );
+
+    return invitation;
   }
 
   async listInvitations(customerId: string): Promise<PartnerInvitationSchema[]> {

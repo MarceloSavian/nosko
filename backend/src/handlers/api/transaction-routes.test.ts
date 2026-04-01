@@ -40,7 +40,9 @@ describe('transaction-routes', () => {
     it('should return 200 with transactions', async () => {
       const route = makeListTransactionsRoute(mockTransactionService);
       const transactions = [{ id: '1', amount: '-50.00' }];
-      mockTransactionService.listTransactions.mock.mockImplementationOnce(async () => transactions);
+      (
+        mockTransactionService.listTransactions as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => transactions);
 
       const result = await route(makeEvent(), 'customer-id');
 
@@ -53,7 +55,9 @@ describe('transaction-routes', () => {
     it('should return 201 with created transaction', async () => {
       const route = makeCreateTransactionRoute(mockTransactionService);
       const tx = { id: '1', amount: '-50.00' };
-      mockTransactionService.createTransaction.mock.mockImplementationOnce(async () => tx);
+      (
+        mockTransactionService.createTransaction as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => tx);
 
       const result = await route(
         makeEvent({

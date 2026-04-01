@@ -47,7 +47,9 @@ describe('partnership-routes', () => {
     it('should return 201 with invitation', async () => {
       const route = makeInvitePartnerRoute(mockPartnershipService);
       const invitation = { id: '1', inviteeEmail: 'partner@test.com', status: 'PENDING' };
-      mockPartnershipService.invitePartner.mock.mockImplementationOnce(async () => invitation);
+      (
+        mockPartnershipService.invitePartner as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => invitation);
 
       const result = await route(
         makeEvent({ body: JSON.stringify({ email: 'partner@test.com' }) }),
@@ -63,7 +65,9 @@ describe('partnership-routes', () => {
     it('should return 200 with partnership', async () => {
       const route = makeGetPartnershipRoute(mockPartnershipService);
       const partnership = { id: '1', customerAId: 'a', customerBId: 'b' };
-      mockPartnershipService.getPartnership.mock.mockImplementationOnce(async () => partnership);
+      (
+        mockPartnershipService.getPartnership as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => partnership);
 
       const result = await route(makeEvent(), 'customer-id');
 
@@ -73,7 +77,9 @@ describe('partnership-routes', () => {
 
     it('should return 404 when no partnership', async () => {
       const route = makeGetPartnershipRoute(mockPartnershipService);
-      mockPartnershipService.getPartnership.mock.mockImplementationOnce(async () => {
+      (
+        mockPartnershipService.getPartnership as unknown as ReturnType<typeof mock.fn>
+      ).mock.mockImplementationOnce(async () => {
         throw new BaseError('Partnership not found', 404);
       });
 

@@ -35,3 +35,9 @@ export class NotPartnershipMemberError extends BaseError {
     super('You are not a member of this partnership', 403);
   }
 }
+
+export class InviteeNotRegisteredError extends BaseError {
+  constructor() {
+    super('The invited email is not registered in the app', 400);
+  }
+}
