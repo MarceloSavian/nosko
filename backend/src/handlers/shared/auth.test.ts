@@ -1,11 +1,14 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
-import type { APIGatewayProxyEventV2 } from 'aws-lambda';
+import type { APIGatewayProxyEventV2, APIGatewayProxyResult } from 'aws-lambda';
 import { resetMock } from '../../test/helpers/resetMock.js';
 import { mockJwtService } from '../../test/mocks/MockJwtService.js';
+import type { AuthenticatedRoute } from '../domain/proxy.js';
 import { withAuth } from './auth.js';
 
-const mockHandler = mock.fn();
+const mockHandler = mock.fn<AuthenticatedRoute>(
+  async (): Promise<APIGatewayProxyResult> => ({ statusCode: 200, body: '' }),
+);
 
 describe('withAuth', () => {
   beforeEach(() => {

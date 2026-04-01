@@ -3,7 +3,9 @@ import { beforeEach, describe, it, mock } from 'node:test';
 import { EmailService } from './EmailService.js';
 
 describe('EmailService', () => {
-  const mockSend = mock.fn(async () => ({}));
+  const mockSend = mock.fn(
+    async (_params: { from: string; to: string; subject: string; html: string }) => ({}),
+  );
 
   const makeSut = () => {
     const sut = new EmailService('test-api-key', 'no-reply@test.com');
