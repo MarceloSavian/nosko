@@ -1,6 +1,8 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResult } from 'aws-lambda';
 import type { IJwtService } from '../../data/domain/auth/IJwtService.js';
+import { setCurrencyDefaultsInputSchema } from '../../domain/models/currency/Currency.js';
 import { updateProfileInputSchema } from '../../domain/models/customer/Customer.js';
+import type { ICurrencyService } from '../../domain/usecases/currency/ICurrencyService.js';
 import type { IProfileService } from '../../domain/usecases/profile/IProfileService.js';
 import type { ProxyRoute } from '../domain/proxy.js';
 import { withAuth } from '../shared/auth.js';
@@ -49,11 +51,45 @@ export function makeDeleteAccountRoute(service: IProfileService) {
   };
 }
 
-export function makeProfileHandler(service: IProfileService, jwtService: IJwtService) {
+export function makeGetCurrenciesRoute(service: ICurrencyService) {
+  return async (
+    _event: APIGatewayProxyEventV2,
+    customerId: string,
+  ): Promise<APIGatewayProxyResult> => {
+    try {
+      return formatResponse(200, await service.getCurrencyDefaults(customerId));
+    } catch (error) {
+      return logErrorAndFormat(error);
+    }
+  };
+}
+
+export function makeSetCurrenciesRoute(service: ICurrencyService) {
+  return async (
+    event: APIGatewayProxyEventV2,
+    customerId: string,
+  ): Promise<APIGatewayProxyResult> => {
+    try {
+      const body = JSON.parse(event.body ?? '{}');
+      const input = setCurrencyDefaultsInputSchema.parse(body);
+      return formatResponse(200, await service.setCurrencyDefaults(customerId, input));
+    } catch (error) {
+      return logErrorAndFormat(error);
+    }
+  };
+}
+
+export function makeProfileHandler(
+  service: IProfileService,
+  currencyService: ICurrencyService,
+  jwtService: IJwtService,
+) {
   const routes: ProxyRoute = {
     'GET /me': withAuth(jwtService, makeGetProfileRoute(service)),
     'PUT /me': withAuth(jwtService, makeUpdateProfileRoute(service)),
     'DELETE /me': withAuth(jwtService, makeDeleteAccountRoute(service)),
+    'GET /me/currencies': withAuth(jwtService, makeGetCurrenciesRoute(currencyService)),
+    'PUT /me/currencies': withAuth(jwtService, makeSetCurrenciesRoute(currencyService)),
   };
   return (event: APIGatewayProxyEventV2) => {
     const route = routes[event.routeKey];

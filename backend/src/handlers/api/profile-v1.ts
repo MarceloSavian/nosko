@@ -1,5 +1,5 @@
 import { jwtService } from '../factories/auth.js';
-import { profileService } from '../factories/profile.js';
+import { currencyService, profileService } from '../factories/profile.js';
 import { makeProfileHandler } from './profile-routes.js';
 
-export const handler = makeProfileHandler(profileService, jwtService);
+export const handler = makeProfileHandler(profileService, currencyService, jwtService);
