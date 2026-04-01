@@ -1,6 +1,9 @@
 import type { Pool } from 'pg';
 import type { IPartnerInvitationRepository } from '../../../data/domain/partnership/IPartnerInvitationRepository.js';
-import type { PartnerInvitationSchema } from '../../../domain/models/partnership/Partnership.js';
+import type {
+  InvitationStatus,
+  PartnerInvitationSchema,
+} from '../../../domain/models/partnership/Partnership.js';
 
 type InvitationRow = {
   id: string;
@@ -16,7 +19,7 @@ function toSchema(row: InvitationRow): PartnerInvitationSchema {
     id: row.id,
     inviterId: row.inviter_id,
     inviteeEmail: row.invitee_email,
-    status: row.status,
+    status: row.status as InvitationStatus,
     acceptedAt: row.accepted_at?.toISOString() ?? null,
     createdAt: row.created_at.toISOString(),
   };

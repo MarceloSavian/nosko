@@ -1,12 +1,14 @@
 import { mock } from 'node:test';
-import type {
-  ContributionRuleSchema,
-  InvitePartnerInput,
-  PartnerInvitationSchema,
-  PartnershipSchema,
-  SetContributionRuleInput,
-  SetSharedAccountsInput,
-  SharedAccountSchema,
+import {
+  type ContributionRuleSchema,
+  ContributionType,
+  InvitationStatus,
+  type InvitePartnerInput,
+  type PartnerInvitationSchema,
+  type PartnershipSchema,
+  type SetContributionRuleInput,
+  type SetSharedAccountsInput,
+  type SharedAccountSchema,
 } from '../../domain/models/partnership/Partnership.js';
 import type { IPartnershipService } from '../../domain/usecases/partnership/IPartnershipService.js';
 
@@ -14,7 +16,7 @@ const defaultInvitation: PartnerInvitationSchema = {
   id: '',
   inviterId: '',
   inviteeEmail: '',
-  status: 'PENDING',
+  status: InvitationStatus.PENDING,
   acceptedAt: null,
   createdAt: '',
 };
@@ -59,7 +61,7 @@ class MockPartnershipService implements IPartnershipService {
     ): Promise<ContributionRuleSchema> => ({
       id: '',
       partnershipId: '',
-      type: 'EQUAL',
+      type: ContributionType.EQUAL,
       customerAPercentage: null,
       customerBPercentage: null,
       createdAt: '',

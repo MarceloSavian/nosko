@@ -29,6 +29,8 @@ export const BudgetItemType = {
 
 export type BudgetItemType = (typeof BudgetItemType)[keyof typeof BudgetItemType];
 
+const budgetItemTypeValues = Object.values(BudgetItemType) as [BudgetItemType, ...BudgetItemType[]];
+
 export const BudgetItemRecurrence = {
   PERMANENT: 'PERMANENT',
   ONE_TIME: 'ONE_TIME',
@@ -37,14 +39,19 @@ export const BudgetItemRecurrence = {
 
 export type BudgetItemRecurrence = (typeof BudgetItemRecurrence)[keyof typeof BudgetItemRecurrence];
 
+const budgetItemRecurrenceValues = Object.values(BudgetItemRecurrence) as [
+  BudgetItemRecurrence,
+  ...BudgetItemRecurrence[],
+];
+
 export const budgetItemSchema = z.object({
   id: z.string(),
   planId: z.string(),
   categoryId: z.string(),
   name: z.string(),
   plannedAmount: z.string(),
-  type: z.string(),
-  recurrence: z.string(),
+  type: z.enum(budgetItemTypeValues),
+  recurrence: z.enum(budgetItemRecurrenceValues),
   installmentTotal: z.number().nullable(),
   installmentNumber: z.number().nullable(),
   sourceItemId: z.string().nullable(),
@@ -58,8 +65,8 @@ export const createBudgetItemInputSchema = z.object({
   categoryId: z.string().uuid('Invalid category ID'),
   name: z.string().min(1, 'Name is required').max(200),
   plannedAmount: z.number().positive('Amount must be positive'),
-  type: z.enum(['FIXED', 'ESTIMATED']),
-  recurrence: z.enum(['PERMANENT', 'ONE_TIME', 'INSTALLMENT']),
+  type: z.enum(budgetItemTypeValues),
+  recurrence: z.enum(budgetItemRecurrenceValues),
   installmentTotal: z.number().int().min(2).optional(),
 });
 

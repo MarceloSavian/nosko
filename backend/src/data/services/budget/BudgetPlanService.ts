@@ -1,11 +1,12 @@
 import { BudgetItemNotFoundError, BudgetPlanNotFoundError } from '../../../domain/errors/budget.js';
 import { PartnershipNotFoundError } from '../../../domain/errors/partnership.js';
-import type {
-  BudgetItemSchema,
-  BudgetPlanSchema,
-  CreateBudgetItemInput,
-  CreateBudgetPlanInput,
-  UpdateBudgetItemInput,
+import {
+  BudgetItemRecurrence,
+  type BudgetItemSchema,
+  type BudgetPlanSchema,
+  type CreateBudgetItemInput,
+  type CreateBudgetPlanInput,
+  type UpdateBudgetItemInput,
 } from '../../../domain/models/budget/BudgetPlan.js';
 import type { IBudgetPlanService } from '../../../domain/usecases/budget/IBudgetPlanService.js';
 import type { IBudgetItemRepository } from '../../domain/budget/IBudgetItemRepository.js';
@@ -92,7 +93,7 @@ export class BudgetPlanService implements IBudgetPlanService {
     const plan = await this.planRepository.findById(planId);
     if (!plan) throw new BudgetPlanNotFoundError();
 
-    const installmentNumber = input.recurrence === 'INSTALLMENT' ? 1 : undefined;
+    const installmentNumber = input.recurrence === BudgetItemRecurrence.INSTALLMENT ? 1 : undefined;
     return await this.itemRepository.insert(planId, input, installmentNumber);
   }
 
@@ -153,9 +154,9 @@ export class BudgetPlanService implements IBudgetPlanService {
     const copiedItems: BudgetItemSchema[] = [];
 
     for (const item of prevItems) {
-      if (item.recurrence === 'ONE_TIME') continue;
+      if (item.recurrence === BudgetItemRecurrence.ONE_TIME) continue;
 
-      if (item.recurrence === 'INSTALLMENT') {
+      if (item.recurrence === BudgetItemRecurrence.INSTALLMENT) {
         const total = item.installmentTotal ?? 0;
         const current = item.installmentNumber ?? 0;
         if (current >= total) continue;
@@ -166,8 +167,8 @@ export class BudgetPlanService implements IBudgetPlanService {
             categoryId: item.categoryId,
             name: item.name,
             plannedAmount: Number(item.plannedAmount),
-            type: item.type as 'FIXED' | 'ESTIMATED',
-            recurrence: 'INSTALLMENT',
+            type: item.type,
+            recurrence: BudgetItemRecurrence.INSTALLMENT,
             installmentTotal: total,
           },
           current + 1,
@@ -184,8 +185,8 @@ export class BudgetPlanService implements IBudgetPlanService {
           categoryId: item.categoryId,
           name: item.name,
           plannedAmount: Number(item.plannedAmount),
-          type: item.type as 'FIXED' | 'ESTIMATED',
-          recurrence: 'PERMANENT',
+          type: item.type,
+          recurrence: BudgetItemRecurrence.PERMANENT,
         },
         undefined,
         item.id,

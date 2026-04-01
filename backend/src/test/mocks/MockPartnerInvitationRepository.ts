@@ -1,12 +1,15 @@
 import { mock } from 'node:test';
 import type { IPartnerInvitationRepository } from '../../data/domain/partnership/IPartnerInvitationRepository.js';
-import type { PartnerInvitationSchema } from '../../domain/models/partnership/Partnership.js';
+import {
+  InvitationStatus,
+  type PartnerInvitationSchema,
+} from '../../domain/models/partnership/Partnership.js';
 
 const defaultInvitation: PartnerInvitationSchema = {
   id: '',
   inviterId: '',
   inviteeEmail: '',
-  status: 'PENDING',
+  status: InvitationStatus.PENDING,
   acceptedAt: null,
   createdAt: '',
 };

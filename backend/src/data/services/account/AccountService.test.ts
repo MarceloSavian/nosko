@@ -4,6 +4,7 @@ import {
   BankAccountNotFoundError,
   BankAccountNotOwnedError,
 } from '../../../domain/errors/account.js';
+import { AccountType } from '../../../domain/models/account/Account.js';
 import { resetMock } from '../../../test/helpers/resetMock.js';
 import { mockBankAccountRepository } from '../../../test/mocks/MockBankAccountRepository.js';
 import { AccountService } from './AccountService.js';
@@ -22,7 +23,7 @@ describe('AccountService', () => {
     accountNumberLast4: '1234',
     currencyCode: 'USD',
     balance: '1000.00',
-    accountType: 'CHECKING',
+    accountType: AccountType.CHECKING,
     balanceUpdatedAt: null,
     createdAt: '2024-01-01T00:00:00.000Z',
   };

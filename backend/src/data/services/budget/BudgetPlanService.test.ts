@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
 import { BudgetItemNotFoundError, BudgetPlanNotFoundError } from '../../../domain/errors/budget.js';
+import { BudgetItemRecurrence, BudgetItemType } from '../../../domain/models/budget/BudgetPlan.js';
 import { resetMock } from '../../../test/helpers/resetMock.js';
 import { mockBudgetItemRepository } from '../../../test/mocks/MockBudgetItemRepository.js';
 import { mockBudgetPlanRepository } from '../../../test/mocks/MockBudgetPlanRepository.js';
@@ -34,8 +35,8 @@ describe('BudgetPlanService', () => {
     categoryId: 'cat-id',
     name: 'Rent',
     plannedAmount: '2800.00',
-    type: 'FIXED',
-    recurrence: 'PERMANENT',
+    type: BudgetItemType.FIXED,
+    recurrence: BudgetItemRecurrence.PERMANENT,
     installmentTotal: null,
     installmentNumber: null,
     sourceItemId: null,
@@ -97,8 +98,8 @@ describe('BudgetPlanService', () => {
         categoryId: 'cat-id',
         name: 'Rent',
         plannedAmount: 2800,
-        type: 'FIXED',
-        recurrence: 'PERMANENT',
+        type: BudgetItemType.FIXED,
+        recurrence: BudgetItemRecurrence.PERMANENT,
       });
 
       assert.deepEqual(result, item);
@@ -114,8 +115,8 @@ describe('BudgetPlanService', () => {
             categoryId: 'cat-id',
             name: 'Rent',
             plannedAmount: 2800,
-            type: 'FIXED',
-            recurrence: 'PERMANENT',
+            type: BudgetItemType.FIXED,
+            recurrence: BudgetItemRecurrence.PERMANENT,
           }),
         new BudgetPlanNotFoundError(),
       );

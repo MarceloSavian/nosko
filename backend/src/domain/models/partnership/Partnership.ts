@@ -1,17 +1,6 @@
 import { z } from 'zod';
 
 // Partner Invitations
-export const partnerInvitationSchema = z.object({
-  id: z.string(),
-  inviterId: z.string(),
-  inviteeEmail: z.string(),
-  status: z.string(),
-  acceptedAt: z.string().nullable(),
-  createdAt: z.string(),
-});
-
-export type PartnerInvitationSchema = z.infer<typeof partnerInvitationSchema>;
-
 export const InvitationStatus = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
@@ -20,6 +9,22 @@ export const InvitationStatus = {
 } as const;
 
 export type InvitationStatus = (typeof InvitationStatus)[keyof typeof InvitationStatus];
+
+const invitationStatusValues = Object.values(InvitationStatus) as [
+  InvitationStatus,
+  ...InvitationStatus[],
+];
+
+export const partnerInvitationSchema = z.object({
+  id: z.string(),
+  inviterId: z.string(),
+  inviteeEmail: z.string(),
+  status: z.enum(invitationStatusValues),
+  acceptedAt: z.string().nullable(),
+  createdAt: z.string(),
+});
+
+export type PartnerInvitationSchema = z.infer<typeof partnerInvitationSchema>;
 
 export const invitePartnerInputSchema = z.object({
   email: z.string().email('Invalid email'),
@@ -39,18 +44,6 @@ export const partnershipSchema = z.object({
 export type PartnershipSchema = z.infer<typeof partnershipSchema>;
 
 // Contribution Rules
-export const contributionRuleSchema = z.object({
-  id: z.string(),
-  partnershipId: z.string(),
-  type: z.string(),
-  customerAPercentage: z.string().nullable(),
-  customerBPercentage: z.string().nullable(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-});
-
-export type ContributionRuleSchema = z.infer<typeof contributionRuleSchema>;
-
 export const ContributionType = {
   EQUAL: 'EQUAL',
   SALARY_PROPORTIONAL: 'SALARY_PROPORTIONAL',
@@ -59,8 +52,25 @@ export const ContributionType = {
 
 export type ContributionType = (typeof ContributionType)[keyof typeof ContributionType];
 
+const contributionTypeValues = Object.values(ContributionType) as [
+  ContributionType,
+  ...ContributionType[],
+];
+
+export const contributionRuleSchema = z.object({
+  id: z.string(),
+  partnershipId: z.string(),
+  type: z.enum(contributionTypeValues),
+  customerAPercentage: z.string().nullable(),
+  customerBPercentage: z.string().nullable(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
+export type ContributionRuleSchema = z.infer<typeof contributionRuleSchema>;
+
 export const setContributionRuleInputSchema = z.object({
-  type: z.enum(['EQUAL', 'SALARY_PROPORTIONAL', 'CUSTOM_PERCENTAGE']),
+  type: z.enum(contributionTypeValues),
   customerAPercentage: z.number().min(0).max(100).optional(),
   customerBPercentage: z.number().min(0).max(100).optional(),
 });

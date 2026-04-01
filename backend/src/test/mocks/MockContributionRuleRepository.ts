@@ -1,6 +1,9 @@
 import { mock } from 'node:test';
 import type { IContributionRuleRepository } from '../../data/domain/partnership/IContributionRuleRepository.js';
-import type { ContributionRuleSchema } from '../../domain/models/partnership/Partnership.js';
+import {
+  type ContributionRuleSchema,
+  ContributionType,
+} from '../../domain/models/partnership/Partnership.js';
 
 class MockContributionRuleRepository implements IContributionRuleRepository {
   findByPartnershipId = mock.fn(
@@ -15,7 +18,7 @@ class MockContributionRuleRepository implements IContributionRuleRepository {
     ): Promise<ContributionRuleSchema> => ({
       id: '',
       partnershipId: '',
-      type: 'EQUAL',
+      type: ContributionType.EQUAL,
       customerAPercentage: null,
       customerBPercentage: null,
       createdAt: '',

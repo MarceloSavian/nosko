@@ -1,7 +1,9 @@
 import type { Pool } from 'pg';
 import type { IBudgetItemRepository } from '../../../data/domain/budget/IBudgetItemRepository.js';
 import type {
+  BudgetItemRecurrence,
   BudgetItemSchema,
+  BudgetItemType,
   CreateBudgetItemInput,
   UpdateBudgetItemInput,
 } from '../../../domain/models/budget/BudgetPlan.js';
@@ -28,8 +30,8 @@ function toSchema(row: ItemRow): BudgetItemSchema {
     categoryId: row.category_id,
     name: row.name,
     plannedAmount: row.planned_amount,
-    type: row.type,
-    recurrence: row.recurrence,
+    type: row.type as BudgetItemType,
+    recurrence: row.recurrence as BudgetItemRecurrence,
     installmentTotal: row.installment_total,
     installmentNumber: row.installment_number,
     sourceItemId: row.source_item_id,

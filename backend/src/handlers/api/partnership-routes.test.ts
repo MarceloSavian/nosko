@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
+import { InvitationStatus } from '../../domain/models/partnership/Partnership.js';
 import { BaseError } from '../../shared/error.js';
 import { resetMock } from '../../test/helpers/resetMock.js';
 import { mockJwtService } from '../../test/mocks/MockJwtService.js';
@@ -28,7 +29,11 @@ describe('partnership-routes', () => {
   describe('makeInvitePartnerRoute()', () => {
     it('should return 201 with invitation', async () => {
       const route = makeInvitePartnerRoute(mockPartnershipService);
-      const invitation = { id: '1', inviteeEmail: 'partner@test.com', status: 'PENDING' };
+      const invitation = {
+        id: '1',
+        inviteeEmail: 'partner@test.com',
+        status: InvitationStatus.PENDING,
+      };
       mock.method(mockPartnershipService, 'invitePartner', async () => invitation);
 
       const result = await route(

@@ -1,6 +1,9 @@
 import type { Pool } from 'pg';
 import type { IContributionRuleRepository } from '../../../data/domain/partnership/IContributionRuleRepository.js';
-import type { ContributionRuleSchema } from '../../../domain/models/partnership/Partnership.js';
+import type {
+  ContributionRuleSchema,
+  ContributionType,
+} from '../../../domain/models/partnership/Partnership.js';
 
 type RuleRow = {
   id: string;
@@ -16,7 +19,7 @@ function toSchema(row: RuleRow): ContributionRuleSchema {
   return {
     id: row.id,
     partnershipId: row.partnership_id,
-    type: row.type,
+    type: row.type as ContributionType,
     customerAPercentage: row.customer_a_percentage,
     customerBPercentage: row.customer_b_percentage,
     createdAt: row.created_at.toISOString(),

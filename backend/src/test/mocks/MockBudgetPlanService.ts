@@ -1,10 +1,12 @@
 import { mock } from 'node:test';
-import type {
-  BudgetItemSchema,
-  BudgetPlanSchema,
-  CreateBudgetItemInput,
-  CreateBudgetPlanInput,
-  UpdateBudgetItemInput,
+import {
+  BudgetItemRecurrence,
+  type BudgetItemSchema,
+  BudgetItemType,
+  type BudgetPlanSchema,
+  type CreateBudgetItemInput,
+  type CreateBudgetPlanInput,
+  type UpdateBudgetItemInput,
 } from '../../domain/models/budget/BudgetPlan.js';
 import type { IBudgetPlanService } from '../../domain/usecases/budget/IBudgetPlanService.js';
 
@@ -25,8 +27,8 @@ const defaultItem: BudgetItemSchema = {
   categoryId: '',
   name: '',
   plannedAmount: '0',
-  type: 'FIXED',
-  recurrence: 'PERMANENT',
+  type: BudgetItemType.FIXED,
+  recurrence: BudgetItemRecurrence.PERMANENT,
   installmentTotal: null,
   installmentNumber: null,
   sourceItemId: null,

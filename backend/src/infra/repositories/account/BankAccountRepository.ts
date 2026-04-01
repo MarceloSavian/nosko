@@ -1,6 +1,7 @@
 import type { Pool } from 'pg';
 import type { IBankAccountRepository } from '../../../data/domain/account/IBankAccountRepository.js';
 import type {
+  AccountType,
   BankAccountSchema,
   CreateBankAccountInput,
   UpdateBankAccountInput,
@@ -28,7 +29,7 @@ function toSchema(row: BankAccountRow): BankAccountSchema {
     accountNumberLast4: row.account_number_last4,
     currencyCode: row.currency_code,
     balance: row.balance,
-    accountType: row.account_type,
+    accountType: row.account_type as AccountType | null,
     balanceUpdatedAt: row.balance_updated_at?.toISOString() ?? null,
     createdAt: row.created_at.toISOString(),
   };

@@ -7,6 +7,10 @@ import {
   InviteeNotRegisteredError,
   PartnershipNotFoundError,
 } from '../../../domain/errors/partnership.js';
+import {
+  ContributionType,
+  InvitationStatus,
+} from '../../../domain/models/partnership/Partnership.js';
 import { resetMock } from '../../../test/helpers/resetMock.js';
 import { mockContributionRuleRepository } from '../../../test/mocks/MockContributionRuleRepository.js';
 import { mockCustomerRepository } from '../../../test/mocks/MockCustomerRepository.js';
@@ -53,7 +57,7 @@ describe('PartnershipService', () => {
     id: 'invitation-id',
     inviterId: 'customer-id',
     inviteeEmail: 'partner@test.com',
-    status: 'PENDING',
+    status: InvitationStatus.PENDING,
     acceptedAt: null,
     createdAt: '2024-01-01T00:00:00.000Z',
   };
@@ -176,7 +180,7 @@ describe('PartnershipService', () => {
       const rule = {
         id: 'rule-id',
         partnershipId: 'partnership-id',
-        type: 'EQUAL',
+        type: ContributionType.EQUAL,
         customerAPercentage: null,
         customerBPercentage: null,
         createdAt: '2024-01-01T00:00:00.000Z',
@@ -184,7 +188,9 @@ describe('PartnershipService', () => {
       };
       mock.method(mockContributionRuleRepository, 'upsert', async () => rule);
 
-      const result = await sut.setContributionRules('customer-id', { type: 'EQUAL' });
+      const result = await sut.setContributionRules('customer-id', {
+        type: ContributionType.EQUAL,
+      });
 
       assert.deepEqual(result, rule);
     });

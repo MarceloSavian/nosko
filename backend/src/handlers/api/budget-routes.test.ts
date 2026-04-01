@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
+import { BudgetItemRecurrence, BudgetItemType } from '../../domain/models/budget/BudgetPlan.js';
 import { BaseError } from '../../shared/error.js';
 import { resetMock } from '../../test/helpers/resetMock.js';
 import { mockBudgetCategoryService } from '../../test/mocks/MockBudgetCategoryService.js';
@@ -107,7 +108,12 @@ describe('budget-routes', () => {
   describe('makeAddItemRoute()', () => {
     it('should return 201 with created item', async () => {
       const route = makeAddItemRoute(mockBudgetPlanService);
-      const item = { id: '1', name: 'Rent', type: 'FIXED', recurrence: 'PERMANENT' };
+      const item = {
+        id: '1',
+        name: 'Rent',
+        type: BudgetItemType.FIXED,
+        recurrence: BudgetItemRecurrence.PERMANENT,
+      };
       mock.method(mockBudgetPlanService, 'addItem', async () => item);
 
       const result = await route(
@@ -117,8 +123,8 @@ describe('budget-routes', () => {
             categoryId: '550e8400-e29b-41d4-a716-446655440000',
             name: 'Rent',
             plannedAmount: 2800,
-            type: 'FIXED',
-            recurrence: 'PERMANENT',
+            type: BudgetItemType.FIXED,
+            recurrence: BudgetItemRecurrence.PERMANENT,
           }),
         }),
         'customer-id',
@@ -141,8 +147,8 @@ describe('budget-routes', () => {
             categoryId: '550e8400-e29b-41d4-a716-446655440000',
             name: 'Rent',
             plannedAmount: 2800,
-            type: 'FIXED',
-            recurrence: 'PERMANENT',
+            type: BudgetItemType.FIXED,
+            recurrence: BudgetItemRecurrence.PERMANENT,
           }),
         }),
         'customer-id',
