@@ -1,7 +1,11 @@
+-- 1. Customers & Auth
 CREATE TABLE IF NOT EXISTS customers (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email TEXT UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
+  name TEXT,
+  language VARCHAR(10) DEFAULT 'en',
+  avatar_url TEXT,
   verified_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -12,5 +16,126 @@ CREATE TABLE IF NOT EXISTS tokens (
   code VARCHAR(6) NOT NULL,
   type VARCHAR(20) NOT NULL,
   expires_at TIMESTAMPTZ NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 2. Currency Defaults
+CREATE TABLE IF NOT EXISTS currency_defaults (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  customer_id UUID NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+  currency_code VARCHAR(3) NOT NULL,
+  display_order INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(customer_id, currency_code)
+);
+
+-- 3. Partnerships
+CREATE TABLE IF NOT EXISTS partner_invitations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  inviter_id UUID NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+  invitee_email TEXT NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+  accepted_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS partnerships (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  invitation_id UUID NOT NULL REFERENCES partner_invitations(id),
+  customer_a_id UUID NOT NULL REFERENCES customers(id),
+  customer_b_id UUID NOT NULL REFERENCES customers(id),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(customer_a_id, customer_b_id)
+);
+
+CREATE TABLE IF NOT EXISTS contribution_rules (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  partnership_id UUID NOT NULL REFERENCES partnerships(id) ON DELETE CASCADE,
+  type VARCHAR(30) NOT NULL,
+  customer_a_percentage NUMERIC(5,2),
+  customer_b_percentage NUMERIC(5,2),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 4. Bank Accounts
+CREATE TABLE IF NOT EXISTS institutions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  country_code VARCHAR(2),
+  logo_url TEXT,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS bank_accounts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  customer_id UUID NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+  institution_id UUID NOT NULL REFERENCES institutions(id),
+  account_name TEXT NOT NULL,
+  account_number_last4 VARCHAR(4),
+  currency_code VARCHAR(3) NOT NULL,
+  balance NUMERIC(15,2) NOT NULL DEFAULT 0,
+  account_type VARCHAR(20),
+  balance_updated_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS shared_accounts (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  partnership_id UUID NOT NULL REFERENCES partnerships(id) ON DELETE CASCADE,
+  bank_account_id UUID NOT NULL REFERENCES bank_accounts(id) ON DELETE CASCADE,
+  shared_by_customer_id UUID NOT NULL REFERENCES customers(id),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE(partnership_id, bank_account_id)
+);
+
+-- 5. Budget Planning
+CREATE TABLE IF NOT EXISTS budget_categories (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name TEXT NOT NULL,
+  icon TEXT,
+  is_system BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS budget_plans (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  customer_id UUID REFERENCES customers(id) ON DELETE CASCADE,
+  partnership_id UUID REFERENCES partnerships(id) ON DELETE CASCADE,
+  year_month VARCHAR(7) NOT NULL,
+  currency_code VARCHAR(3) NOT NULL,
+  is_joint BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  CHECK (
+    (customer_id IS NOT NULL AND partnership_id IS NULL AND is_joint = false) OR
+    (customer_id IS NULL AND partnership_id IS NOT NULL AND is_joint = true)
+  )
+);
+
+CREATE TABLE IF NOT EXISTS budget_items (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  plan_id UUID NOT NULL REFERENCES budget_plans(id) ON DELETE CASCADE,
+  category_id UUID NOT NULL REFERENCES budget_categories(id),
+  name TEXT NOT NULL,
+  planned_amount NUMERIC(15,2) NOT NULL,
+  type VARCHAR(10) NOT NULL,
+  recurrence VARCHAR(15) NOT NULL,
+  installment_total INT,
+  installment_number INT,
+  source_item_id UUID REFERENCES budget_items(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 6. Transactions
+CREATE TABLE IF NOT EXISTS transactions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  bank_account_id UUID NOT NULL REFERENCES bank_accounts(id) ON DELETE CASCADE,
+  category_id UUID REFERENCES budget_categories(id),
+  budget_item_id UUID REFERENCES budget_items(id) ON DELETE SET NULL,
+  amount NUMERIC(15,2) NOT NULL,
+  description TEXT,
+  transaction_date DATE NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

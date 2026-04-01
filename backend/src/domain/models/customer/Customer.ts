@@ -24,11 +24,22 @@ export type VerifyEmailInput = z.infer<typeof verifyEmailInputSchema>;
 export const customerSchema = z.object({
   id: z.string(),
   email: z.string(),
+  name: z.string().nullable(),
+  language: z.string(),
+  avatarUrl: z.string().nullable(),
   verifiedAt: z.string().nullable(),
   createdAt: z.string(),
 });
 
 export type CustomerSchema = z.infer<typeof customerSchema>;
+
+export const updateProfileInputSchema = z.object({
+  name: z.string().min(1, 'Name is required').max(100).optional(),
+  language: z.string().min(2).max(10).optional(),
+  avatarUrl: z.string().url('Invalid URL').nullable().optional(),
+});
+
+export type UpdateProfileInput = z.infer<typeof updateProfileInputSchema>;
 
 export type LoginResult = { accessToken: string };
 

@@ -1,4 +1,7 @@
-import type { CustomerSchema } from '../../../domain/models/customer/Customer.js';
+import type {
+  CustomerSchema,
+  UpdateProfileInput,
+} from '../../../domain/models/customer/Customer.js';
 
 export interface ICustomerRepository {
   findById(id: string): Promise<CustomerSchema | null>;
@@ -9,4 +12,6 @@ export interface ICustomerRepository {
   insert(data: { email: string; passwordHash: string }): Promise<CustomerSchema>;
   markVerified(id: string): Promise<CustomerSchema>;
   updatePassword(id: string, passwordHash: string): Promise<void>;
+  updateProfile(id: string, input: UpdateProfileInput): Promise<CustomerSchema>;
+  delete(id: string): Promise<void>;
 }

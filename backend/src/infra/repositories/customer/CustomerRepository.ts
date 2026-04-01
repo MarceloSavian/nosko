@@ -1,13 +1,29 @@
 import type { Pool } from 'pg';
 import type { ICustomerRepository } from '../../../data/domain/customer/ICustomerRepository.js';
-import type { CustomerSchema } from '../../../domain/models/customer/Customer.js';
+import type {
+  CustomerSchema,
+  UpdateProfileInput,
+} from '../../../domain/models/customer/Customer.js';
 
-type CustomerRow = { id: string; email: string; verified_at: Date | null; created_at: Date };
+type CustomerRow = {
+  id: string;
+  email: string;
+  name: string | null;
+  language: string;
+  avatar_url: string | null;
+  verified_at: Date | null;
+  created_at: Date;
+};
+
+const CUSTOMER_COLUMNS = 'id, email, name, language, avatar_url, verified_at, created_at';
 
 function toSchema(row: CustomerRow): CustomerSchema {
   return {
     id: row.id,
     email: row.email,
+    name: row.name,
+    language: row.language,
+    avatarUrl: row.avatar_url,
     verifiedAt: row.verified_at?.toISOString() ?? null,
     createdAt: row.created_at.toISOString(),
   };
@@ -18,7 +34,7 @@ export class CustomerRepository implements ICustomerRepository {
 
   async findById(id: string): Promise<CustomerSchema | null> {
     const result = await this.pool.query<CustomerRow>(
-      'SELECT id, email, verified_at, created_at FROM customers WHERE id = $1',
+      `SELECT ${CUSTOMER_COLUMNS} FROM customers WHERE id = $1`,
       [id],
     );
 
@@ -30,7 +46,7 @@ export class CustomerRepository implements ICustomerRepository {
 
   async findByEmail(email: string): Promise<CustomerSchema | null> {
     const result = await this.pool.query<CustomerRow>(
-      'SELECT id, email, verified_at, created_at FROM customers WHERE email = $1',
+      `SELECT ${CUSTOMER_COLUMNS} FROM customers WHERE email = $1`,
       [email],
     );
 
@@ -44,7 +60,7 @@ export class CustomerRepository implements ICustomerRepository {
     email: string,
   ): Promise<(CustomerSchema & { passwordHash: string }) | null> {
     const result = await this.pool.query<CustomerRow & { password_hash: string }>(
-      'SELECT id, email, password_hash, verified_at, created_at FROM customers WHERE email = $1',
+      `SELECT ${CUSTOMER_COLUMNS}, password_hash FROM customers WHERE email = $1`,
       [email],
     );
 
@@ -56,7 +72,7 @@ export class CustomerRepository implements ICustomerRepository {
 
   async insert(data: { email: string; passwordHash: string }): Promise<CustomerSchema> {
     const result = await this.pool.query<CustomerRow>(
-      'INSERT INTO customers (email, password_hash) VALUES ($1, $2) RETURNING id, email, verified_at, created_at',
+      `INSERT INTO customers (email, password_hash) VALUES ($1, $2) RETURNING ${CUSTOMER_COLUMNS}`,
       [data.email, data.passwordHash],
     );
 
@@ -68,7 +84,7 @@ export class CustomerRepository implements ICustomerRepository {
 
   async markVerified(id: string): Promise<CustomerSchema> {
     const result = await this.pool.query<CustomerRow>(
-      'UPDATE customers SET verified_at = NOW() WHERE id = $1 RETURNING id, email, verified_at, created_at',
+      `UPDATE customers SET verified_at = NOW() WHERE id = $1 RETURNING ${CUSTOMER_COLUMNS}`,
       [id],
     );
 
@@ -83,5 +99,39 @@ export class CustomerRepository implements ICustomerRepository {
       passwordHash,
       id,
     ]);
+  }
+
+  async updateProfile(id: string, input: UpdateProfileInput): Promise<CustomerSchema> {
+    const fields: string[] = [];
+    const values: unknown[] = [];
+    let paramIndex = 1;
+
+    if (input.name !== undefined) {
+      fields.push(`name = $${paramIndex++}`);
+      values.push(input.name);
+    }
+    if (input.language !== undefined) {
+      fields.push(`language = $${paramIndex++}`);
+      values.push(input.language);
+    }
+    if (input.avatarUrl !== undefined) {
+      fields.push(`avatar_url = $${paramIndex++}`);
+      values.push(input.avatarUrl);
+    }
+
+    values.push(id);
+    const result = await this.pool.query<CustomerRow>(
+      `UPDATE customers SET ${fields.join(', ')} WHERE id = $${paramIndex} RETURNING ${CUSTOMER_COLUMNS}`,
+      values,
+    );
+
+    const row = result.rows[0];
+    if (!row) throw new Error('Failed to update customer profile');
+
+    return toSchema(row);
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.pool.query('DELETE FROM customers WHERE id = $1', [id]);
   }
 }
