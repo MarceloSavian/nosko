@@ -41,6 +41,24 @@ describe('CustomerRepository', () => {
     });
   });
 
+  describe('findById()', () => {
+    it('should return the customer when found', async () => {
+      const customer = await sut.insert({ email: 'findid@test.com', passwordHash: 'hashed' });
+
+      const result = await sut.findById(customer.id);
+
+      assert.ok(result);
+      assert.equal(result.id, customer.id);
+      assert.equal(result.email, 'findid@test.com');
+    });
+
+    it('should return null when not found', async () => {
+      const result = await sut.findById('00000000-0000-0000-0000-000000000000');
+
+      assert.equal(result, null);
+    });
+  });
+
   describe('findByEmail()', () => {
     it('should return the customer when found', async () => {
       await sut.insert({ email: 'find@test.com', passwordHash: 'hashed' });

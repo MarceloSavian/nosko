@@ -16,6 +16,18 @@ function toSchema(row: CustomerRow): CustomerSchema {
 export class CustomerRepository implements ICustomerRepository {
   constructor(private readonly pool: Pool) {}
 
+  async findById(id: string): Promise<CustomerSchema | null> {
+    const result = await this.pool.query<CustomerRow>(
+      'SELECT id, email, verified_at, created_at FROM customers WHERE id = $1',
+      [id],
+    );
+
+    const row = result.rows[0];
+    if (!row) return null;
+
+    return toSchema(row);
+  }
+
   async findByEmail(email: string): Promise<CustomerSchema | null> {
     const result = await this.pool.query<CustomerRow>(
       'SELECT id, email, verified_at, created_at FROM customers WHERE email = $1',
