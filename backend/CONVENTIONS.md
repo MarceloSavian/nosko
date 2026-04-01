@@ -260,56 +260,83 @@ describe('CustomerService', () => {
 })
 ```
 
+### Mock Classes
+
+Each interface that needs mocking gets a **mock class** in `test/mocks/`. The class implements the interface, using `mock.fn()` for each method. A pre-created instance is exported — tests import the instance directly.
+
+```typescript
+// test/mocks/MockCustomerRepository.ts
+import { mock } from 'node:test';
+import type { ICustomerRepository } from '../../data/domain/customer/ICustomerRepository.js';
+import type { CustomerSchema } from '../../domain/models/customer/Customer.js';
+
+class MockCustomerRepository implements ICustomerRepository {
+  findByEmail = mock.fn(async (_email: string): Promise<CustomerSchema | null> => null);
+  insert = mock.fn(
+    async (_data: { email: string; passwordHash: string }): Promise<CustomerSchema> => ({
+      id: '',
+      email: '',
+      verifiedAt: null,
+      createdAt: '',
+    }),
+  );
+}
+
+export const mockCustomerRepository = new MockCustomerRepository();
+```
+
+### Resetting Mocks
+
+Use the `resetMock` helper from `test/helpers/resetMock.ts` in `beforeEach` to reset call history on all mock instances used in the test:
+
+```typescript
+import { resetMock } from '../../../test/helpers/resetMock.js';
+
+beforeEach(() => {
+  resetMock(mockCustomerRepository);
+  resetMock(mockHasher);
+});
+```
+
 ### Unit Test Pattern
 
 ```typescript
 // data/services/customer/CustomerService.test.ts
-import { beforeEach, describe, it, mock } from 'node:test';
+import { beforeEach, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import type { ICustomerRepository } from '../../domain/customer/ICustomerRepository.js';
-import type { IHasher } from '../../domain/customer/IHasher.js';
+import { mockCustomerRepository } from '../../../test/mocks/MockCustomerRepository.js';
+import { mockHasher } from '../../../test/mocks/MockHasher.js';
+import { resetMock } from '../../../test/helpers/resetMock.js';
 import { CustomerService } from './CustomerService.js';
 
 describe('CustomerService', () => {
   const makeSut = () => {
-    const customerRepository = {
-      findByEmail: mock.fn(),
-      insert: mock.fn(),
-    } as unknown as ICustomerRepository & {
-      findByEmail: ReturnType<typeof mock.fn>;
-      insert: ReturnType<typeof mock.fn>;
-    };
-    const hasher = {
-      hash: mock.fn(),
-      compare: mock.fn(),
-    } as unknown as IHasher & {
-      hash: ReturnType<typeof mock.fn>;
-      compare: ReturnType<typeof mock.fn>;
-    };
-    const sut = new CustomerService(customerRepository, hasher);
-    return { sut, customerRepository, hasher };
+    const sut = new CustomerService(mockCustomerRepository, mockHasher);
+    return { sut };
   };
 
   beforeEach(() => {
-    mock.restoreAll();
+    resetMock(mockCustomerRepository);
+    resetMock(mockHasher);
   });
 
   describe('signup()', () => {
     it('should call findByEmail with correct email', async () => {
-      const { sut, customerRepository } = makeSut();
-      customerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
+      const { sut } = makeSut();
+      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
       await sut.signup({ email: 'test@test.com', password: 'password123' });
-      assert.equal(customerRepository.findByEmail.mock.calls[0]?.arguments[0], 'test@test.com');
+      assert.equal(mockCustomerRepository.findByEmail.mock.calls[0]?.arguments[0], 'test@test.com');
     });
   });
 });
 ```
 
 ### Rules
-- Mock all dependencies with `mock.fn()` — never use real implementations in unit tests
+- Each interface gets a mock class in `test/mocks/` that implements the interface with `mock.fn()` methods
+- Mock files export a pre-created instance (not the class)
+- Use `resetMock()` in `beforeEach` to reset all mock call history between tests
 - `makeSut()` is defined inside the outer `describe`, not at module level
 - Use `assert.equal`, `assert.deepEqual`, `assert.rejects`, etc. from `node:assert/strict`
-- Use `beforeEach(() => mock.restoreAll())` to reset mocks between tests
 - Tests must not depend on each other or on execution order
 
 ---
