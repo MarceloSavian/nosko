@@ -1,4 +1,4 @@
-import { before, describe, it } from 'node:test';
+import { before, beforeEach, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import type { Pool } from 'pg';
 import { createTestDb } from '../../../test/helpers/createTestDb.js';
@@ -6,11 +6,16 @@ import { CustomerRepository } from './CustomerRepository.js';
 
 describe('CustomerRepository', () => {
   let pool: Pool;
+  let restore: () => void;
   let sut: CustomerRepository;
 
   before(() => {
-    pool = createTestDb();
+    ({ pool, restore } = createTestDb());
     sut = new CustomerRepository(pool);
+  });
+
+  beforeEach(() => {
+    restore();
   });
 
   describe('insert()', () => {

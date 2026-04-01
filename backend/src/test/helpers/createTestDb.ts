@@ -6,7 +6,7 @@ import type { Pool } from 'pg';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-export function createTestDb(): Pool {
+export function createTestDb(): { pool: Pool; restore: () => void } {
   const db = newDb();
 
   db.public.registerFunction({
@@ -20,6 +20,9 @@ export function createTestDb(): Pool {
   const migrationSql = readFileSync(migrationPath, 'utf-8');
   db.public.none(migrationSql);
 
+  const backup = db.backup();
   const { Pool: MockPool } = db.adapters.createPg();
-  return new MockPool() as unknown as Pool;
+  const pool = new MockPool() as unknown as Pool;
+
+  return { pool, restore: () => backup.restore() };
 }

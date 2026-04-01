@@ -1,4 +1,4 @@
-import { before, describe, it } from 'node:test';
+import { before, beforeEach, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import type { Pool } from 'pg';
 import { TokenType } from '../../../domain/models/customer/Customer.js';
@@ -8,13 +8,17 @@ import { TokenRepository } from './TokenRepository.js';
 
 describe('TokenRepository', () => {
   let pool: Pool;
+  let restore: () => void;
   let sut: TokenRepository;
   let customerId: string;
 
-  before(async () => {
-    pool = createTestDb();
+  before(() => {
+    ({ pool, restore } = createTestDb());
     sut = new TokenRepository(pool);
+  });
 
+  beforeEach(async () => {
+    restore();
     const customerRepo = new CustomerRepository(pool);
     const customer = await customerRepo.insert({ email: 'token@test.com', passwordHash: 'hashed' });
     customerId = customer.id;
