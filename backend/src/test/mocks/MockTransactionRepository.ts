@@ -1,0 +1,42 @@
+import { mock } from 'node:test';
+import type { ITransactionRepository } from '../../data/domain/transaction/ITransactionRepository.js';
+import type {
+  CreateTransactionInput,
+  TransactionSchema,
+  UpdateTransactionInput,
+} from '../../domain/models/transaction/Transaction.js';
+
+const defaultTransaction: TransactionSchema = {
+  id: '',
+  bankAccountId: '',
+  categoryId: null,
+  budgetItemId: null,
+  amount: '0',
+  description: null,
+  transactionDate: '',
+  createdAt: '',
+};
+
+class MockTransactionRepository implements ITransactionRepository {
+  findByFilters = mock.fn(
+    async (_filters: {
+      bankAccountIds: string[];
+      yearMonth?: string;
+      categoryId?: string;
+    }): Promise<TransactionSchema[]> => [],
+  );
+  findById = mock.fn(async (_id: string): Promise<TransactionSchema | null> => null);
+  insert = mock.fn(
+    async (_input: CreateTransactionInput): Promise<TransactionSchema> => ({
+      ...defaultTransaction,
+    }),
+  );
+  update = mock.fn(
+    async (_id: string, _input: UpdateTransactionInput): Promise<TransactionSchema> => ({
+      ...defaultTransaction,
+    }),
+  );
+  delete = mock.fn(async (_id: string): Promise<void> => {});
+}
+
+export const mockTransactionRepository = new MockTransactionRepository();
