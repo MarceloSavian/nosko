@@ -120,4 +120,58 @@ describe('CustomerRepository', () => {
       assert.equal(updated?.passwordHash, 'new-hash');
     });
   });
+
+  describe('updateProfile()', () => {
+    it('should update name only', async () => {
+      const customer = await sut.insert({ email: 'profile1@test.com', passwordHash: 'hashed' });
+
+      const result = await sut.updateProfile(customer.id, { name: 'Alice' });
+
+      assert.equal(result.name, 'Alice');
+      assert.equal(result.id, customer.id);
+    });
+
+    it('should update language only', async () => {
+      const customer = await sut.insert({ email: 'profile2@test.com', passwordHash: 'hashed' });
+
+      const result = await sut.updateProfile(customer.id, { language: 'fi' });
+
+      assert.equal(result.language, 'fi');
+    });
+
+    it('should update avatarUrl only', async () => {
+      const customer = await sut.insert({ email: 'profile3@test.com', passwordHash: 'hashed' });
+
+      const result = await sut.updateProfile(customer.id, {
+        avatarUrl: 'https://example.com/avatar.png',
+      });
+
+      assert.equal(result.avatarUrl, 'https://example.com/avatar.png');
+    });
+
+    it('should update all fields together', async () => {
+      const customer = await sut.insert({ email: 'profile4@test.com', passwordHash: 'hashed' });
+
+      const result = await sut.updateProfile(customer.id, {
+        name: 'Bob',
+        language: 'pt',
+        avatarUrl: 'https://example.com/bob.png',
+      });
+
+      assert.equal(result.name, 'Bob');
+      assert.equal(result.language, 'pt');
+      assert.equal(result.avatarUrl, 'https://example.com/bob.png');
+    });
+  });
+
+  describe('delete()', () => {
+    it('should delete an existing customer', async () => {
+      const customer = await sut.insert({ email: 'del@test.com', passwordHash: 'hashed' });
+
+      await sut.delete(customer.id);
+
+      const result = await sut.findById(customer.id);
+      assert.equal(result, null);
+    });
+  });
 });

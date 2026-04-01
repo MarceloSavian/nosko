@@ -4,6 +4,7 @@ import {
   AlreadyHasPartnerError,
   CannotInviteSelfError,
   InvitationNotFoundError,
+  InvitationNotPendingError,
   InviteeNotRegisteredError,
   PartnershipNotFoundError,
 } from '../../../domain/errors/partnership.js';
@@ -130,6 +131,24 @@ describe('PartnershipService', () => {
   });
 
   describe('acceptInvitation()', () => {
+    it('should accept invitation and create partnership', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnerInvitationRepository, 'findById', async () => invitation);
+      mock.method(mockCustomerRepository, 'findById', async () => invitee);
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => null);
+      mock.method(mockPartnerInvitationRepository, 'updateStatus', async () => ({
+        ...invitation,
+        status: InvitationStatus.ACCEPTED,
+      }));
+      mock.method(mockPartnershipRepository, 'insert', async () => partnership);
+
+      const result = await sut.acceptInvitation('invitee-id', 'invitation-id');
+
+      assert.deepEqual(result, partnership);
+      assert.equal(mockPartnerInvitationRepository.updateStatus.mock.calls.length, 1);
+      assert.equal(mockPartnershipRepository.insert.mock.calls.length, 1);
+    });
+
     it('should throw InvitationNotFoundError when not found', async () => {
       const { sut } = makeSut();
       mock.method(mockPartnerInvitationRepository, 'findById', async () => null);
@@ -137,6 +156,145 @@ describe('PartnershipService', () => {
       await assert.rejects(
         async () => sut.acceptInvitation('partner-id', 'nonexistent'),
         new InvitationNotFoundError(),
+      );
+    });
+
+    it('should throw InvitationNotPendingError when invitation is not pending', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnerInvitationRepository, 'findById', async () => ({
+        ...invitation,
+        status: InvitationStatus.ACCEPTED,
+      }));
+
+      await assert.rejects(
+        async () => sut.acceptInvitation('invitee-id', 'invitation-id'),
+        new InvitationNotPendingError(),
+      );
+    });
+
+    it('should throw InvitationNotFoundError when customer email does not match invitee', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnerInvitationRepository, 'findById', async () => invitation);
+      mock.method(mockCustomerRepository, 'findById', async () => ({
+        ...invitee,
+        email: 'wrong@test.com',
+      }));
+
+      await assert.rejects(
+        async () => sut.acceptInvitation('invitee-id', 'invitation-id'),
+        new InvitationNotFoundError(),
+      );
+    });
+
+    it('should throw AlreadyHasPartnerError when invitee already has a partner', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnerInvitationRepository, 'findById', async () => invitation);
+      mock.method(mockCustomerRepository, 'findById', async () => invitee);
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
+
+      await assert.rejects(
+        async () => sut.acceptInvitation('invitee-id', 'invitation-id'),
+        new AlreadyHasPartnerError(),
+      );
+    });
+  });
+
+  describe('declineInvitation()', () => {
+    it('should decline a pending invitation', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnerInvitationRepository, 'findById', async () => invitation);
+      mock.method(mockCustomerRepository, 'findById', async () => invitee);
+
+      await sut.declineInvitation('invitee-id', 'invitation-id');
+
+      assert.equal(mockPartnerInvitationRepository.updateStatus.mock.calls.length, 1);
+      const args = mockPartnerInvitationRepository.updateStatus.mock.calls[0]?.arguments;
+      assert.equal(args?.[0], 'invitation-id');
+      assert.equal(args?.[1], InvitationStatus.DECLINED);
+    });
+
+    it('should throw InvitationNotFoundError when not found', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnerInvitationRepository, 'findById', async () => null);
+
+      await assert.rejects(
+        async () => sut.declineInvitation('invitee-id', 'nonexistent'),
+        new InvitationNotFoundError(),
+      );
+    });
+
+    it('should throw InvitationNotPendingError when not pending', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnerInvitationRepository, 'findById', async () => ({
+        ...invitation,
+        status: InvitationStatus.DECLINED,
+      }));
+
+      await assert.rejects(
+        async () => sut.declineInvitation('invitee-id', 'invitation-id'),
+        new InvitationNotPendingError(),
+      );
+    });
+
+    it('should throw InvitationNotFoundError when customer email does not match', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnerInvitationRepository, 'findById', async () => invitation);
+      mock.method(mockCustomerRepository, 'findById', async () => ({
+        ...invitee,
+        email: 'wrong@test.com',
+      }));
+
+      await assert.rejects(
+        async () => sut.declineInvitation('invitee-id', 'invitation-id'),
+        new InvitationNotFoundError(),
+      );
+    });
+  });
+
+  describe('cancelInvitation()', () => {
+    it('should cancel a pending invitation owned by the customer', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnerInvitationRepository, 'findById', async () => invitation);
+
+      await sut.cancelInvitation('customer-id', 'invitation-id');
+
+      assert.equal(mockPartnerInvitationRepository.delete.mock.calls.length, 1);
+      assert.equal(
+        mockPartnerInvitationRepository.delete.mock.calls[0]?.arguments[0],
+        'invitation-id',
+      );
+    });
+
+    it('should throw InvitationNotFoundError when not found', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnerInvitationRepository, 'findById', async () => null);
+
+      await assert.rejects(
+        async () => sut.cancelInvitation('customer-id', 'nonexistent'),
+        new InvitationNotFoundError(),
+      );
+    });
+
+    it('should throw InvitationNotFoundError when customer is not the inviter', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnerInvitationRepository, 'findById', async () => invitation);
+
+      await assert.rejects(
+        async () => sut.cancelInvitation('other-customer', 'invitation-id'),
+        new InvitationNotFoundError(),
+      );
+    });
+
+    it('should throw InvitationNotPendingError when invitation is not pending', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnerInvitationRepository, 'findById', async () => ({
+        ...invitation,
+        status: InvitationStatus.ACCEPTED,
+      }));
+
+      await assert.rejects(
+        async () => sut.cancelInvitation('customer-id', 'invitation-id'),
+        new InvitationNotPendingError(),
       );
     });
   });
@@ -170,6 +328,111 @@ describe('PartnershipService', () => {
       await sut.dissolvePartnership('customer-id');
 
       assert.equal(mockPartnershipRepository.delete.mock.calls[0]?.arguments[0], 'partnership-id');
+    });
+  });
+
+  describe('getContributionRules()', () => {
+    it('should return contribution rules for partnership', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
+      const rule = {
+        id: 'rule-id',
+        partnershipId: 'partnership-id',
+        type: ContributionType.EQUAL,
+        customerAPercentage: null,
+        customerBPercentage: null,
+        createdAt: '2024-01-01T00:00:00.000Z',
+        updatedAt: '2024-01-01T00:00:00.000Z',
+      };
+      mock.method(mockContributionRuleRepository, 'findByPartnershipId', async () => rule);
+
+      const result = await sut.getContributionRules('customer-id');
+
+      assert.deepEqual(result, rule);
+    });
+
+    it('should return null when no rules exist', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
+      mock.method(mockContributionRuleRepository, 'findByPartnershipId', async () => null);
+
+      const result = await sut.getContributionRules('customer-id');
+
+      assert.equal(result, null);
+    });
+
+    it('should throw PartnershipNotFoundError when no partnership', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => null);
+
+      await assert.rejects(
+        async () => sut.getContributionRules('customer-id'),
+        new PartnershipNotFoundError(),
+      );
+    });
+  });
+
+  describe('getSharedAccounts()', () => {
+    it('should return shared accounts for partnership', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
+      const sharedAccount = {
+        id: 'shared-acc-id',
+        partnershipId: 'partnership-id',
+        bankAccountId: 'bank-acc-id',
+        sharedByCustomerId: 'customer-id',
+        createdAt: '2024-01-01T00:00:00.000Z',
+      };
+      mock.method(mockSharedAccountRepository, 'findByPartnershipId', async () => [sharedAccount]);
+
+      const result = await sut.getSharedAccounts('customer-id');
+
+      assert.deepEqual(result, [sharedAccount]);
+    });
+
+    it('should throw PartnershipNotFoundError when no partnership', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => null);
+
+      await assert.rejects(
+        async () => sut.getSharedAccounts('customer-id'),
+        new PartnershipNotFoundError(),
+      );
+    });
+  });
+
+  describe('setSharedAccounts()', () => {
+    it('should replace shared accounts for partnership', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
+      const sharedAccount = {
+        id: 'shared-acc-id',
+        partnershipId: 'partnership-id',
+        bankAccountId: 'bank-acc-1',
+        sharedByCustomerId: 'customer-id',
+        createdAt: '2024-01-01T00:00:00.000Z',
+      };
+      mock.method(mockSharedAccountRepository, 'replaceAll', async () => [sharedAccount]);
+
+      const result = await sut.setSharedAccounts('customer-id', {
+        bankAccountIds: ['bank-acc-1'],
+      });
+
+      assert.deepEqual(result, [sharedAccount]);
+      const replaceArgs = mockSharedAccountRepository.replaceAll.mock.calls[0]?.arguments;
+      assert.equal(replaceArgs?.[0], 'partnership-id');
+      assert.equal(replaceArgs?.[1], 'customer-id');
+      assert.deepEqual(replaceArgs?.[2], ['bank-acc-1']);
+    });
+
+    it('should throw PartnershipNotFoundError when no partnership', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => null);
+
+      await assert.rejects(
+        async () => sut.setSharedAccounts('customer-id', { bankAccountIds: ['acc-1'] }),
+        new PartnershipNotFoundError(),
+      );
     });
   });
 

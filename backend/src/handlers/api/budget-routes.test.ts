@@ -14,9 +14,17 @@ import { mockJwtService } from '../../test/mocks/MockJwtService.js';
 import {
   makeAddItemRoute,
   makeCreateCategoryRoute,
+  makeCreateJointPlanRoute,
   makeCreatePersonalPlanRoute,
+  makeDeleteCategoryRoute,
+  makeDeleteItemRoute,
+  makeDeleteJointPlanRoute,
+  makeDeletePersonalPlanRoute,
+  makeGetJointPlanRoute,
   makeGetPersonalPlanRoute,
   makeListCategoriesRoute,
+  makeUpdateCategoryRoute,
+  makeUpdateItemRoute,
 } from './budget-routes.js';
 
 describe('budget-routes', () => {
@@ -161,6 +169,150 @@ describe('budget-routes', () => {
       );
 
       assert.equal(result.statusCode, 404);
+    });
+  });
+
+  describe('makeUpdateCategoryRoute()', () => {
+    it('should return 200 with updated category', async () => {
+      const route = makeUpdateCategoryRoute(mockBudgetCategoryService);
+      const updated = { id: '1', name: 'Renamed', icon: null, isSystem: false };
+      mock.method(mockBudgetCategoryService, 'updateCategory', async () => updated);
+
+      const result = await route(
+        makeEvent({
+          pathParameters: { id: 'cat-1' },
+          body: JSON.stringify({ name: 'Renamed' }),
+        }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 200);
+      assert.deepEqual(JSON.parse(result.body), updated);
+    });
+
+    it('should return 400 for invalid body', async () => {
+      const route = makeUpdateCategoryRoute(mockBudgetCategoryService);
+
+      const result = await route(
+        makeEvent({
+          pathParameters: { id: 'cat-1' },
+          body: JSON.stringify({ name: '' }),
+        }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 400);
+    });
+  });
+
+  describe('makeDeleteCategoryRoute()', () => {
+    it('should return 204 on success', async () => {
+      const route = makeDeleteCategoryRoute(mockBudgetCategoryService);
+      mock.method(mockBudgetCategoryService, 'deleteCategory', async () => {});
+
+      const result = await route(makeEvent({ pathParameters: { id: 'cat-1' } }), 'customer-id');
+
+      assert.equal(result.statusCode, 204);
+    });
+  });
+
+  describe('makeDeletePersonalPlanRoute()', () => {
+    it('should return 204 on success', async () => {
+      const route = makeDeletePersonalPlanRoute(mockBudgetPlanService);
+      mock.method(mockBudgetPlanService, 'deletePersonalPlan', async () => {});
+
+      const result = await route(makeEvent({ pathParameters: { id: 'plan-1' } }), 'customer-id');
+
+      assert.equal(result.statusCode, 204);
+    });
+  });
+
+  describe('makeGetJointPlanRoute()', () => {
+    it('should return 200 with joint plan and items', async () => {
+      const route = makeGetJointPlanRoute(mockBudgetPlanService);
+      const data = { plan: { id: 'jp-1' }, items: [{ id: 'i-1', name: 'Groceries' }] };
+      mock.method(mockBudgetPlanService, 'getJointPlan', async () => data);
+
+      const result = await route(
+        makeEvent({ queryStringParameters: { yearMonth: '2024-09' } }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 200);
+      assert.deepEqual(JSON.parse(result.body), data);
+    });
+
+    it('should return 200 with null plan when not found', async () => {
+      const route = makeGetJointPlanRoute(mockBudgetPlanService);
+      mock.method(mockBudgetPlanService, 'getJointPlan', async () => null);
+
+      const result = await route(
+        makeEvent({ queryStringParameters: { yearMonth: '2024-09' } }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 200);
+      assert.deepEqual(JSON.parse(result.body), { plan: null, items: [] });
+    });
+  });
+
+  describe('makeCreateJointPlanRoute()', () => {
+    it('should return 201 with created joint plan', async () => {
+      const route = makeCreateJointPlanRoute(mockBudgetPlanService);
+      const data = { plan: { id: 'jp-1', yearMonth: '2024-09' }, items: [] };
+      mock.method(mockBudgetPlanService, 'createJointPlan', async () => data);
+
+      const result = await route(
+        makeEvent({ body: JSON.stringify({ yearMonth: '2024-09', currencyCode: 'USD' }) }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 201);
+      assert.deepEqual(JSON.parse(result.body), data);
+    });
+  });
+
+  describe('makeDeleteJointPlanRoute()', () => {
+    it('should return 204 on success', async () => {
+      const route = makeDeleteJointPlanRoute(mockBudgetPlanService);
+      mock.method(mockBudgetPlanService, 'deleteJointPlan', async () => {});
+
+      const result = await route(makeEvent({ pathParameters: { id: 'jp-1' } }), 'customer-id');
+
+      assert.equal(result.statusCode, 204);
+    });
+  });
+
+  describe('makeUpdateItemRoute()', () => {
+    it('should return 200 with updated item', async () => {
+      const route = makeUpdateItemRoute(mockBudgetPlanService);
+      const item = { id: 'item-1', name: 'Updated Rent', plannedAmount: 300000 };
+      mock.method(mockBudgetPlanService, 'updateItem', async () => item);
+
+      const result = await route(
+        makeEvent({
+          pathParameters: { planId: 'plan-1', id: 'item-1' },
+          body: JSON.stringify({ name: 'Updated Rent', plannedAmount: 300000 }),
+        }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 200);
+      assert.deepEqual(JSON.parse(result.body), item);
+    });
+  });
+
+  describe('makeDeleteItemRoute()', () => {
+    it('should return 204 on success', async () => {
+      const route = makeDeleteItemRoute(mockBudgetPlanService);
+      mock.method(mockBudgetPlanService, 'deleteItem', async () => {});
+
+      const result = await route(
+        makeEvent({ pathParameters: { planId: 'plan-1', id: 'item-1' } }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 204);
     });
   });
 });

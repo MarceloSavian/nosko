@@ -6,8 +6,10 @@ import { mockJwtService } from '../../test/mocks/MockJwtService.js';
 import { mockTransactionService } from '../../test/mocks/MockTransactionService.js';
 import {
   makeCreateTransactionRoute,
+  makeDeleteTransactionRoute,
   makeListTransactionsRoute,
   makeTransactionHandler,
+  makeUpdateTransactionRoute,
 } from './transaction-routes.js';
 
 describe('transaction-routes', () => {
@@ -57,6 +59,36 @@ describe('transaction-routes', () => {
 
       assert.equal(result.statusCode, 201);
       assert.deepEqual(JSON.parse(result.body), tx);
+    });
+  });
+
+  describe('makeUpdateTransactionRoute()', () => {
+    it('should return 200 with updated transaction', async () => {
+      const route = makeUpdateTransactionRoute(mockTransactionService);
+      const updated = { id: 'tx-1', amount: -7500 };
+      mock.method(mockTransactionService, 'updateTransaction', async () => updated);
+
+      const result = await route(
+        makeEvent({
+          pathParameters: { id: 'tx-1' },
+          body: JSON.stringify({ amount: -7500 }),
+        }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 200);
+      assert.deepEqual(JSON.parse(result.body), updated);
+    });
+  });
+
+  describe('makeDeleteTransactionRoute()', () => {
+    it('should return 204 on success', async () => {
+      const route = makeDeleteTransactionRoute(mockTransactionService);
+      mock.method(mockTransactionService, 'deleteTransaction', async () => {});
+
+      const result = await route(makeEvent({ pathParameters: { id: 'tx-1' } }), 'customer-id');
+
+      assert.equal(result.statusCode, 204);
     });
   });
 

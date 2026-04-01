@@ -6,10 +6,13 @@ import { resetMock } from '../../test/helpers/resetMock.js';
 import { mockAccountService } from '../../test/mocks/MockAccountService.js';
 import { mockJwtService } from '../../test/mocks/MockJwtService.js';
 import {
+  makeAccountHandler,
   makeCreateAccountRoute,
+  makeDeleteAccountRoute,
   makeGetAccountRoute,
   makeGetOverviewRoute,
   makeListAccountsRoute,
+  makeUpdateAccountRoute,
 } from './account-routes.js';
 
 describe('account-routes', () => {
@@ -87,6 +90,54 @@ describe('account-routes', () => {
 
       assert.equal(result.statusCode, 200);
       assert.deepEqual(JSON.parse(result.body), overview);
+    });
+  });
+
+  describe('makeUpdateAccountRoute()', () => {
+    it('should return 200 with updated account', async () => {
+      const route = makeUpdateAccountRoute(mockAccountService);
+      const updated = { id: '1', accountName: 'Renamed' };
+      mock.method(mockAccountService, 'updateAccount', async () => updated);
+
+      const result = await route(
+        makeEvent({
+          pathParameters: { id: 'acc-1' },
+          body: JSON.stringify({ accountName: 'Renamed' }),
+        }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 200);
+      assert.deepEqual(JSON.parse(result.body), updated);
+    });
+  });
+
+  describe('makeDeleteAccountRoute()', () => {
+    it('should return 204 on success', async () => {
+      const route = makeDeleteAccountRoute(mockAccountService);
+      mock.method(mockAccountService, 'deleteAccount', async () => {});
+
+      const result = await route(makeEvent({ pathParameters: { id: 'acc-1' } }), 'customer-id');
+
+      assert.equal(result.statusCode, 204);
+    });
+  });
+
+  describe('makeAccountHandler()', () => {
+    it('should return 401 without a token', async () => {
+      const handler = makeAccountHandler(mockAccountService, mockJwtService);
+
+      const result = await handler(makeEvent({ headers: {} }));
+
+      assert.equal(result.statusCode, 401);
+    });
+
+    it('should return 404 for unknown routes', async () => {
+      const handler = makeAccountHandler(mockAccountService, mockJwtService);
+
+      const result = await handler(makeEvent({ routeKey: 'PATCH /accounts/unknown' }));
+
+      assert.equal(result.statusCode, 404);
     });
   });
 });

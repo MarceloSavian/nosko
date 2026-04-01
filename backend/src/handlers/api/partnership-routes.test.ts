@@ -1,15 +1,28 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
-import { InvitationStatus } from '../../domain/models/partnership/Partnership.js';
+import {
+  ContributionType,
+  InvitationStatus,
+  type SharedAccountSchema,
+} from '../../domain/models/partnership/Partnership.js';
 import { BaseError } from '../../shared/error.js';
 import { resetMock } from '../../test/helpers/resetMock.js';
 import { mockJwtService } from '../../test/mocks/MockJwtService.js';
 import { mockPartnershipService } from '../../test/mocks/MockPartnershipService.js';
 import {
+  makeAcceptInvitationRoute,
+  makeCancelInvitationRoute,
+  makeDeclineInvitationRoute,
+  makeDissolvePartnershipRoute,
+  makeGetContributionRulesRoute,
   makeGetPartnershipRoute,
+  makeGetSharedAccountsRoute,
   makeInvitePartnerRoute,
+  makeListInvitationsRoute,
   makePartnershipHandler,
+  makeSetContributionRulesRoute,
+  makeSetSharedAccountsRoute,
 } from './partnership-routes.js';
 
 describe('partnership-routes', () => {
@@ -67,6 +80,147 @@ describe('partnership-routes', () => {
       const result = await route(makeEvent(), 'customer-id');
 
       assert.equal(result.statusCode, 404);
+    });
+  });
+
+  describe('makeListInvitationsRoute()', () => {
+    it('should return 200 with invitations', async () => {
+      const route = makeListInvitationsRoute(mockPartnershipService);
+      const invitations = [
+        { id: '1', inviteeEmail: 'a@test.com', status: InvitationStatus.PENDING },
+      ];
+      mock.method(mockPartnershipService, 'listInvitations', async () => invitations);
+
+      const result = await route(makeEvent(), 'customer-id');
+
+      assert.equal(result.statusCode, 200);
+      assert.deepEqual(JSON.parse(result.body), invitations);
+    });
+  });
+
+  describe('makeAcceptInvitationRoute()', () => {
+    it('should return 200 with partnership', async () => {
+      const route = makeAcceptInvitationRoute(mockPartnershipService);
+      const partnership = { id: 'p-1', customerAId: 'a', customerBId: 'b' };
+      mock.method(mockPartnershipService, 'acceptInvitation', async () => partnership);
+
+      const result = await route(makeEvent({ pathParameters: { id: 'inv-1' } }), 'customer-id');
+
+      assert.equal(result.statusCode, 200);
+      assert.deepEqual(JSON.parse(result.body), partnership);
+    });
+  });
+
+  describe('makeDeclineInvitationRoute()', () => {
+    it('should return 204 on success', async () => {
+      const route = makeDeclineInvitationRoute(mockPartnershipService);
+      mock.method(mockPartnershipService, 'declineInvitation', async () => {});
+
+      const result = await route(makeEvent({ pathParameters: { id: 'inv-1' } }), 'customer-id');
+
+      assert.equal(result.statusCode, 204);
+    });
+  });
+
+  describe('makeCancelInvitationRoute()', () => {
+    it('should return 204 on success', async () => {
+      const route = makeCancelInvitationRoute(mockPartnershipService);
+      mock.method(mockPartnershipService, 'cancelInvitation', async () => {});
+
+      const result = await route(makeEvent({ pathParameters: { id: 'inv-1' } }), 'customer-id');
+
+      assert.equal(result.statusCode, 204);
+    });
+  });
+
+  describe('makeDissolvePartnershipRoute()', () => {
+    it('should return 204 on success', async () => {
+      const route = makeDissolvePartnershipRoute(mockPartnershipService);
+      mock.method(mockPartnershipService, 'dissolvePartnership', async () => {});
+
+      const result = await route(makeEvent(), 'customer-id');
+
+      assert.equal(result.statusCode, 204);
+    });
+  });
+
+  describe('makeGetContributionRulesRoute()', () => {
+    it('should return 200 with rules', async () => {
+      const route = makeGetContributionRulesRoute(mockPartnershipService);
+      const rules = {
+        id: 'r-1',
+        partnershipId: 'p-1',
+        type: ContributionType.EQUAL,
+        customerAPercentage: null,
+        customerBPercentage: null,
+      };
+      mock.method(mockPartnershipService, 'getContributionRules', async () => rules);
+
+      const result = await route(makeEvent(), 'customer-id');
+
+      assert.equal(result.statusCode, 200);
+      assert.deepEqual(JSON.parse(result.body), rules);
+    });
+  });
+
+  describe('makeSetContributionRulesRoute()', () => {
+    it('should return 200 with updated rules', async () => {
+      const route = makeSetContributionRulesRoute(mockPartnershipService);
+      const rules = {
+        id: 'r-1',
+        partnershipId: 'p-1',
+        type: ContributionType.EQUAL,
+      };
+      mock.method(mockPartnershipService, 'setContributionRules', async () => rules);
+
+      const result = await route(
+        makeEvent({ body: JSON.stringify({ type: 'EQUAL' }) }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 200);
+      assert.deepEqual(JSON.parse(result.body), rules);
+    });
+  });
+
+  describe('makeGetSharedAccountsRoute()', () => {
+    it('should return 200 with shared accounts', async () => {
+      const route = makeGetSharedAccountsRoute(mockPartnershipService);
+      const accounts: SharedAccountSchema[] = [
+        {
+          id: 'sa-1',
+          partnershipId: 'p-1',
+          bankAccountId: 'ba-1',
+          sharedByCustomerId: 'c-1',
+          createdAt: '',
+        },
+      ];
+      mock.method(mockPartnershipService, 'getSharedAccounts', async () => accounts);
+
+      const result = await route(makeEvent(), 'customer-id');
+
+      assert.equal(result.statusCode, 200);
+      assert.deepEqual(JSON.parse(result.body), accounts);
+    });
+  });
+
+  describe('makeSetSharedAccountsRoute()', () => {
+    it('should return 200 with updated shared accounts', async () => {
+      const route = makeSetSharedAccountsRoute(mockPartnershipService);
+      const accounts: SharedAccountSchema[] = [];
+      mock.method(mockPartnershipService, 'setSharedAccounts', async () => accounts);
+
+      const result = await route(
+        makeEvent({
+          body: JSON.stringify({
+            bankAccountIds: ['550e8400-e29b-41d4-a716-446655440000'],
+          }),
+        }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 200);
+      assert.deepEqual(JSON.parse(result.body), accounts);
     });
   });
 
