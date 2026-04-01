@@ -31,3 +31,10 @@ export const customerSchema = z.object({
 export type CustomerSchema = z.infer<typeof customerSchema>;
 
 export type LoginResult = { accessToken: string };
+
+export const TokenType = {
+  EMAIL_VERIFICATION: 'EMAIL_VERIFICATION',
+  PASSWORD_RESET: 'PASSWORD_RESET',
+} as const;
+
+export type TokenType = (typeof TokenType)[keyof typeof TokenType];

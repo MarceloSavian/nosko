@@ -21,6 +21,7 @@ class MockCustomerRepository implements ICustomerRepository {
     verifiedAt: null,
     createdAt: '',
   }));
+  updatePassword = mock.fn(async (_id: string, _passwordHash: string): Promise<void> => {});
 }
 
 export const mockCustomerRepository = new MockCustomerRepository();

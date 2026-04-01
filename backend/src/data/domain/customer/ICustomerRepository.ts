@@ -5,4 +5,5 @@ export interface ICustomerRepository {
   findByEmailWithPassword(email: string): Promise<(CustomerSchema & { passwordHash: string }) | null>;
   insert(data: { email: string; passwordHash: string }): Promise<CustomerSchema>;
   markVerified(id: string): Promise<CustomerSchema>;
+  updatePassword(id: string, passwordHash: string): Promise<void>;
 }

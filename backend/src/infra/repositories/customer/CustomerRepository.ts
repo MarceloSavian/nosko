@@ -63,4 +63,8 @@ export class CustomerRepository implements ICustomerRepository {
 
     return toSchema(row);
   }
+
+  async updatePassword(id: string, passwordHash: string): Promise<void> {
+    await this.pool.query('UPDATE customers SET password_hash = $1 WHERE id = $2', [passwordHash, id]);
+  }
 }

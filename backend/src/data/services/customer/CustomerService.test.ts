@@ -2,7 +2,7 @@ import { beforeEach, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { mockCustomerRepository } from '../../../test/mocks/MockCustomerRepository.js';
 import { mockHasher } from '../../../test/mocks/MockHasher.js';
-import { mockVerificationTokenRepository } from '../../../test/mocks/MockVerificationTokenRepository.js';
+import { mockTokenRepository } from '../../../test/mocks/MockTokenRepository.js';
 import { mockEmailService } from '../../../test/mocks/MockEmailService.js';
 import { mockJwtService } from '../../../test/mocks/MockJwtService.js';
 import { resetMock } from '../../../test/helpers/resetMock.js';
@@ -22,7 +22,7 @@ describe('CustomerService', () => {
     const sut = new CustomerService(
       mockCustomerRepository,
       mockHasher,
-      mockVerificationTokenRepository,
+      mockTokenRepository,
       mockEmailService,
       mockJwtService,
     );
@@ -36,7 +36,7 @@ describe('CustomerService', () => {
   beforeEach(() => {
     resetMock(mockCustomerRepository);
     resetMock(mockHasher);
-    resetMock(mockVerificationTokenRepository);
+    resetMock(mockTokenRepository);
     resetMock(mockEmailService);
     resetMock(mockJwtService);
   });
@@ -47,7 +47,7 @@ describe('CustomerService', () => {
       mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
       mockHasher.hash.mock.mockImplementationOnce(async () => 'hashed-password');
       mockCustomerRepository.insert.mock.mockImplementationOnce(async () => customer);
-      mockVerificationTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
+      mockTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
       mockEmailService.send.mock.mockImplementationOnce(async () => undefined);
 
       await sut.signup({ email: 'test@test.com', password: 'password123' });
@@ -71,7 +71,7 @@ describe('CustomerService', () => {
       mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
       mockHasher.hash.mock.mockImplementationOnce(async () => 'hashed-password');
       mockCustomerRepository.insert.mock.mockImplementationOnce(async () => customer);
-      mockVerificationTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
+      mockTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
       mockEmailService.send.mock.mockImplementationOnce(async () => undefined);
 
       await sut.signup({ email: 'test@test.com', password: 'password123' });
@@ -84,7 +84,7 @@ describe('CustomerService', () => {
       mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
       mockHasher.hash.mock.mockImplementationOnce(async () => 'hashed-password');
       mockCustomerRepository.insert.mock.mockImplementationOnce(async () => customer);
-      mockVerificationTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
+      mockTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
       mockEmailService.send.mock.mockImplementationOnce(async () => undefined);
 
       await sut.signup({ email: 'test@test.com', password: 'password123' });
@@ -98,7 +98,7 @@ describe('CustomerService', () => {
       mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
       mockHasher.hash.mock.mockImplementationOnce(async () => 'hashed-password');
       mockCustomerRepository.insert.mock.mockImplementationOnce(async () => customer);
-      mockVerificationTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
+      mockTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
       mockEmailService.send.mock.mockImplementationOnce(async () => undefined);
 
       const result = await sut.signup({ email: 'test@test.com', password: 'password123' });
@@ -133,7 +133,7 @@ describe('CustomerService', () => {
     it('should throw InvalidVerificationCodeError if token is not found', async () => {
       const { sut } = makeSut();
       mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
-      mockVerificationTokenRepository.find.mock.mockImplementationOnce(async () => null);
+      mockTokenRepository.find.mock.mockImplementationOnce(async () => null);
 
       await assert.rejects(
         async () => sut.verifyEmail({ email: 'test@test.com', code: '000000' }),
@@ -145,8 +145,8 @@ describe('CustomerService', () => {
       const { sut } = makeSut();
       const expiredToken = { id: 'token-id', expiresAt: new Date(Date.now() - 60_000) };
       mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
-      mockVerificationTokenRepository.find.mock.mockImplementationOnce(async () => expiredToken);
-      mockVerificationTokenRepository.delete.mock.mockImplementationOnce(async () => undefined);
+      mockTokenRepository.find.mock.mockImplementationOnce(async () => expiredToken);
+      mockTokenRepository.delete.mock.mockImplementationOnce(async () => undefined);
 
       await assert.rejects(
         async () => sut.verifyEmail({ email: 'test@test.com', code: '123456' }),
@@ -157,14 +157,14 @@ describe('CustomerService', () => {
     it('should mark customer as verified and return updated customer', async () => {
       const { sut } = makeSut();
       mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
-      mockVerificationTokenRepository.find.mock.mockImplementationOnce(async () => token);
-      mockVerificationTokenRepository.delete.mock.mockImplementationOnce(async () => undefined);
+      mockTokenRepository.find.mock.mockImplementationOnce(async () => token);
+      mockTokenRepository.delete.mock.mockImplementationOnce(async () => undefined);
       mockCustomerRepository.markVerified.mock.mockImplementationOnce(async () => verifiedCustomer);
 
       const result = await sut.verifyEmail({ email: 'test@test.com', code: '123456' });
 
       assert.deepEqual(result, verifiedCustomer);
-      assert.equal(mockVerificationTokenRepository.delete.mock.callCount(), 1);
+      assert.equal(mockTokenRepository.delete.mock.callCount(), 1);
     });
   });
 
