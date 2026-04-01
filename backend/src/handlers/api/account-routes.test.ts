@@ -80,7 +80,7 @@ describe('account-routes', () => {
   describe('makeGetOverviewRoute()', () => {
     it('should return 200 with overview', async () => {
       const route = makeGetOverviewRoute(mockAccountService);
-      const overview = { totalsByCurrency: [{ currencyCode: 'USD', total: '1000.00' }] };
+      const overview = { totalsByCurrency: [{ currencyCode: 'USD', total: 100000 }] };
       mock.method(mockAccountService, 'getOverview', async () => overview);
 
       const result = await route(makeEvent(), 'customer-id');

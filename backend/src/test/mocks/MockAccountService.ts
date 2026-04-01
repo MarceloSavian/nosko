@@ -13,7 +13,7 @@ const defaultAccount: BankAccountSchema = {
   accountName: '',
   accountNumberLast4: null,
   currencyCode: 'USD',
-  balance: '0',
+  balance: 0,
   accountType: null,
   balanceUpdatedAt: null,
   createdAt: '',
@@ -42,7 +42,7 @@ class MockAccountService implements IAccountService {
   getOverview = mock.fn(
     async (
       _customerId: string,
-    ): Promise<{ totalsByCurrency: { currencyCode: string; total: string }[] }> => ({
+    ): Promise<{ totalsByCurrency: { currencyCode: string; total: number }[] }> => ({
       totalsByCurrency: [],
     }),
   );

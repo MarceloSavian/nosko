@@ -51,7 +51,7 @@ export class AccountService implements IAccountService {
 
   async getOverview(
     customerId: string,
-  ): Promise<{ totalsByCurrency: { currencyCode: string; total: string }[] }> {
+  ): Promise<{ totalsByCurrency: { currencyCode: string; total: number }[] }> {
     const totals = await this.bankAccountRepository.getOverviewByCustomerId(customerId);
     return { totalsByCurrency: totals };
   }

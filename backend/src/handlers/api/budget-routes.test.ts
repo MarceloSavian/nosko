@@ -1,7 +1,11 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
-import { BudgetItemRecurrence, BudgetItemType } from '../../domain/models/budget/BudgetPlan.js';
+import {
+  BudgetItemDirection,
+  BudgetItemRecurrence,
+  BudgetItemType,
+} from '../../domain/models/budget/BudgetPlan.js';
 import { BaseError } from '../../shared/error.js';
 import { resetMock } from '../../test/helpers/resetMock.js';
 import { mockBudgetCategoryService } from '../../test/mocks/MockBudgetCategoryService.js';
@@ -122,7 +126,8 @@ describe('budget-routes', () => {
           body: JSON.stringify({
             categoryId: '550e8400-e29b-41d4-a716-446655440000',
             name: 'Rent',
-            plannedAmount: 2800,
+            plannedAmount: 280000,
+            direction: BudgetItemDirection.EXPENSE,
             type: BudgetItemType.FIXED,
             recurrence: BudgetItemRecurrence.PERMANENT,
           }),
@@ -146,7 +151,8 @@ describe('budget-routes', () => {
           body: JSON.stringify({
             categoryId: '550e8400-e29b-41d4-a716-446655440000',
             name: 'Rent',
-            plannedAmount: 2800,
+            plannedAmount: 280000,
+            direction: BudgetItemDirection.EXPENSE,
             type: BudgetItemType.FIXED,
             recurrence: BudgetItemRecurrence.PERMANENT,
           }),

@@ -36,7 +36,7 @@ describe('BankAccountRepository', () => {
         institutionId,
         accountName: 'My Checking',
         currencyCode: 'EUR',
-        balance: 1000.5,
+        balance: 100050,
         accountType: AccountType.CHECKING,
       });
 
@@ -45,7 +45,7 @@ describe('BankAccountRepository', () => {
       assert.equal(result.institutionId, institutionId);
       assert.equal(result.accountName, 'My Checking');
       assert.equal(result.currencyCode, 'EUR');
-      assert.equal(Number(result.balance), 1000.5);
+      assert.equal(result.balance, 100050);
       assert.equal(result.accountType, AccountType.CHECKING);
       assert.equal(result.accountNumberLast4, null);
       assert.equal(result.balanceUpdatedAt, null);
@@ -182,9 +182,9 @@ describe('BankAccountRepository', () => {
       });
       assert.equal(inserted.balanceUpdatedAt, null);
 
-      const result = await sut.update(inserted.id, { balance: 999.99 });
+      const result = await sut.update(inserted.id, { balance: 99999 });
 
-      assert.equal(Number(result.balance), 999.99);
+      assert.equal(result.balance, 99999);
       assert.ok(result.balanceUpdatedAt);
     });
 
@@ -216,7 +216,7 @@ describe('BankAccountRepository', () => {
       });
 
       assert.equal(result.accountName, 'Updated');
-      assert.equal(Number(result.balance), 500);
+      assert.equal(result.balance, 500);
       assert.equal(result.accountType, AccountType.INVESTMENT);
     });
   });
@@ -255,28 +255,28 @@ describe('BankAccountRepository', () => {
         institutionId,
         accountName: 'EUR 1',
         currencyCode: 'EUR',
-        balance: 100,
+        balance: 10000,
       });
       await sut.insert(customerId, {
         institutionId,
         accountName: 'EUR 2',
         currencyCode: 'EUR',
-        balance: 250.5,
+        balance: 25050,
       });
       await sut.insert(customerId, {
         institutionId,
         accountName: 'USD 1',
         currencyCode: 'USD',
-        balance: 500,
+        balance: 50000,
       });
 
       const result = await sut.getOverviewByCustomerId(customerId);
 
       assert.equal(result.length, 2);
       assert.equal(result[0]!.currencyCode, 'EUR');
-      assert.equal(Number(result[0]!.total), 350.5);
+      assert.equal(result[0]!.total, 35050);
       assert.equal(result[1]!.currencyCode, 'USD');
-      assert.equal(Number(result[1]!.total), 500);
+      assert.equal(result[1]!.total, 50000);
     });
   });
 });

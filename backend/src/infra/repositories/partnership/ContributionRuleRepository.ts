@@ -9,8 +9,8 @@ type RuleRow = {
   id: string;
   partnership_id: string;
   type: string;
-  customer_a_percentage: string | null;
-  customer_b_percentage: string | null;
+  customer_a_percentage: number | null;
+  customer_b_percentage: number | null;
   created_at: Date;
   updated_at: Date;
 };

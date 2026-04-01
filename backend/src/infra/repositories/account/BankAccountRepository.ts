@@ -14,7 +14,7 @@ type BankAccountRow = {
   account_name: string;
   account_number_last4: string | null;
   currency_code: string;
-  balance: string;
+  balance: number;
   account_type: string | null;
   balance_updated_at: Date | null;
   created_at: Date;
@@ -116,9 +116,9 @@ export class BankAccountRepository implements IBankAccountRepository {
 
   async getOverviewByCustomerId(
     customerId: string,
-  ): Promise<{ currencyCode: string; total: string }[]> {
-    const result = await this.pool.query<{ currency_code: string; total: string }>(
-      'SELECT currency_code, SUM(balance)::TEXT as total FROM bank_accounts WHERE customer_id = $1 GROUP BY currency_code ORDER BY currency_code',
+  ): Promise<{ currencyCode: string; total: number }[]> {
+    const result = await this.pool.query<{ currency_code: string; total: number }>(
+      'SELECT currency_code, SUM(balance) as total FROM bank_accounts WHERE customer_id = $1 GROUP BY currency_code ORDER BY currency_code',
       [customerId],
     );
     return result.rows.map((row) => ({

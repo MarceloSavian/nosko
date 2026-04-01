@@ -13,7 +13,7 @@ const defaultAccount: BankAccountSchema = {
   accountName: '',
   accountNumberLast4: null,
   currencyCode: 'USD',
-  balance: '0',
+  balance: 0,
   accountType: null,
   balanceUpdatedAt: null,
   createdAt: '',
@@ -34,7 +34,7 @@ class MockBankAccountRepository implements IBankAccountRepository {
   );
   delete = mock.fn(async (_id: string): Promise<void> => {});
   getOverviewByCustomerId = mock.fn(
-    async (_customerId: string): Promise<{ currencyCode: string; total: string }[]> => [],
+    async (_customerId: string): Promise<{ currencyCode: string; total: number }[]> => [],
   );
 }
 

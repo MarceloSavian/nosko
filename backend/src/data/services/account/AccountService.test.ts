@@ -22,7 +22,7 @@ describe('AccountService', () => {
     accountName: 'Checking',
     accountNumberLast4: '1234',
     currencyCode: 'USD',
-    balance: '1000.00',
+    balance: 100000,
     accountType: AccountType.CHECKING,
     balanceUpdatedAt: null,
     createdAt: '2024-01-01T00:00:00.000Z',
@@ -116,8 +116,8 @@ describe('AccountService', () => {
     it('should return totals by currency', async () => {
       const { sut } = makeSut();
       const totals = [
-        { currencyCode: 'USD', total: '42910.00' },
-        { currencyCode: 'EUR', total: '12450.00' },
+        { currencyCode: 'USD', total: 4291000 },
+        { currencyCode: 'EUR', total: 1245000 },
       ];
       mock.method(mockBankAccountRepository, 'getOverviewByCustomerId', async () => totals);
 

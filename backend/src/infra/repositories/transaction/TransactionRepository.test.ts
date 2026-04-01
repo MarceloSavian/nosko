@@ -45,14 +45,14 @@ describe('TransactionRepository', () => {
     it('should insert a transaction and return the created record', async () => {
       const result = await sut.insert({
         bankAccountId: BANK_ACCOUNT_ID,
-        amount: -42.5,
+        amount: -4250,
         transactionDate: '2026-04-01',
         description: 'Grocery store',
       });
 
       assert.ok(result.id);
       assert.equal(result.bankAccountId, BANK_ACCOUNT_ID);
-      assert.equal(Number(result.amount), -42.5);
+      assert.equal(result.amount, -4250);
       assert.equal(result.description, 'Grocery store');
       assert.equal(result.transactionDate, '2026-04-01');
       assert.equal(result.categoryId, null);
@@ -84,7 +84,7 @@ describe('TransactionRepository', () => {
 
       assert.ok(result);
       assert.equal(result.id, tx.id);
-      assert.equal(Number(result.amount), -50);
+      assert.equal(result.amount, -50);
     });
 
     it('should return null when not found', async () => {
@@ -211,7 +211,7 @@ describe('TransactionRepository', () => {
 
       const result = await sut.update(tx.id, { amount: -75 });
 
-      assert.equal(Number(result.amount), -75);
+      assert.equal(result.amount, -75);
     });
 
     it('should update the description', async () => {

@@ -52,8 +52,8 @@ CREATE TABLE IF NOT EXISTS contribution_rules (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   partnership_id UUID NOT NULL REFERENCES partnerships(id) ON DELETE CASCADE,
   type VARCHAR(30) NOT NULL,
-  customer_a_percentage NUMERIC(5,2),
-  customer_b_percentage NUMERIC(5,2),
+  customer_a_percentage INT,
+  customer_b_percentage INT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS bank_accounts (
   account_name TEXT NOT NULL,
   account_number_last4 VARCHAR(4),
   currency_code VARCHAR(3) NOT NULL,
-  balance NUMERIC(15,2) NOT NULL DEFAULT 0,
+  balance BIGINT NOT NULL DEFAULT 0,
   account_type VARCHAR(20),
   balance_updated_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -118,7 +118,8 @@ CREATE TABLE IF NOT EXISTS budget_items (
   plan_id UUID NOT NULL REFERENCES budget_plans(id) ON DELETE CASCADE,
   category_id UUID NOT NULL REFERENCES budget_categories(id),
   name TEXT NOT NULL,
-  planned_amount NUMERIC(15,2) NOT NULL,
+  planned_amount BIGINT NOT NULL,
+  direction VARCHAR(10) NOT NULL,
   type VARCHAR(10) NOT NULL,
   recurrence VARCHAR(15) NOT NULL,
   installment_total INT,
@@ -134,7 +135,7 @@ CREATE TABLE IF NOT EXISTS transactions (
   bank_account_id UUID NOT NULL REFERENCES bank_accounts(id) ON DELETE CASCADE,
   category_id UUID REFERENCES budget_categories(id),
   budget_item_id UUID REFERENCES budget_items(id) ON DELETE SET NULL,
-  amount NUMERIC(15,2) NOT NULL,
+  amount BIGINT NOT NULL,
   description TEXT,
   transaction_date DATE NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()

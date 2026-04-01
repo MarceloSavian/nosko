@@ -29,7 +29,7 @@ export class DashboardService implements IDashboardService {
         ? await this.transactionRepository.findByFilters({ bankAccountIds, yearMonth })
         : [];
 
-    const totalSpending = transactions.reduce((sum, tx) => sum + Number(tx.amount), 0).toFixed(2);
+    const totalSpending = transactions.reduce((sum, tx) => sum + tx.amount, 0);
 
     // Get budget plan for the month
     const plan = await this.planRepository.findByCustomerAndMonth(customerId, yearMonth);
@@ -43,8 +43,7 @@ export class DashboardService implements IDashboardService {
       budgetSummary = items.map((item) => {
         const actual = transactions
           .filter((tx) => tx.budgetItemId === item.id)
-          .reduce((sum, tx) => sum + Math.abs(Number(tx.amount)), 0)
-          .toFixed(2);
+          .reduce((sum, tx) => sum + Math.abs(tx.amount), 0);
 
         return {
           categoryName: categoryMap.get(item.categoryId) ?? 'Unknown',

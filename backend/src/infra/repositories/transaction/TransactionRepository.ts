@@ -11,7 +11,7 @@ type TransactionRow = {
   bank_account_id: string;
   category_id: string | null;
   budget_item_id: string | null;
-  amount: string;
+  amount: number;
   description: string | null;
   transaction_date: Date;
   created_at: Date;

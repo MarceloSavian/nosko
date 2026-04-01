@@ -1,6 +1,7 @@
 import type { Pool } from 'pg';
 import type { IBudgetItemRepository } from '../../../data/domain/budget/IBudgetItemRepository.js';
 import type {
+  BudgetItemDirection,
   BudgetItemRecurrence,
   BudgetItemSchema,
   BudgetItemType,
@@ -13,7 +14,8 @@ type ItemRow = {
   plan_id: string;
   category_id: string;
   name: string;
-  planned_amount: string;
+  planned_amount: number;
+  direction: string;
   type: string;
   recurrence: string;
   installment_total: number | null;
@@ -30,6 +32,7 @@ function toSchema(row: ItemRow): BudgetItemSchema {
     categoryId: row.category_id,
     name: row.name,
     plannedAmount: row.planned_amount,
+    direction: row.direction as BudgetItemDirection,
     type: row.type as BudgetItemType,
     recurrence: row.recurrence as BudgetItemRecurrence,
     installmentTotal: row.installment_total,
@@ -41,7 +44,7 @@ function toSchema(row: ItemRow): BudgetItemSchema {
 }
 
 const COLUMNS =
-  'id, plan_id, category_id, name, planned_amount, type, recurrence, installment_total, installment_number, source_item_id, created_at, updated_at';
+  'id, plan_id, category_id, name, planned_amount, direction, type, recurrence, installment_total, installment_number, source_item_id, created_at, updated_at';
 
 export class BudgetItemRepository implements IBudgetItemRepository {
   constructor(private readonly pool: Pool) {}
@@ -70,13 +73,14 @@ export class BudgetItemRepository implements IBudgetItemRepository {
     sourceItemId?: string,
   ): Promise<BudgetItemSchema> {
     const result = await this.pool.query<ItemRow>(
-      `INSERT INTO budget_items (plan_id, category_id, name, planned_amount, type, recurrence, installment_total, installment_number, source_item_id)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING ${COLUMNS}`,
+      `INSERT INTO budget_items (plan_id, category_id, name, planned_amount, direction, type, recurrence, installment_total, installment_number, source_item_id)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING ${COLUMNS}`,
       [
         planId,
         input.categoryId,
         input.name,
         input.plannedAmount,
+        input.direction,
         input.type,
         input.recurrence,
         input.installmentTotal ?? null,

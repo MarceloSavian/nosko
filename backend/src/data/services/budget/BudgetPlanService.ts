@@ -166,7 +166,8 @@ export class BudgetPlanService implements IBudgetPlanService {
           {
             categoryId: item.categoryId,
             name: item.name,
-            plannedAmount: Number(item.plannedAmount),
+            plannedAmount: item.plannedAmount,
+            direction: item.direction,
             type: item.type,
             recurrence: BudgetItemRecurrence.INSTALLMENT,
             installmentTotal: total,
@@ -184,7 +185,8 @@ export class BudgetPlanService implements IBudgetPlanService {
         {
           categoryId: item.categoryId,
           name: item.name,
-          plannedAmount: Number(item.plannedAmount),
+          plannedAmount: item.plannedAmount,
+          direction: item.direction,
           type: item.type,
           recurrence: BudgetItemRecurrence.PERMANENT,
         },

@@ -1,6 +1,7 @@
 import { mock } from 'node:test';
 import type { IBudgetItemRepository } from '../../data/domain/budget/IBudgetItemRepository.js';
 import {
+  BudgetItemDirection,
   BudgetItemRecurrence,
   type BudgetItemSchema,
   BudgetItemType,
@@ -13,7 +14,8 @@ const defaultItem: BudgetItemSchema = {
   planId: '',
   categoryId: '',
   name: '',
-  plannedAmount: '0',
+  plannedAmount: 0,
+  direction: BudgetItemDirection.EXPENSE,
   type: BudgetItemType.FIXED,
   recurrence: BudgetItemRecurrence.PERMANENT,
   installmentTotal: null,

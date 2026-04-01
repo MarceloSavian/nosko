@@ -10,5 +10,5 @@ export interface IBankAccountRepository {
   insert(customerId: string, input: CreateBankAccountInput): Promise<BankAccountSchema>;
   update(id: string, input: UpdateBankAccountInput): Promise<BankAccountSchema>;
   delete(id: string): Promise<void>;
-  getOverviewByCustomerId(customerId: string): Promise<{ currencyCode: string; total: string }[]>;
+  getOverviewByCustomerId(customerId: string): Promise<{ currencyCode: string; total: number }[]>;
 }

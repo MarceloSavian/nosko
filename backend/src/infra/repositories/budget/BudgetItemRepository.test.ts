@@ -1,7 +1,11 @@
 import assert from 'node:assert/strict';
 import { before, beforeEach, describe, it } from 'node:test';
 import type { Pool } from 'pg';
-import { BudgetItemRecurrence, BudgetItemType } from '../../../domain/models/budget/BudgetPlan.js';
+import {
+  BudgetItemDirection,
+  BudgetItemRecurrence,
+  BudgetItemType,
+} from '../../../domain/models/budget/BudgetPlan.js';
 import { createTestDb } from '../../../test/helpers/createTestDb.js';
 import { BudgetItemRepository } from './BudgetItemRepository.js';
 
@@ -45,6 +49,7 @@ describe('BudgetItemRepository', () => {
         categoryId: CATEGORY_ID,
         name: 'Groceries',
         plannedAmount: 500,
+        direction: BudgetItemDirection.EXPENSE,
         type: BudgetItemType.ESTIMATED,
         recurrence: BudgetItemRecurrence.PERMANENT,
       });
@@ -68,6 +73,7 @@ describe('BudgetItemRepository', () => {
         categoryId: CATEGORY_ID,
         name: 'Laptop',
         plannedAmount: 200,
+        direction: BudgetItemDirection.EXPENSE,
         type: BudgetItemType.FIXED,
         recurrence: BudgetItemRecurrence.INSTALLMENT,
         installmentTotal: 12,
@@ -79,6 +85,7 @@ describe('BudgetItemRepository', () => {
           categoryId: CATEGORY_ID,
           name: 'Laptop',
           plannedAmount: 200,
+          direction: BudgetItemDirection.EXPENSE,
           type: BudgetItemType.FIXED,
           recurrence: BudgetItemRecurrence.INSTALLMENT,
           installmentTotal: 12,
@@ -105,6 +112,7 @@ describe('BudgetItemRepository', () => {
         categoryId: CATEGORY_ID,
         name: 'First',
         plannedAmount: 100,
+        direction: BudgetItemDirection.EXPENSE,
         type: BudgetItemType.FIXED,
         recurrence: BudgetItemRecurrence.PERMANENT,
       });
@@ -112,6 +120,7 @@ describe('BudgetItemRepository', () => {
         categoryId: CATEGORY_ID,
         name: 'Second',
         plannedAmount: 200,
+        direction: BudgetItemDirection.EXPENSE,
         type: BudgetItemType.ESTIMATED,
         recurrence: BudgetItemRecurrence.ONE_TIME,
       });
@@ -130,6 +139,7 @@ describe('BudgetItemRepository', () => {
         categoryId: CATEGORY_ID,
         name: 'Rent',
         plannedAmount: 1000,
+        direction: BudgetItemDirection.EXPENSE,
         type: BudgetItemType.FIXED,
         recurrence: BudgetItemRecurrence.PERMANENT,
       });
@@ -154,6 +164,7 @@ describe('BudgetItemRepository', () => {
         categoryId: CATEGORY_ID,
         name: 'Old',
         plannedAmount: 100,
+        direction: BudgetItemDirection.EXPENSE,
         type: BudgetItemType.FIXED,
         recurrence: BudgetItemRecurrence.PERMANENT,
       });
@@ -169,6 +180,7 @@ describe('BudgetItemRepository', () => {
         categoryId: CATEGORY_ID,
         name: 'Item',
         plannedAmount: 100,
+        direction: BudgetItemDirection.EXPENSE,
         type: BudgetItemType.FIXED,
         recurrence: BudgetItemRecurrence.PERMANENT,
       });
@@ -183,6 +195,7 @@ describe('BudgetItemRepository', () => {
         categoryId: CATEGORY_ID,
         name: 'Item',
         plannedAmount: 100,
+        direction: BudgetItemDirection.EXPENSE,
         type: BudgetItemType.FIXED,
         recurrence: BudgetItemRecurrence.PERMANENT,
       });
@@ -199,6 +212,7 @@ describe('BudgetItemRepository', () => {
         categoryId: CATEGORY_ID,
         name: 'ToDelete',
         plannedAmount: 100,
+        direction: BudgetItemDirection.EXPENSE,
         type: BudgetItemType.FIXED,
         recurrence: BudgetItemRecurrence.PERMANENT,
       });

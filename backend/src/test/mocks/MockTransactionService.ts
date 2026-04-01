@@ -11,7 +11,7 @@ const defaultTransaction: TransactionSchema = {
   bankAccountId: '',
   categoryId: null,
   budgetItemId: null,
-  amount: '0',
+  amount: 0,
   description: null,
   transactionDate: '',
   createdAt: '',

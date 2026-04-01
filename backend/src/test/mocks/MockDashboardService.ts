@@ -8,7 +8,7 @@ class MockDashboardService implements IDashboardService {
   getDashboard = mock.fn(
     async (_customerId: string, _yearMonth: string): Promise<DashboardData> => ({
       yearMonth: '',
-      totalSpending: '0',
+      totalSpending: 0,
       budgetSummary: [],
       recentTransactions: [],
     }),

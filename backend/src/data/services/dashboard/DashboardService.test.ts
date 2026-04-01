@@ -38,7 +38,7 @@ describe('DashboardService', () => {
       const result = await sut.getDashboard('customer-id', '2024-09');
 
       assert.equal(result.yearMonth, '2024-09');
-      assert.equal(result.totalSpending, '0.00');
+      assert.equal(result.totalSpending, 0);
       assert.deepEqual(result.budgetSummary, []);
       assert.deepEqual(result.recentTransactions, []);
     });
@@ -52,7 +52,7 @@ describe('DashboardService', () => {
         accountName: 'Checking',
         accountNumberLast4: null,
         currencyCode: 'USD',
-        balance: '1000',
+        balance: 100000,
         accountType: null,
         balanceUpdatedAt: null,
         createdAt: '',
@@ -63,7 +63,7 @@ describe('DashboardService', () => {
           bankAccountId: 'acc-id',
           categoryId: null,
           budgetItemId: null,
-          amount: '-50.00',
+          amount: -5000,
           description: 'Groceries',
           transactionDate: '2024-09-15',
           createdAt: '',
@@ -73,7 +73,7 @@ describe('DashboardService', () => {
           bankAccountId: 'acc-id',
           categoryId: null,
           budgetItemId: null,
-          amount: '-30.00',
+          amount: -3000,
           description: 'Coffee',
           transactionDate: '2024-09-16',
           createdAt: '',
@@ -86,7 +86,7 @@ describe('DashboardService', () => {
 
       const result = await sut.getDashboard('customer-id', '2024-09');
 
-      assert.equal(result.totalSpending, '-80.00');
+      assert.equal(result.totalSpending, -8000);
       assert.equal(result.recentTransactions.length, 2);
     });
   });

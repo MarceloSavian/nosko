@@ -21,6 +21,19 @@ export const createBudgetPlanInputSchema = z.object({
 
 export type CreateBudgetPlanInput = z.infer<typeof createBudgetPlanInputSchema>;
 
+// Budget Item Direction
+export const BudgetItemDirection = {
+  INCOME: 'INCOME',
+  EXPENSE: 'EXPENSE',
+} as const;
+
+export type BudgetItemDirection = (typeof BudgetItemDirection)[keyof typeof BudgetItemDirection];
+
+const budgetItemDirectionValues = Object.values(BudgetItemDirection) as [
+  BudgetItemDirection,
+  ...BudgetItemDirection[],
+];
+
 // Budget Item
 export const BudgetItemType = {
   FIXED: 'FIXED',
@@ -49,7 +62,8 @@ export const budgetItemSchema = z.object({
   planId: z.string(),
   categoryId: z.string(),
   name: z.string(),
-  plannedAmount: z.string(),
+  plannedAmount: z.number().int(),
+  direction: z.enum(budgetItemDirectionValues),
   type: z.enum(budgetItemTypeValues),
   recurrence: z.enum(budgetItemRecurrenceValues),
   installmentTotal: z.number().nullable(),
@@ -64,7 +78,8 @@ export type BudgetItemSchema = z.infer<typeof budgetItemSchema>;
 export const createBudgetItemInputSchema = z.object({
   categoryId: z.string().uuid('Invalid category ID'),
   name: z.string().min(1, 'Name is required').max(200),
-  plannedAmount: z.number().positive('Amount must be positive'),
+  plannedAmount: z.number().int().positive('Amount must be positive'),
+  direction: z.enum(budgetItemDirectionValues),
   type: z.enum(budgetItemTypeValues),
   recurrence: z.enum(budgetItemRecurrenceValues),
   installmentTotal: z.number().int().min(2).optional(),

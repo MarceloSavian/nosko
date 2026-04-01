@@ -61,8 +61,8 @@ export const contributionRuleSchema = z.object({
   id: z.string(),
   partnershipId: z.string(),
   type: z.enum(contributionTypeValues),
-  customerAPercentage: z.string().nullable(),
-  customerBPercentage: z.string().nullable(),
+  customerAPercentage: z.number().int().nullable(),
+  customerBPercentage: z.number().int().nullable(),
   createdAt: z.string(),
   updatedAt: z.string(),
 });
@@ -71,8 +71,8 @@ export type ContributionRuleSchema = z.infer<typeof contributionRuleSchema>;
 
 export const setContributionRuleInputSchema = z.object({
   type: z.enum(contributionTypeValues),
-  customerAPercentage: z.number().min(0).max(100).optional(),
-  customerBPercentage: z.number().min(0).max(100).optional(),
+  customerAPercentage: z.number().int().min(0).max(10000).optional(),
+  customerBPercentage: z.number().int().min(0).max(10000).optional(),
 });
 
 export type SetContributionRuleInput = z.infer<typeof setContributionRuleInputSchema>;

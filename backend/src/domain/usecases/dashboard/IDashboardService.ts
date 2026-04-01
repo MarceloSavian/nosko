@@ -1,15 +1,15 @@
 export interface DashboardData {
   yearMonth: string;
-  totalSpending: string;
+  totalSpending: number;
   budgetSummary: {
     categoryName: string;
-    planned: string;
-    actual: string;
+    planned: number;
+    actual: number;
   }[];
   recentTransactions: {
     id: string;
     description: string | null;
-    amount: string;
+    amount: number;
     transactionDate: string;
   }[];
 }

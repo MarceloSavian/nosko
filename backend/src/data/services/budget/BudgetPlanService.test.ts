@@ -1,7 +1,11 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
 import { BudgetItemNotFoundError, BudgetPlanNotFoundError } from '../../../domain/errors/budget.js';
-import { BudgetItemRecurrence, BudgetItemType } from '../../../domain/models/budget/BudgetPlan.js';
+import {
+  BudgetItemDirection,
+  BudgetItemRecurrence,
+  BudgetItemType,
+} from '../../../domain/models/budget/BudgetPlan.js';
 import { resetMock } from '../../../test/helpers/resetMock.js';
 import { mockBudgetItemRepository } from '../../../test/mocks/MockBudgetItemRepository.js';
 import { mockBudgetPlanRepository } from '../../../test/mocks/MockBudgetPlanRepository.js';
@@ -34,7 +38,8 @@ describe('BudgetPlanService', () => {
     planId: 'plan-id',
     categoryId: 'cat-id',
     name: 'Rent',
-    plannedAmount: '2800.00',
+    plannedAmount: 280000,
+    direction: BudgetItemDirection.EXPENSE,
     type: BudgetItemType.FIXED,
     recurrence: BudgetItemRecurrence.PERMANENT,
     installmentTotal: null,
@@ -97,7 +102,8 @@ describe('BudgetPlanService', () => {
       const result = await sut.addItem('plan-id', {
         categoryId: 'cat-id',
         name: 'Rent',
-        plannedAmount: 2800,
+        plannedAmount: 280000,
+        direction: BudgetItemDirection.EXPENSE,
         type: BudgetItemType.FIXED,
         recurrence: BudgetItemRecurrence.PERMANENT,
       });
@@ -114,7 +120,8 @@ describe('BudgetPlanService', () => {
           sut.addItem('nonexistent', {
             categoryId: 'cat-id',
             name: 'Rent',
-            plannedAmount: 2800,
+            plannedAmount: 280000,
+            direction: BudgetItemDirection.EXPENSE,
             type: BudgetItemType.FIXED,
             recurrence: BudgetItemRecurrence.PERMANENT,
           }),
