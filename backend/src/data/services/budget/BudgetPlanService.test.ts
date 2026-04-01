@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { beforeEach, describe, it } from 'node:test';
+import { beforeEach, describe, it, mock } from 'node:test';
 import { BudgetItemNotFoundError, BudgetPlanNotFoundError } from '../../../domain/errors/budget.js';
 import { resetMock } from '../../../test/helpers/resetMock.js';
 import { mockBudgetItemRepository } from '../../../test/mocks/MockBudgetItemRepository.js';
@@ -44,6 +44,7 @@ describe('BudgetPlanService', () => {
   };
 
   beforeEach(() => {
+    mock.restoreAll();
     resetMock(mockBudgetPlanRepository);
     resetMock(mockBudgetItemRepository);
     resetMock(mockPartnershipRepository);
@@ -52,8 +53,8 @@ describe('BudgetPlanService', () => {
   describe('getPersonalPlan()', () => {
     it('should return plan with items when found', async () => {
       const { sut } = makeSut();
-      mockBudgetPlanRepository.findByCustomerAndMonth.mock.mockImplementationOnce(async () => plan);
-      mockBudgetItemRepository.findByPlanId.mock.mockImplementationOnce(async () => [item]);
+      mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => plan);
+      mock.method(mockBudgetItemRepository, 'findByPlanId', async () => [item]);
 
       const result = await sut.getPersonalPlan('customer-id', '2024-09');
 
@@ -62,7 +63,7 @@ describe('BudgetPlanService', () => {
 
     it('should return null when no plan exists', async () => {
       const { sut } = makeSut();
-      mockBudgetPlanRepository.findByCustomerAndMonth.mock.mockImplementationOnce(async () => null);
+      mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => null);
 
       const result = await sut.getPersonalPlan('customer-id', '2024-09');
 
@@ -73,9 +74,9 @@ describe('BudgetPlanService', () => {
   describe('createPersonalPlan()', () => {
     it('should create plan and carry forward items from previous month', async () => {
       const { sut } = makeSut();
-      mockBudgetPlanRepository.insertPersonal.mock.mockImplementationOnce(async () => plan);
+      mock.method(mockBudgetPlanRepository, 'insertPersonal', async () => plan);
       // No previous plan
-      mockBudgetPlanRepository.findByCustomerAndMonth.mock.mockImplementationOnce(async () => null);
+      mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => null);
 
       const result = await sut.createPersonalPlan('customer-id', {
         yearMonth: '2024-09',
@@ -89,8 +90,8 @@ describe('BudgetPlanService', () => {
   describe('addItem()', () => {
     it('should add an item to the plan', async () => {
       const { sut } = makeSut();
-      mockBudgetPlanRepository.findById.mock.mockImplementationOnce(async () => plan);
-      mockBudgetItemRepository.insert.mock.mockImplementationOnce(async () => item);
+      mock.method(mockBudgetPlanRepository, 'findById', async () => plan);
+      mock.method(mockBudgetItemRepository, 'insert', async () => item);
 
       const result = await sut.addItem('plan-id', {
         categoryId: 'cat-id',
@@ -105,7 +106,7 @@ describe('BudgetPlanService', () => {
 
     it('should throw BudgetPlanNotFoundError when plan not found', async () => {
       const { sut } = makeSut();
-      mockBudgetPlanRepository.findById.mock.mockImplementationOnce(async () => null);
+      mock.method(mockBudgetPlanRepository, 'findById', async () => null);
 
       await assert.rejects(
         async () =>
@@ -124,7 +125,7 @@ describe('BudgetPlanService', () => {
   describe('updateItem()', () => {
     it('should throw BudgetItemNotFoundError when item not found', async () => {
       const { sut } = makeSut();
-      mockBudgetItemRepository.findById.mock.mockImplementationOnce(async () => null);
+      mock.method(mockBudgetItemRepository, 'findById', async () => null);
 
       await assert.rejects(
         async () => sut.updateItem('plan-id', 'nonexistent', { name: 'New' }),
@@ -136,7 +137,7 @@ describe('BudgetPlanService', () => {
   describe('deleteItem()', () => {
     it('should delete the item', async () => {
       const { sut } = makeSut();
-      mockBudgetItemRepository.findById.mock.mockImplementationOnce(async () => item);
+      mock.method(mockBudgetItemRepository, 'findById', async () => item);
 
       await sut.deleteItem('plan-id', 'item-id');
 

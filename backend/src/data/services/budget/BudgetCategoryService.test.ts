@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { beforeEach, describe, it } from 'node:test';
+import { beforeEach, describe, it, mock } from 'node:test';
 import {
   BudgetCategoryNotFoundError,
   CannotModifySystemCategoryError,
@@ -25,13 +25,14 @@ describe('BudgetCategoryService', () => {
   const systemCategory = { ...category, id: 'sys-id', isSystem: true };
 
   beforeEach(() => {
+    mock.restoreAll();
     resetMock(mockBudgetCategoryRepository);
   });
 
   describe('listCategories()', () => {
     it('should return all categories', async () => {
       const { sut } = makeSut();
-      mockBudgetCategoryRepository.findAll.mock.mockImplementationOnce(async () => [category]);
+      mock.method(mockBudgetCategoryRepository, 'findAll', async () => [category]);
 
       const result = await sut.listCategories();
 
@@ -42,7 +43,7 @@ describe('BudgetCategoryService', () => {
   describe('createCategory()', () => {
     it('should create and return category', async () => {
       const { sut } = makeSut();
-      mockBudgetCategoryRepository.insert.mock.mockImplementationOnce(async () => category);
+      mock.method(mockBudgetCategoryRepository, 'insert', async () => category);
 
       const result = await sut.createCategory({ name: 'Food & Dining' });
 
@@ -53,7 +54,7 @@ describe('BudgetCategoryService', () => {
   describe('updateCategory()', () => {
     it('should throw BudgetCategoryNotFoundError when not found', async () => {
       const { sut } = makeSut();
-      mockBudgetCategoryRepository.findById.mock.mockImplementationOnce(async () => null);
+      mock.method(mockBudgetCategoryRepository, 'findById', async () => null);
 
       await assert.rejects(
         async () => sut.updateCategory('nonexistent', { name: 'New' }),
@@ -63,7 +64,7 @@ describe('BudgetCategoryService', () => {
 
     it('should throw CannotModifySystemCategoryError for system categories', async () => {
       const { sut } = makeSut();
-      mockBudgetCategoryRepository.findById.mock.mockImplementationOnce(async () => systemCategory);
+      mock.method(mockBudgetCategoryRepository, 'findById', async () => systemCategory);
 
       await assert.rejects(
         async () => sut.updateCategory('sys-id', { name: 'New' }),
@@ -75,7 +76,7 @@ describe('BudgetCategoryService', () => {
   describe('deleteCategory()', () => {
     it('should delete the category', async () => {
       const { sut } = makeSut();
-      mockBudgetCategoryRepository.findById.mock.mockImplementationOnce(async () => category);
+      mock.method(mockBudgetCategoryRepository, 'findById', async () => category);
 
       await sut.deleteCategory('cat-id');
 

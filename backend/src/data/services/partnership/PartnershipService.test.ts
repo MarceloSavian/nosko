@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { beforeEach, describe, it } from 'node:test';
+import { beforeEach, describe, it, mock } from 'node:test';
 import {
   AlreadyHasPartnerError,
   CannotInviteSelfError,
@@ -67,6 +67,7 @@ describe('PartnershipService', () => {
   };
 
   beforeEach(() => {
+    mock.restoreAll();
     resetMock(mockCustomerRepository);
     resetMock(mockPartnerInvitationRepository);
     resetMock(mockPartnershipRepository);
@@ -78,10 +79,10 @@ describe('PartnershipService', () => {
   describe('invitePartner()', () => {
     it('should create an invitation and send email', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findById.mock.mockImplementationOnce(async () => customer);
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => invitee);
-      mockPartnershipRepository.findByCustomerId.mock.mockImplementationOnce(async () => null);
-      mockPartnerInvitationRepository.insert.mock.mockImplementationOnce(async () => invitation);
+      mock.method(mockCustomerRepository, 'findById', async () => customer);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => invitee);
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => null);
+      mock.method(mockPartnerInvitationRepository, 'insert', async () => invitation);
 
       const result = await sut.invitePartner('customer-id', { email: 'partner@test.com' });
 
@@ -92,7 +93,7 @@ describe('PartnershipService', () => {
 
     it('should throw CannotInviteSelfError when inviting own email', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findById.mock.mockImplementationOnce(async () => customer);
+      mock.method(mockCustomerRepository, 'findById', async () => customer);
 
       await assert.rejects(
         async () => sut.invitePartner('customer-id', { email: 'alex@test.com' }),
@@ -102,8 +103,8 @@ describe('PartnershipService', () => {
 
     it('should throw InviteeNotRegisteredError when invitee not found', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findById.mock.mockImplementationOnce(async () => customer);
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
+      mock.method(mockCustomerRepository, 'findById', async () => customer);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => null);
 
       await assert.rejects(
         async () => sut.invitePartner('customer-id', { email: 'unknown@test.com' }),
@@ -113,11 +114,9 @@ describe('PartnershipService', () => {
 
     it('should throw AlreadyHasPartnerError when already partnered', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findById.mock.mockImplementationOnce(async () => customer);
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => invitee);
-      mockPartnershipRepository.findByCustomerId.mock.mockImplementationOnce(
-        async () => partnership,
-      );
+      mock.method(mockCustomerRepository, 'findById', async () => customer);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => invitee);
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
 
       await assert.rejects(
         async () => sut.invitePartner('customer-id', { email: 'partner@test.com' }),
@@ -129,7 +128,7 @@ describe('PartnershipService', () => {
   describe('acceptInvitation()', () => {
     it('should throw InvitationNotFoundError when not found', async () => {
       const { sut } = makeSut();
-      mockPartnerInvitationRepository.findById.mock.mockImplementationOnce(async () => null);
+      mock.method(mockPartnerInvitationRepository, 'findById', async () => null);
 
       await assert.rejects(
         async () => sut.acceptInvitation('partner-id', 'nonexistent'),
@@ -141,9 +140,7 @@ describe('PartnershipService', () => {
   describe('getPartnership()', () => {
     it('should return the partnership', async () => {
       const { sut } = makeSut();
-      mockPartnershipRepository.findByCustomerId.mock.mockImplementationOnce(
-        async () => partnership,
-      );
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
 
       const result = await sut.getPartnership('customer-id');
 
@@ -152,7 +149,7 @@ describe('PartnershipService', () => {
 
     it('should throw PartnershipNotFoundError when no partnership', async () => {
       const { sut } = makeSut();
-      mockPartnershipRepository.findByCustomerId.mock.mockImplementationOnce(async () => null);
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => null);
 
       await assert.rejects(
         async () => sut.getPartnership('customer-id'),
@@ -164,9 +161,7 @@ describe('PartnershipService', () => {
   describe('dissolvePartnership()', () => {
     it('should delete the partnership', async () => {
       const { sut } = makeSut();
-      mockPartnershipRepository.findByCustomerId.mock.mockImplementationOnce(
-        async () => partnership,
-      );
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
 
       await sut.dissolvePartnership('customer-id');
 
@@ -177,9 +172,7 @@ describe('PartnershipService', () => {
   describe('setContributionRules()', () => {
     it('should upsert contribution rules', async () => {
       const { sut } = makeSut();
-      mockPartnershipRepository.findByCustomerId.mock.mockImplementationOnce(
-        async () => partnership,
-      );
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
       const rule = {
         id: 'rule-id',
         partnershipId: 'partnership-id',
@@ -189,7 +182,7 @@ describe('PartnershipService', () => {
         createdAt: '2024-01-01T00:00:00.000Z',
         updatedAt: '2024-01-01T00:00:00.000Z',
       };
-      mockContributionRuleRepository.upsert.mock.mockImplementationOnce(async () => rule);
+      mock.method(mockContributionRuleRepository, 'upsert', async () => rule);
 
       const result = await sut.setContributionRules('customer-id', { type: 'EQUAL' });
 

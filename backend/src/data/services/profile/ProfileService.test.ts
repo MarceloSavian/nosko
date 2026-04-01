@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { beforeEach, describe, it } from 'node:test';
+import { beforeEach, describe, it, mock } from 'node:test';
 import { CustomerNotFoundError } from '../../../domain/errors/customer.js';
 import { resetMock } from '../../../test/helpers/resetMock.js';
 import { mockCustomerRepository } from '../../../test/mocks/MockCustomerRepository.js';
@@ -22,13 +22,14 @@ describe('ProfileService', () => {
   };
 
   beforeEach(() => {
+    mock.restoreAll();
     resetMock(mockCustomerRepository);
   });
 
   describe('getProfile()', () => {
     it('should return the customer when found', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findById.mock.mockImplementationOnce(async () => customer);
+      mock.method(mockCustomerRepository, 'findById', async () => customer);
 
       const result = await sut.getProfile('customer-id');
 
@@ -38,7 +39,7 @@ describe('ProfileService', () => {
 
     it('should throw CustomerNotFoundError when customer does not exist', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findById.mock.mockImplementationOnce(async () => null);
+      mock.method(mockCustomerRepository, 'findById', async () => null);
 
       await assert.rejects(
         async () => sut.getProfile('nonexistent-id'),
@@ -51,8 +52,8 @@ describe('ProfileService', () => {
     it('should update and return the customer', async () => {
       const { sut } = makeSut();
       const updated = { ...customer, name: 'Updated Name' };
-      mockCustomerRepository.findById.mock.mockImplementationOnce(async () => customer);
-      mockCustomerRepository.updateProfile.mock.mockImplementationOnce(async () => updated);
+      mock.method(mockCustomerRepository, 'findById', async () => customer);
+      mock.method(mockCustomerRepository, 'updateProfile', async () => updated);
 
       const result = await sut.updateProfile('customer-id', { name: 'Updated Name' });
 
@@ -62,7 +63,7 @@ describe('ProfileService', () => {
 
     it('should throw CustomerNotFoundError when customer does not exist', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findById.mock.mockImplementationOnce(async () => null);
+      mock.method(mockCustomerRepository, 'findById', async () => null);
 
       await assert.rejects(
         async () => sut.updateProfile('nonexistent-id', { name: 'Test' }),
@@ -74,7 +75,7 @@ describe('ProfileService', () => {
   describe('deleteAccount()', () => {
     it('should delete the customer', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findById.mock.mockImplementationOnce(async () => customer);
+      mock.method(mockCustomerRepository, 'findById', async () => customer);
 
       await sut.deleteAccount('customer-id');
 
@@ -83,7 +84,7 @@ describe('ProfileService', () => {
 
     it('should throw CustomerNotFoundError when customer does not exist', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findById.mock.mockImplementationOnce(async () => null);
+      mock.method(mockCustomerRepository, 'findById', async () => null);
 
       await assert.rejects(
         async () => sut.deleteAccount('nonexistent-id'),

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { beforeEach, describe, it } from 'node:test';
+import { beforeEach, describe, it, mock } from 'node:test';
 import {
   CustomerNotFoundError,
   EmailAlreadyRegisteredError,
@@ -42,6 +42,7 @@ describe('CustomerService', () => {
   const verifiedCustomer = { ...customer, verifiedAt: '2024-01-01T01:00:00.000Z' };
 
   beforeEach(() => {
+    mock.restoreAll();
     resetMock(mockCustomerRepository);
     resetMock(mockHasher);
     resetMock(mockTokenRepository);
@@ -52,11 +53,11 @@ describe('CustomerService', () => {
   describe('signup()', () => {
     it('should call findByEmail with correct email', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
-      mockHasher.hash.mock.mockImplementationOnce(async () => 'hashed-password');
-      mockCustomerRepository.insert.mock.mockImplementationOnce(async () => customer);
-      mockTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
-      mockEmailService.send.mock.mockImplementationOnce(async () => undefined);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => null);
+      mock.method(mockHasher, 'hash', async () => 'hashed-password');
+      mock.method(mockCustomerRepository, 'insert', async () => customer);
+      mock.method(mockTokenRepository, 'insert', async () => undefined);
+      mock.method(mockEmailService, 'send', async () => undefined);
 
       await sut.signup({ email: 'test@test.com', password: 'password123' });
 
@@ -66,7 +67,7 @@ describe('CustomerService', () => {
 
     it('should throw EmailAlreadyRegisteredError if email is already registered', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => customer);
 
       await assert.rejects(
         async () => sut.signup({ email: 'test@test.com', password: 'password123' }),
@@ -76,11 +77,11 @@ describe('CustomerService', () => {
 
     it('should call mockHasher.hash with the provided password', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
-      mockHasher.hash.mock.mockImplementationOnce(async () => 'hashed-password');
-      mockCustomerRepository.insert.mock.mockImplementationOnce(async () => customer);
-      mockTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
-      mockEmailService.send.mock.mockImplementationOnce(async () => undefined);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => null);
+      mock.method(mockHasher, 'hash', async () => 'hashed-password');
+      mock.method(mockCustomerRepository, 'insert', async () => customer);
+      mock.method(mockTokenRepository, 'insert', async () => undefined);
+      mock.method(mockEmailService, 'send', async () => undefined);
 
       await sut.signup({ email: 'test@test.com', password: 'password123' });
 
@@ -89,11 +90,11 @@ describe('CustomerService', () => {
 
     it('should send a verification email after signup', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
-      mockHasher.hash.mock.mockImplementationOnce(async () => 'hashed-password');
-      mockCustomerRepository.insert.mock.mockImplementationOnce(async () => customer);
-      mockTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
-      mockEmailService.send.mock.mockImplementationOnce(async () => undefined);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => null);
+      mock.method(mockHasher, 'hash', async () => 'hashed-password');
+      mock.method(mockCustomerRepository, 'insert', async () => customer);
+      mock.method(mockTokenRepository, 'insert', async () => undefined);
+      mock.method(mockEmailService, 'send', async () => undefined);
 
       await sut.signup({ email: 'test@test.com', password: 'password123' });
 
@@ -103,11 +104,11 @@ describe('CustomerService', () => {
 
     it('should return the created customer', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
-      mockHasher.hash.mock.mockImplementationOnce(async () => 'hashed-password');
-      mockCustomerRepository.insert.mock.mockImplementationOnce(async () => customer);
-      mockTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
-      mockEmailService.send.mock.mockImplementationOnce(async () => undefined);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => null);
+      mock.method(mockHasher, 'hash', async () => 'hashed-password');
+      mock.method(mockCustomerRepository, 'insert', async () => customer);
+      mock.method(mockTokenRepository, 'insert', async () => undefined);
+      mock.method(mockEmailService, 'send', async () => undefined);
 
       const result = await sut.signup({ email: 'test@test.com', password: 'password123' });
 
@@ -120,7 +121,7 @@ describe('CustomerService', () => {
 
     it('should throw CustomerNotFoundError if customer does not exist', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => null);
 
       await assert.rejects(
         async () => sut.verifyEmail({ email: 'test@test.com', code: '123456' }),
@@ -130,7 +131,7 @@ describe('CustomerService', () => {
 
     it('should throw EmailAlreadyVerifiedError if customer is already verified', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => verifiedCustomer);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => verifiedCustomer);
 
       await assert.rejects(
         async () => sut.verifyEmail({ email: 'test@test.com', code: '123456' }),
@@ -140,8 +141,8 @@ describe('CustomerService', () => {
 
     it('should throw InvalidVerificationCodeError if token is not found', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
-      mockTokenRepository.find.mock.mockImplementationOnce(async () => null);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => customer);
+      mock.method(mockTokenRepository, 'find', async () => null);
 
       await assert.rejects(
         async () => sut.verifyEmail({ email: 'test@test.com', code: '000000' }),
@@ -152,9 +153,9 @@ describe('CustomerService', () => {
     it('should throw VerificationCodeExpiredError if token is expired', async () => {
       const { sut } = makeSut();
       const expiredToken = { id: 'token-id', expiresAt: new Date(Date.now() - 60_000) };
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
-      mockTokenRepository.find.mock.mockImplementationOnce(async () => expiredToken);
-      mockTokenRepository.delete.mock.mockImplementationOnce(async () => undefined);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => customer);
+      mock.method(mockTokenRepository, 'find', async () => expiredToken);
+      mock.method(mockTokenRepository, 'delete', async () => undefined);
 
       await assert.rejects(
         async () => sut.verifyEmail({ email: 'test@test.com', code: '123456' }),
@@ -164,10 +165,10 @@ describe('CustomerService', () => {
 
     it('should mark customer as verified and return updated customer', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
-      mockTokenRepository.find.mock.mockImplementationOnce(async () => token);
-      mockTokenRepository.delete.mock.mockImplementationOnce(async () => undefined);
-      mockCustomerRepository.markVerified.mock.mockImplementationOnce(async () => verifiedCustomer);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => customer);
+      mock.method(mockTokenRepository, 'find', async () => token);
+      mock.method(mockTokenRepository, 'delete', async () => undefined);
+      mock.method(mockCustomerRepository, 'markVerified', async () => verifiedCustomer);
 
       const result = await sut.verifyEmail({ email: 'test@test.com', code: '123456' });
 
@@ -179,7 +180,7 @@ describe('CustomerService', () => {
   describe('login()', () => {
     it('should throw InvalidCredentialsError if customer does not exist', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmailWithPassword.mock.mockImplementationOnce(async () => null);
+      mock.method(mockCustomerRepository, 'findByEmailWithPassword', async () => null);
 
       await assert.rejects(
         async () => sut.login({ email: 'test@test.com', password: 'password123' }),
@@ -189,11 +190,11 @@ describe('CustomerService', () => {
 
     it('should throw InvalidCredentialsError if password does not match', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmailWithPassword.mock.mockImplementationOnce(async () => ({
+      mock.method(mockCustomerRepository, 'findByEmailWithPassword', async () => ({
         ...verifiedCustomer,
         passwordHash: 'hashed-password',
       }));
-      mockHasher.compare.mock.mockImplementationOnce(async () => false);
+      mock.method(mockHasher, 'compare', async () => false);
 
       await assert.rejects(
         async () => sut.login({ email: 'test@test.com', password: 'wrong-password' }),
@@ -203,11 +204,11 @@ describe('CustomerService', () => {
 
     it('should throw EmailNotVerifiedError if customer is not verified', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmailWithPassword.mock.mockImplementationOnce(async () => ({
+      mock.method(mockCustomerRepository, 'findByEmailWithPassword', async () => ({
         ...customer,
         passwordHash: 'hashed-password',
       }));
-      mockHasher.compare.mock.mockImplementationOnce(async () => true);
+      mock.method(mockHasher, 'compare', async () => true);
 
       await assert.rejects(
         async () => sut.login({ email: 'test@test.com', password: 'password123' }),
@@ -217,12 +218,12 @@ describe('CustomerService', () => {
 
     it('should call mockJwtService.sign with correct payload', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmailWithPassword.mock.mockImplementationOnce(async () => ({
+      mock.method(mockCustomerRepository, 'findByEmailWithPassword', async () => ({
         ...verifiedCustomer,
         passwordHash: 'hashed-password',
       }));
-      mockHasher.compare.mock.mockImplementationOnce(async () => true);
-      mockJwtService.sign.mock.mockImplementationOnce(async () => 'test-token');
+      mock.method(mockHasher, 'compare', async () => true);
+      mock.method(mockJwtService, 'sign', async () => 'test-token');
 
       await sut.login({ email: 'test@test.com', password: 'password123' });
 
@@ -234,12 +235,12 @@ describe('CustomerService', () => {
 
     it('should return an access token on success', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmailWithPassword.mock.mockImplementationOnce(async () => ({
+      mock.method(mockCustomerRepository, 'findByEmailWithPassword', async () => ({
         ...verifiedCustomer,
         passwordHash: 'hashed-password',
       }));
-      mockHasher.compare.mock.mockImplementationOnce(async () => true);
-      mockJwtService.sign.mock.mockImplementationOnce(async () => 'test-token');
+      mock.method(mockHasher, 'compare', async () => true);
+      mock.method(mockJwtService, 'sign', async () => 'test-token');
 
       const result = await sut.login({ email: 'test@test.com', password: 'password123' });
 
@@ -250,7 +251,7 @@ describe('CustomerService', () => {
   describe('resendVerification()', () => {
     it('should throw CustomerNotFoundError if customer does not exist', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => null);
 
       await assert.rejects(
         async () => sut.resendVerification({ email: 'test@test.com' }),
@@ -260,7 +261,7 @@ describe('CustomerService', () => {
 
     it('should throw EmailAlreadyVerifiedError if customer is already verified', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => verifiedCustomer);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => verifiedCustomer);
 
       await assert.rejects(
         async () => sut.resendVerification({ email: 'test@test.com' }),
@@ -270,12 +271,10 @@ describe('CustomerService', () => {
 
     it('should delete old tokens and send a new verification email', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
-      mockTokenRepository.deleteByCustomerAndType.mock.mockImplementationOnce(
-        async () => undefined,
-      );
-      mockTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
-      mockEmailService.send.mock.mockImplementationOnce(async () => undefined);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => customer);
+      mock.method(mockTokenRepository, 'deleteByCustomerAndType', async () => undefined);
+      mock.method(mockTokenRepository, 'insert', async () => undefined);
+      mock.method(mockEmailService, 'send', async () => undefined);
 
       await sut.resendVerification({ email: 'test@test.com' });
 
@@ -288,7 +287,7 @@ describe('CustomerService', () => {
   describe('requestPasswordReset()', () => {
     it('should return silently if customer does not exist', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => null);
 
       await assert.doesNotReject(async () =>
         sut.requestPasswordReset({ email: 'nonexistent@test.com' }),
@@ -299,12 +298,10 @@ describe('CustomerService', () => {
 
     it('should delete old tokens and send a reset email', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
-      mockTokenRepository.deleteByCustomerAndType.mock.mockImplementationOnce(
-        async () => undefined,
-      );
-      mockTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
-      mockEmailService.send.mock.mockImplementationOnce(async () => undefined);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => customer);
+      mock.method(mockTokenRepository, 'deleteByCustomerAndType', async () => undefined);
+      mock.method(mockTokenRepository, 'insert', async () => undefined);
+      mock.method(mockEmailService, 'send', async () => undefined);
 
       await sut.requestPasswordReset({ email: 'test@test.com' });
 
@@ -320,7 +317,7 @@ describe('CustomerService', () => {
 
     it('should throw CustomerNotFoundError if customer does not exist', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => null);
 
       await assert.rejects(
         async () =>
@@ -331,8 +328,8 @@ describe('CustomerService', () => {
 
     it('should throw InvalidVerificationCodeError if token is not found', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
-      mockTokenRepository.find.mock.mockImplementationOnce(async () => null);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => customer);
+      mock.method(mockTokenRepository, 'find', async () => null);
 
       await assert.rejects(
         async () =>
@@ -344,9 +341,9 @@ describe('CustomerService', () => {
     it('should throw VerificationCodeExpiredError if token is expired', async () => {
       const { sut } = makeSut();
       const expiredToken = { id: 'token-id', expiresAt: new Date(Date.now() - 60_000) };
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
-      mockTokenRepository.find.mock.mockImplementationOnce(async () => expiredToken);
-      mockTokenRepository.delete.mock.mockImplementationOnce(async () => undefined);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => customer);
+      mock.method(mockTokenRepository, 'find', async () => expiredToken);
+      mock.method(mockTokenRepository, 'delete', async () => undefined);
 
       await assert.rejects(
         async () =>
@@ -357,11 +354,11 @@ describe('CustomerService', () => {
 
     it('should hash new password and update customer', async () => {
       const { sut } = makeSut();
-      mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
-      mockTokenRepository.find.mock.mockImplementationOnce(async () => validToken);
-      mockHasher.hash.mock.mockImplementationOnce(async () => 'new-hashed-password');
-      mockCustomerRepository.updatePassword.mock.mockImplementationOnce(async () => undefined);
-      mockTokenRepository.delete.mock.mockImplementationOnce(async () => undefined);
+      mock.method(mockCustomerRepository, 'findByEmail', async () => customer);
+      mock.method(mockTokenRepository, 'find', async () => validToken);
+      mock.method(mockHasher, 'hash', async () => 'new-hashed-password');
+      mock.method(mockCustomerRepository, 'updatePassword', async () => undefined);
+      mock.method(mockTokenRepository, 'delete', async () => undefined);
 
       await sut.resetPassword({
         email: 'test@test.com',

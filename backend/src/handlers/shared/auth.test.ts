@@ -12,6 +12,7 @@ const mockHandler = mock.fn<AuthenticatedRoute>(
 
 describe('withAuth', () => {
   beforeEach(() => {
+    mock.restoreAll();
     resetMock(mockJwtService);
     mockHandler.mock.resetCalls();
   });
@@ -40,7 +41,7 @@ describe('withAuth', () => {
     });
 
     it('should return 401 when jwtService.verify throws', async () => {
-      mockJwtService.verify.mock.mockImplementationOnce(async () => {
+      mock.method(mockJwtService, 'verify', async () => {
         throw new Error('invalid token');
       });
       const wrapped = withAuth(mockJwtService, mockHandler);
@@ -52,7 +53,7 @@ describe('withAuth', () => {
     });
 
     it('should call the handler with event and customerId on valid token', async () => {
-      mockJwtService.verify.mock.mockImplementationOnce(async () => ({
+      mock.method(mockJwtService, 'verify', async () => ({
         sub: 'customer-id',
         email: 'test@test.com',
       }));
@@ -71,7 +72,7 @@ describe('withAuth', () => {
     });
 
     it('should return the handler response on success', async () => {
-      mockJwtService.verify.mock.mockImplementationOnce(async () => ({
+      mock.method(mockJwtService, 'verify', async () => ({
         sub: 'customer-id',
         email: 'test@test.com',
       }));

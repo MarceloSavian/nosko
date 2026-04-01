@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { beforeEach, describe, it } from 'node:test';
+import { beforeEach, describe, it, mock } from 'node:test';
 import {
   BankAccountNotFoundError,
   BankAccountNotOwnedError,
@@ -28,13 +28,14 @@ describe('AccountService', () => {
   };
 
   beforeEach(() => {
+    mock.restoreAll();
     resetMock(mockBankAccountRepository);
   });
 
   describe('listAccounts()', () => {
     it('should return accounts for the customer', async () => {
       const { sut } = makeSut();
-      mockBankAccountRepository.findByCustomerId.mock.mockImplementationOnce(async () => [account]);
+      mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
 
       const result = await sut.listAccounts('customer-id');
 
@@ -45,7 +46,7 @@ describe('AccountService', () => {
   describe('getAccount()', () => {
     it('should return the account when owned by customer', async () => {
       const { sut } = makeSut();
-      mockBankAccountRepository.findById.mock.mockImplementationOnce(async () => account);
+      mock.method(mockBankAccountRepository, 'findById', async () => account);
 
       const result = await sut.getAccount('customer-id', 'account-id');
 
@@ -54,7 +55,7 @@ describe('AccountService', () => {
 
     it('should throw BankAccountNotFoundError when not found', async () => {
       const { sut } = makeSut();
-      mockBankAccountRepository.findById.mock.mockImplementationOnce(async () => null);
+      mock.method(mockBankAccountRepository, 'findById', async () => null);
 
       await assert.rejects(
         async () => sut.getAccount('customer-id', 'nonexistent'),
@@ -64,7 +65,7 @@ describe('AccountService', () => {
 
     it('should throw BankAccountNotOwnedError when not owned', async () => {
       const { sut } = makeSut();
-      mockBankAccountRepository.findById.mock.mockImplementationOnce(async () => account);
+      mock.method(mockBankAccountRepository, 'findById', async () => account);
 
       await assert.rejects(
         async () => sut.getAccount('other-customer', 'account-id'),
@@ -76,7 +77,7 @@ describe('AccountService', () => {
   describe('createAccount()', () => {
     it('should create and return the account', async () => {
       const { sut } = makeSut();
-      mockBankAccountRepository.insert.mock.mockImplementationOnce(async () => account);
+      mock.method(mockBankAccountRepository, 'insert', async () => account);
 
       const result = await sut.createAccount('customer-id', {
         institutionId: 'inst-id',
@@ -92,7 +93,7 @@ describe('AccountService', () => {
   describe('deleteAccount()', () => {
     it('should delete the account when owned', async () => {
       const { sut } = makeSut();
-      mockBankAccountRepository.findById.mock.mockImplementationOnce(async () => account);
+      mock.method(mockBankAccountRepository, 'findById', async () => account);
 
       await sut.deleteAccount('customer-id', 'account-id');
 
@@ -101,7 +102,7 @@ describe('AccountService', () => {
 
     it('should throw BankAccountNotOwnedError when not owned', async () => {
       const { sut } = makeSut();
-      mockBankAccountRepository.findById.mock.mockImplementationOnce(async () => account);
+      mock.method(mockBankAccountRepository, 'findById', async () => account);
 
       await assert.rejects(
         async () => sut.deleteAccount('other-customer', 'account-id'),
@@ -117,9 +118,7 @@ describe('AccountService', () => {
         { currencyCode: 'USD', total: '42910.00' },
         { currencyCode: 'EUR', total: '12450.00' },
       ];
-      mockBankAccountRepository.getOverviewByCustomerId.mock.mockImplementationOnce(
-        async () => totals,
-      );
+      mock.method(mockBankAccountRepository, 'getOverviewByCustomerId', async () => totals);
 
       const result = await sut.getOverview('customer-id');
 

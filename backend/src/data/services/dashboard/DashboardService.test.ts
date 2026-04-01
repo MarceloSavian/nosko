@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { beforeEach, describe, it } from 'node:test';
+import { beforeEach, describe, it, mock } from 'node:test';
 import { resetMock } from '../../../test/helpers/resetMock.js';
 import { mockBankAccountRepository } from '../../../test/mocks/MockBankAccountRepository.js';
 import { mockBudgetCategoryRepository } from '../../../test/mocks/MockBudgetCategoryRepository.js';
@@ -21,6 +21,7 @@ describe('DashboardService', () => {
   };
 
   beforeEach(() => {
+    mock.restoreAll();
     resetMock(mockBankAccountRepository);
     resetMock(mockBudgetPlanRepository);
     resetMock(mockBudgetItemRepository);
@@ -31,8 +32,8 @@ describe('DashboardService', () => {
   describe('getDashboard()', () => {
     it('should return dashboard data with no accounts', async () => {
       const { sut } = makeSut();
-      mockBankAccountRepository.findByCustomerId.mock.mockImplementationOnce(async () => []);
-      mockBudgetPlanRepository.findByCustomerAndMonth.mock.mockImplementationOnce(async () => null);
+      mock.method(mockBankAccountRepository, 'findByCustomerId', async () => []);
+      mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => null);
 
       const result = await sut.getDashboard('customer-id', '2024-09');
 
@@ -79,9 +80,9 @@ describe('DashboardService', () => {
         },
       ];
 
-      mockBankAccountRepository.findByCustomerId.mock.mockImplementationOnce(async () => [account]);
-      mockTransactionRepository.findByFilters.mock.mockImplementationOnce(async () => transactions);
-      mockBudgetPlanRepository.findByCustomerAndMonth.mock.mockImplementationOnce(async () => null);
+      mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
+      mock.method(mockTransactionRepository, 'findByFilters', async () => transactions);
+      mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => null);
 
       const result = await sut.getDashboard('customer-id', '2024-09');
 

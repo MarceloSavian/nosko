@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { beforeEach, describe, it } from 'node:test';
+import { beforeEach, describe, it, mock } from 'node:test';
 import { BankAccountNotFoundError } from '../../../domain/errors/account.js';
 import { TransactionNotFoundError } from '../../../domain/errors/transaction.js';
 import { resetMock } from '../../../test/helpers/resetMock.js';
@@ -38,6 +38,7 @@ describe('TransactionService', () => {
   };
 
   beforeEach(() => {
+    mock.restoreAll();
     resetMock(mockTransactionRepository);
     resetMock(mockBankAccountRepository);
   });
@@ -45,10 +46,8 @@ describe('TransactionService', () => {
   describe('listTransactions()', () => {
     it('should return transactions for all customer accounts', async () => {
       const { sut } = makeSut();
-      mockBankAccountRepository.findByCustomerId.mock.mockImplementationOnce(async () => [account]);
-      mockTransactionRepository.findByFilters.mock.mockImplementationOnce(async () => [
-        transaction,
-      ]);
+      mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
+      mock.method(mockTransactionRepository, 'findByFilters', async () => [transaction]);
 
       const result = await sut.listTransactions('customer-id', {});
 
@@ -57,7 +56,7 @@ describe('TransactionService', () => {
 
     it('should return empty array when no accounts', async () => {
       const { sut } = makeSut();
-      mockBankAccountRepository.findByCustomerId.mock.mockImplementationOnce(async () => []);
+      mock.method(mockBankAccountRepository, 'findByCustomerId', async () => []);
 
       const result = await sut.listTransactions('customer-id', {});
 
@@ -68,8 +67,8 @@ describe('TransactionService', () => {
   describe('createTransaction()', () => {
     it('should create a transaction', async () => {
       const { sut } = makeSut();
-      mockBankAccountRepository.findById.mock.mockImplementationOnce(async () => account);
-      mockTransactionRepository.insert.mock.mockImplementationOnce(async () => transaction);
+      mock.method(mockBankAccountRepository, 'findById', async () => account);
+      mock.method(mockTransactionRepository, 'insert', async () => transaction);
 
       const result = await sut.createTransaction('customer-id', {
         bankAccountId: 'account-id',
@@ -82,7 +81,7 @@ describe('TransactionService', () => {
 
     it('should throw BankAccountNotFoundError when account not found', async () => {
       const { sut } = makeSut();
-      mockBankAccountRepository.findById.mock.mockImplementationOnce(async () => null);
+      mock.method(mockBankAccountRepository, 'findById', async () => null);
 
       await assert.rejects(
         async () =>
@@ -99,7 +98,7 @@ describe('TransactionService', () => {
   describe('deleteTransaction()', () => {
     it('should throw TransactionNotFoundError when not found', async () => {
       const { sut } = makeSut();
-      mockTransactionRepository.findById.mock.mockImplementationOnce(async () => null);
+      mock.method(mockTransactionRepository, 'findById', async () => null);
 
       await assert.rejects(
         async () => sut.deleteTransaction('customer-id', 'nonexistent'),
@@ -109,8 +108,8 @@ describe('TransactionService', () => {
 
     it('should delete the transaction when owned', async () => {
       const { sut } = makeSut();
-      mockTransactionRepository.findById.mock.mockImplementationOnce(async () => transaction);
-      mockBankAccountRepository.findById.mock.mockImplementationOnce(async () => account);
+      mock.method(mockTransactionRepository, 'findById', async () => transaction);
+      mock.method(mockBankAccountRepository, 'findById', async () => account);
 
       await sut.deleteTransaction('customer-id', 'tx-id');
 

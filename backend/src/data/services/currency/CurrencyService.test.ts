@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { beforeEach, describe, it } from 'node:test';
+import { beforeEach, describe, it, mock } from 'node:test';
 import { resetMock } from '../../../test/helpers/resetMock.js';
 import { mockCurrencyDefaultRepository } from '../../../test/mocks/MockCurrencyDefaultRepository.js';
 import { CurrencyService } from './CurrencyService.js';
@@ -11,6 +11,7 @@ describe('CurrencyService', () => {
   };
 
   beforeEach(() => {
+    mock.restoreAll();
     resetMock(mockCurrencyDefaultRepository);
   });
 
@@ -21,9 +22,7 @@ describe('CurrencyService', () => {
         { id: '1', currencyCode: 'USD', displayOrder: 0 },
         { id: '2', currencyCode: 'EUR', displayOrder: 1 },
       ];
-      mockCurrencyDefaultRepository.findByCustomerId.mock.mockImplementationOnce(
-        async () => currencies,
-      );
+      mock.method(mockCurrencyDefaultRepository, 'findByCustomerId', async () => currencies);
 
       const result = await sut.getCurrencyDefaults('customer-id');
 
@@ -48,7 +47,7 @@ describe('CurrencyService', () => {
         { id: '1', currencyCode: 'USD', displayOrder: 0 },
         { id: '2', currencyCode: 'GBP', displayOrder: 1 },
       ];
-      mockCurrencyDefaultRepository.replaceAll.mock.mockImplementationOnce(async () => result_data);
+      mock.method(mockCurrencyDefaultRepository, 'replaceAll', async () => result_data);
 
       const result = await sut.setCurrencyDefaults('customer-id', input);
 
