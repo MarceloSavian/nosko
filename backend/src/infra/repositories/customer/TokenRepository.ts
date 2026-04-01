@@ -1,6 +1,6 @@
 import type { Pool } from 'pg';
-import type { TokenType } from '../../../domain/models/customer/Customer.js';
 import type { ITokenRepository } from '../../../data/domain/customer/ITokenRepository.js';
+import type { TokenType } from '../../../domain/models/customer/Customer.js';
 
 export class TokenRepository implements ITokenRepository {
   constructor(private readonly pool: Pool) {}
@@ -12,7 +12,11 @@ export class TokenRepository implements ITokenRepository {
     );
   }
 
-  async find(customerId: string, code: string, type: TokenType): Promise<{ id: string; expiresAt: Date } | null> {
+  async find(
+    customerId: string,
+    code: string,
+    type: TokenType,
+  ): Promise<{ id: string; expiresAt: Date } | null> {
     const result = await this.pool.query<{ id: string; expires_at: Date }>(
       'SELECT id, expires_at FROM tokens WHERE customer_id = $1 AND code = $2 AND type = $3',
       [customerId, code, type],
@@ -25,7 +29,10 @@ export class TokenRepository implements ITokenRepository {
   }
 
   async deleteByCustomerAndType(customerId: string, type: TokenType): Promise<void> {
-    await this.pool.query('DELETE FROM tokens WHERE customer_id = $1 AND type = $2', [customerId, type]);
+    await this.pool.query('DELETE FROM tokens WHERE customer_id = $1 AND type = $2', [
+      customerId,
+      type,
+    ]);
   }
 
   async delete(id: string): Promise<void> {

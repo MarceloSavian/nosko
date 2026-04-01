@@ -1,4 +1,13 @@
 import { randomInt } from 'node:crypto';
+import {
+  CustomerNotFoundError,
+  EmailAlreadyRegisteredError,
+  EmailAlreadyVerifiedError,
+  EmailNotVerifiedError,
+  InvalidCredentialsError,
+  InvalidVerificationCodeError,
+  VerificationCodeExpiredError,
+} from '../../../domain/errors/customer.js';
 import type {
   CustomerSchema,
   LoginInput,
@@ -11,15 +20,6 @@ import type {
 } from '../../../domain/models/customer/Customer.js';
 import { TokenType } from '../../../domain/models/customer/Customer.js';
 import type { ICustomerService } from '../../../domain/usecases/customer/ICustomerService.js';
-import {
-  EmailAlreadyRegisteredError,
-  EmailAlreadyVerifiedError,
-  CustomerNotFoundError,
-  InvalidCredentialsError,
-  InvalidVerificationCodeError,
-  EmailNotVerifiedError,
-  VerificationCodeExpiredError,
-} from '../../../domain/errors/customer.js';
 import type { IJwtService } from '../../domain/auth/IJwtService.js';
 import type { ICustomerRepository } from '../../domain/customer/ICustomerRepository.js';
 import type { IHasher } from '../../domain/customer/IHasher.js';
@@ -63,7 +63,11 @@ export class CustomerService implements ICustomerService {
 
     if (customer.verifiedAt) throw new EmailAlreadyVerifiedError();
 
-    const token = await this.tokenRepository.find(customer.id, input.code, TokenType.EMAIL_VERIFICATION);
+    const token = await this.tokenRepository.find(
+      customer.id,
+      input.code,
+      TokenType.EMAIL_VERIFICATION,
+    );
     if (!token) throw new InvalidVerificationCodeError();
 
     if (token.expiresAt < new Date()) {
@@ -128,7 +132,11 @@ export class CustomerService implements ICustomerService {
     const customer = await this.customerRepository.findByEmail(input.email);
     if (!customer) throw new CustomerNotFoundError();
 
-    const token = await this.tokenRepository.find(customer.id, input.code, TokenType.PASSWORD_RESET);
+    const token = await this.tokenRepository.find(
+      customer.id,
+      input.code,
+      TokenType.PASSWORD_RESET,
+    );
     if (!token) throw new InvalidVerificationCodeError();
 
     if (token.expiresAt < new Date()) {

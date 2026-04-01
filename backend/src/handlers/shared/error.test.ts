@@ -1,5 +1,5 @@
-import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import { ZodError } from 'zod';
 import { BaseError } from '../../shared/error.js';
 import { logErrorAndFormat } from './error.js';
@@ -17,7 +17,13 @@ describe('logErrorAndFormat', () => {
 
     it('should return 400 for a ZodError', () => {
       const error = new ZodError([
-        { code: 'invalid_type', expected: 'string', input: undefined, path: ['email'], message: 'Required' },
+        {
+          code: 'invalid_type',
+          expected: 'string',
+          input: undefined,
+          path: ['email'],
+          message: 'Required',
+        },
       ]);
 
       const result = logErrorAndFormat(error);

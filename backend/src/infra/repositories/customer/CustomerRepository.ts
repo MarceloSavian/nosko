@@ -40,7 +40,9 @@ export class CustomerRepository implements ICustomerRepository {
     return toSchema(row);
   }
 
-  async findByEmailWithPassword(email: string): Promise<(CustomerSchema & { passwordHash: string }) | null> {
+  async findByEmailWithPassword(
+    email: string,
+  ): Promise<(CustomerSchema & { passwordHash: string }) | null> {
     const result = await this.pool.query<CustomerRow & { password_hash: string }>(
       'SELECT id, email, password_hash, verified_at, created_at FROM customers WHERE email = $1',
       [email],
@@ -77,6 +79,9 @@ export class CustomerRepository implements ICustomerRepository {
   }
 
   async updatePassword(id: string, passwordHash: string): Promise<void> {
-    await this.pool.query('UPDATE customers SET password_hash = $1 WHERE id = $2', [passwordHash, id]);
+    await this.pool.query('UPDATE customers SET password_hash = $1 WHERE id = $2', [
+      passwordHash,
+      id,
+    ]);
   }
 }

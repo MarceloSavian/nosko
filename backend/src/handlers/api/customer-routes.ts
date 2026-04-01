@@ -1,13 +1,13 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResult } from 'aws-lambda';
-import type { ICustomerService } from '../../domain/usecases/customer/ICustomerService.js';
 import {
-  signupInputSchema,
   loginInputSchema,
-  verifyEmailInputSchema,
-  resendVerificationInputSchema,
   requestPasswordResetInputSchema,
+  resendVerificationInputSchema,
   resetPasswordInputSchema,
+  signupInputSchema,
+  verifyEmailInputSchema,
 } from '../../domain/models/customer/Customer.js';
+import type { ICustomerService } from '../../domain/usecases/customer/ICustomerService.js';
 import type { ProxyRoute } from '../domain/proxy.js';
 import { logErrorAndFormat } from '../shared/error.js';
 import { formatResponse } from '../shared/response.js';

@@ -4,7 +4,10 @@ import type { IEmailService } from '../../../data/domain/email/IEmailService.js'
 export class EmailService implements IEmailService {
   private readonly client: Resend;
 
-  constructor(apiKey: string, private readonly from: string) {
+  constructor(
+    apiKey: string,
+    private readonly from: string,
+  ) {
     this.client = new Resend(apiKey);
   }
 

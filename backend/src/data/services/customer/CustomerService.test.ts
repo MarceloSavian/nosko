@@ -1,21 +1,21 @@
-import { beforeEach, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { mockCustomerRepository } from '../../../test/mocks/MockCustomerRepository.js';
-import { mockHasher } from '../../../test/mocks/MockHasher.js';
-import { mockTokenRepository } from '../../../test/mocks/MockTokenRepository.js';
-import { mockEmailService } from '../../../test/mocks/MockEmailService.js';
-import { mockJwtService } from '../../../test/mocks/MockJwtService.js';
-import { resetMock } from '../../../test/helpers/resetMock.js';
-import { CustomerService } from './CustomerService.js';
+import { beforeEach, describe, it } from 'node:test';
 import {
-  EmailAlreadyRegisteredError,
   CustomerNotFoundError,
+  EmailAlreadyRegisteredError,
   EmailAlreadyVerifiedError,
+  EmailNotVerifiedError,
+  InvalidCredentialsError,
   InvalidVerificationCodeError,
   VerificationCodeExpiredError,
-  InvalidCredentialsError,
-  EmailNotVerifiedError,
 } from '../../../domain/errors/customer.js';
+import { resetMock } from '../../../test/helpers/resetMock.js';
+import { mockCustomerRepository } from '../../../test/mocks/MockCustomerRepository.js';
+import { mockEmailService } from '../../../test/mocks/MockEmailService.js';
+import { mockHasher } from '../../../test/mocks/MockHasher.js';
+import { mockJwtService } from '../../../test/mocks/MockJwtService.js';
+import { mockTokenRepository } from '../../../test/mocks/MockTokenRepository.js';
+import { CustomerService } from './CustomerService.js';
 
 describe('CustomerService', () => {
   const makeSut = () => {
@@ -30,7 +30,12 @@ describe('CustomerService', () => {
     return { sut };
   };
 
-  const customer = { id: 'customer-id', email: 'test@test.com', verifiedAt: null, createdAt: '2024-01-01T00:00:00.000Z' };
+  const customer = {
+    id: 'customer-id',
+    email: 'test@test.com',
+    verifiedAt: null,
+    createdAt: '2024-01-01T00:00:00.000Z',
+  };
   const verifiedCustomer = { ...customer, verifiedAt: '2024-01-01T01:00:00.000Z' };
 
   beforeEach(() => {
@@ -263,7 +268,9 @@ describe('CustomerService', () => {
     it('should delete old tokens and send a new verification email', async () => {
       const { sut } = makeSut();
       mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
-      mockTokenRepository.deleteByCustomerAndType.mock.mockImplementationOnce(async () => undefined);
+      mockTokenRepository.deleteByCustomerAndType.mock.mockImplementationOnce(
+        async () => undefined,
+      );
       mockTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
       mockEmailService.send.mock.mockImplementationOnce(async () => undefined);
 
@@ -280,8 +287,8 @@ describe('CustomerService', () => {
       const { sut } = makeSut();
       mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
 
-      await assert.doesNotReject(
-        async () => sut.requestPasswordReset({ email: 'nonexistent@test.com' }),
+      await assert.doesNotReject(async () =>
+        sut.requestPasswordReset({ email: 'nonexistent@test.com' }),
       );
 
       assert.equal(mockEmailService.send.mock.callCount(), 0);
@@ -290,7 +297,9 @@ describe('CustomerService', () => {
     it('should delete old tokens and send a reset email', async () => {
       const { sut } = makeSut();
       mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => customer);
-      mockTokenRepository.deleteByCustomerAndType.mock.mockImplementationOnce(async () => undefined);
+      mockTokenRepository.deleteByCustomerAndType.mock.mockImplementationOnce(
+        async () => undefined,
+      );
       mockTokenRepository.insert.mock.mockImplementationOnce(async () => undefined);
       mockEmailService.send.mock.mockImplementationOnce(async () => undefined);
 
@@ -311,7 +320,8 @@ describe('CustomerService', () => {
       mockCustomerRepository.findByEmail.mock.mockImplementationOnce(async () => null);
 
       await assert.rejects(
-        async () => sut.resetPassword({ email: 'test@test.com', code: '123456', newPassword: 'newpass123' }),
+        async () =>
+          sut.resetPassword({ email: 'test@test.com', code: '123456', newPassword: 'newpass123' }),
         new CustomerNotFoundError(),
       );
     });
@@ -322,7 +332,8 @@ describe('CustomerService', () => {
       mockTokenRepository.find.mock.mockImplementationOnce(async () => null);
 
       await assert.rejects(
-        async () => sut.resetPassword({ email: 'test@test.com', code: '000000', newPassword: 'newpass123' }),
+        async () =>
+          sut.resetPassword({ email: 'test@test.com', code: '000000', newPassword: 'newpass123' }),
         new InvalidVerificationCodeError(),
       );
     });
@@ -335,7 +346,8 @@ describe('CustomerService', () => {
       mockTokenRepository.delete.mock.mockImplementationOnce(async () => undefined);
 
       await assert.rejects(
-        async () => sut.resetPassword({ email: 'test@test.com', code: '123456', newPassword: 'newpass123' }),
+        async () =>
+          sut.resetPassword({ email: 'test@test.com', code: '123456', newPassword: 'newpass123' }),
         new VerificationCodeExpiredError(),
       );
     });
@@ -348,7 +360,11 @@ describe('CustomerService', () => {
       mockCustomerRepository.updatePassword.mock.mockImplementationOnce(async () => undefined);
       mockTokenRepository.delete.mock.mockImplementationOnce(async () => undefined);
 
-      await sut.resetPassword({ email: 'test@test.com', code: '123456', newPassword: 'newpass123' });
+      await sut.resetPassword({
+        email: 'test@test.com',
+        code: '123456',
+        newPassword: 'newpass123',
+      });
 
       assert.equal(mockHasher.hash.mock.calls[0]?.arguments[0], 'newpass123');
       assert.equal(mockCustomerRepository.updatePassword.mock.callCount(), 1);

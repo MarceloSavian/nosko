@@ -1,11 +1,11 @@
-import { beforeEach, describe, it, mock } from 'node:test';
 import assert from 'node:assert/strict';
+import { beforeEach, describe, it, mock } from 'node:test';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
-import { mockJwtService } from '../../test/mocks/MockJwtService.js';
-import { resetMock } from '../../test/helpers/resetMock.js';
-import { makeGetProfileRoute, makeProfileHandler } from './profile-routes.js';
 import type { IProfileService } from '../../domain/usecases/profile/IProfileService.js';
 import { BaseError } from '../../shared/error.js';
+import { resetMock } from '../../test/helpers/resetMock.js';
+import { mockJwtService } from '../../test/mocks/MockJwtService.js';
+import { makeGetProfileRoute, makeProfileHandler } from './profile-routes.js';
 
 const mockProfileService = {
   getProfile: mock.fn(async () => ({})),
@@ -17,7 +17,12 @@ describe('profile-routes', () => {
     mockProfileService.getProfile.mock.resetCalls();
   });
 
-  const customer = { id: 'customer-id', email: 'test@test.com', verifiedAt: '2024-01-01T01:00:00.000Z', createdAt: '2024-01-01T00:00:00.000Z' };
+  const customer = {
+    id: 'customer-id',
+    email: 'test@test.com',
+    verifiedAt: '2024-01-01T01:00:00.000Z',
+    createdAt: '2024-01-01T00:00:00.000Z',
+  };
 
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
     ({

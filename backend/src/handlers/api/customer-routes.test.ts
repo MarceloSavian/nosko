@@ -1,10 +1,19 @@
-import { beforeEach, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import { beforeEach, describe, it } from 'node:test';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
-import { mockCustomerService } from '../../test/mocks/MockCustomerService.js';
-import { resetMock } from '../../test/helpers/resetMock.js';
 import { BaseError } from '../../shared/error.js';
-import { makeCustomerHandler, makeLoginRoute, makeRequestPasswordResetRoute, makeResendVerificationRoute, makeResetPasswordRoute, makeSignupRoute, makeVerifyEmailRoute, routeHandler } from './customer-routes.js';
+import { resetMock } from '../../test/helpers/resetMock.js';
+import { mockCustomerService } from '../../test/mocks/MockCustomerService.js';
+import {
+  makeCustomerHandler,
+  makeLoginRoute,
+  makeRequestPasswordResetRoute,
+  makeResendVerificationRoute,
+  makeResetPasswordRoute,
+  makeSignupRoute,
+  makeVerifyEmailRoute,
+  routeHandler,
+} from './customer-routes.js';
 
 describe('customer-routes', () => {
   const makeSut = () => {
@@ -16,7 +25,15 @@ describe('customer-routes', () => {
     const resetPassword = makeResetPasswordRoute(mockCustomerService);
     const routes = { 'POST /signup': signup };
 
-    return { signup, login, verifyEmail, resendVerification, requestPasswordReset, resetPassword, routes };
+    return {
+      signup,
+      login,
+      verifyEmail,
+      resendVerification,
+      requestPasswordReset,
+      resetPassword,
+      routes,
+    };
   };
 
   beforeEach(() => {
@@ -30,7 +47,12 @@ describe('customer-routes', () => {
       ...overrides,
     }) as unknown as APIGatewayProxyEventV2;
 
-  const customer = { id: 'id-1', email: 'test@test.com', verifiedAt: null, createdAt: '2024-01-01T00:00:00.000Z' };
+  const customer = {
+    id: 'id-1',
+    email: 'test@test.com',
+    verifiedAt: null,
+    createdAt: '2024-01-01T00:00:00.000Z',
+  };
   const verifiedCustomer = { ...customer, verifiedAt: '2024-01-01T01:00:00.000Z' };
 
   describe('routeHandler()', () => {
@@ -66,7 +88,9 @@ describe('customer-routes', () => {
     it('should return 400 for invalid input', async () => {
       const { signup } = makeSut();
 
-      const result = await signup(makeEvent({ body: JSON.stringify({ email: 'not-an-email', password: 'pass' }) }));
+      const result = await signup(
+        makeEvent({ body: JSON.stringify({ email: 'not-an-email', password: 'pass' }) }),
+      );
 
       assert.equal(result.statusCode, 400);
     });
@@ -106,12 +130,16 @@ describe('customer-routes', () => {
   describe('makeLoginRoute()', () => {
     it('should return 200 with access token on success', async () => {
       const { login } = makeSut();
-      mockCustomerService.login.mock.mockImplementationOnce(() => Promise.resolve({ accessToken: 'test-token' }));
+      mockCustomerService.login.mock.mockImplementationOnce(() =>
+        Promise.resolve({ accessToken: 'test-token' }),
+      );
 
-      const result = await login(makeEvent({
-        routeKey: 'POST /login',
-        body: JSON.stringify({ email: 'test@test.com', password: 'password123' }),
-      }));
+      const result = await login(
+        makeEvent({
+          routeKey: 'POST /login',
+          body: JSON.stringify({ email: 'test@test.com', password: 'password123' }),
+        }),
+      );
 
       assert.equal(result.statusCode, 200);
       assert.deepEqual(JSON.parse(result.body), { accessToken: 'test-token' });
@@ -123,10 +151,12 @@ describe('customer-routes', () => {
         throw new BaseError('Invalid credentials', 401);
       });
 
-      const result = await login(makeEvent({
-        routeKey: 'POST /login',
-        body: JSON.stringify({ email: 'test@test.com', password: 'wrong' }),
-      }));
+      const result = await login(
+        makeEvent({
+          routeKey: 'POST /login',
+          body: JSON.stringify({ email: 'test@test.com', password: 'wrong' }),
+        }),
+      );
 
       assert.equal(result.statusCode, 401);
     });
@@ -134,10 +164,12 @@ describe('customer-routes', () => {
     it('should return 400 for invalid input', async () => {
       const { login } = makeSut();
 
-      const result = await login(makeEvent({
-        routeKey: 'POST /login',
-        body: JSON.stringify({ email: 'not-an-email' }),
-      }));
+      const result = await login(
+        makeEvent({
+          routeKey: 'POST /login',
+          body: JSON.stringify({ email: 'not-an-email' }),
+        }),
+      );
 
       assert.equal(result.statusCode, 400);
     });
@@ -146,12 +178,16 @@ describe('customer-routes', () => {
   describe('makeVerifyEmailRoute()', () => {
     it('should return 200 with verified customer on success', async () => {
       const { verifyEmail } = makeSut();
-      mockCustomerService.verifyEmail.mock.mockImplementationOnce(() => Promise.resolve(verifiedCustomer));
+      mockCustomerService.verifyEmail.mock.mockImplementationOnce(() =>
+        Promise.resolve(verifiedCustomer),
+      );
 
-      const result = await verifyEmail(makeEvent({
-        routeKey: 'POST /verify-email',
-        body: JSON.stringify({ email: 'test@test.com', code: '123456' }),
-      }));
+      const result = await verifyEmail(
+        makeEvent({
+          routeKey: 'POST /verify-email',
+          body: JSON.stringify({ email: 'test@test.com', code: '123456' }),
+        }),
+      );
 
       assert.equal(result.statusCode, 200);
       assert.deepEqual(JSON.parse(result.body), verifiedCustomer);
@@ -160,10 +196,12 @@ describe('customer-routes', () => {
     it('should return 400 for invalid input', async () => {
       const { verifyEmail } = makeSut();
 
-      const result = await verifyEmail(makeEvent({
-        routeKey: 'POST /verify-email',
-        body: JSON.stringify({ email: 'test@test.com', code: '12' }),
-      }));
+      const result = await verifyEmail(
+        makeEvent({
+          routeKey: 'POST /verify-email',
+          body: JSON.stringify({ email: 'test@test.com', code: '12' }),
+        }),
+      );
 
       assert.equal(result.statusCode, 400);
     });
@@ -174,10 +212,12 @@ describe('customer-routes', () => {
         throw new BaseError('Invalid verification code', 400);
       });
 
-      const result = await verifyEmail(makeEvent({
-        routeKey: 'POST /verify-email',
-        body: JSON.stringify({ email: 'test@test.com', code: '000000' }),
-      }));
+      const result = await verifyEmail(
+        makeEvent({
+          routeKey: 'POST /verify-email',
+          body: JSON.stringify({ email: 'test@test.com', code: '000000' }),
+        }),
+      );
 
       assert.equal(result.statusCode, 400);
     });
@@ -187,10 +227,12 @@ describe('customer-routes', () => {
     it('should return 200 on success', async () => {
       const { resendVerification } = makeSut();
 
-      const result = await resendVerification(makeEvent({
-        routeKey: 'POST /resend-verification',
-        body: JSON.stringify({ email: 'test@test.com' }),
-      }));
+      const result = await resendVerification(
+        makeEvent({
+          routeKey: 'POST /resend-verification',
+          body: JSON.stringify({ email: 'test@test.com' }),
+        }),
+      );
 
       assert.equal(result.statusCode, 200);
     });
@@ -198,10 +240,12 @@ describe('customer-routes', () => {
     it('should return 400 for invalid input', async () => {
       const { resendVerification } = makeSut();
 
-      const result = await resendVerification(makeEvent({
-        routeKey: 'POST /resend-verification',
-        body: JSON.stringify({ email: 'not-an-email' }),
-      }));
+      const result = await resendVerification(
+        makeEvent({
+          routeKey: 'POST /resend-verification',
+          body: JSON.stringify({ email: 'not-an-email' }),
+        }),
+      );
 
       assert.equal(result.statusCode, 400);
     });
@@ -211,10 +255,12 @@ describe('customer-routes', () => {
     it('should return 200 on success', async () => {
       const { requestPasswordReset } = makeSut();
 
-      const result = await requestPasswordReset(makeEvent({
-        routeKey: 'POST /request-password-reset',
-        body: JSON.stringify({ email: 'test@test.com' }),
-      }));
+      const result = await requestPasswordReset(
+        makeEvent({
+          routeKey: 'POST /request-password-reset',
+          body: JSON.stringify({ email: 'test@test.com' }),
+        }),
+      );
 
       assert.equal(result.statusCode, 200);
     });
@@ -222,10 +268,12 @@ describe('customer-routes', () => {
     it('should return 400 for invalid input', async () => {
       const { requestPasswordReset } = makeSut();
 
-      const result = await requestPasswordReset(makeEvent({
-        routeKey: 'POST /request-password-reset',
-        body: JSON.stringify({ email: 'not-an-email' }),
-      }));
+      const result = await requestPasswordReset(
+        makeEvent({
+          routeKey: 'POST /request-password-reset',
+          body: JSON.stringify({ email: 'not-an-email' }),
+        }),
+      );
 
       assert.equal(result.statusCode, 400);
     });
@@ -235,10 +283,16 @@ describe('customer-routes', () => {
     it('should return 200 on success', async () => {
       const { resetPassword } = makeSut();
 
-      const result = await resetPassword(makeEvent({
-        routeKey: 'POST /reset-password',
-        body: JSON.stringify({ email: 'test@test.com', code: '123456', newPassword: 'newpass123' }),
-      }));
+      const result = await resetPassword(
+        makeEvent({
+          routeKey: 'POST /reset-password',
+          body: JSON.stringify({
+            email: 'test@test.com',
+            code: '123456',
+            newPassword: 'newpass123',
+          }),
+        }),
+      );
 
       assert.equal(result.statusCode, 200);
     });
@@ -246,10 +300,12 @@ describe('customer-routes', () => {
     it('should return 400 for invalid input', async () => {
       const { resetPassword } = makeSut();
 
-      const result = await resetPassword(makeEvent({
-        routeKey: 'POST /reset-password',
-        body: JSON.stringify({ email: 'test@test.com', code: '12', newPassword: 'short' }),
-      }));
+      const result = await resetPassword(
+        makeEvent({
+          routeKey: 'POST /reset-password',
+          body: JSON.stringify({ email: 'test@test.com', code: '12', newPassword: 'short' }),
+        }),
+      );
 
       assert.equal(result.statusCode, 400);
     });
@@ -260,10 +316,16 @@ describe('customer-routes', () => {
         throw new BaseError('Customer not found', 404);
       });
 
-      const result = await resetPassword(makeEvent({
-        routeKey: 'POST /reset-password',
-        body: JSON.stringify({ email: 'test@test.com', code: '123456', newPassword: 'newpass123' }),
-      }));
+      const result = await resetPassword(
+        makeEvent({
+          routeKey: 'POST /reset-password',
+          body: JSON.stringify({
+            email: 'test@test.com',
+            code: '123456',
+            newPassword: 'newpass123',
+          }),
+        }),
+      );
 
       assert.equal(result.statusCode, 404);
     });
@@ -280,25 +342,33 @@ describe('customer-routes', () => {
     });
 
     it('should route POST /login correctly', async () => {
-      mockCustomerService.login.mock.mockImplementationOnce(() => Promise.resolve({ accessToken: 'test-token' }));
+      mockCustomerService.login.mock.mockImplementationOnce(() =>
+        Promise.resolve({ accessToken: 'test-token' }),
+      );
 
       const handler = makeCustomerHandler(mockCustomerService);
-      const result = await handler(makeEvent({
-        routeKey: 'POST /login',
-        body: JSON.stringify({ email: 'test@test.com', password: 'password123' }),
-      }));
+      const result = await handler(
+        makeEvent({
+          routeKey: 'POST /login',
+          body: JSON.stringify({ email: 'test@test.com', password: 'password123' }),
+        }),
+      );
 
       assert.equal(result.statusCode, 200);
     });
 
     it('should route POST /verify-email correctly', async () => {
-      mockCustomerService.verifyEmail.mock.mockImplementationOnce(() => Promise.resolve(verifiedCustomer));
+      mockCustomerService.verifyEmail.mock.mockImplementationOnce(() =>
+        Promise.resolve(verifiedCustomer),
+      );
 
       const handler = makeCustomerHandler(mockCustomerService);
-      const result = await handler(makeEvent({
-        routeKey: 'POST /verify-email',
-        body: JSON.stringify({ email: 'test@test.com', code: '123456' }),
-      }));
+      const result = await handler(
+        makeEvent({
+          routeKey: 'POST /verify-email',
+          body: JSON.stringify({ email: 'test@test.com', code: '123456' }),
+        }),
+      );
 
       assert.equal(result.statusCode, 200);
     });

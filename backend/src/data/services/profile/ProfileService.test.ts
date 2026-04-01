@@ -1,9 +1,9 @@
-import { beforeEach, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import { mockCustomerRepository } from '../../../test/mocks/MockCustomerRepository.js';
-import { resetMock } from '../../../test/helpers/resetMock.js';
-import { ProfileService } from './ProfileService.js';
+import { beforeEach, describe, it } from 'node:test';
 import { CustomerNotFoundError } from '../../../domain/errors/customer.js';
+import { resetMock } from '../../../test/helpers/resetMock.js';
+import { mockCustomerRepository } from '../../../test/mocks/MockCustomerRepository.js';
+import { ProfileService } from './ProfileService.js';
 
 describe('ProfileService', () => {
   const makeSut = () => {
@@ -11,7 +11,12 @@ describe('ProfileService', () => {
     return { sut };
   };
 
-  const customer = { id: 'customer-id', email: 'test@test.com', verifiedAt: '2024-01-01T01:00:00.000Z', createdAt: '2024-01-01T00:00:00.000Z' };
+  const customer = {
+    id: 'customer-id',
+    email: 'test@test.com',
+    verifiedAt: '2024-01-01T01:00:00.000Z',
+    createdAt: '2024-01-01T00:00:00.000Z',
+  };
 
   beforeEach(() => {
     resetMock(mockCustomerRepository);

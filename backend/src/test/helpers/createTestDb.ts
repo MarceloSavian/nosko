@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { DataType, newDb } from 'pg-mem';
 import type { Pool } from 'pg';
+import { DataType, newDb } from 'pg-mem';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

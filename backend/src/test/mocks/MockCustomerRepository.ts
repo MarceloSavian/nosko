@@ -16,12 +16,14 @@ class MockCustomerRepository implements ICustomerRepository {
       createdAt: '',
     }),
   );
-  markVerified = mock.fn(async (_id: string): Promise<CustomerSchema> => ({
-    id: '',
-    email: '',
-    verifiedAt: null,
-    createdAt: '',
-  }));
+  markVerified = mock.fn(
+    async (_id: string): Promise<CustomerSchema> => ({
+      id: '',
+      email: '',
+      verifiedAt: null,
+      createdAt: '',
+    }),
+  );
   updatePassword = mock.fn(async (_id: string, _passwordHash: string): Promise<void> => {});
 }
 

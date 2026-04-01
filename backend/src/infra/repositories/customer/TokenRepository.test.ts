@@ -1,5 +1,5 @@
-import { before, beforeEach, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import { before, beforeEach, describe, it } from 'node:test';
 import type { Pool } from 'pg';
 import { TokenType } from '../../../domain/models/customer/Customer.js';
 import { createTestDb } from '../../../test/helpers/createTestDb.js';
@@ -26,8 +26,13 @@ describe('TokenRepository', () => {
 
   describe('insert()', () => {
     it('should insert a token without error', async () => {
-      await assert.doesNotReject(
-        async () => sut.insert(customerId, '123456', TokenType.EMAIL_VERIFICATION, new Date(Date.now() + 60_000)),
+      await assert.doesNotReject(async () =>
+        sut.insert(
+          customerId,
+          '123456',
+          TokenType.EMAIL_VERIFICATION,
+          new Date(Date.now() + 60_000),
+        ),
       );
     });
   });
@@ -45,7 +50,12 @@ describe('TokenRepository', () => {
     });
 
     it('should return null when type does not match', async () => {
-      await sut.insert(customerId, '111111', TokenType.EMAIL_VERIFICATION, new Date(Date.now() + 60_000));
+      await sut.insert(
+        customerId,
+        '111111',
+        TokenType.EMAIL_VERIFICATION,
+        new Date(Date.now() + 60_000),
+      );
 
       const result = await sut.find(customerId, '111111', TokenType.PASSWORD_RESET);
 
@@ -59,7 +69,11 @@ describe('TokenRepository', () => {
     });
 
     it('should return null for a non-existent customer', async () => {
-      const result = await sut.find('00000000-0000-0000-0000-000000000000', '123456', TokenType.EMAIL_VERIFICATION);
+      const result = await sut.find(
+        '00000000-0000-0000-0000-000000000000',
+        '123456',
+        TokenType.EMAIL_VERIFICATION,
+      );
 
       assert.equal(result, null);
     });
@@ -67,9 +81,24 @@ describe('TokenRepository', () => {
 
   describe('deleteByCustomerAndType()', () => {
     it('should delete all tokens of a given type for a customer', async () => {
-      await sut.insert(customerId, 'aaaaaa', TokenType.PASSWORD_RESET, new Date(Date.now() + 60_000));
-      await sut.insert(customerId, 'bbbbbb', TokenType.PASSWORD_RESET, new Date(Date.now() + 60_000));
-      await sut.insert(customerId, 'cccccc', TokenType.EMAIL_VERIFICATION, new Date(Date.now() + 60_000));
+      await sut.insert(
+        customerId,
+        'aaaaaa',
+        TokenType.PASSWORD_RESET,
+        new Date(Date.now() + 60_000),
+      );
+      await sut.insert(
+        customerId,
+        'bbbbbb',
+        TokenType.PASSWORD_RESET,
+        new Date(Date.now() + 60_000),
+      );
+      await sut.insert(
+        customerId,
+        'cccccc',
+        TokenType.EMAIL_VERIFICATION,
+        new Date(Date.now() + 60_000),
+      );
 
       await sut.deleteByCustomerAndType(customerId, TokenType.PASSWORD_RESET);
 
@@ -81,7 +110,12 @@ describe('TokenRepository', () => {
 
   describe('delete()', () => {
     it('should delete the token by id', async () => {
-      await sut.insert(customerId, '999999', TokenType.EMAIL_VERIFICATION, new Date(Date.now() + 60_000));
+      await sut.insert(
+        customerId,
+        '999999',
+        TokenType.EMAIL_VERIFICATION,
+        new Date(Date.now() + 60_000),
+      );
       const token = await sut.find(customerId, '999999', TokenType.EMAIL_VERIFICATION);
       assert.ok(token);
 

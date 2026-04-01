@@ -1,5 +1,5 @@
-import { beforeEach, describe, it, mock } from 'node:test';
 import assert from 'node:assert/strict';
+import { beforeEach, describe, it, mock } from 'node:test';
 import { EmailService } from './EmailService.js';
 
 describe('EmailService', () => {
@@ -37,10 +37,9 @@ describe('EmailService', () => {
         throw new Error('Resend API error');
       });
 
-      await assert.rejects(
-        async () => sut.send('user@test.com', 'Hello', '<p>Hi</p>'),
-        { message: 'Resend API error' },
-      );
+      await assert.rejects(async () => sut.send('user@test.com', 'Hello', '<p>Hi</p>'), {
+        message: 'Resend API error',
+      });
     });
   });
 });

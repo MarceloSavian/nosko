@@ -1,5 +1,5 @@
-import { before, beforeEach, describe, it } from 'node:test';
 import assert from 'node:assert/strict';
+import { before, beforeEach, describe, it } from 'node:test';
 import type { Pool } from 'pg';
 import { createTestDb } from '../../../test/helpers/createTestDb.js';
 import { CustomerRepository } from './CustomerRepository.js';
@@ -37,7 +37,9 @@ describe('CustomerRepository', () => {
     it('should throw on duplicate email', async () => {
       await sut.insert({ email: 'dup@test.com', passwordHash: 'hashed' });
 
-      await assert.rejects(async () => sut.insert({ email: 'dup@test.com', passwordHash: 'hashed' }));
+      await assert.rejects(async () =>
+        sut.insert({ email: 'dup@test.com', passwordHash: 'hashed' }),
+      );
     });
   });
 
