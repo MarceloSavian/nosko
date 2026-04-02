@@ -3,8 +3,8 @@ CREATE TABLE IF NOT EXISTS customers (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email TEXT UNIQUE NOT NULL,
   password_hash TEXT NOT NULL,
-  name TEXT,
-  language VARCHAR(10) DEFAULT 'en',
+  name TEXT NOT NULL,
+  language VARCHAR(10) NOT NULL DEFAULT 'en',
   avatar_url TEXT,
   verified_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -42,8 +42,8 @@ CREATE TABLE IF NOT EXISTS partner_invitations (
 CREATE TABLE IF NOT EXISTS partnerships (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   invitation_id UUID NOT NULL REFERENCES partner_invitations(id),
-  customer_a_id UUID NOT NULL REFERENCES customers(id),
-  customer_b_id UUID NOT NULL REFERENCES customers(id),
+  customer_a_id UUID NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+  customer_b_id UUID NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE(customer_a_id, customer_b_id)
 );
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS contribution_rules (
 CREATE TABLE IF NOT EXISTS institutions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
-  country_code VARCHAR(2),
+  country_code VARCHAR(2) NOT NULL,
   logo_url TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -71,10 +71,9 @@ CREATE TABLE IF NOT EXISTS bank_accounts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   institution_id UUID NOT NULL REFERENCES institutions(id),
   account_name TEXT NOT NULL,
-  account_number_last4 VARCHAR(4),
   currency_code VARCHAR(3) NOT NULL,
   balance BIGINT NOT NULL DEFAULT 0,
-  account_type VARCHAR(20),
+  account_type VARCHAR(20) NOT NULL DEFAULT 'CHECKING',
   balance_updated_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -93,7 +92,7 @@ CREATE TABLE IF NOT EXISTS budget_categories (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   icon TEXT,
-  is_system BOOLEAN DEFAULT false,
+  is_system BOOLEAN NOT NULL DEFAULT false,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
@@ -163,3 +162,6 @@ CREATE INDEX IF NOT EXISTS idx_transactions_bank_account_id ON transactions (ban
 CREATE INDEX IF NOT EXISTS idx_transactions_category_id ON transactions (category_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_budget_item_id ON transactions (budget_item_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_transaction_date ON transactions (transaction_date);
+CREATE INDEX IF NOT EXISTS idx_transactions_account_date ON transactions (bank_account_id, transaction_date);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_partner_invitations_pending_unique
+  ON partner_invitations (inviter_id, invitee_email) WHERE status = 'PENDING';

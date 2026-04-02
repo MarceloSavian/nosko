@@ -23,7 +23,7 @@ describe('TransactionRepository', () => {
   beforeEach(async () => {
     restore();
     await pool.query(
-      "INSERT INTO customers (id, email, password_hash) VALUES ($1, 'tx@test.com', 'hashed')",
+      "INSERT INTO customers (id, email, password_hash, name) VALUES ($1, 'tx@test.com', 'hashed', 'Test')",
       [CUSTOMER_ID],
     );
     await pool.query(

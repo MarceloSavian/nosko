@@ -40,34 +40,29 @@ describe('BankAccountRepository', () => {
       assert.equal(result.currencyCode, 'EUR');
       assert.equal(result.balance, 100050);
       assert.equal(result.accountType, AccountType.CHECKING);
-      assert.equal(result.accountNumberLast4, null);
       assert.equal(result.balanceUpdatedAt, null);
       assert.ok(result.createdAt);
     });
 
-    it('should insert with optional fields', async () => {
+    it('should insert with explicit accountType', async () => {
       const result = await sut.insert({
         institutionId,
         accountName: 'Savings',
-        accountNumberLast4: '1234',
         currencyCode: 'USD',
         balance: 0,
         accountType: AccountType.SAVINGS,
       });
 
-      assert.equal(result.accountNumberLast4, '1234');
       assert.equal(result.accountType, AccountType.SAVINGS);
     });
 
-    it('should insert with null accountType', async () => {
-      const result = await sut.insert({
-        institutionId,
-        accountName: 'Untyped',
-        currencyCode: 'BRL',
-        balance: 0,
-      });
+    it('should default accountType to CHECKING via SQL when not specified', async () => {
+      const result = await pool.query<{ account_type: string }>(
+        "INSERT INTO bank_accounts (institution_id, account_name, currency_code) VALUES ($1, 'Default', 'BRL') RETURNING account_type",
+        [institutionId],
+      );
 
-      assert.equal(result.accountType, null);
+      assert.equal(result.rows[0]!.account_type, 'CHECKING');
     });
   });
 
@@ -78,6 +73,7 @@ describe('BankAccountRepository', () => {
         accountName: 'Find Me',
         currencyCode: 'EUR',
         balance: 500,
+        accountType: AccountType.CHECKING,
       });
 
       const result = await sut.findById(inserted.id);
@@ -107,12 +103,14 @@ describe('BankAccountRepository', () => {
         accountName: 'Account A',
         currencyCode: 'EUR',
         balance: 100,
+        accountType: AccountType.CHECKING,
       });
       const a2 = await sut.insert({
         institutionId,
         accountName: 'Account B',
         currencyCode: 'USD',
         balance: 200,
+        accountType: AccountType.CHECKING,
       });
 
       const result = await sut.findByIds([a1.id, a2.id]);
@@ -130,24 +128,12 @@ describe('BankAccountRepository', () => {
         accountName: 'Old Name',
         currencyCode: 'EUR',
         balance: 0,
+        accountType: AccountType.CHECKING,
       });
 
       const result = await sut.update(inserted.id, { accountName: 'New Name' });
 
       assert.equal(result.accountName, 'New Name');
-    });
-
-    it('should update accountNumberLast4', async () => {
-      const inserted = await sut.insert({
-        institutionId,
-        accountName: 'Account',
-        currencyCode: 'EUR',
-        balance: 0,
-      });
-
-      const result = await sut.update(inserted.id, { accountNumberLast4: '5678' });
-
-      assert.equal(result.accountNumberLast4, '5678');
     });
 
     it('should update balance and set balanceUpdatedAt', async () => {
@@ -156,6 +142,7 @@ describe('BankAccountRepository', () => {
         accountName: 'Account',
         currencyCode: 'EUR',
         balance: 0,
+        accountType: AccountType.CHECKING,
       });
       assert.equal(inserted.balanceUpdatedAt, null);
 
@@ -171,6 +158,7 @@ describe('BankAccountRepository', () => {
         accountName: 'Account',
         currencyCode: 'EUR',
         balance: 0,
+        accountType: AccountType.CHECKING,
       });
 
       const result = await sut.update(inserted.id, { accountType: AccountType.CREDIT });
@@ -184,6 +172,7 @@ describe('BankAccountRepository', () => {
         accountName: 'Account',
         currencyCode: 'EUR',
         balance: 0,
+        accountType: AccountType.CHECKING,
       });
 
       const result = await sut.update(inserted.id, {
@@ -205,6 +194,7 @@ describe('BankAccountRepository', () => {
         accountName: 'To Delete',
         currencyCode: 'EUR',
         balance: 0,
+        accountType: AccountType.CHECKING,
       });
 
       await sut.delete(inserted.id);
@@ -233,18 +223,21 @@ describe('BankAccountRepository', () => {
         accountName: 'EUR 1',
         currencyCode: 'EUR',
         balance: 10000,
+        accountType: AccountType.CHECKING,
       });
       const a2 = await sut.insert({
         institutionId,
         accountName: 'EUR 2',
         currencyCode: 'EUR',
         balance: 25050,
+        accountType: AccountType.CHECKING,
       });
       const a3 = await sut.insert({
         institutionId,
         accountName: 'USD 1',
         currencyCode: 'USD',
         balance: 50000,
+        accountType: AccountType.CHECKING,
       });
 
       const result = await sut.getOverviewByAccountIds([a1.id, a2.id, a3.id]);

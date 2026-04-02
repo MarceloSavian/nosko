@@ -21,11 +21,11 @@ describe('BankAccountOwnershipRepository', () => {
   beforeEach(async () => {
     restore();
     const a = await pool.query<{ id: string }>(
-      "INSERT INTO customers (email, password_hash) VALUES ('a@test.com', 'hashed') RETURNING id",
+      "INSERT INTO customers (email, password_hash, name) VALUES ('a@test.com', 'hashed', 'Test A') RETURNING id",
     );
     customerAId = a.rows[0]!.id;
     const b = await pool.query<{ id: string }>(
-      "INSERT INTO customers (email, password_hash) VALUES ('b@test.com', 'hashed') RETURNING id",
+      "INSERT INTO customers (email, password_hash, name) VALUES ('b@test.com', 'hashed', 'Test B') RETURNING id",
     );
     customerBId = b.rows[0]!.id;
     const inst = await pool.query<{ id: string }>(

@@ -386,10 +386,9 @@ describe('PartnershipService', () => {
         id: 'acc-1',
         institutionId: 'inst-id',
         accountName: 'Checking',
-        accountNumberLast4: null,
         currencyCode: 'USD',
         balance: 0,
-        accountType: null,
+        accountType: 'CHECKING',
         balanceUpdatedAt: null,
         createdAt: '',
       };
@@ -448,10 +447,9 @@ describe('PartnershipService', () => {
         id: 'bank-acc-1',
         institutionId: 'inst-id',
         accountName: 'Checking',
-        accountNumberLast4: null,
         currencyCode: 'USD',
         balance: 0,
-        accountType: null,
+        accountType: 'CHECKING',
         balanceUpdatedAt: null,
         createdAt: '',
       };

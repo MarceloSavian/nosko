@@ -19,10 +19,10 @@ describe('ContributionRuleRepository', () => {
   beforeEach(async () => {
     restore();
     const a = await pool.query(
-      "INSERT INTO customers (email, password_hash) VALUES ('a@test.com', 'hashed') RETURNING id",
+      "INSERT INTO customers (email, password_hash, name) VALUES ('a@test.com', 'hashed', 'Test A') RETURNING id",
     );
     const b = await pool.query(
-      "INSERT INTO customers (email, password_hash) VALUES ('b@test.com', 'hashed') RETURNING id",
+      "INSERT INTO customers (email, password_hash, name) VALUES ('b@test.com', 'hashed', 'Test B') RETURNING id",
     );
     const inv = await pool.query(
       "INSERT INTO partner_invitations (inviter_id, invitee_email, status) VALUES ($1, 'b@test.com', 'ACCEPTED') RETURNING id",

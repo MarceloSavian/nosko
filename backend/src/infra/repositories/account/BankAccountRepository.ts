@@ -11,10 +11,9 @@ type BankAccountRow = {
   id: string;
   institution_id: string;
   account_name: string;
-  account_number_last4: string | null;
   currency_code: string;
   balance: number;
-  account_type: string | null;
+  account_type: string;
   balance_updated_at: Date | null;
   created_at: Date;
 };
@@ -24,17 +23,16 @@ function toSchema(row: BankAccountRow): BankAccountSchema {
     id: row.id,
     institutionId: row.institution_id,
     accountName: row.account_name,
-    accountNumberLast4: row.account_number_last4,
     currencyCode: row.currency_code,
     balance: row.balance,
-    accountType: row.account_type as AccountType | null,
+    accountType: row.account_type as AccountType,
     balanceUpdatedAt: row.balance_updated_at?.toISOString() ?? null,
     createdAt: row.created_at.toISOString(),
   };
 }
 
 const COLUMNS =
-  'id, institution_id, account_name, account_number_last4, currency_code, balance, account_type, balance_updated_at, created_at';
+  'id, institution_id, account_name, currency_code, balance, account_type, balance_updated_at, created_at';
 
 export class BankAccountRepository implements IBankAccountRepository {
   constructor(private readonly pool: Pool) {}
@@ -60,15 +58,14 @@ export class BankAccountRepository implements IBankAccountRepository {
 
   async insert(input: CreateBankAccountInput): Promise<BankAccountSchema> {
     const result = await this.pool.query<BankAccountRow>(
-      `INSERT INTO bank_accounts (institution_id, account_name, account_number_last4, currency_code, balance, account_type)
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING ${COLUMNS}`,
+      `INSERT INTO bank_accounts (institution_id, account_name, currency_code, balance, account_type)
+       VALUES ($1, $2, $3, $4, $5) RETURNING ${COLUMNS}`,
       [
         input.institutionId,
         input.accountName,
-        input.accountNumberLast4 ?? null,
         input.currencyCode,
         input.balance,
-        input.accountType ?? null,
+        input.accountType,
       ],
     );
     const row = result.rows[0];
@@ -84,10 +81,6 @@ export class BankAccountRepository implements IBankAccountRepository {
     if (input.accountName !== undefined) {
       fields.push(`account_name = $${paramIndex++}`);
       values.push(input.accountName);
-    }
-    if (input.accountNumberLast4 !== undefined) {
-      fields.push(`account_number_last4 = $${paramIndex++}`);
-      values.push(input.accountNumberLast4);
     }
     if (input.balance !== undefined) {
       fields.push(`balance = $${paramIndex++}`);

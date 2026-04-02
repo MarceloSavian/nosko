@@ -43,14 +43,16 @@ describe('InstitutionRepository', () => {
       assert.equal(result[1]!.countryCode, 'US');
     });
 
-    it('should handle null country_code and logo_url', async () => {
-      await pool.query("INSERT INTO institutions (name) VALUES ('No Details Bank')");
+    it('should handle null logo_url', async () => {
+      await pool.query(
+        "INSERT INTO institutions (name, country_code) VALUES ('No Logo Bank', 'US')",
+      );
 
       const result = await sut.findAll();
 
       assert.equal(result.length, 1);
-      assert.equal(result[0]!.name, 'No Details Bank');
-      assert.equal(result[0]!.countryCode, null);
+      assert.equal(result[0]!.name, 'No Logo Bank');
+      assert.equal(result[0]!.countryCode, 'US');
       assert.equal(result[0]!.logoUrl, null);
     });
   });

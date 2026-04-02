@@ -18,7 +18,7 @@ describe('CurrencyDefaultRepository', () => {
   beforeEach(async () => {
     restore();
     const result = await pool.query<{ id: string }>(
-      "INSERT INTO customers (email, password_hash) VALUES ('currency-test@test.com', 'hashed') RETURNING id",
+      "INSERT INTO customers (email, password_hash, name) VALUES ('currency-test@test.com', 'hashed', 'Test') RETURNING id",
     );
     customerId = result.rows[0]!.id;
   });
@@ -51,7 +51,7 @@ describe('CurrencyDefaultRepository', () => {
 
     it('should not return defaults for other customers', async () => {
       const other = await pool.query<{ id: string }>(
-        "INSERT INTO customers (email, password_hash) VALUES ('other@test.com', 'hashed') RETURNING id",
+        "INSERT INTO customers (email, password_hash, name) VALUES ('other@test.com', 'hashed', 'Test') RETURNING id",
       );
       await pool.query(
         'INSERT INTO currency_defaults (customer_id, currency_code, display_order) VALUES ($1, $2, $3)',
@@ -97,7 +97,7 @@ describe('CurrencyDefaultRepository', () => {
 
     it('should not affect other customers defaults', async () => {
       const other = await pool.query<{ id: string }>(
-        "INSERT INTO customers (email, password_hash) VALUES ('other2@test.com', 'hashed') RETURNING id",
+        "INSERT INTO customers (email, password_hash, name) VALUES ('other2@test.com', 'hashed', 'Test') RETURNING id",
       );
       const otherId = other.rows[0]!.id;
       await sut.replaceAll(otherId, [{ currencyCode: 'GBP', displayOrder: 0 }]);

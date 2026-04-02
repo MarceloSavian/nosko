@@ -27,7 +27,7 @@ describe('BudgetItemRepository', () => {
   beforeEach(async () => {
     restore();
     await pool.query(
-      "INSERT INTO customers (id, email, password_hash) VALUES ($1, 'item@test.com', 'hashed')",
+      "INSERT INTO customers (id, email, password_hash, name) VALUES ($1, 'item@test.com', 'hashed', 'Test')",
       [CUSTOMER_ID],
     );
     await pool.query("INSERT INTO budget_categories (id, name) VALUES ($1, 'Food')", [CATEGORY_ID]);

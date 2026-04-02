@@ -5,7 +5,7 @@ import type { InstitutionSchema } from '../../../domain/models/institution/Insti
 type InstitutionRow = {
   id: string;
   name: string;
-  country_code: string | null;
+  country_code: string;
   logo_url: string | null;
 };
 

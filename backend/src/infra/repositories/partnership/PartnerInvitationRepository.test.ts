@@ -20,11 +20,11 @@ describe('PartnerInvitationRepository', () => {
   beforeEach(async () => {
     restore();
     const result = await pool.query(
-      "INSERT INTO customers (email, password_hash) VALUES ('inviter@test.com', 'hashed') RETURNING id",
+      "INSERT INTO customers (email, password_hash, name) VALUES ('inviter@test.com', 'hashed', 'Inviter') RETURNING id",
     );
     inviterId = result.rows[0].id;
     await pool.query(
-      "INSERT INTO customers (email, password_hash) VALUES ('invitee@test.com', 'hashed')",
+      "INSERT INTO customers (email, password_hash, name) VALUES ('invitee@test.com', 'hashed', 'Invitee')",
     );
   });
 

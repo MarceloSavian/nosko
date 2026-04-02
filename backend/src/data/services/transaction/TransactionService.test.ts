@@ -128,10 +128,9 @@ describe('TransactionService', () => {
         id: 'account-id',
         institutionId: 'inst-id',
         accountName: 'Checking',
-        accountNumberLast4: null,
         currencyCode: 'USD',
         balance: 100000,
-        accountType: null,
+        accountType: 'CHECKING',
         balanceUpdatedAt: null,
         createdAt: '',
       }));
@@ -153,10 +152,9 @@ describe('TransactionService', () => {
         id: 'account-id',
         institutionId: 'inst-id',
         accountName: 'Checking',
-        accountNumberLast4: null,
         currencyCode: 'USD',
         balance: 100000,
-        accountType: null,
+        accountType: 'CHECKING',
         balanceUpdatedAt: null,
         createdAt: '',
       }));

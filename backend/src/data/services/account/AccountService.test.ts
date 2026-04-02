@@ -20,7 +20,6 @@ describe('AccountService', () => {
     id: 'account-id',
     institutionId: 'inst-id',
     accountName: 'Checking',
-    accountNumberLast4: '1234',
     currencyCode: 'USD',
     balance: 100000,
     accountType: AccountType.CHECKING,
@@ -32,7 +31,6 @@ describe('AccountService', () => {
     id: 'partner-account-id',
     institutionId: 'inst-id',
     accountName: 'Partner Savings',
-    accountNumberLast4: '5678',
     currencyCode: 'USD',
     balance: 200000,
     accountType: AccountType.SAVINGS,
@@ -124,6 +122,7 @@ describe('AccountService', () => {
         accountName: 'Checking',
         currencyCode: 'USD',
         balance: 1000,
+        accountType: AccountType.CHECKING,
       });
 
       assert.deepEqual(result, account);

@@ -24,10 +24,10 @@ describe('BudgetPlanRepository', () => {
   });
 
   async function insertCustomer(id: string = CUSTOMER_ID): Promise<void> {
-    await pool.query("INSERT INTO customers (id, email, password_hash) VALUES ($1, $2, 'hashed')", [
-      id,
-      `user-${id}@test.com`,
-    ]);
+    await pool.query(
+      "INSERT INTO customers (id, email, password_hash, name) VALUES ($1, $2, 'hashed', 'Test')",
+      [id, `user-${id}@test.com`],
+    );
   }
 
   async function insertPartnership(): Promise<void> {

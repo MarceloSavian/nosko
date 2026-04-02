@@ -10,10 +10,9 @@ const defaultAccount: BankAccountSchema = {
   id: '',
   institutionId: '',
   accountName: '',
-  accountNumberLast4: null,
   currencyCode: 'USD',
   balance: 0,
-  accountType: null,
+  accountType: 'CHECKING',
   balanceUpdatedAt: null,
   createdAt: '',
 };
