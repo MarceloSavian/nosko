@@ -114,7 +114,12 @@ describe('BudgetSummaryService', () => {
     it('should calculate personal income and expenses from plan items', async () => {
       const { sut } = makeSut();
       mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
-      mock.method(mockTransactionRepository, 'findByFilters', async () => []);
+      mock.method(mockTransactionRepository, 'findByFilters', async () => ({
+        data: [],
+        total: 0,
+        limit: 1000,
+        offset: 0,
+      }));
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => personalPlan);
       mock.method(mockBudgetItemRepository, 'findByPlanId', async () => [salaryItem, gymItem]);
       mock.method(mockPartnershipRepository, 'findByCustomerId', async () => null);
@@ -152,7 +157,12 @@ describe('BudgetSummaryService', () => {
       };
 
       mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
-      mock.method(mockTransactionRepository, 'findByFilters', async () => []);
+      mock.method(mockTransactionRepository, 'findByFilters', async () => ({
+        data: [],
+        total: 0,
+        limit: 1000,
+        offset: 0,
+      }));
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => personalPlan);
       mock.method(mockBudgetItemRepository, 'findByPlanId', async (planId: string) =>
         planId === 'personal-plan' ? [salaryItem] : [rentItem],
@@ -201,7 +211,12 @@ describe('BudgetSummaryService', () => {
       };
 
       mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
-      mock.method(mockTransactionRepository, 'findByFilters', async () => []);
+      mock.method(mockTransactionRepository, 'findByFilters', async () => ({
+        data: [],
+        total: 0,
+        limit: 1000,
+        offset: 0,
+      }));
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => null);
       mock.method(mockBudgetItemRepository, 'findByPlanId', async () => [rentItem]);
       mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
@@ -237,7 +252,12 @@ describe('BudgetSummaryService', () => {
       ];
 
       mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
-      mock.method(mockTransactionRepository, 'findByFilters', async () => transactions);
+      mock.method(mockTransactionRepository, 'findByFilters', async () => ({
+        data: transactions,
+        total: transactions.length,
+        limit: 1000,
+        offset: 0,
+      }));
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => personalPlan);
       mock.method(mockBudgetItemRepository, 'findByPlanId', async () => [gymItem]);
       mock.method(mockPartnershipRepository, 'findByCustomerId', async () => null);

@@ -26,10 +26,14 @@ export class BudgetSummaryService implements IBudgetSummaryService {
     const accounts = await this.bankAccountRepository.findByCustomerId(customerId);
     const bankAccountIds = accounts.map((a) => a.id);
 
-    const transactions =
+    const allTransactions =
       bankAccountIds.length > 0
-        ? await this.transactionRepository.findByFilters({ bankAccountIds, yearMonth })
-        : [];
+        ? await this.transactionRepository.findByFilters(
+            { bankAccountIds, yearMonth },
+            { limit: 1000, offset: 0 },
+          )
+        : null;
+    const transactions = allTransactions ? allTransactions.data : [];
 
     // Personal plan
     const personalPlan = await this.planRepository.findByCustomerAndMonth(customerId, yearMonth);

@@ -1,5 +1,6 @@
 import type { Pool } from 'pg';
 import type { ITransactionRepository } from '../../../data/domain/transaction/ITransactionRepository.js';
+import type { PaginatedResult, PaginationInput } from '../../../domain/models/shared/Pagination.js';
 import type {
   CreateTransactionInput,
   TransactionSchema,
@@ -36,11 +37,14 @@ const COLUMNS =
 export class TransactionRepository implements ITransactionRepository {
   constructor(private readonly pool: Pool) {}
 
-  async findByFilters(filters: {
-    bankAccountIds: string[];
-    yearMonth?: string;
-    categoryId?: string;
-  }): Promise<TransactionSchema[]> {
+  async findByFilters(
+    filters: {
+      bankAccountIds: string[];
+      yearMonth?: string;
+      categoryId?: string;
+    },
+    pagination: PaginationInput,
+  ): Promise<PaginatedResult<TransactionSchema>> {
     const conditions: string[] = [];
     const values: unknown[] = [];
     let paramIndex = 1;
@@ -62,11 +66,24 @@ export class TransactionRepository implements ITransactionRepository {
     }
 
     const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
-    const result = await this.pool.query<TransactionRow>(
-      `SELECT ${COLUMNS} FROM transactions ${where} ORDER BY transaction_date DESC, created_at DESC`,
+
+    const countResult = await this.pool.query<{ count: string }>(
+      `SELECT COUNT(*) as count FROM transactions ${where}`,
       values,
     );
-    return result.rows.map(toSchema);
+    const total = Number(countResult.rows[0]?.count ?? 0);
+
+    const result = await this.pool.query<TransactionRow>(
+      `SELECT ${COLUMNS} FROM transactions ${where} ORDER BY transaction_date DESC, created_at DESC LIMIT $${paramIndex++} OFFSET $${paramIndex++}`,
+      [...values, pagination.limit, pagination.offset],
+    );
+
+    return {
+      data: result.rows.map(toSchema),
+      total,
+      limit: pagination.limit,
+      offset: pagination.offset,
+    };
   }
 
   async findById(id: string): Promise<TransactionSchema | null> {

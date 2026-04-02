@@ -24,10 +24,14 @@ export class DashboardService implements IDashboardService {
     const bankAccountIds = accounts.map((a) => a.id);
 
     // Get transactions for the month
-    const transactions =
+    const allTransactions =
       bankAccountIds.length > 0
-        ? await this.transactionRepository.findByFilters({ bankAccountIds, yearMonth })
-        : [];
+        ? await this.transactionRepository.findByFilters(
+            { bankAccountIds, yearMonth },
+            { limit: 1000, offset: 0 },
+          )
+        : null;
+    const transactions = allTransactions ? allTransactions.data : [];
 
     const totalSpending = transactions.reduce((sum, tx) => sum + tx.amount, 0);
 

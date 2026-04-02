@@ -1,3 +1,4 @@
+import type { PaginatedResult, PaginationInput } from '../../models/shared/Pagination.js';
 import type {
   CreateTransactionInput,
   TransactionSchema,
@@ -8,7 +9,8 @@ export interface ITransactionService {
   listTransactions(
     customerId: string,
     filters: { yearMonth?: string; accountId?: string; categoryId?: string },
-  ): Promise<TransactionSchema[]>;
+    pagination: PaginationInput,
+  ): Promise<PaginatedResult<TransactionSchema>>;
   createTransaction(customerId: string, input: CreateTransactionInput): Promise<TransactionSchema>;
   updateTransaction(
     customerId: string,

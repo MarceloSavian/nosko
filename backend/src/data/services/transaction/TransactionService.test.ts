@@ -47,21 +47,31 @@ describe('TransactionService', () => {
   describe('listTransactions()', () => {
     it('should return transactions for all customer accounts', async () => {
       const { sut } = makeSut();
+      const paginatedResult = {
+        data: [transaction],
+        total: 1,
+        limit: 50,
+        offset: 0,
+      };
       mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
-      mock.method(mockTransactionRepository, 'findByFilters', async () => [transaction]);
+      mock.method(mockTransactionRepository, 'findByFilters', async () => paginatedResult);
 
-      const result = await sut.listTransactions('customer-id', {});
+      const result = await sut.listTransactions('customer-id', {}, { limit: 50, offset: 0 });
 
-      assert.deepEqual(result, [transaction]);
+      assert.deepEqual(result.data, [transaction]);
+      assert.equal(result.total, 1);
     });
 
-    it('should return empty array when no accounts', async () => {
+    it('should return empty result when no accounts', async () => {
       const { sut } = makeSut();
       mock.method(mockBankAccountRepository, 'findByCustomerId', async () => []);
 
-      const result = await sut.listTransactions('customer-id', {});
+      const result = await sut.listTransactions('customer-id', {}, { limit: 50, offset: 0 });
 
-      assert.deepEqual(result, []);
+      assert.deepEqual(result.data, []);
+      assert.equal(result.total, 0);
+      assert.equal(result.limit, 50);
+      assert.equal(result.offset, 0);
     });
   });
 

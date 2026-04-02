@@ -3,6 +3,7 @@ import {
   BankAccountNotOwnedError,
 } from '../../../domain/errors/account.js';
 import { TransactionNotFoundError } from '../../../domain/errors/transaction.js';
+import type { PaginatedResult, PaginationInput } from '../../../domain/models/shared/Pagination.js';
 import type {
   CreateTransactionInput,
   TransactionSchema,
@@ -21,25 +22,31 @@ export class TransactionService implements ITransactionService {
   async listTransactions(
     customerId: string,
     filters: { yearMonth?: string; accountId?: string; categoryId?: string },
-  ): Promise<TransactionSchema[]> {
+    pagination: PaginationInput,
+  ): Promise<PaginatedResult<TransactionSchema>> {
     let bankAccountIds: string[];
 
     if (filters.accountId) {
       const account = await this.bankAccountRepository.findById(filters.accountId);
-      if (!account || account.customerId !== customerId) return [];
+      if (!account || account.customerId !== customerId)
+        return { data: [], total: 0, limit: pagination.limit, offset: pagination.offset };
       bankAccountIds = [filters.accountId];
     } else {
       const accounts = await this.bankAccountRepository.findByCustomerId(customerId);
       bankAccountIds = accounts.map((a) => a.id);
     }
 
-    if (bankAccountIds.length === 0) return [];
+    if (bankAccountIds.length === 0)
+      return { data: [], total: 0, limit: pagination.limit, offset: pagination.offset };
 
-    return await this.transactionRepository.findByFilters({
-      bankAccountIds,
-      yearMonth: filters.yearMonth,
-      categoryId: filters.categoryId,
-    });
+    return await this.transactionRepository.findByFilters(
+      {
+        bankAccountIds,
+        yearMonth: filters.yearMonth,
+        categoryId: filters.categoryId,
+      },
+      pagination,
+    );
   }
 
   async createTransaction(

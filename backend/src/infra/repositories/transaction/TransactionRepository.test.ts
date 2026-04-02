@@ -95,10 +95,18 @@ describe('TransactionRepository', () => {
   });
 
   describe('findByFilters()', () => {
-    it('should return an empty array when no transactions match', async () => {
-      const result = await sut.findByFilters({ bankAccountIds: [BANK_ACCOUNT_ID] });
+    const defaultPagination = { limit: 50, offset: 0 };
 
-      assert.deepEqual(result, []);
+    it('should return an empty result when no transactions match', async () => {
+      const result = await sut.findByFilters(
+        { bankAccountIds: [BANK_ACCOUNT_ID] },
+        defaultPagination,
+      );
+
+      assert.deepEqual(result.data, []);
+      assert.equal(result.total, 0);
+      assert.equal(result.limit, 50);
+      assert.equal(result.offset, 0);
     });
 
     it('should filter by bankAccountIds', async () => {
@@ -113,10 +121,14 @@ describe('TransactionRepository', () => {
         transactionDate: '2026-04-01',
       });
 
-      const result = await sut.findByFilters({ bankAccountIds: [BANK_ACCOUNT_ID] });
+      const result = await sut.findByFilters(
+        { bankAccountIds: [BANK_ACCOUNT_ID] },
+        defaultPagination,
+      );
 
-      assert.equal(result.length, 1);
-      assert.equal(result[0]?.bankAccountId, BANK_ACCOUNT_ID);
+      assert.equal(result.data.length, 1);
+      assert.equal(result.data[0]?.bankAccountId, BANK_ACCOUNT_ID);
+      assert.equal(result.total, 1);
     });
 
     it('should filter by multiple bankAccountIds', async () => {
@@ -131,11 +143,15 @@ describe('TransactionRepository', () => {
         transactionDate: '2026-04-01',
       });
 
-      const result = await sut.findByFilters({
-        bankAccountIds: [BANK_ACCOUNT_ID, BANK_ACCOUNT_B_ID],
-      });
+      const result = await sut.findByFilters(
+        {
+          bankAccountIds: [BANK_ACCOUNT_ID, BANK_ACCOUNT_B_ID],
+        },
+        defaultPagination,
+      );
 
-      assert.equal(result.length, 2);
+      assert.equal(result.data.length, 2);
+      assert.equal(result.total, 2);
     });
 
     it('should filter by yearMonth', async () => {
@@ -150,13 +166,17 @@ describe('TransactionRepository', () => {
         transactionDate: '2026-05-01',
       });
 
-      const result = await sut.findByFilters({
-        bankAccountIds: [BANK_ACCOUNT_ID],
-        yearMonth: '2026-04',
-      });
+      const result = await sut.findByFilters(
+        {
+          bankAccountIds: [BANK_ACCOUNT_ID],
+          yearMonth: '2026-04',
+        },
+        defaultPagination,
+      );
 
-      assert.equal(result.length, 1);
-      assert.equal(result[0]?.transactionDate, '2026-04-15');
+      assert.equal(result.data.length, 1);
+      assert.equal(result.data[0]?.transactionDate, '2026-04-15');
+      assert.equal(result.total, 1);
     });
 
     it('should filter by categoryId', async () => {
@@ -172,13 +192,17 @@ describe('TransactionRepository', () => {
         transactionDate: '2026-04-01',
       });
 
-      const result = await sut.findByFilters({
-        bankAccountIds: [BANK_ACCOUNT_ID],
-        categoryId: CATEGORY_ID,
-      });
+      const result = await sut.findByFilters(
+        {
+          bankAccountIds: [BANK_ACCOUNT_ID],
+          categoryId: CATEGORY_ID,
+        },
+        defaultPagination,
+      );
 
-      assert.equal(result.length, 1);
-      assert.equal(result[0]?.categoryId, CATEGORY_ID);
+      assert.equal(result.data.length, 1);
+      assert.equal(result.data[0]?.categoryId, CATEGORY_ID);
+      assert.equal(result.total, 1);
     });
 
     it('should return results ordered by transaction_date DESC', async () => {
@@ -193,11 +217,52 @@ describe('TransactionRepository', () => {
         transactionDate: '2026-04-15',
       });
 
-      const result = await sut.findByFilters({ bankAccountIds: [BANK_ACCOUNT_ID] });
+      const result = await sut.findByFilters(
+        { bankAccountIds: [BANK_ACCOUNT_ID] },
+        defaultPagination,
+      );
 
-      assert.equal(result.length, 2);
-      assert.equal(result[0]?.transactionDate, '2026-04-15');
-      assert.equal(result[1]?.transactionDate, '2026-04-01');
+      assert.equal(result.data.length, 2);
+      assert.equal(result.data[0]?.transactionDate, '2026-04-15');
+      assert.equal(result.data[1]?.transactionDate, '2026-04-01');
+    });
+
+    it('should paginate results correctly', async () => {
+      await sut.insert({
+        bankAccountId: BANK_ACCOUNT_ID,
+        amount: -10,
+        transactionDate: '2026-04-01',
+      });
+      await sut.insert({
+        bankAccountId: BANK_ACCOUNT_ID,
+        amount: -20,
+        transactionDate: '2026-04-02',
+      });
+      await sut.insert({
+        bankAccountId: BANK_ACCOUNT_ID,
+        amount: -30,
+        transactionDate: '2026-04-03',
+      });
+
+      const firstPage = await sut.findByFilters(
+        { bankAccountIds: [BANK_ACCOUNT_ID] },
+        { limit: 2, offset: 0 },
+      );
+
+      assert.equal(firstPage.data.length, 2);
+      assert.equal(firstPage.total, 3);
+      assert.equal(firstPage.limit, 2);
+      assert.equal(firstPage.offset, 0);
+
+      const secondPage = await sut.findByFilters(
+        { bankAccountIds: [BANK_ACCOUNT_ID] },
+        { limit: 2, offset: 2 },
+      );
+
+      assert.equal(secondPage.data.length, 1);
+      assert.equal(secondPage.total, 3);
+      assert.equal(secondPage.limit, 2);
+      assert.equal(secondPage.offset, 2);
     });
   });
 

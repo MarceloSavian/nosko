@@ -1,5 +1,6 @@
 import { mock } from 'node:test';
 import type { ITransactionRepository } from '../../data/domain/transaction/ITransactionRepository.js';
+import type { PaginatedResult, PaginationInput } from '../../domain/models/shared/Pagination.js';
 import type {
   CreateTransactionInput,
   TransactionSchema,
@@ -19,11 +20,19 @@ const defaultTransaction: TransactionSchema = {
 
 class MockTransactionRepository implements ITransactionRepository {
   findByFilters = mock.fn(
-    async (_filters: {
-      bankAccountIds: string[];
-      yearMonth?: string;
-      categoryId?: string;
-    }): Promise<TransactionSchema[]> => [],
+    async (
+      _filters: {
+        bankAccountIds: string[];
+        yearMonth?: string;
+        categoryId?: string;
+      },
+      _pagination: PaginationInput,
+    ): Promise<PaginatedResult<TransactionSchema>> => ({
+      data: [],
+      total: 0,
+      limit: 50,
+      offset: 0,
+    }),
   );
   findById = mock.fn(async (_id: string): Promise<TransactionSchema | null> => null);
   insert = mock.fn(

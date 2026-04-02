@@ -137,7 +137,12 @@ describe('DashboardService', () => {
       ];
 
       mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
-      mock.method(mockTransactionRepository, 'findByFilters', async () => transactions);
+      mock.method(mockTransactionRepository, 'findByFilters', async () => ({
+        data: transactions,
+        total: transactions.length,
+        limit: 1000,
+        offset: 0,
+      }));
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => budgetPlan);
       mock.method(mockBudgetItemRepository, 'findByPlanId', async () => budgetItems);
       mock.method(mockBudgetCategoryRepository, 'findAll', async () => categories);
@@ -202,7 +207,12 @@ describe('DashboardService', () => {
       ];
 
       mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
-      mock.method(mockTransactionRepository, 'findByFilters', async () => []);
+      mock.method(mockTransactionRepository, 'findByFilters', async () => ({
+        data: [],
+        total: 0,
+        limit: 1000,
+        offset: 0,
+      }));
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => budgetPlan);
       mock.method(mockBudgetItemRepository, 'findByPlanId', async () => budgetItems);
       mock.method(mockBudgetCategoryRepository, 'findAll', async () => []);
@@ -253,7 +263,12 @@ describe('DashboardService', () => {
       ];
 
       mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
-      mock.method(mockTransactionRepository, 'findByFilters', async () => transactions);
+      mock.method(mockTransactionRepository, 'findByFilters', async () => ({
+        data: transactions,
+        total: transactions.length,
+        limit: 1000,
+        offset: 0,
+      }));
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => null);
 
       const result = await sut.getDashboard('customer-id', '2024-09');

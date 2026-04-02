@@ -28,15 +28,20 @@ describe('transaction-routes', () => {
     }) as unknown as APIGatewayProxyEventV2;
 
   describe('makeListTransactionsRoute()', () => {
-    it('should return 200 with transactions', async () => {
+    it('should return 200 with paginated transactions', async () => {
       const route = makeListTransactionsRoute(mockTransactionService);
-      const transactions = [{ id: '1', amount: -5000 }];
-      mock.method(mockTransactionService, 'listTransactions', async () => transactions);
+      const paginatedResult = {
+        data: [{ id: '1', amount: -5000 }],
+        total: 1,
+        limit: 50,
+        offset: 0,
+      };
+      mock.method(mockTransactionService, 'listTransactions', async () => paginatedResult);
 
       const result = await route(makeEvent(), 'customer-id');
 
       assert.equal(result.statusCode, 200);
-      assert.deepEqual(JSON.parse(result.body), transactions);
+      assert.deepEqual(JSON.parse(result.body), paginatedResult);
     });
   });
 

@@ -1,5 +1,6 @@
 import type { APIGatewayProxyEventV2, APIGatewayProxyResult } from 'aws-lambda';
 import type { IJwtService } from '../../data/domain/auth/IJwtService.js';
+import { paginationInputSchema } from '../../domain/models/shared/Pagination.js';
 import {
   createTransactionInputSchema,
   updateTransactionInputSchema,
@@ -23,9 +24,17 @@ export function makeListTransactionsRoute(service: ITransactionService) {
       const yearMonth = event.queryStringParameters?.yearMonth;
       const accountId = event.queryStringParameters?.accountId;
       const categoryId = event.queryStringParameters?.categoryId;
+      const pagination = paginationInputSchema.parse({
+        limit: event.queryStringParameters?.limit,
+        offset: event.queryStringParameters?.offset,
+      });
       return formatResponse(
         200,
-        await service.listTransactions(customerId, { yearMonth, accountId, categoryId }),
+        await service.listTransactions(
+          customerId,
+          { yearMonth, accountId, categoryId },
+          pagination,
+        ),
       );
     } catch (error) {
       return logErrorAndFormat(error);

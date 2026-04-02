@@ -1,4 +1,5 @@
 import { mock } from 'node:test';
+import type { PaginatedResult, PaginationInput } from '../../domain/models/shared/Pagination.js';
 import type {
   CreateTransactionInput,
   TransactionSchema,
@@ -22,7 +23,13 @@ class MockTransactionService implements ITransactionService {
     async (
       _customerId: string,
       _filters: { yearMonth?: string; accountId?: string; categoryId?: string },
-    ): Promise<TransactionSchema[]> => [],
+      _pagination: PaginationInput,
+    ): Promise<PaginatedResult<TransactionSchema>> => ({
+      data: [],
+      total: 0,
+      limit: 50,
+      offset: 0,
+    }),
   );
   createTransaction = mock.fn(
     async (_customerId: string, _input: CreateTransactionInput): Promise<TransactionSchema> => ({
