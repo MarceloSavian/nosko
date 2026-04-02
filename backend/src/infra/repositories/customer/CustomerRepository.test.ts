@@ -20,7 +20,12 @@ describe('CustomerRepository', () => {
 
   describe('insert()', () => {
     it('should insert a customer and return the created record', async () => {
-      const result = await sut.insert({ email: 'insert@test.com', passwordHash: 'hashed' });
+      const result = await sut.insert({
+        email: 'insert@test.com',
+        passwordHash: 'hashed',
+        name: 'Test',
+        language: 'en',
+      });
 
       assert.ok(result.id);
       assert.equal(result.email, 'insert@test.com');
@@ -29,23 +34,38 @@ describe('CustomerRepository', () => {
     });
 
     it('should generate a UUID for the id', async () => {
-      const result = await sut.insert({ email: 'uuid@test.com', passwordHash: 'hashed' });
+      const result = await sut.insert({
+        email: 'uuid@test.com',
+        passwordHash: 'hashed',
+        name: 'Test',
+        language: 'en',
+      });
 
       assert.match(result.id, /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
     });
 
     it('should throw on duplicate email', async () => {
-      await sut.insert({ email: 'dup@test.com', passwordHash: 'hashed' });
+      await sut.insert({
+        email: 'dup@test.com',
+        passwordHash: 'hashed',
+        name: 'Test',
+        language: 'en',
+      });
 
       await assert.rejects(async () =>
-        sut.insert({ email: 'dup@test.com', passwordHash: 'hashed' }),
+        sut.insert({ email: 'dup@test.com', passwordHash: 'hashed', name: 'Test', language: 'en' }),
       );
     });
   });
 
   describe('findById()', () => {
     it('should return the customer when found', async () => {
-      const customer = await sut.insert({ email: 'findid@test.com', passwordHash: 'hashed' });
+      const customer = await sut.insert({
+        email: 'findid@test.com',
+        passwordHash: 'hashed',
+        name: 'Test',
+        language: 'en',
+      });
 
       const result = await sut.findById(customer.id);
 
@@ -63,7 +83,12 @@ describe('CustomerRepository', () => {
 
   describe('findByEmail()', () => {
     it('should return the customer when found', async () => {
-      await sut.insert({ email: 'find@test.com', passwordHash: 'hashed' });
+      await sut.insert({
+        email: 'find@test.com',
+        passwordHash: 'hashed',
+        name: 'Test',
+        language: 'en',
+      });
 
       const result = await sut.findByEmail('find@test.com');
 
@@ -81,7 +106,12 @@ describe('CustomerRepository', () => {
 
   describe('findByEmailWithPassword()', () => {
     it('should return customer with passwordHash when found', async () => {
-      await sut.insert({ email: 'withpw@test.com', passwordHash: 'secret-hash' });
+      await sut.insert({
+        email: 'withpw@test.com',
+        passwordHash: 'secret-hash',
+        name: 'Test',
+        language: 'en',
+      });
 
       const result = await sut.findByEmailWithPassword('withpw@test.com');
 
@@ -99,7 +129,12 @@ describe('CustomerRepository', () => {
 
   describe('markVerified()', () => {
     it('should set verifiedAt and return the updated customer', async () => {
-      const customer = await sut.insert({ email: 'verify@test.com', passwordHash: 'hashed' });
+      const customer = await sut.insert({
+        email: 'verify@test.com',
+        passwordHash: 'hashed',
+        name: 'Test',
+        language: 'en',
+      });
       assert.equal(customer.verifiedAt, null);
 
       const result = await sut.markVerified(customer.id);
@@ -112,7 +147,12 @@ describe('CustomerRepository', () => {
 
   describe('updatePassword()', () => {
     it('should update the password hash', async () => {
-      const customer = await sut.insert({ email: 'pwupdate@test.com', passwordHash: 'old-hash' });
+      const customer = await sut.insert({
+        email: 'pwupdate@test.com',
+        passwordHash: 'old-hash',
+        name: 'Test',
+        language: 'en',
+      });
 
       await sut.updatePassword(customer.id, 'new-hash');
 
@@ -123,7 +163,12 @@ describe('CustomerRepository', () => {
 
   describe('updateProfile()', () => {
     it('should update name only', async () => {
-      const customer = await sut.insert({ email: 'profile1@test.com', passwordHash: 'hashed' });
+      const customer = await sut.insert({
+        email: 'profile1@test.com',
+        passwordHash: 'hashed',
+        name: 'Test',
+        language: 'en',
+      });
 
       const result = await sut.updateProfile(customer.id, { name: 'Alice' });
 
@@ -132,7 +177,12 @@ describe('CustomerRepository', () => {
     });
 
     it('should update language only', async () => {
-      const customer = await sut.insert({ email: 'profile2@test.com', passwordHash: 'hashed' });
+      const customer = await sut.insert({
+        email: 'profile2@test.com',
+        passwordHash: 'hashed',
+        name: 'Test',
+        language: 'en',
+      });
 
       const result = await sut.updateProfile(customer.id, { language: 'fi' });
 
@@ -140,7 +190,12 @@ describe('CustomerRepository', () => {
     });
 
     it('should update avatarUrl only', async () => {
-      const customer = await sut.insert({ email: 'profile3@test.com', passwordHash: 'hashed' });
+      const customer = await sut.insert({
+        email: 'profile3@test.com',
+        passwordHash: 'hashed',
+        name: 'Test',
+        language: 'en',
+      });
 
       const result = await sut.updateProfile(customer.id, {
         avatarUrl: 'https://example.com/avatar.png',
@@ -150,7 +205,12 @@ describe('CustomerRepository', () => {
     });
 
     it('should update all fields together', async () => {
-      const customer = await sut.insert({ email: 'profile4@test.com', passwordHash: 'hashed' });
+      const customer = await sut.insert({
+        email: 'profile4@test.com',
+        passwordHash: 'hashed',
+        name: 'Test',
+        language: 'en',
+      });
 
       const result = await sut.updateProfile(customer.id, {
         name: 'Bob',
@@ -166,7 +226,12 @@ describe('CustomerRepository', () => {
 
   describe('delete()', () => {
     it('should delete an existing customer', async () => {
-      const customer = await sut.insert({ email: 'del@test.com', passwordHash: 'hashed' });
+      const customer = await sut.insert({
+        email: 'del@test.com',
+        passwordHash: 'hashed',
+        name: 'Test',
+        language: 'en',
+      });
 
       await sut.delete(customer.id);
 

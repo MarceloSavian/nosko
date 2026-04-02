@@ -59,7 +59,12 @@ describe('CustomerService', () => {
       mock.method(mockTokenRepository, 'insert', async () => undefined);
       mock.method(mockEmailService, 'send', async () => undefined);
 
-      await sut.signup({ email: 'test@test.com', password: 'password123' });
+      await sut.signup({
+        email: 'test@test.com',
+        password: 'password123',
+        name: 'Test',
+        language: 'en',
+      });
 
       assert.equal(mockCustomerRepository.findByEmail.mock.calls[0]?.arguments[0], 'test@test.com');
       assert.equal(mockCustomerRepository.findByEmail.mock.callCount(), 1);
@@ -70,7 +75,13 @@ describe('CustomerService', () => {
       mock.method(mockCustomerRepository, 'findByEmail', async () => customer);
 
       await assert.rejects(
-        async () => sut.signup({ email: 'test@test.com', password: 'password123' }),
+        async () =>
+          sut.signup({
+            email: 'test@test.com',
+            password: 'password123',
+            name: 'Test',
+            language: 'en',
+          }),
         new EmailAlreadyRegisteredError(),
       );
     });
@@ -83,7 +94,12 @@ describe('CustomerService', () => {
       mock.method(mockTokenRepository, 'insert', async () => undefined);
       mock.method(mockEmailService, 'send', async () => undefined);
 
-      await sut.signup({ email: 'test@test.com', password: 'password123' });
+      await sut.signup({
+        email: 'test@test.com',
+        password: 'password123',
+        name: 'Test',
+        language: 'en',
+      });
 
       assert.equal(mockHasher.hash.mock.calls[0]?.arguments[0], 'password123');
     });
@@ -96,7 +112,12 @@ describe('CustomerService', () => {
       mock.method(mockTokenRepository, 'insert', async () => undefined);
       mock.method(mockEmailService, 'send', async () => undefined);
 
-      await sut.signup({ email: 'test@test.com', password: 'password123' });
+      await sut.signup({
+        email: 'test@test.com',
+        password: 'password123',
+        name: 'Test',
+        language: 'en',
+      });
 
       assert.equal(mockEmailService.send.mock.callCount(), 1);
       assert.equal(mockEmailService.send.mock.calls[0]?.arguments[0], 'test@test.com');
@@ -110,7 +131,12 @@ describe('CustomerService', () => {
       mock.method(mockTokenRepository, 'insert', async () => undefined);
       mock.method(mockEmailService, 'send', async () => undefined);
 
-      const result = await sut.signup({ email: 'test@test.com', password: 'password123' });
+      const result = await sut.signup({
+        email: 'test@test.com',
+        password: 'password123',
+        name: 'Test',
+        language: 'en',
+      });
 
       assert.deepEqual(result, customer);
     });

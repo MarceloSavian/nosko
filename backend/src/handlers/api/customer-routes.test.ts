@@ -43,7 +43,12 @@ describe('customer-routes', () => {
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
     ({
       routeKey: 'POST /v1/signup',
-      body: JSON.stringify({ email: 'test@test.com', password: 'password123' }),
+      body: JSON.stringify({
+        email: 'test@test.com',
+        password: 'password123',
+        name: 'Test',
+        language: 'en',
+      }),
       ...overrides,
     }) as unknown as APIGatewayProxyEventV2;
 
@@ -140,7 +145,12 @@ describe('customer-routes', () => {
       const result = await login(
         makeEvent({
           routeKey: 'POST /v1/login',
-          body: JSON.stringify({ email: 'test@test.com', password: 'password123' }),
+          body: JSON.stringify({
+            email: 'test@test.com',
+            password: 'password123',
+            name: 'Test',
+            language: 'en',
+          }),
         }),
       );
 
@@ -351,7 +361,12 @@ describe('customer-routes', () => {
       const result = await handler(
         makeEvent({
           routeKey: 'POST /v1/login',
-          body: JSON.stringify({ email: 'test@test.com', password: 'password123' }),
+          body: JSON.stringify({
+            email: 'test@test.com',
+            password: 'password123',
+            name: 'Test',
+            language: 'en',
+          }),
         }),
       );
 

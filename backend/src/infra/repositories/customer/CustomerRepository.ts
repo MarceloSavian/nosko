@@ -70,10 +70,15 @@ export class CustomerRepository implements ICustomerRepository {
     return { ...toSchema(row), passwordHash: row.password_hash };
   }
 
-  async insert(data: { email: string; passwordHash: string }): Promise<CustomerSchema> {
+  async insert(data: {
+    email: string;
+    passwordHash: string;
+    name: string;
+    language: string;
+  }): Promise<CustomerSchema> {
     const result = await this.pool.query<CustomerRow>(
-      `INSERT INTO customers (email, password_hash) VALUES ($1, $2) RETURNING ${CUSTOMER_COLUMNS}`,
-      [data.email, data.passwordHash],
+      `INSERT INTO customers (email, password_hash, name, language) VALUES ($1, $2, $3, $4) RETURNING ${CUSTOMER_COLUMNS}`,
+      [data.email, data.passwordHash, data.name, data.language],
     );
 
     const row = result.rows[0];

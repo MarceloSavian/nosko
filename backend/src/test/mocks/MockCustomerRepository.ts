@@ -19,7 +19,12 @@ class MockCustomerRepository implements ICustomerRepository {
     async (_email: string): Promise<(CustomerSchema & { passwordHash: string }) | null> => null,
   );
   insert = mock.fn(
-    async (_data: { email: string; passwordHash: string }): Promise<CustomerSchema> => ({
+    async (_data: {
+      email: string;
+      passwordHash: string;
+      name: string;
+      language: string;
+    }): Promise<CustomerSchema> => ({
       ...defaultCustomer,
     }),
   );

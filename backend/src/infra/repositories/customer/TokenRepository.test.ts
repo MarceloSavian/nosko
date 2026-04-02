@@ -20,7 +20,12 @@ describe('TokenRepository', () => {
   beforeEach(async () => {
     restore();
     const customerRepo = new CustomerRepository(pool);
-    const customer = await customerRepo.insert({ email: 'token@test.com', passwordHash: 'hashed' });
+    const customer = await customerRepo.insert({
+      email: 'token@test.com',
+      passwordHash: 'hashed',
+      name: 'Test',
+      language: 'en',
+    });
     customerId = customer.id;
   });
 

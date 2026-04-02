@@ -42,7 +42,12 @@ export class CustomerService implements ICustomerService {
     if (customerExists) throw new EmailAlreadyRegisteredError();
 
     const passwordHash = await this.hasher.hash(input.password);
-    const customer = await this.customerRepository.insert({ email: input.email, passwordHash });
+    const customer = await this.customerRepository.insert({
+      email: input.email,
+      passwordHash,
+      name: input.name,
+      language: input.language,
+    });
 
     const code = String(randomInt(0, 1000000)).padStart(6, '0');
     const expiresAt = new Date(Date.now() + VERIFICATION_CODE_EXPIRY_MINUTES * 60 * 1000);

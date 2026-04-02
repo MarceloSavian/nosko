@@ -9,7 +9,12 @@ export interface ICustomerRepository {
   findByEmailWithPassword(
     email: string,
   ): Promise<(CustomerSchema & { passwordHash: string }) | null>;
-  insert(data: { email: string; passwordHash: string }): Promise<CustomerSchema>;
+  insert(data: {
+    email: string;
+    passwordHash: string;
+    name: string;
+    language: string;
+  }): Promise<CustomerSchema>;
   markVerified(id: string): Promise<CustomerSchema>;
   updatePassword(id: string, passwordHash: string): Promise<void>;
   updateProfile(id: string, input: UpdateProfileInput): Promise<CustomerSchema>;
