@@ -10,6 +10,7 @@ import { BaseError } from '../../shared/error.js';
 import { resetMock } from '../../test/helpers/resetMock.js';
 import { mockBudgetCategoryService } from '../../test/mocks/MockBudgetCategoryService.js';
 import { mockBudgetPlanService } from '../../test/mocks/MockBudgetPlanService.js';
+import { mockBudgetSummaryService } from '../../test/mocks/MockBudgetSummaryService.js';
 import { mockJwtService } from '../../test/mocks/MockJwtService.js';
 import {
   makeAddItemRoute,
@@ -22,6 +23,7 @@ import {
   makeDeletePersonalPlanRoute,
   makeGetJointPlanRoute,
   makeGetPersonalPlanRoute,
+  makeGetSummaryRoute,
   makeListCategoriesRoute,
   makeUpdateCategoryRoute,
   makeUpdateItemRoute,
@@ -32,6 +34,7 @@ describe('budget-routes', () => {
     resetMock(mockJwtService);
     resetMock(mockBudgetCategoryService);
     resetMock(mockBudgetPlanService);
+    resetMock(mockBudgetSummaryService);
   });
 
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
@@ -313,6 +316,31 @@ describe('budget-routes', () => {
       );
 
       assert.equal(result.statusCode, 204);
+    });
+  });
+
+  describe('makeGetSummaryRoute()', () => {
+    it('should return 200 with budget summary', async () => {
+      const route = makeGetSummaryRoute(mockBudgetSummaryService);
+      const summary = {
+        yearMonth: '2024-09',
+        personalIncome: 350000,
+        personalExpenses: 30000,
+        jointExpenses: 280000,
+        yourJointShare: 140000,
+        freeAmount: 180000,
+        personalItems: [],
+        jointItems: [],
+      };
+      mock.method(mockBudgetSummaryService, 'getSummary', async () => summary);
+
+      const result = await route(
+        makeEvent({ queryStringParameters: { yearMonth: '2024-09' } }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 200);
+      assert.deepEqual(JSON.parse(result.body), summary);
     });
   });
 });

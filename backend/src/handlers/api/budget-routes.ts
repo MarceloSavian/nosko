@@ -11,6 +11,7 @@ import {
 } from '../../domain/models/budget/BudgetPlan.js';
 import type { IBudgetCategoryService } from '../../domain/usecases/budget/IBudgetCategoryService.js';
 import type { IBudgetPlanService } from '../../domain/usecases/budget/IBudgetPlanService.js';
+import type { IBudgetSummaryService } from '../../domain/usecases/budget/IBudgetSummaryService.js';
 import type { ProxyRoute } from '../domain/proxy.js';
 import { withAuth } from '../shared/auth.js';
 import { logErrorAndFormat } from '../shared/error.js';
@@ -228,9 +229,24 @@ export function makeDeleteItemRoute(service: IBudgetPlanService) {
   };
 }
 
+export function makeGetSummaryRoute(service: IBudgetSummaryService) {
+  return async (
+    event: APIGatewayProxyEventV2,
+    customerId: string,
+  ): Promise<APIGatewayProxyResult> => {
+    try {
+      const yearMonth = extractQueryParam(event, 'yearMonth');
+      return formatResponse(200, await service.getSummary(customerId, yearMonth));
+    } catch (error) {
+      return logErrorAndFormat(error);
+    }
+  };
+}
+
 export function makeBudgetHandler(
   categoryService: IBudgetCategoryService,
   planService: IBudgetPlanService,
+  summaryService: IBudgetSummaryService,
   jwtService: IJwtService,
 ) {
   const routes: ProxyRoute = {
@@ -259,6 +275,8 @@ export function makeBudgetHandler(
       jwtService,
       makeDeleteJointPlanRoute(planService),
     ),
+    // Summary
+    'GET /v1/budget-plans/summary': withAuth(jwtService, makeGetSummaryRoute(summaryService)),
     // Items
     'POST /v1/budget-plans/{planId}/items': withAuth(jwtService, makeAddItemRoute(planService)),
     'PUT /v1/budget-plans/{planId}/items/{id}': withAuth(
