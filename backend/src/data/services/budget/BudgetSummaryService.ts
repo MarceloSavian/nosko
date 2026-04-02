@@ -5,7 +5,7 @@ import type {
   BudgetSummaryItem,
   IBudgetSummaryService,
 } from '../../../domain/usecases/budget/IBudgetSummaryService.js';
-import type { IBankAccountRepository } from '../../domain/account/IBankAccountRepository.js';
+import type { IBankAccountOwnershipRepository } from '../../domain/account/IBankAccountOwnershipRepository.js';
 import type { IBudgetItemRepository } from '../../domain/budget/IBudgetItemRepository.js';
 import type { IBudgetPlanRepository } from '../../domain/budget/IBudgetPlanRepository.js';
 import type { IContributionRuleRepository } from '../../domain/partnership/IContributionRuleRepository.js';
@@ -17,14 +17,13 @@ export class BudgetSummaryService implements IBudgetSummaryService {
     private readonly planRepository: IBudgetPlanRepository,
     private readonly itemRepository: IBudgetItemRepository,
     private readonly transactionRepository: ITransactionRepository,
-    private readonly bankAccountRepository: IBankAccountRepository,
+    private readonly ownershipRepository: IBankAccountOwnershipRepository,
     private readonly partnershipRepository: IPartnershipRepository,
     private readonly contributionRuleRepository: IContributionRuleRepository,
   ) {}
 
   async getSummary(customerId: string, yearMonth: string): Promise<BudgetSummary> {
-    const accounts = await this.bankAccountRepository.findByCustomerId(customerId);
-    const bankAccountIds = accounts.map((a) => a.id);
+    const bankAccountIds = await this.ownershipRepository.findAccountIdsByCustomerId(customerId);
 
     const allTransactions =
       bankAccountIds.length > 0
@@ -144,8 +143,6 @@ export class BudgetSummaryService implements IBudgetSummaryService {
       }
 
       case ContributionType.SALARY_PROPORTIONAL:
-        // Salary-proportional needs income data which we don't have here yet.
-        // Fall back to 50/50 for now.
         return Math.round(totalJointExpenses / 2);
 
       default:

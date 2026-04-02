@@ -25,11 +25,16 @@ export interface IBudgetPlanService {
     input: CreateBudgetPlanInput,
   ): Promise<{ plan: BudgetPlanSchema; items: BudgetItemSchema[] }>;
   deleteJointPlan(customerId: string, planId: string): Promise<void>;
-  addItem(planId: string, input: CreateBudgetItemInput): Promise<BudgetItemSchema>;
+  addItem(
+    customerId: string,
+    planId: string,
+    input: CreateBudgetItemInput,
+  ): Promise<BudgetItemSchema>;
   updateItem(
+    customerId: string,
     planId: string,
     itemId: string,
     input: UpdateBudgetItemInput,
   ): Promise<BudgetItemSchema>;
-  deleteItem(planId: string, itemId: string): Promise<void>;
+  deleteItem(customerId: string, planId: string, itemId: string): Promise<void>;
 }

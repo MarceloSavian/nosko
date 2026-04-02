@@ -1,3 +1,4 @@
+import type { BankAccountSchema } from '../../models/account/Account.js';
 import type {
   ContributionRuleSchema,
   InvitePartnerInput,
@@ -5,7 +6,6 @@ import type {
   PartnershipSchema,
   SetContributionRuleInput,
   SetSharedAccountsInput,
-  SharedAccountSchema,
 } from '../../models/partnership/Partnership.js';
 
 export interface IPartnershipService {
@@ -21,9 +21,9 @@ export interface IPartnershipService {
     customerId: string,
     input: SetContributionRuleInput,
   ): Promise<ContributionRuleSchema>;
-  getSharedAccounts(customerId: string): Promise<SharedAccountSchema[]>;
+  getSharedAccounts(customerId: string): Promise<BankAccountSchema[]>;
   setSharedAccounts(
     customerId: string,
     input: SetSharedAccountsInput,
-  ): Promise<SharedAccountSchema[]>;
+  ): Promise<BankAccountSchema[]>;
 }

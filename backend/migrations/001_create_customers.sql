@@ -69,7 +69,6 @@ CREATE TABLE IF NOT EXISTS institutions (
 
 CREATE TABLE IF NOT EXISTS bank_accounts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  customer_id UUID NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
   institution_id UUID NOT NULL REFERENCES institutions(id),
   account_name TEXT NOT NULL,
   account_number_last4 VARCHAR(4),
@@ -80,13 +79,13 @@ CREATE TABLE IF NOT EXISTS bank_accounts (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS shared_accounts (
+CREATE TABLE IF NOT EXISTS bank_account_ownerships (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  partnership_id UUID NOT NULL REFERENCES partnerships(id) ON DELETE CASCADE,
   bank_account_id UUID NOT NULL REFERENCES bank_accounts(id) ON DELETE CASCADE,
-  shared_by_customer_id UUID NOT NULL REFERENCES customers(id),
+  customer_id UUID NOT NULL REFERENCES customers(id) ON DELETE CASCADE,
+  partnership_id UUID REFERENCES partnerships(id) ON DELETE CASCADE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  UNIQUE(partnership_id, bank_account_id)
+  UNIQUE(bank_account_id, customer_id)
 );
 
 -- 5. Budget Planning
@@ -155,8 +154,9 @@ CREATE INDEX IF NOT EXISTS idx_partner_invitations_invitee_email ON partner_invi
 CREATE INDEX IF NOT EXISTS idx_partnerships_customer_a_id ON partnerships (customer_a_id);
 CREATE INDEX IF NOT EXISTS idx_partnerships_customer_b_id ON partnerships (customer_b_id);
 CREATE INDEX IF NOT EXISTS idx_contribution_rules_partnership_id ON contribution_rules (partnership_id);
-CREATE INDEX IF NOT EXISTS idx_bank_accounts_customer_id ON bank_accounts (customer_id);
-CREATE INDEX IF NOT EXISTS idx_shared_accounts_partnership_id ON shared_accounts (partnership_id);
+CREATE INDEX IF NOT EXISTS idx_bank_account_ownerships_customer_id ON bank_account_ownerships (customer_id);
+CREATE INDEX IF NOT EXISTS idx_bank_account_ownerships_bank_account_id ON bank_account_ownerships (bank_account_id);
+CREATE INDEX IF NOT EXISTS idx_bank_account_ownerships_partnership_id ON bank_account_ownerships (partnership_id);
 CREATE INDEX IF NOT EXISTS idx_budget_items_plan_id ON budget_items (plan_id);
 CREATE INDEX IF NOT EXISTS idx_budget_items_category_id ON budget_items (category_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_bank_account_id ON transactions (bank_account_id);

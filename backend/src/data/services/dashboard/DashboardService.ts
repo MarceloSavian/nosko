@@ -2,7 +2,7 @@ import type {
   DashboardData,
   IDashboardService,
 } from '../../../domain/usecases/dashboard/IDashboardService.js';
-import type { IBankAccountRepository } from '../../domain/account/IBankAccountRepository.js';
+import type { IBankAccountOwnershipRepository } from '../../domain/account/IBankAccountOwnershipRepository.js';
 import type { IBudgetCategoryRepository } from '../../domain/budget/IBudgetCategoryRepository.js';
 import type { IBudgetItemRepository } from '../../domain/budget/IBudgetItemRepository.js';
 import type { IBudgetPlanRepository } from '../../domain/budget/IBudgetPlanRepository.js';
@@ -12,7 +12,7 @@ const RECENT_TRANSACTION_LIMIT = 10;
 
 export class DashboardService implements IDashboardService {
   constructor(
-    private readonly bankAccountRepository: IBankAccountRepository,
+    private readonly ownershipRepository: IBankAccountOwnershipRepository,
     private readonly planRepository: IBudgetPlanRepository,
     private readonly itemRepository: IBudgetItemRepository,
     private readonly transactionRepository: ITransactionRepository,
@@ -20,8 +20,7 @@ export class DashboardService implements IDashboardService {
   ) {}
 
   async getDashboard(customerId: string, yearMonth: string): Promise<DashboardData> {
-    const accounts = await this.bankAccountRepository.findByCustomerId(customerId);
-    const bankAccountIds = accounts.map((a) => a.id);
+    const bankAccountIds = await this.ownershipRepository.findAccountIdsByCustomerId(customerId);
 
     // Get transactions for the month
     const allTransactions =

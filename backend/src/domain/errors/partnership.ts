@@ -41,3 +41,9 @@ export class InviteeNotRegisteredError extends BaseError {
     super('The invited email is not registered in the app', 400);
   }
 }
+
+export class SharedAccountNotOwnedError extends BaseError {
+  constructor() {
+    super('You can only share accounts that you own', 400);
+  }
+}

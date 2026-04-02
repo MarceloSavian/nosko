@@ -1,11 +1,8 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
-import {
-  ContributionType,
-  InvitationStatus,
-  type SharedAccountSchema,
-} from '../../domain/models/partnership/Partnership.js';
+import type { BankAccountSchema } from '../../domain/models/account/Account.js';
+import { ContributionType, InvitationStatus } from '../../domain/models/partnership/Partnership.js';
 import { BaseError } from '../../shared/error.js';
 import { resetMock } from '../../test/helpers/resetMock.js';
 import { mockJwtService } from '../../test/mocks/MockJwtService.js';
@@ -186,12 +183,16 @@ describe('partnership-routes', () => {
   describe('makeGetSharedAccountsRoute()', () => {
     it('should return 200 with shared accounts', async () => {
       const route = makeGetSharedAccountsRoute(mockPartnershipService);
-      const accounts: SharedAccountSchema[] = [
+      const accounts: BankAccountSchema[] = [
         {
-          id: 'sa-1',
-          partnershipId: 'p-1',
-          bankAccountId: 'ba-1',
-          sharedByCustomerId: 'c-1',
+          id: 'ba-1',
+          institutionId: 'inst-1',
+          accountName: 'Checking',
+          accountNumberLast4: null,
+          currencyCode: 'USD',
+          balance: 100000,
+          accountType: null,
+          balanceUpdatedAt: null,
           createdAt: '',
         },
       ];
@@ -207,7 +208,7 @@ describe('partnership-routes', () => {
   describe('makeSetSharedAccountsRoute()', () => {
     it('should return 200 with updated shared accounts', async () => {
       const route = makeSetSharedAccountsRoute(mockPartnershipService);
-      const accounts: SharedAccountSchema[] = [];
+      const accounts: BankAccountSchema[] = [];
       mock.method(mockPartnershipService, 'setSharedAccounts', async () => accounts);
 
       const result = await route(

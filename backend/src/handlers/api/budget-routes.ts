@@ -183,13 +183,13 @@ export function makeDeleteJointPlanRoute(service: IBudgetPlanService) {
 export function makeAddItemRoute(service: IBudgetPlanService) {
   return async (
     event: APIGatewayProxyEventV2,
-    _customerId: string,
+    customerId: string,
   ): Promise<APIGatewayProxyResult> => {
     try {
       const planId = extractPathParam(event, 'planId');
       const body = JSON.parse(event.body ?? '{}');
       const input = createBudgetItemInputSchema.parse(body);
-      return formatResponse(201, await service.addItem(planId, input));
+      return formatResponse(201, await service.addItem(customerId, planId, input));
     } catch (error) {
       return logErrorAndFormat(error);
     }
@@ -199,14 +199,14 @@ export function makeAddItemRoute(service: IBudgetPlanService) {
 export function makeUpdateItemRoute(service: IBudgetPlanService) {
   return async (
     event: APIGatewayProxyEventV2,
-    _customerId: string,
+    customerId: string,
   ): Promise<APIGatewayProxyResult> => {
     try {
       const planId = extractPathParam(event, 'planId');
       const itemId = extractPathParam(event, 'id');
       const body = JSON.parse(event.body ?? '{}');
       const input = updateBudgetItemInputSchema.parse(body);
-      return formatResponse(200, await service.updateItem(planId, itemId, input));
+      return formatResponse(200, await service.updateItem(customerId, planId, itemId, input));
     } catch (error) {
       return logErrorAndFormat(error);
     }
@@ -216,12 +216,12 @@ export function makeUpdateItemRoute(service: IBudgetPlanService) {
 export function makeDeleteItemRoute(service: IBudgetPlanService) {
   return async (
     event: APIGatewayProxyEventV2,
-    _customerId: string,
+    customerId: string,
   ): Promise<APIGatewayProxyResult> => {
     try {
       const planId = extractPathParam(event, 'planId');
       const itemId = extractPathParam(event, 'id');
-      await service.deleteItem(planId, itemId);
+      await service.deleteItem(customerId, planId, itemId);
       return formatResponse(204, {});
     } catch (error) {
       return logErrorAndFormat(error);

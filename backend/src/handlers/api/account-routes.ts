@@ -4,6 +4,7 @@ import {
   createBankAccountInputSchema,
   updateBankAccountInputSchema,
 } from '../../domain/models/account/Account.js';
+import type { IAccountOverviewService } from '../../domain/usecases/account/IAccountOverviewService.js';
 import type { IAccountService } from '../../domain/usecases/account/IAccountService.js';
 import type { ProxyRoute } from '../domain/proxy.js';
 import { withAuth } from '../shared/auth.js';
@@ -87,7 +88,7 @@ export function makeDeleteAccountRoute(service: IAccountService) {
   };
 }
 
-export function makeGetOverviewRoute(service: IAccountService) {
+export function makeGetOverviewRoute(service: IAccountOverviewService) {
   return async (
     _event: APIGatewayProxyEventV2,
     customerId: string,
@@ -100,11 +101,15 @@ export function makeGetOverviewRoute(service: IAccountService) {
   };
 }
 
-export function makeAccountHandler(service: IAccountService, jwtService: IJwtService) {
+export function makeAccountHandler(
+  service: IAccountService,
+  overviewService: IAccountOverviewService,
+  jwtService: IJwtService,
+) {
   const routes: ProxyRoute = {
     'GET /v1/accounts': withAuth(jwtService, makeListAccountsRoute(service)),
     'POST /v1/accounts': withAuth(jwtService, makeCreateAccountRoute(service)),
-    'GET /v1/accounts/overview': withAuth(jwtService, makeGetOverviewRoute(service)),
+    'GET /v1/accounts/overview': withAuth(jwtService, makeGetOverviewRoute(overviewService)),
     'GET /v1/accounts/{id}': withAuth(jwtService, makeGetAccountRoute(service)),
     'PUT /v1/accounts/{id}': withAuth(jwtService, makeUpdateAccountRoute(service)),
     'DELETE /v1/accounts/{id}': withAuth(jwtService, makeDeleteAccountRoute(service)),

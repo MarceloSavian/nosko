@@ -1,4 +1,5 @@
 import { mock } from 'node:test';
+import type { BankAccountSchema } from '../../domain/models/account/Account.js';
 import {
   type ContributionRuleSchema,
   ContributionType,
@@ -8,7 +9,6 @@ import {
   type PartnershipSchema,
   type SetContributionRuleInput,
   type SetSharedAccountsInput,
-  type SharedAccountSchema,
 } from '../../domain/models/partnership/Partnership.js';
 import type { IPartnershipService } from '../../domain/usecases/partnership/IPartnershipService.js';
 
@@ -68,12 +68,9 @@ class MockPartnershipService implements IPartnershipService {
       updatedAt: '',
     }),
   );
-  getSharedAccounts = mock.fn(async (_customerId: string): Promise<SharedAccountSchema[]> => []);
+  getSharedAccounts = mock.fn(async (_customerId: string): Promise<BankAccountSchema[]> => []);
   setSharedAccounts = mock.fn(
-    async (
-      _customerId: string,
-      _input: SetSharedAccountsInput,
-    ): Promise<SharedAccountSchema[]> => [],
+    async (_customerId: string, _input: SetSharedAccountsInput): Promise<BankAccountSchema[]> => [],
   );
 }
 

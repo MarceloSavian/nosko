@@ -10,6 +10,7 @@ import type {
   UpdateTransactionInput,
 } from '../../../domain/models/transaction/Transaction.js';
 import type { ITransactionService } from '../../../domain/usecases/transaction/ITransactionService.js';
+import type { IBankAccountOwnershipRepository } from '../../domain/account/IBankAccountOwnershipRepository.js';
 import type { IBankAccountRepository } from '../../domain/account/IBankAccountRepository.js';
 import type { ITransactionRepository } from '../../domain/transaction/ITransactionRepository.js';
 
@@ -17,6 +18,7 @@ export class TransactionService implements ITransactionService {
   constructor(
     private readonly transactionRepository: ITransactionRepository,
     private readonly bankAccountRepository: IBankAccountRepository,
+    private readonly ownershipRepository: IBankAccountOwnershipRepository,
   ) {}
 
   async listTransactions(
@@ -27,13 +29,12 @@ export class TransactionService implements ITransactionService {
     let bankAccountIds: string[];
 
     if (filters.accountId) {
-      const account = await this.bankAccountRepository.findById(filters.accountId);
-      if (!account || account.customerId !== customerId)
+      const isOwner = await this.ownershipRepository.isOwner(customerId, filters.accountId);
+      if (!isOwner)
         return { data: [], total: 0, limit: pagination.limit, offset: pagination.offset };
       bankAccountIds = [filters.accountId];
     } else {
-      const accounts = await this.bankAccountRepository.findByCustomerId(customerId);
-      bankAccountIds = accounts.map((a) => a.id);
+      bankAccountIds = await this.ownershipRepository.findAccountIdsByCustomerId(customerId);
     }
 
     if (bankAccountIds.length === 0)
@@ -55,7 +56,8 @@ export class TransactionService implements ITransactionService {
   ): Promise<TransactionSchema> {
     const account = await this.bankAccountRepository.findById(input.bankAccountId);
     if (!account) throw new BankAccountNotFoundError();
-    if (account.customerId !== customerId) throw new BankAccountNotOwnedError();
+    const isOwner = await this.ownershipRepository.isOwner(customerId, input.bankAccountId);
+    if (!isOwner) throw new BankAccountNotOwnedError();
 
     return await this.transactionRepository.insert(input);
   }
@@ -68,8 +70,8 @@ export class TransactionService implements ITransactionService {
     const transaction = await this.transactionRepository.findById(transactionId);
     if (!transaction) throw new TransactionNotFoundError();
 
-    const account = await this.bankAccountRepository.findById(transaction.bankAccountId);
-    if (!account || account.customerId !== customerId) throw new TransactionNotFoundError();
+    const isOwner = await this.ownershipRepository.isOwner(customerId, transaction.bankAccountId);
+    if (!isOwner) throw new TransactionNotFoundError();
 
     return await this.transactionRepository.update(transactionId, input);
   }
@@ -78,8 +80,8 @@ export class TransactionService implements ITransactionService {
     const transaction = await this.transactionRepository.findById(transactionId);
     if (!transaction) throw new TransactionNotFoundError();
 
-    const account = await this.bankAccountRepository.findById(transaction.bankAccountId);
-    if (!account || account.customerId !== customerId) throw new TransactionNotFoundError();
+    const isOwner = await this.ownershipRepository.isOwner(customerId, transaction.bankAccountId);
+    if (!isOwner) throw new TransactionNotFoundError();
 
     await this.transactionRepository.delete(transactionId);
   }

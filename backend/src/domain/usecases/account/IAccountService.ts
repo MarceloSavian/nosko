@@ -14,7 +14,4 @@ export interface IAccountService {
     input: UpdateBankAccountInput,
   ): Promise<BankAccountSchema>;
   deleteAccount(customerId: string, accountId: string): Promise<void>;
-  getOverview(
-    customerId: string,
-  ): Promise<{ totalsByCurrency: { currencyCode: string; total: number }[] }>;
 }

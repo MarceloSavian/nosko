@@ -102,28 +102,54 @@ export class BudgetPlanService implements IBudgetPlanService {
     await this.planRepository.delete(planId);
   }
 
-  async addItem(planId: string, input: CreateBudgetItemInput): Promise<BudgetItemSchema> {
+  async addItem(
+    customerId: string,
+    planId: string,
+    input: CreateBudgetItemInput,
+  ): Promise<BudgetItemSchema> {
     const plan = await this.planRepository.findById(planId);
     if (!plan) throw new BudgetPlanNotFoundError();
+    await this.verifyPlanAccess(customerId, plan);
 
     const installmentNumber = input.recurrence === BudgetItemRecurrence.INSTALLMENT ? 1 : undefined;
     return await this.itemRepository.insert(planId, input, installmentNumber);
   }
 
   async updateItem(
+    customerId: string,
     planId: string,
     itemId: string,
     input: UpdateBudgetItemInput,
   ): Promise<BudgetItemSchema> {
+    const plan = await this.planRepository.findById(planId);
+    if (!plan) throw new BudgetPlanNotFoundError();
+    await this.verifyPlanAccess(customerId, plan);
+
     const item = await this.itemRepository.findById(itemId);
     if (!item || item.planId !== planId) throw new BudgetItemNotFoundError();
     return await this.itemRepository.update(itemId, input);
   }
 
-  async deleteItem(planId: string, itemId: string): Promise<void> {
+  async deleteItem(customerId: string, planId: string, itemId: string): Promise<void> {
+    const plan = await this.planRepository.findById(planId);
+    if (!plan) throw new BudgetPlanNotFoundError();
+    await this.verifyPlanAccess(customerId, plan);
+
     const item = await this.itemRepository.findById(itemId);
     if (!item || item.planId !== planId) throw new BudgetItemNotFoundError();
     await this.itemRepository.delete(itemId);
+  }
+
+  private async verifyPlanAccess(customerId: string, plan: BudgetPlanSchema): Promise<void> {
+    if (plan.customerId) {
+      if (plan.customerId !== customerId) throw new BudgetPlanNotFoundError();
+      return;
+    }
+    if (plan.partnershipId) {
+      const partnership = await this.partnershipRepository.findByCustomerId(customerId);
+      if (!partnership || partnership.id !== plan.partnershipId)
+        throw new BudgetPlanNotFoundError();
+    }
   }
 
   private getPreviousMonth(yearMonth: string): string {

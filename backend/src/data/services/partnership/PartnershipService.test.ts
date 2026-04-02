@@ -7,18 +7,20 @@ import {
   InvitationNotPendingError,
   InviteeNotRegisteredError,
   PartnershipNotFoundError,
+  SharedAccountNotOwnedError,
 } from '../../../domain/errors/partnership.js';
 import {
   ContributionType,
   InvitationStatus,
 } from '../../../domain/models/partnership/Partnership.js';
 import { resetMock } from '../../../test/helpers/resetMock.js';
+import { mockOwnershipRepository } from '../../../test/mocks/MockBankAccountOwnershipRepository.js';
+import { mockBankAccountRepository } from '../../../test/mocks/MockBankAccountRepository.js';
 import { mockContributionRuleRepository } from '../../../test/mocks/MockContributionRuleRepository.js';
 import { mockCustomerRepository } from '../../../test/mocks/MockCustomerRepository.js';
 import { mockEmailService } from '../../../test/mocks/MockEmailService.js';
 import { mockPartnerInvitationRepository } from '../../../test/mocks/MockPartnerInvitationRepository.js';
 import { mockPartnershipRepository } from '../../../test/mocks/MockPartnershipRepository.js';
-import { mockSharedAccountRepository } from '../../../test/mocks/MockSharedAccountRepository.js';
 import { PartnershipService } from './PartnershipService.js';
 
 describe('PartnershipService', () => {
@@ -28,8 +30,9 @@ describe('PartnershipService', () => {
       mockPartnerInvitationRepository,
       mockPartnershipRepository,
       mockContributionRuleRepository,
-      mockSharedAccountRepository,
+      mockOwnershipRepository,
       mockEmailService,
+      mockBankAccountRepository,
     );
     return { sut };
   };
@@ -77,8 +80,9 @@ describe('PartnershipService', () => {
     resetMock(mockPartnerInvitationRepository);
     resetMock(mockPartnershipRepository);
     resetMock(mockContributionRuleRepository);
-    resetMock(mockSharedAccountRepository);
+    resetMock(mockOwnershipRepository);
     resetMock(mockEmailService);
+    resetMock(mockBankAccountRepository);
   });
 
   describe('invitePartner()', () => {
@@ -372,57 +376,46 @@ describe('PartnershipService', () => {
     });
   });
 
-  describe('getSharedAccounts()', () => {
-    it('should return shared accounts for partnership', async () => {
-      const { sut } = makeSut();
-      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
-      const sharedAccount = {
-        id: 'shared-acc-id',
-        partnershipId: 'partnership-id',
-        bankAccountId: 'bank-acc-id',
-        sharedByCustomerId: 'customer-id',
-        createdAt: '2024-01-01T00:00:00.000Z',
-      };
-      mock.method(mockSharedAccountRepository, 'findByPartnershipId', async () => [sharedAccount]);
-
-      const result = await sut.getSharedAccounts('customer-id');
-
-      assert.deepEqual(result, [sharedAccount]);
-    });
-
-    it('should throw PartnershipNotFoundError when no partnership', async () => {
-      const { sut } = makeSut();
-      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => null);
-
-      await assert.rejects(
-        async () => sut.getSharedAccounts('customer-id'),
-        new PartnershipNotFoundError(),
-      );
-    });
-  });
-
   describe('setSharedAccounts()', () => {
-    it('should replace shared accounts for partnership', async () => {
+    it('should create ownership for partner and return accounts', async () => {
       const { sut } = makeSut();
       mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
+      mock.method(mockOwnershipRepository, 'isOwner', async () => true);
       const sharedAccount = {
-        id: 'shared-acc-id',
-        partnershipId: 'partnership-id',
-        bankAccountId: 'bank-acc-1',
-        sharedByCustomerId: 'customer-id',
-        createdAt: '2024-01-01T00:00:00.000Z',
+        id: 'bank-acc-1',
+        institutionId: 'inst-id',
+        accountName: 'Checking',
+        accountNumberLast4: null,
+        currencyCode: 'USD',
+        balance: 0,
+        accountType: null,
+        balanceUpdatedAt: null,
+        createdAt: '',
       };
-      mock.method(mockSharedAccountRepository, 'replaceAll', async () => [sharedAccount]);
+      mock.method(mockBankAccountRepository, 'findByIds', async () => [sharedAccount]);
 
       const result = await sut.setSharedAccounts('customer-id', {
         bankAccountIds: ['bank-acc-1'],
       });
 
       assert.deepEqual(result, [sharedAccount]);
-      const replaceArgs = mockSharedAccountRepository.replaceAll.mock.calls[0]?.arguments;
-      assert.equal(replaceArgs?.[0], 'partnership-id');
-      assert.equal(replaceArgs?.[1], 'customer-id');
-      assert.deepEqual(replaceArgs?.[2], ['bank-acc-1']);
+      assert.equal(mockOwnershipRepository.deleteByPartnershipAndCustomer.mock.calls.length, 1);
+      assert.equal(mockOwnershipRepository.insert.mock.calls.length, 1);
+      const insertArgs = mockOwnershipRepository.insert.mock.calls[0]?.arguments;
+      assert.equal(insertArgs?.[0], 'bank-acc-1');
+      assert.equal(insertArgs?.[1], 'partner-id');
+      assert.equal(insertArgs?.[2], 'partnership-id');
+    });
+
+    it('should throw SharedAccountNotOwnedError when account not owned by customer', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
+      mock.method(mockOwnershipRepository, 'isOwner', async () => false);
+
+      await assert.rejects(
+        async () => sut.setSharedAccounts('customer-id', { bankAccountIds: ['bank-acc-1'] }),
+        new SharedAccountNotOwnedError(),
+      );
     });
 
     it('should throw PartnershipNotFoundError when no partnership', async () => {

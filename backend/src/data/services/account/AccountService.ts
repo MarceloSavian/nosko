@@ -8,19 +8,26 @@ import type {
   UpdateBankAccountInput,
 } from '../../../domain/models/account/Account.js';
 import type { IAccountService } from '../../../domain/usecases/account/IAccountService.js';
+import type { IBankAccountOwnershipRepository } from '../../domain/account/IBankAccountOwnershipRepository.js';
 import type { IBankAccountRepository } from '../../domain/account/IBankAccountRepository.js';
 
 export class AccountService implements IAccountService {
-  constructor(private readonly bankAccountRepository: IBankAccountRepository) {}
+  constructor(
+    private readonly bankAccountRepository: IBankAccountRepository,
+    private readonly ownershipRepository: IBankAccountOwnershipRepository,
+  ) {}
 
   async listAccounts(customerId: string): Promise<BankAccountSchema[]> {
-    return await this.bankAccountRepository.findByCustomerId(customerId);
+    const accountIds = await this.ownershipRepository.findAccountIdsByCustomerId(customerId);
+    if (accountIds.length === 0) return [];
+    return this.bankAccountRepository.findByIds(accountIds);
   }
 
   async getAccount(customerId: string, accountId: string): Promise<BankAccountSchema> {
     const account = await this.bankAccountRepository.findById(accountId);
     if (!account) throw new BankAccountNotFoundError();
-    if (account.customerId !== customerId) throw new BankAccountNotOwnedError();
+    const isOwner = await this.ownershipRepository.isOwner(customerId, accountId);
+    if (!isOwner) throw new BankAccountNotOwnedError();
     return account;
   }
 
@@ -28,7 +35,9 @@ export class AccountService implements IAccountService {
     customerId: string,
     input: CreateBankAccountInput,
   ): Promise<BankAccountSchema> {
-    return await this.bankAccountRepository.insert(customerId, input);
+    const account = await this.bankAccountRepository.insert(input);
+    await this.ownershipRepository.insert(account.id, customerId);
+    return account;
   }
 
   async updateAccount(
@@ -38,21 +47,16 @@ export class AccountService implements IAccountService {
   ): Promise<BankAccountSchema> {
     const account = await this.bankAccountRepository.findById(accountId);
     if (!account) throw new BankAccountNotFoundError();
-    if (account.customerId !== customerId) throw new BankAccountNotOwnedError();
+    const isOwner = await this.ownershipRepository.isOwner(customerId, accountId);
+    if (!isOwner) throw new BankAccountNotOwnedError();
     return await this.bankAccountRepository.update(accountId, input);
   }
 
   async deleteAccount(customerId: string, accountId: string): Promise<void> {
     const account = await this.bankAccountRepository.findById(accountId);
     if (!account) throw new BankAccountNotFoundError();
-    if (account.customerId !== customerId) throw new BankAccountNotOwnedError();
+    const isOwner = await this.ownershipRepository.isOwner(customerId, accountId);
+    if (!isOwner) throw new BankAccountNotOwnedError();
     await this.bankAccountRepository.delete(accountId);
-  }
-
-  async getOverview(
-    customerId: string,
-  ): Promise<{ totalsByCurrency: { currencyCode: string; total: number }[] }> {
-    const totals = await this.bankAccountRepository.getOverviewByCustomerId(customerId);
-    return { totalsByCurrency: totals };
   }
 }

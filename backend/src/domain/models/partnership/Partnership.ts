@@ -83,13 +83,3 @@ export const setSharedAccountsInputSchema = z.object({
 });
 
 export type SetSharedAccountsInput = z.infer<typeof setSharedAccountsInputSchema>;
-
-export const sharedAccountSchema = z.object({
-  id: z.string(),
-  partnershipId: z.string(),
-  bankAccountId: z.string(),
-  sharedByCustomerId: z.string(),
-  createdAt: z.string(),
-});
-
-export type SharedAccountSchema = z.infer<typeof sharedAccountSchema>;

@@ -6,7 +6,9 @@ import {
   InviteeNotRegisteredError,
   NotPartnershipMemberError,
   PartnershipNotFoundError,
+  SharedAccountNotOwnedError,
 } from '../../../domain/errors/partnership.js';
+import type { BankAccountSchema } from '../../../domain/models/account/Account.js';
 import { InvitationStatus } from '../../../domain/models/partnership/Partnership.js';
 import type {
   ContributionRuleSchema,
@@ -15,15 +17,15 @@ import type {
   PartnershipSchema,
   SetContributionRuleInput,
   SetSharedAccountsInput,
-  SharedAccountSchema,
 } from '../../../domain/models/partnership/Partnership.js';
 import type { IPartnershipService } from '../../../domain/usecases/partnership/IPartnershipService.js';
+import type { IBankAccountOwnershipRepository } from '../../domain/account/IBankAccountOwnershipRepository.js';
+import type { IBankAccountRepository } from '../../domain/account/IBankAccountRepository.js';
 import type { ICustomerRepository } from '../../domain/customer/ICustomerRepository.js';
 import type { IEmailService } from '../../domain/email/IEmailService.js';
 import type { IContributionRuleRepository } from '../../domain/partnership/IContributionRuleRepository.js';
 import type { IPartnerInvitationRepository } from '../../domain/partnership/IPartnerInvitationRepository.js';
 import type { IPartnershipRepository } from '../../domain/partnership/IPartnershipRepository.js';
-import type { ISharedAccountRepository } from '../../domain/partnership/ISharedAccountRepository.js';
 
 export class PartnershipService implements IPartnershipService {
   constructor(
@@ -31,8 +33,9 @@ export class PartnershipService implements IPartnershipService {
     private readonly invitationRepository: IPartnerInvitationRepository,
     private readonly partnershipRepository: IPartnershipRepository,
     private readonly contributionRuleRepository: IContributionRuleRepository,
-    private readonly sharedAccountRepository: ISharedAccountRepository,
+    private readonly ownershipRepository: IBankAccountOwnershipRepository,
     private readonly emailService: IEmailService,
+    private readonly bankAccountRepository: IBankAccountRepository,
   ) {}
 
   async invitePartner(
@@ -142,20 +145,37 @@ export class PartnershipService implements IPartnershipService {
     );
   }
 
-  async getSharedAccounts(customerId: string): Promise<SharedAccountSchema[]> {
+  async getSharedAccounts(customerId: string): Promise<BankAccountSchema[]> {
     const partnership = await this.requirePartnership(customerId);
-    return await this.sharedAccountRepository.findByPartnershipId(partnership.id);
+    const partnerId =
+      partnership.customerAId === customerId ? partnership.customerBId : partnership.customerAId;
+    const partnerAccountIds = await this.ownershipRepository.findAccountIdsByCustomerId(partnerId);
+    if (partnerAccountIds.length === 0) return [];
+    return this.bankAccountRepository.findByIds(partnerAccountIds);
   }
 
   async setSharedAccounts(
     customerId: string,
     input: SetSharedAccountsInput,
-  ): Promise<SharedAccountSchema[]> {
+  ): Promise<BankAccountSchema[]> {
     const partnership = await this.requirePartnership(customerId);
-    return await this.sharedAccountRepository.replaceAll(
-      partnership.id,
-      customerId,
-      input.bankAccountIds,
-    );
+    const partnerId =
+      partnership.customerAId === customerId ? partnership.customerBId : partnership.customerAId;
+
+    for (const accountId of input.bankAccountIds) {
+      const isOwner = await this.ownershipRepository.isOwner(customerId, accountId);
+      if (!isOwner) throw new SharedAccountNotOwnedError();
+    }
+
+    // Remove existing shared ownerships for this partnership+partner
+    await this.ownershipRepository.deleteByPartnershipAndCustomer(partnership.id, partnerId);
+
+    // Create new ownerships for partner
+    for (const accountId of input.bankAccountIds) {
+      await this.ownershipRepository.insert(accountId, partnerId, partnership.id);
+    }
+
+    if (input.bankAccountIds.length === 0) return [];
+    return this.bankAccountRepository.findByIds(input.bankAccountIds);
   }
 }

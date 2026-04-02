@@ -31,12 +31,12 @@ describe('TransactionRepository', () => {
       [INSTITUTION_ID],
     );
     await pool.query(
-      "INSERT INTO bank_accounts (id, customer_id, institution_id, account_name, currency_code) VALUES ($1, $2, $3, 'Checking', 'EUR')",
-      [BANK_ACCOUNT_ID, CUSTOMER_ID, INSTITUTION_ID],
+      "INSERT INTO bank_accounts (id, institution_id, account_name, currency_code) VALUES ($1, $2, 'Checking', 'EUR')",
+      [BANK_ACCOUNT_ID, INSTITUTION_ID],
     );
     await pool.query(
-      "INSERT INTO bank_accounts (id, customer_id, institution_id, account_name, currency_code) VALUES ($1, $2, $3, 'Savings', 'EUR')",
-      [BANK_ACCOUNT_B_ID, CUSTOMER_ID, INSTITUTION_ID],
+      "INSERT INTO bank_accounts (id, institution_id, account_name, currency_code) VALUES ($1, $2, 'Savings', 'EUR')",
+      [BANK_ACCOUNT_B_ID, INSTITUTION_ID],
     );
     await pool.query("INSERT INTO budget_categories (id, name) VALUES ($1, 'Food')", [CATEGORY_ID]);
   });

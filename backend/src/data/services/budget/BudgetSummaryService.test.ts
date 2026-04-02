@@ -7,7 +7,7 @@ import {
 } from '../../../domain/models/budget/BudgetPlan.js';
 import { ContributionType } from '../../../domain/models/partnership/Partnership.js';
 import { resetMock } from '../../../test/helpers/resetMock.js';
-import { mockBankAccountRepository } from '../../../test/mocks/MockBankAccountRepository.js';
+import { mockOwnershipRepository } from '../../../test/mocks/MockBankAccountOwnershipRepository.js';
 import { mockBudgetItemRepository } from '../../../test/mocks/MockBudgetItemRepository.js';
 import { mockBudgetPlanRepository } from '../../../test/mocks/MockBudgetPlanRepository.js';
 import { mockContributionRuleRepository } from '../../../test/mocks/MockContributionRuleRepository.js';
@@ -21,24 +21,11 @@ describe('BudgetSummaryService', () => {
       mockBudgetPlanRepository,
       mockBudgetItemRepository,
       mockTransactionRepository,
-      mockBankAccountRepository,
+      mockOwnershipRepository,
       mockPartnershipRepository,
       mockContributionRuleRepository,
     );
     return { sut };
-  };
-
-  const account = {
-    id: 'acc-id',
-    customerId: 'customer-id',
-    institutionId: 'inst-id',
-    accountName: 'Checking',
-    accountNumberLast4: null,
-    currencyCode: 'USD',
-    balance: 100000,
-    accountType: null,
-    balanceUpdatedAt: null,
-    createdAt: '',
   };
 
   const personalPlan = {
@@ -89,7 +76,7 @@ describe('BudgetSummaryService', () => {
     resetMock(mockBudgetPlanRepository);
     resetMock(mockBudgetItemRepository);
     resetMock(mockTransactionRepository);
-    resetMock(mockBankAccountRepository);
+    resetMock(mockOwnershipRepository);
     resetMock(mockPartnershipRepository);
     resetMock(mockContributionRuleRepository);
   });
@@ -97,7 +84,6 @@ describe('BudgetSummaryService', () => {
   describe('getSummary()', () => {
     it('should return empty summary when no plans exist', async () => {
       const { sut } = makeSut();
-      mock.method(mockBankAccountRepository, 'findByCustomerId', async () => []);
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => null);
       mock.method(mockPartnershipRepository, 'findByCustomerId', async () => null);
 
@@ -113,7 +99,7 @@ describe('BudgetSummaryService', () => {
 
     it('should calculate personal income and expenses from plan items', async () => {
       const { sut } = makeSut();
-      mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
+      mock.method(mockOwnershipRepository, 'findAccountIdsByCustomerId', async () => ['acc-id']);
       mock.method(mockTransactionRepository, 'findByFilters', async () => ({
         data: [],
         total: 0,
@@ -156,7 +142,7 @@ describe('BudgetSummaryService', () => {
         plannedAmount: 280000,
       };
 
-      mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
+      mock.method(mockOwnershipRepository, 'findAccountIdsByCustomerId', async () => ['acc-id']);
       mock.method(mockTransactionRepository, 'findByFilters', async () => ({
         data: [],
         total: 0,
@@ -183,7 +169,7 @@ describe('BudgetSummaryService', () => {
 
       assert.equal(result.jointExpenses, 280000);
       assert.equal(result.yourJointShare, 140000);
-      assert.equal(result.freeAmount, 350000 - 140000); // income - joint share
+      assert.equal(result.freeAmount, 350000 - 140000);
     });
 
     it('should calculate joint share with custom percentage', async () => {
@@ -210,7 +196,7 @@ describe('BudgetSummaryService', () => {
         plannedAmount: 200000,
       };
 
-      mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
+      mock.method(mockOwnershipRepository, 'findAccountIdsByCustomerId', async () => ['acc-id']);
       mock.method(mockTransactionRepository, 'findByFilters', async () => ({
         data: [],
         total: 0,
@@ -225,15 +211,15 @@ describe('BudgetSummaryService', () => {
         id: 'rule-id',
         partnershipId: 'partnership-id',
         type: ContributionType.CUSTOM_PERCENTAGE,
-        customerAPercentage: 6000, // 60%
-        customerBPercentage: 4000, // 40%
+        customerAPercentage: 6000,
+        customerBPercentage: 4000,
         createdAt: '',
         updatedAt: '',
       }));
 
       const result = await sut.getSummary('customer-id', '2024-09');
 
-      assert.equal(result.yourJointShare, 120000); // 200000 * 6000 / 10000
+      assert.equal(result.yourJointShare, 120000);
     });
 
     it('should calculate actual amounts from linked transactions', async () => {
@@ -251,7 +237,7 @@ describe('BudgetSummaryService', () => {
         },
       ];
 
-      mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
+      mock.method(mockOwnershipRepository, 'findAccountIdsByCustomerId', async () => ['acc-id']);
       mock.method(mockTransactionRepository, 'findByFilters', async () => ({
         data: transactions,
         total: transactions.length,

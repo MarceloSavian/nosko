@@ -636,12 +636,43 @@ describe('BudgetPlanService', () => {
   });
 
   describe('addItem()', () => {
-    it('should add an item to the plan', async () => {
+    it('should add an item to a personal plan', async () => {
       const { sut } = makeSut();
       mock.method(mockBudgetPlanRepository, 'findById', async () => plan);
       mock.method(mockBudgetItemRepository, 'insert', async () => item);
 
-      const result = await sut.addItem('plan-id', {
+      const result = await sut.addItem('customer-id', 'plan-id', {
+        categoryId: 'cat-id',
+        name: 'Rent',
+        plannedAmount: 280000,
+        direction: BudgetItemDirection.EXPENSE,
+        type: BudgetItemType.FIXED,
+        recurrence: BudgetItemRecurrence.PERMANENT,
+      });
+
+      assert.deepEqual(result, item);
+    });
+
+    it('should add an item to a joint plan when customer is partnership member', async () => {
+      const { sut } = makeSut();
+      const jointPlan = {
+        ...plan,
+        customerId: null,
+        partnershipId: 'partnership-id',
+        isJoint: true,
+      };
+      const partnership = {
+        id: 'partnership-id',
+        invitationId: 'inv-id',
+        customerAId: 'customer-id',
+        customerBId: 'partner-id',
+        createdAt: '',
+      };
+      mock.method(mockBudgetPlanRepository, 'findById', async () => jointPlan);
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
+      mock.method(mockBudgetItemRepository, 'insert', async () => item);
+
+      const result = await sut.addItem('customer-id', 'plan-id', {
         categoryId: 'cat-id',
         name: 'Rent',
         plannedAmount: 280000,
@@ -659,7 +690,28 @@ describe('BudgetPlanService', () => {
 
       await assert.rejects(
         async () =>
-          sut.addItem('nonexistent', {
+          sut.addItem('customer-id', 'nonexistent', {
+            categoryId: 'cat-id',
+            name: 'Rent',
+            plannedAmount: 280000,
+            direction: BudgetItemDirection.EXPENSE,
+            type: BudgetItemType.FIXED,
+            recurrence: BudgetItemRecurrence.PERMANENT,
+          }),
+        new BudgetPlanNotFoundError(),
+      );
+    });
+
+    it('should throw BudgetPlanNotFoundError when customer does not own the plan', async () => {
+      const { sut } = makeSut();
+      mock.method(mockBudgetPlanRepository, 'findById', async () => ({
+        ...plan,
+        customerId: 'other-customer',
+      }));
+
+      await assert.rejects(
+        async () =>
+          sut.addItem('customer-id', 'plan-id', {
             categoryId: 'cat-id',
             name: 'Rent',
             plannedAmount: 280000,
@@ -675,10 +727,11 @@ describe('BudgetPlanService', () => {
   describe('updateItem()', () => {
     it('should throw BudgetItemNotFoundError when item not found', async () => {
       const { sut } = makeSut();
+      mock.method(mockBudgetPlanRepository, 'findById', async () => plan);
       mock.method(mockBudgetItemRepository, 'findById', async () => null);
 
       await assert.rejects(
-        async () => sut.updateItem('plan-id', 'nonexistent', { name: 'New' }),
+        async () => sut.updateItem('customer-id', 'plan-id', 'nonexistent', { name: 'New' }),
         new BudgetItemNotFoundError(),
       );
     });
@@ -687,9 +740,10 @@ describe('BudgetPlanService', () => {
   describe('deleteItem()', () => {
     it('should delete the item', async () => {
       const { sut } = makeSut();
+      mock.method(mockBudgetPlanRepository, 'findById', async () => plan);
       mock.method(mockBudgetItemRepository, 'findById', async () => item);
 
-      await sut.deleteItem('plan-id', 'item-id');
+      await sut.deleteItem('customer-id', 'plan-id', 'item-id');
 
       assert.equal(mockBudgetItemRepository.delete.mock.calls[0]?.arguments[0], 'item-id');
     });

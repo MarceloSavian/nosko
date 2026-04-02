@@ -72,18 +72,25 @@ class MockBudgetPlanService implements IBudgetPlanService {
   );
   deleteJointPlan = mock.fn(async (_customerId: string, _planId: string): Promise<void> => {});
   addItem = mock.fn(
-    async (_planId: string, _input: CreateBudgetItemInput): Promise<BudgetItemSchema> => ({
+    async (
+      _customerId: string,
+      _planId: string,
+      _input: CreateBudgetItemInput,
+    ): Promise<BudgetItemSchema> => ({
       ...defaultItem,
     }),
   );
   updateItem = mock.fn(
     async (
+      _customerId: string,
       _planId: string,
       _itemId: string,
       _input: UpdateBudgetItemInput,
     ): Promise<BudgetItemSchema> => ({ ...defaultItem }),
   );
-  deleteItem = mock.fn(async (_planId: string, _itemId: string): Promise<void> => {});
+  deleteItem = mock.fn(
+    async (_customerId: string, _planId: string, _itemId: string): Promise<void> => {},
+  );
 }
 
 export const mockBudgetPlanService = new MockBudgetPlanService();

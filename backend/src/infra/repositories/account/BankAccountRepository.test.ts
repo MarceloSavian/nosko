@@ -9,7 +9,6 @@ describe('BankAccountRepository', () => {
   let pool: Pool;
   let restore: () => void;
   let sut: BankAccountRepository;
-  let customerId: string;
   let institutionId: string;
 
   before(() => {
@@ -19,11 +18,6 @@ describe('BankAccountRepository', () => {
 
   beforeEach(async () => {
     restore();
-    const customerResult = await pool.query<{ id: string }>(
-      "INSERT INTO customers (email, password_hash) VALUES ('bank-test@test.com', 'hashed') RETURNING id",
-    );
-    customerId = customerResult.rows[0]!.id;
-
     const institutionResult = await pool.query<{ id: string }>(
       "INSERT INTO institutions (name, country_code) VALUES ('Test Bank', 'FI') RETURNING id",
     );
@@ -32,7 +26,7 @@ describe('BankAccountRepository', () => {
 
   describe('insert()', () => {
     it('should insert a bank account and return the created record', async () => {
-      const result = await sut.insert(customerId, {
+      const result = await sut.insert({
         institutionId,
         accountName: 'My Checking',
         currencyCode: 'EUR',
@@ -41,7 +35,6 @@ describe('BankAccountRepository', () => {
       });
 
       assert.ok(result.id);
-      assert.equal(result.customerId, customerId);
       assert.equal(result.institutionId, institutionId);
       assert.equal(result.accountName, 'My Checking');
       assert.equal(result.currencyCode, 'EUR');
@@ -53,7 +46,7 @@ describe('BankAccountRepository', () => {
     });
 
     it('should insert with optional fields', async () => {
-      const result = await sut.insert(customerId, {
+      const result = await sut.insert({
         institutionId,
         accountName: 'Savings',
         accountNumberLast4: '1234',
@@ -67,7 +60,7 @@ describe('BankAccountRepository', () => {
     });
 
     it('should insert with null accountType', async () => {
-      const result = await sut.insert(customerId, {
+      const result = await sut.insert({
         institutionId,
         accountName: 'Untyped',
         currencyCode: 'BRL',
@@ -80,7 +73,7 @@ describe('BankAccountRepository', () => {
 
   describe('findById()', () => {
     it('should return the bank account when found', async () => {
-      const inserted = await sut.insert(customerId, {
+      const inserted = await sut.insert({
         institutionId,
         accountName: 'Find Me',
         currencyCode: 'EUR',
@@ -101,54 +94,38 @@ describe('BankAccountRepository', () => {
     });
   });
 
-  describe('findByCustomerId()', () => {
-    it('should return an empty array when no accounts exist', async () => {
-      const result = await sut.findByCustomerId(customerId);
+  describe('findByIds()', () => {
+    it('should return empty array for empty input', async () => {
+      const result = await sut.findByIds([]);
 
       assert.deepEqual(result, []);
     });
 
-    it('should return all accounts for a customer ordered by created_at', async () => {
-      await sut.insert(customerId, {
+    it('should return matching accounts ordered by created_at', async () => {
+      const a1 = await sut.insert({
         institutionId,
         accountName: 'Account A',
         currencyCode: 'EUR',
         balance: 100,
       });
-      await sut.insert(customerId, {
+      const a2 = await sut.insert({
         institutionId,
         accountName: 'Account B',
         currencyCode: 'USD',
         balance: 200,
       });
 
-      const result = await sut.findByCustomerId(customerId);
+      const result = await sut.findByIds([a1.id, a2.id]);
 
       assert.equal(result.length, 2);
       assert.equal(result[0]!.accountName, 'Account A');
       assert.equal(result[1]!.accountName, 'Account B');
     });
-
-    it('should not return accounts for other customers', async () => {
-      const otherCustomer = await pool.query<{ id: string }>(
-        "INSERT INTO customers (email, password_hash) VALUES ('other-bank@test.com', 'hashed') RETURNING id",
-      );
-      await sut.insert(otherCustomer.rows[0]!.id, {
-        institutionId,
-        accountName: 'Other Account',
-        currencyCode: 'EUR',
-        balance: 0,
-      });
-
-      const result = await sut.findByCustomerId(customerId);
-
-      assert.deepEqual(result, []);
-    });
   });
 
   describe('update()', () => {
     it('should update accountName', async () => {
-      const inserted = await sut.insert(customerId, {
+      const inserted = await sut.insert({
         institutionId,
         accountName: 'Old Name',
         currencyCode: 'EUR',
@@ -161,7 +138,7 @@ describe('BankAccountRepository', () => {
     });
 
     it('should update accountNumberLast4', async () => {
-      const inserted = await sut.insert(customerId, {
+      const inserted = await sut.insert({
         institutionId,
         accountName: 'Account',
         currencyCode: 'EUR',
@@ -174,7 +151,7 @@ describe('BankAccountRepository', () => {
     });
 
     it('should update balance and set balanceUpdatedAt', async () => {
-      const inserted = await sut.insert(customerId, {
+      const inserted = await sut.insert({
         institutionId,
         accountName: 'Account',
         currencyCode: 'EUR',
@@ -189,7 +166,7 @@ describe('BankAccountRepository', () => {
     });
 
     it('should update accountType', async () => {
-      const inserted = await sut.insert(customerId, {
+      const inserted = await sut.insert({
         institutionId,
         accountName: 'Account',
         currencyCode: 'EUR',
@@ -202,7 +179,7 @@ describe('BankAccountRepository', () => {
     });
 
     it('should update multiple fields at once', async () => {
-      const inserted = await sut.insert(customerId, {
+      const inserted = await sut.insert({
         institutionId,
         accountName: 'Account',
         currencyCode: 'EUR',
@@ -223,7 +200,7 @@ describe('BankAccountRepository', () => {
 
   describe('delete()', () => {
     it('should delete the bank account', async () => {
-      const inserted = await sut.insert(customerId, {
+      const inserted = await sut.insert({
         institutionId,
         accountName: 'To Delete',
         currencyCode: 'EUR',
@@ -243,34 +220,34 @@ describe('BankAccountRepository', () => {
     });
   });
 
-  describe('getOverviewByCustomerId()', () => {
-    it('should return an empty array when no accounts exist', async () => {
-      const result = await sut.getOverviewByCustomerId(customerId);
+  describe('getOverviewByAccountIds()', () => {
+    it('should return an empty array when given empty ids', async () => {
+      const result = await sut.getOverviewByAccountIds([]);
 
       assert.deepEqual(result, []);
     });
 
     it('should return totals grouped by currency', async () => {
-      await sut.insert(customerId, {
+      const a1 = await sut.insert({
         institutionId,
         accountName: 'EUR 1',
         currencyCode: 'EUR',
         balance: 10000,
       });
-      await sut.insert(customerId, {
+      const a2 = await sut.insert({
         institutionId,
         accountName: 'EUR 2',
         currencyCode: 'EUR',
         balance: 25050,
       });
-      await sut.insert(customerId, {
+      const a3 = await sut.insert({
         institutionId,
         accountName: 'USD 1',
         currencyCode: 'USD',
         balance: 50000,
       });
 
-      const result = await sut.getOverviewByCustomerId(customerId);
+      const result = await sut.getOverviewByAccountIds([a1.id, a2.id, a3.id]);
 
       assert.equal(result.length, 2);
       assert.equal(result[0]!.currencyCode, 'EUR');

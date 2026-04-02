@@ -9,7 +9,6 @@ import type {
 
 type BankAccountRow = {
   id: string;
-  customer_id: string;
   institution_id: string;
   account_name: string;
   account_number_last4: string | null;
@@ -23,7 +22,6 @@ type BankAccountRow = {
 function toSchema(row: BankAccountRow): BankAccountSchema {
   return {
     id: row.id,
-    customerId: row.customer_id,
     institutionId: row.institution_id,
     accountName: row.account_name,
     accountNumberLast4: row.account_number_last4,
@@ -36,18 +34,10 @@ function toSchema(row: BankAccountRow): BankAccountSchema {
 }
 
 const COLUMNS =
-  'id, customer_id, institution_id, account_name, account_number_last4, currency_code, balance, account_type, balance_updated_at, created_at';
+  'id, institution_id, account_name, account_number_last4, currency_code, balance, account_type, balance_updated_at, created_at';
 
 export class BankAccountRepository implements IBankAccountRepository {
   constructor(private readonly pool: Pool) {}
-
-  async findByCustomerId(customerId: string): Promise<BankAccountSchema[]> {
-    const result = await this.pool.query<BankAccountRow>(
-      `SELECT ${COLUMNS} FROM bank_accounts WHERE customer_id = $1 ORDER BY created_at`,
-      [customerId],
-    );
-    return result.rows.map(toSchema);
-  }
 
   async findById(id: string): Promise<BankAccountSchema | null> {
     const result = await this.pool.query<BankAccountRow>(
@@ -58,12 +48,21 @@ export class BankAccountRepository implements IBankAccountRepository {
     return row ? toSchema(row) : null;
   }
 
-  async insert(customerId: string, input: CreateBankAccountInput): Promise<BankAccountSchema> {
+  async findByIds(ids: string[]): Promise<BankAccountSchema[]> {
+    if (ids.length === 0) return [];
+    const placeholders = ids.map((_, i) => `$${i + 1}`).join(', ');
     const result = await this.pool.query<BankAccountRow>(
-      `INSERT INTO bank_accounts (customer_id, institution_id, account_name, account_number_last4, currency_code, balance, account_type)
-       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING ${COLUMNS}`,
+      `SELECT ${COLUMNS} FROM bank_accounts WHERE id IN (${placeholders}) ORDER BY created_at`,
+      ids,
+    );
+    return result.rows.map(toSchema);
+  }
+
+  async insert(input: CreateBankAccountInput): Promise<BankAccountSchema> {
+    const result = await this.pool.query<BankAccountRow>(
+      `INSERT INTO bank_accounts (institution_id, account_name, account_number_last4, currency_code, balance, account_type)
+       VALUES ($1, $2, $3, $4, $5, $6) RETURNING ${COLUMNS}`,
       [
-        customerId,
         input.institutionId,
         input.accountName,
         input.accountNumberLast4 ?? null,
@@ -114,12 +113,14 @@ export class BankAccountRepository implements IBankAccountRepository {
     await this.pool.query('DELETE FROM bank_accounts WHERE id = $1', [id]);
   }
 
-  async getOverviewByCustomerId(
-    customerId: string,
+  async getOverviewByAccountIds(
+    accountIds: string[],
   ): Promise<{ currencyCode: string; total: number }[]> {
+    if (accountIds.length === 0) return [];
+    const placeholders = accountIds.map((_, i) => `$${i + 1}`).join(', ');
     const result = await this.pool.query<{ currency_code: string; total: number }>(
-      'SELECT currency_code, SUM(balance) as total FROM bank_accounts WHERE customer_id = $1 GROUP BY currency_code ORDER BY currency_code',
-      [customerId],
+      `SELECT currency_code, SUM(balance) as total FROM bank_accounts WHERE id IN (${placeholders}) GROUP BY currency_code ORDER BY currency_code`,
+      accountIds,
     );
     return result.rows.map((row) => ({
       currencyCode: row.currency_code,

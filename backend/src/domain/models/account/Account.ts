@@ -13,7 +13,6 @@ const accountTypeValues = Object.values(AccountType) as [AccountType, ...Account
 
 export const bankAccountSchema = z.object({
   id: z.string(),
-  customerId: z.string(),
   institutionId: z.string(),
   accountName: z.string(),
   accountNumberLast4: z.string().nullable(),

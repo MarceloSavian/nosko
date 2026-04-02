@@ -3,6 +3,7 @@ import { beforeEach, describe, it, mock } from 'node:test';
 import type { APIGatewayProxyEventV2 } from 'aws-lambda';
 import { BaseError } from '../../shared/error.js';
 import { resetMock } from '../../test/helpers/resetMock.js';
+import { mockAccountOverviewService } from '../../test/mocks/MockAccountOverviewService.js';
 import { mockAccountService } from '../../test/mocks/MockAccountService.js';
 import { mockJwtService } from '../../test/mocks/MockJwtService.js';
 import {
@@ -19,6 +20,7 @@ describe('account-routes', () => {
   beforeEach(() => {
     resetMock(mockJwtService);
     resetMock(mockAccountService);
+    resetMock(mockAccountOverviewService);
   });
 
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
@@ -82,9 +84,9 @@ describe('account-routes', () => {
 
   describe('makeGetOverviewRoute()', () => {
     it('should return 200 with overview', async () => {
-      const route = makeGetOverviewRoute(mockAccountService);
+      const route = makeGetOverviewRoute(mockAccountOverviewService);
       const overview = { totalsByCurrency: [{ currencyCode: 'USD', total: 100000 }] };
-      mock.method(mockAccountService, 'getOverview', async () => overview);
+      mock.method(mockAccountOverviewService, 'getOverview', async () => overview);
 
       const result = await route(makeEvent(), 'customer-id');
 
@@ -125,7 +127,11 @@ describe('account-routes', () => {
 
   describe('makeAccountHandler()', () => {
     it('should return 401 without a token', async () => {
-      const handler = makeAccountHandler(mockAccountService, mockJwtService);
+      const handler = makeAccountHandler(
+        mockAccountService,
+        mockAccountOverviewService,
+        mockJwtService,
+      );
 
       const result = await handler(makeEvent({ headers: {} }));
 
@@ -133,7 +139,11 @@ describe('account-routes', () => {
     });
 
     it('should return 404 for unknown routes', async () => {
-      const handler = makeAccountHandler(mockAccountService, mockJwtService);
+      const handler = makeAccountHandler(
+        mockAccountService,
+        mockAccountOverviewService,
+        mockJwtService,
+      );
 
       const result = await handler(makeEvent({ routeKey: 'PATCH /accounts/unknown' }));
 

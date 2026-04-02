@@ -8,7 +8,6 @@ import type {
 
 const defaultAccount: BankAccountSchema = {
   id: '',
-  customerId: '',
   institutionId: '',
   accountName: '',
   accountNumberLast4: null,
@@ -20,10 +19,10 @@ const defaultAccount: BankAccountSchema = {
 };
 
 class MockBankAccountRepository implements IBankAccountRepository {
-  findByCustomerId = mock.fn(async (_customerId: string): Promise<BankAccountSchema[]> => []);
   findById = mock.fn(async (_id: string): Promise<BankAccountSchema | null> => null);
+  findByIds = mock.fn(async (_ids: string[]): Promise<BankAccountSchema[]> => []);
   insert = mock.fn(
-    async (_customerId: string, _input: CreateBankAccountInput): Promise<BankAccountSchema> => ({
+    async (_input: CreateBankAccountInput): Promise<BankAccountSchema> => ({
       ...defaultAccount,
     }),
   );
@@ -33,8 +32,8 @@ class MockBankAccountRepository implements IBankAccountRepository {
     }),
   );
   delete = mock.fn(async (_id: string): Promise<void> => {});
-  getOverviewByCustomerId = mock.fn(
-    async (_customerId: string): Promise<{ currencyCode: string; total: number }[]> => [],
+  getOverviewByAccountIds = mock.fn(
+    async (_accountIds: string[]): Promise<{ currencyCode: string; total: number }[]> => [],
   );
 }
 

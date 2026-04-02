@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
 import { resetMock } from '../../../test/helpers/resetMock.js';
-import { mockBankAccountRepository } from '../../../test/mocks/MockBankAccountRepository.js';
+import { mockOwnershipRepository } from '../../../test/mocks/MockBankAccountOwnershipRepository.js';
 import { mockBudgetCategoryRepository } from '../../../test/mocks/MockBudgetCategoryRepository.js';
 import { mockBudgetItemRepository } from '../../../test/mocks/MockBudgetItemRepository.js';
 import { mockBudgetPlanRepository } from '../../../test/mocks/MockBudgetPlanRepository.js';
@@ -11,7 +11,7 @@ import { DashboardService } from './DashboardService.js';
 describe('DashboardService', () => {
   const makeSut = () => {
     const sut = new DashboardService(
-      mockBankAccountRepository,
+      mockOwnershipRepository,
       mockBudgetPlanRepository,
       mockBudgetItemRepository,
       mockTransactionRepository,
@@ -22,7 +22,7 @@ describe('DashboardService', () => {
 
   beforeEach(() => {
     mock.restoreAll();
-    resetMock(mockBankAccountRepository);
+    resetMock(mockOwnershipRepository);
     resetMock(mockBudgetPlanRepository);
     resetMock(mockBudgetItemRepository);
     resetMock(mockTransactionRepository);
@@ -32,7 +32,6 @@ describe('DashboardService', () => {
   describe('getDashboard()', () => {
     it('should return dashboard data with no accounts', async () => {
       const { sut } = makeSut();
-      mock.method(mockBankAccountRepository, 'findByCustomerId', async () => []);
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => null);
 
       const result = await sut.getDashboard('customer-id', '2024-09');
@@ -45,18 +44,6 @@ describe('DashboardService', () => {
 
     it('should return budget summary with planned vs actual when plan exists', async () => {
       const { sut } = makeSut();
-      const account = {
-        id: 'acc-id',
-        customerId: 'customer-id',
-        institutionId: 'inst-id',
-        accountName: 'Checking',
-        accountNumberLast4: null,
-        currencyCode: 'USD',
-        balance: 100000,
-        accountType: null,
-        balanceUpdatedAt: null,
-        createdAt: '',
-      };
       const budgetPlan = {
         id: 'plan-id',
         customerId: 'customer-id',
@@ -136,7 +123,7 @@ describe('DashboardService', () => {
         },
       ];
 
-      mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
+      mock.method(mockOwnershipRepository, 'findAccountIdsByCustomerId', async () => ['acc-id']);
       mock.method(mockTransactionRepository, 'findByFilters', async () => ({
         data: transactions,
         total: transactions.length,
@@ -155,29 +142,17 @@ describe('DashboardService', () => {
 
       const grocerySummary = result.budgetSummary.find((s) => s.categoryName === 'Food');
       assert.equal(grocerySummary?.planned, 50000);
-      assert.equal(grocerySummary?.actual, 23000); // abs(-15000) + abs(-8000)
+      assert.equal(grocerySummary?.actual, 23000);
 
       const rentSummary = result.budgetSummary.find((s) => s.categoryName === 'Housing');
       assert.equal(rentSummary?.planned, 120000);
-      assert.equal(rentSummary?.actual, 120000); // abs(-120000)
+      assert.equal(rentSummary?.actual, 120000);
 
       assert.equal(result.recentTransactions.length, 3);
     });
 
     it('should show Unknown for items with missing category', async () => {
       const { sut } = makeSut();
-      const account = {
-        id: 'acc-id',
-        customerId: 'customer-id',
-        institutionId: 'inst-id',
-        accountName: 'Checking',
-        accountNumberLast4: null,
-        currencyCode: 'USD',
-        balance: 100000,
-        accountType: null,
-        balanceUpdatedAt: null,
-        createdAt: '',
-      };
       const budgetPlan = {
         id: 'plan-id',
         customerId: 'customer-id',
@@ -206,7 +181,7 @@ describe('DashboardService', () => {
         },
       ];
 
-      mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
+      mock.method(mockOwnershipRepository, 'findAccountIdsByCustomerId', async () => ['acc-id']);
       mock.method(mockTransactionRepository, 'findByFilters', async () => ({
         data: [],
         total: 0,
@@ -227,18 +202,6 @@ describe('DashboardService', () => {
 
     it('should calculate total spending from transactions', async () => {
       const { sut } = makeSut();
-      const account = {
-        id: 'acc-id',
-        customerId: 'customer-id',
-        institutionId: 'inst-id',
-        accountName: 'Checking',
-        accountNumberLast4: null,
-        currencyCode: 'USD',
-        balance: 100000,
-        accountType: null,
-        balanceUpdatedAt: null,
-        createdAt: '',
-      };
       const transactions = [
         {
           id: '1',
@@ -262,7 +225,7 @@ describe('DashboardService', () => {
         },
       ];
 
-      mock.method(mockBankAccountRepository, 'findByCustomerId', async () => [account]);
+      mock.method(mockOwnershipRepository, 'findAccountIdsByCustomerId', async () => ['acc-id']);
       mock.method(mockTransactionRepository, 'findByFilters', async () => ({
         data: transactions,
         total: transactions.length,

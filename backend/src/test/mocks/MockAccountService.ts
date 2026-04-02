@@ -8,7 +8,6 @@ import type { IAccountService } from '../../domain/usecases/account/IAccountServ
 
 const defaultAccount: BankAccountSchema = {
   id: '',
-  customerId: '',
   institutionId: '',
   accountName: '',
   accountNumberLast4: null,
@@ -39,13 +38,6 @@ class MockAccountService implements IAccountService {
     ): Promise<BankAccountSchema> => ({ ...defaultAccount }),
   );
   deleteAccount = mock.fn(async (_customerId: string, _accountId: string): Promise<void> => {});
-  getOverview = mock.fn(
-    async (
-      _customerId: string,
-    ): Promise<{ totalsByCurrency: { currencyCode: string; total: number }[] }> => ({
-      totalsByCurrency: [],
-    }),
-  );
 }
 
 export const mockAccountService = new MockAccountService();
