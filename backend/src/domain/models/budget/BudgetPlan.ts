@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 // Budget Plan
 export const budgetPlanSchema = z.object({
@@ -76,7 +76,7 @@ export const budgetItemSchema = z.object({
 export type BudgetItemSchema = z.infer<typeof budgetItemSchema>;
 
 export const createBudgetItemInputSchema = z.object({
-  categoryId: z.string().uuid('Invalid category ID'),
+  categoryId: z.uuid('Invalid category ID'),
   name: z.string().min(1, 'Name is required').max(200),
   plannedAmount: z.number().int().positive('Amount must be positive'),
   direction: z.enum(budgetItemDirectionValues),
@@ -90,7 +90,7 @@ export type CreateBudgetItemInput = z.infer<typeof createBudgetItemInputSchema>;
 export const updateBudgetItemInputSchema = z.object({
   name: z.string().min(1).max(200).optional(),
   plannedAmount: z.number().positive().optional(),
-  categoryId: z.string().uuid().optional(),
+  categoryId: z.uuid().optional(),
 });
 
 export type UpdateBudgetItemInput = z.infer<typeof updateBudgetItemInputSchema>;

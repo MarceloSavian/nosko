@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import { ZodError } from 'zod';
+import { ZodError } from 'zod/v4';
 import { BaseError } from '../../shared/error.js';
 import { logErrorAndFormat } from './error.js';
 

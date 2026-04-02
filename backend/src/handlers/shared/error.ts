@@ -1,5 +1,5 @@
 import type { APIGatewayProxyResult } from 'aws-lambda';
-import { ZodError } from 'zod';
+import { ZodError } from 'zod/v4';
 import { BaseError } from '../../shared/error.js';
 import { formatResponse } from './response.js';
 

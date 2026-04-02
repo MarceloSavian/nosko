@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 const DEFAULT_LIMIT = 50;
 const MAX_LIMIT = 100;

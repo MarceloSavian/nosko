@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 // Partner Invitations
 export const InvitationStatus = {
@@ -27,7 +27,7 @@ export const partnerInvitationSchema = z.object({
 export type PartnerInvitationSchema = z.infer<typeof partnerInvitationSchema>;
 
 export const invitePartnerInputSchema = z.object({
-  email: z.string().email('Invalid email'),
+  email: z.email('Invalid email'),
 });
 
 export type InvitePartnerInput = z.infer<typeof invitePartnerInputSchema>;
@@ -79,7 +79,7 @@ export type SetContributionRuleInput = z.infer<typeof setContributionRuleInputSc
 
 // Shared Accounts
 export const setSharedAccountsInputSchema = z.object({
-  bankAccountIds: z.array(z.string().uuid()),
+  bankAccountIds: z.array(z.uuid()),
 });
 
 export type SetSharedAccountsInput = z.infer<typeof setSharedAccountsInputSchema>;

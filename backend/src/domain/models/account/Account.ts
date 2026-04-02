@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 
 export const AccountType = {
   CHECKING: 'CHECKING',
@@ -27,7 +27,7 @@ export const bankAccountSchema = z.object({
 export type BankAccountSchema = z.infer<typeof bankAccountSchema>;
 
 export const createBankAccountInputSchema = z.object({
-  institutionId: z.string().uuid('Invalid institution ID'),
+  institutionId: z.uuid('Invalid institution ID'),
   accountName: z.string().min(1, 'Account name is required').max(100),
   accountNumberLast4: z.string().length(4).nullable().optional(),
   currencyCode: z.string().length(3, 'Currency code must be 3 characters'),
@@ -47,7 +47,7 @@ export const updateBankAccountInputSchema = z.object({
 export type UpdateBankAccountInput = z.infer<typeof updateBankAccountInputSchema>;
 
 export const accountOverviewSchema = z.object({
-  totalsByurrency: z.array(
+  totalsByCurrency: z.array(
     z.object({
       currencyCode: z.string(),
       total: z.string(),
