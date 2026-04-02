@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
-import { BankAccountNotFoundError } from '../../../domain/errors/account.js';
+import {
+  BankAccountNotFoundError,
+  BankAccountNotOwnedError,
+} from '../../../domain/errors/account.js';
 import { TransactionNotFoundError } from '../../../domain/errors/transaction.js';
 import { resetMock } from '../../../test/helpers/resetMock.js';
 import { mockOwnershipRepository } from '../../../test/mocks/MockBankAccountOwnershipRepository.js';
@@ -144,6 +147,32 @@ describe('TransactionService', () => {
       assert.deepEqual(result, transaction);
     });
 
+    it('should throw BankAccountNotOwnedError when customer is not the owner', async () => {
+      const { sut } = makeSut();
+      mock.method(mockBankAccountRepository, 'findById', async () => ({
+        id: 'account-id',
+        institutionId: 'inst-id',
+        accountName: 'Checking',
+        accountNumberLast4: null,
+        currencyCode: 'USD',
+        balance: 100000,
+        accountType: null,
+        balanceUpdatedAt: null,
+        createdAt: '',
+      }));
+      mock.method(mockOwnershipRepository, 'isOwner', async () => false);
+
+      await assert.rejects(
+        async () =>
+          sut.createTransaction('other-customer', {
+            bankAccountId: 'account-id',
+            amount: -50,
+            transactionDate: '2024-09-15',
+          }),
+        new BankAccountNotOwnedError(),
+      );
+    });
+
     it('should throw BankAccountNotFoundError when account not found', async () => {
       const { sut } = makeSut();
       mock.method(mockBankAccountRepository, 'findById', async () => null);
@@ -160,6 +189,42 @@ describe('TransactionService', () => {
     });
   });
 
+  describe('updateTransaction()', () => {
+    it('should throw TransactionNotFoundError when transaction does not exist', async () => {
+      const { sut } = makeSut();
+      mock.method(mockTransactionRepository, 'findById', async () => null);
+
+      await assert.rejects(
+        async () => sut.updateTransaction('customer-id', 'nonexistent', { amount: 100 }),
+        new TransactionNotFoundError(),
+      );
+    });
+
+    it('should throw TransactionNotFoundError when customer is not the owner', async () => {
+      const { sut } = makeSut();
+      mock.method(mockTransactionRepository, 'findById', async () => transaction);
+      mock.method(mockOwnershipRepository, 'isOwner', async () => false);
+
+      await assert.rejects(
+        async () => sut.updateTransaction('other-customer', 'tx-id', { amount: 100 }),
+        new TransactionNotFoundError(),
+      );
+    });
+
+    it('should update the transaction when owned', async () => {
+      const { sut } = makeSut();
+      const updated = { ...transaction, amount: -10000 };
+      mock.method(mockTransactionRepository, 'findById', async () => transaction);
+      mock.method(mockOwnershipRepository, 'isOwner', async () => true);
+      mock.method(mockTransactionRepository, 'update', async () => updated);
+
+      const result = await sut.updateTransaction('customer-id', 'tx-id', { amount: -10000 });
+
+      assert.deepEqual(result, updated);
+      assert.equal(mockTransactionRepository.update.mock.calls[0]?.arguments[0], 'tx-id');
+    });
+  });
+
   describe('deleteTransaction()', () => {
     it('should throw TransactionNotFoundError when not found', async () => {
       const { sut } = makeSut();
@@ -167,6 +232,17 @@ describe('TransactionService', () => {
 
       await assert.rejects(
         async () => sut.deleteTransaction('customer-id', 'nonexistent'),
+        new TransactionNotFoundError(),
+      );
+    });
+
+    it('should throw TransactionNotFoundError when customer is not the owner', async () => {
+      const { sut } = makeSut();
+      mock.method(mockTransactionRepository, 'findById', async () => transaction);
+      mock.method(mockOwnershipRepository, 'isOwner', async () => false);
+
+      await assert.rejects(
+        async () => sut.deleteTransaction('other-customer', 'tx-id'),
         new TransactionNotFoundError(),
       );
     });

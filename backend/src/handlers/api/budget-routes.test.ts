@@ -14,6 +14,7 @@ import { mockBudgetSummaryService } from '../../test/mocks/MockBudgetSummaryServ
 import { mockJwtService } from '../../test/mocks/MockJwtService.js';
 import {
   makeAddItemRoute,
+  makeBudgetHandler,
   makeCreateCategoryRoute,
   makeCreateJointPlanRoute,
   makeCreatePersonalPlanRoute,
@@ -341,6 +342,198 @@ describe('budget-routes', () => {
 
       assert.equal(result.statusCode, 200);
       assert.deepEqual(JSON.parse(result.body), summary);
+    });
+
+    it('should return error when service throws', async () => {
+      const route = makeGetSummaryRoute(mockBudgetSummaryService);
+      mock.method(mockBudgetSummaryService, 'getSummary', async () => {
+        throw new BaseError('Partnership not found', 404);
+      });
+
+      const result = await route(
+        makeEvent({ queryStringParameters: { yearMonth: '2024-09' } }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 404);
+    });
+  });
+
+  describe('makeCreateCategoryRoute() errors', () => {
+    it('should return 400 for invalid input', async () => {
+      const route = makeCreateCategoryRoute(mockBudgetCategoryService);
+
+      const result = await route(makeEvent({ body: JSON.stringify({ name: '' }) }), 'customer-id');
+
+      assert.equal(result.statusCode, 400);
+    });
+  });
+
+  describe('makeCreatePersonalPlanRoute() errors', () => {
+    it('should return 400 for invalid input', async () => {
+      const route = makeCreatePersonalPlanRoute(mockBudgetPlanService);
+
+      const result = await route(
+        makeEvent({ body: JSON.stringify({ yearMonth: 'invalid' }) }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 400);
+    });
+
+    it('should return error when service throws', async () => {
+      const route = makeCreatePersonalPlanRoute(mockBudgetPlanService);
+      mock.method(mockBudgetPlanService, 'createPersonalPlan', async () => {
+        throw new BaseError('Duplicate plan', 409);
+      });
+
+      const result = await route(
+        makeEvent({ body: JSON.stringify({ yearMonth: '2024-09', currencyCode: 'USD' }) }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 409);
+    });
+  });
+
+  describe('makeCreateJointPlanRoute() errors', () => {
+    it('should return 400 for invalid input', async () => {
+      const route = makeCreateJointPlanRoute(mockBudgetPlanService);
+
+      const result = await route(makeEvent({ body: JSON.stringify({}) }), 'customer-id');
+
+      assert.equal(result.statusCode, 400);
+    });
+  });
+
+  describe('makeDeletePersonalPlanRoute() errors', () => {
+    it('should return error when service throws', async () => {
+      const route = makeDeletePersonalPlanRoute(mockBudgetPlanService);
+      mock.method(mockBudgetPlanService, 'deletePersonalPlan', async () => {
+        throw new BaseError('Budget plan not found', 404);
+      });
+
+      const result = await route(
+        makeEvent({ pathParameters: { id: 'nonexistent' } }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 404);
+    });
+  });
+
+  describe('makeDeleteJointPlanRoute() errors', () => {
+    it('should return error when service throws', async () => {
+      const route = makeDeleteJointPlanRoute(mockBudgetPlanService);
+      mock.method(mockBudgetPlanService, 'deleteJointPlan', async () => {
+        throw new BaseError('Budget plan not found', 404);
+      });
+
+      const result = await route(
+        makeEvent({ pathParameters: { id: 'nonexistent' } }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 404);
+    });
+  });
+
+  describe('makeAddItemRoute() errors', () => {
+    it('should return 400 for invalid input', async () => {
+      const route = makeAddItemRoute(mockBudgetPlanService);
+
+      const result = await route(
+        makeEvent({
+          pathParameters: { planId: 'plan-id' },
+          body: JSON.stringify({ name: '' }),
+        }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 400);
+    });
+  });
+
+  describe('makeUpdateItemRoute() errors', () => {
+    it('should return error when service throws', async () => {
+      const route = makeUpdateItemRoute(mockBudgetPlanService);
+      mock.method(mockBudgetPlanService, 'updateItem', async () => {
+        throw new BaseError('Budget item not found', 404);
+      });
+
+      const result = await route(
+        makeEvent({
+          pathParameters: { planId: 'plan-1', id: 'item-1' },
+          body: JSON.stringify({ name: 'Updated' }),
+        }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 404);
+    });
+  });
+
+  describe('makeDeleteItemRoute() errors', () => {
+    it('should return error when service throws', async () => {
+      const route = makeDeleteItemRoute(mockBudgetPlanService);
+      mock.method(mockBudgetPlanService, 'deleteItem', async () => {
+        throw new BaseError('Budget item not found', 404);
+      });
+
+      const result = await route(
+        makeEvent({ pathParameters: { planId: 'plan-1', id: 'item-1' } }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 404);
+    });
+  });
+
+  describe('makeBudgetHandler()', () => {
+    it('should return 401 without a token', async () => {
+      const handler = makeBudgetHandler(
+        mockBudgetCategoryService,
+        mockBudgetPlanService,
+        mockBudgetSummaryService,
+        mockJwtService,
+      );
+
+      const result = await handler(makeEvent({ headers: {} }));
+
+      assert.equal(result.statusCode, 401);
+    });
+
+    it('should return 404 for unknown routes', async () => {
+      const handler = makeBudgetHandler(
+        mockBudgetCategoryService,
+        mockBudgetPlanService,
+        mockBudgetSummaryService,
+        mockJwtService,
+      );
+
+      const result = await handler(makeEvent({ routeKey: 'PATCH /v1/budget/unknown' }));
+
+      assert.equal(result.statusCode, 404);
+    });
+
+    it('should route GET /v1/budget-categories correctly', async () => {
+      const handler = makeBudgetHandler(
+        mockBudgetCategoryService,
+        mockBudgetPlanService,
+        mockBudgetSummaryService,
+        mockJwtService,
+      );
+      mock.method(mockJwtService, 'verify', async () => ({ sub: 'customer-id', email: 'a@b.com' }));
+      mock.method(mockBudgetCategoryService, 'listCategories', async () => []);
+
+      const result = await handler(
+        makeEvent({
+          routeKey: 'GET /v1/budget-categories',
+          headers: { authorization: 'Bearer t' },
+        }),
+      );
+
+      assert.equal(result.statusCode, 200);
     });
   });
 });

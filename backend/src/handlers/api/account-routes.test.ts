@@ -42,6 +42,17 @@ describe('account-routes', () => {
       assert.equal(result.statusCode, 200);
       assert.deepEqual(JSON.parse(result.body), accounts);
     });
+
+    it('should return 500 when service throws unexpected error', async () => {
+      const route = makeListAccountsRoute(mockAccountService);
+      mock.method(mockAccountService, 'listAccounts', async () => {
+        throw new Error('database error');
+      });
+
+      const result = await route(makeEvent(), 'customer-id');
+
+      assert.equal(result.statusCode, 500);
+    });
   });
 
   describe('makeGetAccountRoute()', () => {
@@ -80,6 +91,37 @@ describe('account-routes', () => {
       assert.equal(result.statusCode, 201);
       assert.deepEqual(JSON.parse(result.body), account);
     });
+
+    it('should return 400 for invalid input', async () => {
+      const route = makeCreateAccountRoute(mockAccountService);
+
+      const result = await route(
+        makeEvent({ body: JSON.stringify({ accountName: '' }) }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 400);
+    });
+
+    it('should return error when service throws', async () => {
+      const route = makeCreateAccountRoute(mockAccountService);
+      mock.method(mockAccountService, 'createAccount', async () => {
+        throw new BaseError('Institution not found', 404);
+      });
+
+      const result = await route(
+        makeEvent({
+          body: JSON.stringify({
+            institutionId: '550e8400-e29b-41d4-a716-446655440000',
+            accountName: 'Test',
+            currencyCode: 'USD',
+          }),
+        }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 404);
+    });
   });
 
   describe('makeGetOverviewRoute()', () => {
@@ -92,6 +134,17 @@ describe('account-routes', () => {
 
       assert.equal(result.statusCode, 200);
       assert.deepEqual(JSON.parse(result.body), overview);
+    });
+
+    it('should return 500 when service throws unexpected error', async () => {
+      const route = makeGetOverviewRoute(mockAccountOverviewService);
+      mock.method(mockAccountOverviewService, 'getOverview', async () => {
+        throw new Error('unexpected');
+      });
+
+      const result = await route(makeEvent(), 'customer-id');
+
+      assert.equal(result.statusCode, 500);
     });
   });
 
@@ -112,6 +165,23 @@ describe('account-routes', () => {
       assert.equal(result.statusCode, 200);
       assert.deepEqual(JSON.parse(result.body), updated);
     });
+
+    it('should return error when service throws', async () => {
+      const route = makeUpdateAccountRoute(mockAccountService);
+      mock.method(mockAccountService, 'updateAccount', async () => {
+        throw new BaseError('Bank account not found', 404);
+      });
+
+      const result = await route(
+        makeEvent({
+          pathParameters: { id: 'acc-1' },
+          body: JSON.stringify({ accountName: 'Renamed' }),
+        }),
+        'customer-id',
+      );
+
+      assert.equal(result.statusCode, 404);
+    });
   });
 
   describe('makeDeleteAccountRoute()', () => {
@@ -122,6 +192,17 @@ describe('account-routes', () => {
       const result = await route(makeEvent({ pathParameters: { id: 'acc-1' } }), 'customer-id');
 
       assert.equal(result.statusCode, 204);
+    });
+
+    it('should return error when service throws', async () => {
+      const route = makeDeleteAccountRoute(mockAccountService);
+      mock.method(mockAccountService, 'deleteAccount', async () => {
+        throw new BaseError('Bank account not found', 404);
+      });
+
+      const result = await route(makeEvent({ pathParameters: { id: 'acc-1' } }), 'customer-id');
+
+      assert.equal(result.statusCode, 404);
     });
   });
 
