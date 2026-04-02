@@ -146,3 +146,20 @@ CREATE TABLE IF NOT EXISTS transactions (
   transaction_date DATE NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+-- 7. Indexes
+CREATE INDEX IF NOT EXISTS idx_tokens_customer_id ON tokens (customer_id);
+CREATE INDEX IF NOT EXISTS idx_currency_defaults_customer_id ON currency_defaults (customer_id);
+CREATE INDEX IF NOT EXISTS idx_partner_invitations_inviter_id ON partner_invitations (inviter_id);
+CREATE INDEX IF NOT EXISTS idx_partner_invitations_invitee_email ON partner_invitations (invitee_email);
+CREATE INDEX IF NOT EXISTS idx_partnerships_customer_a_id ON partnerships (customer_a_id);
+CREATE INDEX IF NOT EXISTS idx_partnerships_customer_b_id ON partnerships (customer_b_id);
+CREATE INDEX IF NOT EXISTS idx_contribution_rules_partnership_id ON contribution_rules (partnership_id);
+CREATE INDEX IF NOT EXISTS idx_bank_accounts_customer_id ON bank_accounts (customer_id);
+CREATE INDEX IF NOT EXISTS idx_shared_accounts_partnership_id ON shared_accounts (partnership_id);
+CREATE INDEX IF NOT EXISTS idx_budget_items_plan_id ON budget_items (plan_id);
+CREATE INDEX IF NOT EXISTS idx_budget_items_category_id ON budget_items (category_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_bank_account_id ON transactions (bank_account_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_category_id ON transactions (category_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_budget_item_id ON transactions (budget_item_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_transaction_date ON transactions (transaction_date);
