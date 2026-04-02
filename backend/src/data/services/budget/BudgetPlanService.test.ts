@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
 import { beforeEach, describe, it, mock } from 'node:test';
-import { BudgetItemNotFoundError, BudgetPlanNotFoundError } from '../../../domain/errors/budget.js';
+import {
+  BudgetItemNotFoundError,
+  BudgetPlanAlreadyExistsError,
+  BudgetPlanNotFoundError,
+} from '../../../domain/errors/budget.js';
 import { PartnershipNotFoundError } from '../../../domain/errors/partnership.js';
 import {
   BudgetItemDirection,
@@ -93,6 +97,20 @@ describe('BudgetPlanService', () => {
       assert.deepEqual(result, { plan, items: [] });
     });
 
+    it('should throw BudgetPlanAlreadyExistsError when plan already exists for the month', async () => {
+      const { sut } = makeSut();
+      mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => plan);
+
+      await assert.rejects(
+        async () =>
+          sut.createPersonalPlan('customer-id', {
+            yearMonth: '2024-09',
+            currencyCode: 'USD',
+          }),
+        new BudgetPlanAlreadyExistsError(),
+      );
+    });
+
     it('should carry forward PERMANENT items from previous month', async () => {
       const { sut } = makeSut();
       const newPlan = { ...plan, id: 'new-plan-id', yearMonth: '2024-10' };
@@ -110,11 +128,11 @@ describe('BudgetPlanService', () => {
       };
 
       mock.method(mockBudgetPlanRepository, 'insertPersonal', async () => newPlan);
-      // First call for carry-forward lookup (previous month), return prev plan
+      // First call: duplicate check (current month) returns null, second call: carry-forward (prev month) returns prev plan
       let findCallCount = 0;
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => {
         findCallCount++;
-        return findCallCount === 1 ? prevPlan : null;
+        return findCallCount === 1 ? null : prevPlan;
       });
       mock.method(mockBudgetItemRepository, 'findByPlanId', async () => [permanentItem]);
       mock.method(mockBudgetItemRepository, 'insert', async () => copiedItem);
@@ -147,7 +165,7 @@ describe('BudgetPlanService', () => {
       let findCallCount = 0;
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => {
         findCallCount++;
-        return findCallCount === 1 ? prevPlan : null;
+        return findCallCount === 1 ? null : prevPlan;
       });
       mock.method(mockBudgetItemRepository, 'findByPlanId', async () => [oneTimeItem]);
 
@@ -183,7 +201,7 @@ describe('BudgetPlanService', () => {
       let findCallCount = 0;
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => {
         findCallCount++;
-        return findCallCount === 1 ? prevPlan : null;
+        return findCallCount === 1 ? null : prevPlan;
       });
       mock.method(mockBudgetItemRepository, 'findByPlanId', async () => [installmentItem]);
       mock.method(mockBudgetItemRepository, 'insert', async () => copiedItem);
@@ -218,7 +236,7 @@ describe('BudgetPlanService', () => {
       let findCallCount = 0;
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => {
         findCallCount++;
-        return findCallCount === 1 ? prevPlan : null;
+        return findCallCount === 1 ? null : prevPlan;
       });
       mock.method(mockBudgetItemRepository, 'findByPlanId', async () => [finishedInstallment]);
 
@@ -258,7 +276,7 @@ describe('BudgetPlanService', () => {
       let findCallCount = 0;
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => {
         findCallCount++;
-        return findCallCount === 1 ? prevPlan : null;
+        return findCallCount === 1 ? null : prevPlan;
       });
       mock.method(mockBudgetItemRepository, 'findByPlanId', async () => [
         permanentItem,
@@ -304,8 +322,8 @@ describe('BudgetPlanService', () => {
       });
 
       assert.equal(result.items.length, 1);
-      // Verify it looked up December 2024
-      const findArgs = mockBudgetPlanRepository.findByCustomerAndMonth.mock.calls[0]?.arguments;
+      // Verify it looked up December 2024 (second call, after duplicate check)
+      const findArgs = mockBudgetPlanRepository.findByCustomerAndMonth.mock.calls[1]?.arguments;
       assert.equal(findArgs?.[1], '2024-12');
     });
   });
@@ -392,6 +410,34 @@ describe('BudgetPlanService', () => {
       });
 
       assert.deepEqual(result, { plan: jointPlan, items: [] });
+    });
+
+    it('should throw BudgetPlanAlreadyExistsError when joint plan already exists for the month', async () => {
+      const { sut } = makeSut();
+      const partnership = {
+        id: 'partnership-id',
+        invitationId: 'inv-id',
+        customerAId: 'customer-id',
+        customerBId: 'partner-id',
+        createdAt: '',
+      };
+      const existingPlan = {
+        ...plan,
+        partnershipId: 'partnership-id',
+        isJoint: true,
+      };
+
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
+      mock.method(mockBudgetPlanRepository, 'findByPartnershipAndMonth', async () => existingPlan);
+
+      await assert.rejects(
+        async () =>
+          sut.createJointPlan('customer-id', {
+            yearMonth: '2024-09',
+            currencyCode: 'USD',
+          }),
+        new BudgetPlanAlreadyExistsError(),
+      );
     });
 
     it('should carry forward items from previous joint plan', async () => {

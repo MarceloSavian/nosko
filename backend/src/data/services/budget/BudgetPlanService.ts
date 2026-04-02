@@ -1,4 +1,8 @@
-import { BudgetItemNotFoundError, BudgetPlanNotFoundError } from '../../../domain/errors/budget.js';
+import {
+  BudgetItemNotFoundError,
+  BudgetPlanAlreadyExistsError,
+  BudgetPlanNotFoundError,
+} from '../../../domain/errors/budget.js';
 import { PartnershipNotFoundError } from '../../../domain/errors/partnership.js';
 import {
   BudgetItemRecurrence,
@@ -34,6 +38,9 @@ export class BudgetPlanService implements IBudgetPlanService {
     customerId: string,
     input: CreateBudgetPlanInput,
   ): Promise<{ plan: BudgetPlanSchema; items: BudgetItemSchema[] }> {
+    const existing = await this.planRepository.findByCustomerAndMonth(customerId, input.yearMonth);
+    if (existing) throw new BudgetPlanAlreadyExistsError();
+
     const plan = await this.planRepository.insertPersonal(
       customerId,
       input.yearMonth,
@@ -68,6 +75,12 @@ export class BudgetPlanService implements IBudgetPlanService {
   ): Promise<{ plan: BudgetPlanSchema; items: BudgetItemSchema[] }> {
     const partnership = await this.partnershipRepository.findByCustomerId(customerId);
     if (!partnership) throw new PartnershipNotFoundError();
+
+    const existing = await this.planRepository.findByPartnershipAndMonth(
+      partnership.id,
+      input.yearMonth,
+    );
+    if (existing) throw new BudgetPlanAlreadyExistsError();
 
     const plan = await this.planRepository.insertJoint(
       partnership.id,

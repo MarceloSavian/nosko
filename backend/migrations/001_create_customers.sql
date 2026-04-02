@@ -113,6 +113,12 @@ CREATE TABLE IF NOT EXISTS budget_plans (
   )
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS budget_plans_personal_unique
+  ON budget_plans (customer_id, year_month) WHERE is_joint = false;
+
+CREATE UNIQUE INDEX IF NOT EXISTS budget_plans_joint_unique
+  ON budget_plans (partnership_id, year_month) WHERE is_joint = true;
+
 CREATE TABLE IF NOT EXISTS budget_items (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   plan_id UUID NOT NULL REFERENCES budget_plans(id) ON DELETE CASCADE,

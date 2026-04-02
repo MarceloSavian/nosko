@@ -23,3 +23,9 @@ export class BudgetItemNotFoundError extends BaseError {
     super('Budget item not found', 404);
   }
 }
+
+export class BudgetPlanAlreadyExistsError extends BaseError {
+  constructor() {
+    super('A budget plan already exists for this month', 409);
+  }
+}
