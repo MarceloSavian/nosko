@@ -117,8 +117,8 @@ export function SelectSharedAccountsPage() {
 function ProgressDots({ current, total }: { current: number; total: number }) {
   return (
     <div className="flex items-center space-x-1.5">
-      {/* biome-ignore lint/suspicious/noArrayIndexKey: static list of decorative dots */}
       {Array.from({ length: total }, (_, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: static decorative dots
         <span
           key={i}
           className={`rounded-full transition-all ${
