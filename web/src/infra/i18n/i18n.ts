@@ -5,7 +5,7 @@ const DEFAULT_LOCALE = 'en';
 type CatalogModule = { messages: Record<string, string> };
 
 async function loadCatalog(locale: string): Promise<void> {
-  const { messages }: CatalogModule = await import(`../../locales/${locale}/messages.js`);
+  const { messages }: CatalogModule = await import(`../../locales/${locale}/messages.mjs`);
   i18n.load(locale, messages);
 }
 

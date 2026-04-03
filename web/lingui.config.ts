@@ -10,6 +10,7 @@ const config: LinguiConfig = {
     },
   ],
   format: 'po',
+  compileNamespace: 'es',
 };
 
 export default config;
