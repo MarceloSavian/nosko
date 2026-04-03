@@ -189,9 +189,9 @@ describe('CustomerRepository', () => {
         language: 'en-US',
       });
 
-      const result = await sut.updateProfile(customer.id, { language: 'fi' });
+      const result = await sut.updateProfile(customer.id, { language: 'pt-BR' });
 
-      assert.equal(result.language, 'fi');
+      assert.equal(result.language, 'pt-BR');
     });
 
     it('should update avatarUrl only', async () => {
@@ -219,12 +219,12 @@ describe('CustomerRepository', () => {
 
       const result = await sut.updateProfile(customer.id, {
         name: 'Bob',
-        language: 'pt',
+        language: 'pt-BR',
         avatarUrl: 'https://example.com/bob.png',
       });
 
       assert.equal(result.name, 'Bob');
-      assert.equal(result.language, 'pt');
+      assert.equal(result.language, 'pt-BR');
       assert.equal(result.avatarUrl, 'https://example.com/bob.png');
     });
   });
