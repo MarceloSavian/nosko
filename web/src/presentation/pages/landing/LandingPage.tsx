@@ -1,42 +1,61 @@
 import { Trans } from '@lingui/react/macro';
+import { useState } from 'react';
 import { Icon } from '@/presentation/components/Icon';
 import { LinkButton } from '@/presentation/components/LinkButton';
 import { Logo } from '@/presentation/components/Logo';
 
+const navLinks = [
+  { href: '#benefits', labelKey: 'Portfolio' },
+  { href: '#features', labelKey: 'Insights' },
+  { href: '#planning', labelKey: 'Planning' },
+] as const;
+
+function NavLabel({ labelKey }: { labelKey: string }) {
+  switch (labelKey) {
+    case 'Portfolio':
+      return <Trans>Portfolio</Trans>;
+    case 'Insights':
+      return <Trans>Insights</Trans>;
+    case 'Planning':
+      return <Trans>Planning</Trans>;
+    default:
+      return labelKey;
+  }
+}
+
 function Navbar() {
+  const [activeNav, setActiveNav] = useState<string | null>(null);
+
   return (
     <header className="fixed top-0 right-0 left-0 h-20 bg-background/80 backdrop-blur-xl shadow-sm z-50 flex justify-between items-center px-10 w-full">
       <div className="flex items-center gap-8">
         <Logo />
         <nav className="hidden md:flex gap-8 items-center">
-          <a
-            className="text-primary border-b-2 border-secondary pb-1 font-extrabold tracking-tight text-sm"
-            href="#benefits"
-          >
-            <Trans>Portfolio</Trans>
-          </a>
-          <a
-            className="text-on-surface-variant hover:text-primary transition-opacity font-extrabold tracking-tight text-sm"
-            href="#features"
-          >
-            <Trans>Insights</Trans>
-          </a>
-          <a
-            className="text-on-surface-variant hover:text-primary transition-opacity font-extrabold tracking-tight text-sm"
-            href="#planning"
-          >
-            <Trans>Planning</Trans>
-          </a>
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              className={`font-extrabold tracking-tight text-sm pb-1 transition-colors ${
+                activeNav === link.href
+                  ? 'text-primary border-b-2 border-secondary'
+                  : 'text-on-surface-variant hover:text-primary border-b-2 border-transparent'
+              }`}
+              href={link.href}
+              onClick={() => setActiveNav(link.href)}
+            >
+              <NavLabel labelKey={link.labelKey} />
+            </a>
+          ))}
         </nav>
       </div>
       <div className="flex items-center gap-4">
-        <div className="hidden lg:flex items-center gap-4 text-sm font-semibold tracking-wide text-primary/70">
-          <a className="hover:text-primary transition-colors" href="#benefits">
-            <Trans>Benefits</Trans>
-          </a>
-          <a className="hover:text-primary transition-colors" href="#pricing">
-            <Trans>Pricing</Trans>
-          </a>
+        <div className="hidden lg:flex items-center">
+          <button
+            type="button"
+            className="flex items-center gap-1 text-sm font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer"
+          >
+            <Icon name="language" className="text-xl" />
+            <span>EN</span>
+          </button>
         </div>
         <LinkButton to="/signup" variant="primary" size="sm">
           <Trans>Get Started</Trans>
