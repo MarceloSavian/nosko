@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/react/macro';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Badge } from '@/presentation/components/Badge';
 import { Button } from '@/presentation/components/Button';
 import { Card } from '@/presentation/components/Card';
 import { Icon } from '@/presentation/components/Icon';
@@ -45,17 +44,17 @@ export function SelectSharedAccountsPage() {
   return (
     <div className="flex items-center justify-center min-h-full p-8">
       <div className="w-full max-w-lg text-center">
-        <Badge variant="success" size="md" className="mb-6">
+        <p className="text-[10px] font-bold text-secondary uppercase tracking-widest mb-6">
           <Trans>Partner Setup</Trans>
-        </Badge>
+        </p>
 
-        <h1 className="font-headline text-3xl font-bold text-on-surface tracking-tight mb-3">
+        <h1 className="font-headline text-3xl font-bold text-primary tracking-tight mb-3">
           <Trans>Which stories shall we share?</Trans>
         </h1>
         <p className="text-on-surface-variant leading-relaxed mb-10 max-w-sm mx-auto">
           <Trans>
-            Select the accounts you want to sync with your partner&apos;s ledger. You can adjust
-            visibility settings for individual transactions later.
+            Select the accounts you want to sync with your partner&apos;s ledger. Visibility can be
+            adjusted per transaction later.
           </Trans>
         </p>
 
@@ -65,7 +64,7 @@ export function SelectSharedAccountsPage() {
               <div className="flex items-center space-x-4">
                 <IconBox icon={account.icon} size="md" shape="circle" tone="surface" />
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-sm text-on-surface">{account.name}</p>
+                  <p className="font-bold text-sm text-primary">{account.name}</p>
                   <p className="text-xs text-on-surface-variant">{account.detail}</p>
                 </div>
                 <ToggleSwitch
@@ -82,8 +81,8 @@ export function SelectSharedAccountsPage() {
           title={<Trans>Collaborative Security</Trans>}
           description={
             <Trans>
-              Financial Harmony encrypts all shared ledger data. Your partner will see balances and
-              transaction history, but cannot initiate transfers or change account settings.
+              Financial Harmony uses military-grade encryption for all shared data. Your partner can
+              view history but cannot perform transactions or modify core settings.
             </Trans>
           }
           className="mt-6 text-left"
@@ -92,7 +91,7 @@ export function SelectSharedAccountsPage() {
         <div className="flex items-center justify-between mt-10">
           <Link
             to="/partner-setup/invite"
-            className="inline-flex items-center space-x-1 text-sm text-on-surface-variant hover:text-on-surface transition-colors"
+            className="inline-flex items-center space-x-1 text-sm text-on-surface-variant hover:text-primary transition-colors"
           >
             <Icon name="chevron_left" className="text-base" />
             <span>
@@ -101,7 +100,7 @@ export function SelectSharedAccountsPage() {
           </Link>
           <ProgressDots current={2} total={3} />
           <Link to="/partner-setup/contribution-rules">
-            <Button type="button" variant="primary" size="md" className="space-x-2">
+            <Button type="button" variant="secondary" size="md" className="space-x-2">
               <span>
                 <Trans>Next</Trans>
               </span>

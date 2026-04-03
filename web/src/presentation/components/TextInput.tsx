@@ -14,8 +14,11 @@ export const TextInput = forwardRef<HTMLInputElement, Props>(
   ({ label, icon, trailing, headerRight, error, id, className, ...rest }, ref) => {
     return (
       <div className="space-y-2">
-        <div className="flex justify-between items-center px-1">
-          <label className="block text-sm font-semibold text-on-surface-variant" htmlFor={id}>
+        <div className="flex justify-between items-center ml-1">
+          <label
+            className="block text-[10px] font-semibold text-primary/60 tracking-widest uppercase"
+            htmlFor={id}
+          >
             {label}
           </label>
           {headerRight}
@@ -30,7 +33,7 @@ export const TextInput = forwardRef<HTMLInputElement, Props>(
             ref={ref}
             id={id}
             className={cn(
-              'block w-full py-4 bg-surface-container-high border-none rounded-xl text-on-surface placeholder:text-outline focus:ring-2 focus:ring-tertiary/20 transition-all duration-200 outline-none',
+              'block w-full py-4 bg-surface-container-highest border-none rounded-2xl text-on-surface placeholder:text-primary/30 focus:ring-2 focus:ring-tertiary/20 transition-all duration-200 outline-none font-medium',
               icon ? 'pl-11' : 'pl-4',
               trailing ? 'pr-12' : 'pr-4',
               error && 'ring-2 ring-error/40',

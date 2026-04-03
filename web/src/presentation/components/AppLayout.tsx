@@ -1,15 +1,13 @@
 import { Trans } from '@lingui/react/macro';
 import { Link, Outlet, useMatchRoute } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
-import { Button } from '@/presentation/components/Button';
 import { Icon } from '@/presentation/components/Icon';
-import { Logo } from '@/presentation/components/Logo';
 import { cn } from '@/presentation/lib/cn';
 
 const navItems = [
   { to: '/dashboard' as const, icon: 'dashboard', labelKey: 'Dashboard' },
-  { to: '/accounts' as const, icon: 'account_balance_wallet', labelKey: 'Accounts' },
-  { to: '/planner' as const, icon: 'event_note', labelKey: 'Planner' },
+  { to: '/accounts' as const, icon: 'account_balance_wallet', labelKey: 'Joint Accounts' },
+  { to: '/planner' as const, icon: 'savings', labelKey: 'Savings Goals' },
   { to: '/profile' as const, icon: 'person', labelKey: 'Profile' },
 ];
 
@@ -25,10 +23,8 @@ function NavItem({ to, icon, children, active }: NavItemProps) {
     <Link
       to={to}
       className={cn(
-        'flex items-center space-x-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors',
-        active
-          ? 'text-secondary bg-secondary/5 font-bold'
-          : 'text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low',
+        'flex items-center space-x-3 px-4 py-3 rounded-xl text-sm font-bold transition-all',
+        active ? 'bg-white/10 text-secondary' : 'text-slate-300 hover:text-white hover:bg-white/5',
       )}
     >
       <Icon name={icon} filled={active} className="text-xl" />
@@ -41,10 +37,10 @@ function NavItemLabel({ labelKey }: { labelKey: string }) {
   switch (labelKey) {
     case 'Dashboard':
       return <Trans>Dashboard</Trans>;
-    case 'Accounts':
-      return <Trans>Accounts</Trans>;
-    case 'Planner':
-      return <Trans>Planner</Trans>;
+    case 'Joint Accounts':
+      return <Trans>Joint Accounts</Trans>;
+    case 'Savings Goals':
+      return <Trans>Savings Goals</Trans>;
     case 'Profile':
       return <Trans>Profile</Trans>;
     default:
@@ -57,15 +53,20 @@ export function AppLayout() {
 
   return (
     <div className="min-h-screen bg-background flex">
-      <aside className="w-64 bg-surface-container-lowest border-r border-outline-variant/10 flex flex-col p-6 shrink-0">
-        <div className="mb-10">
-          <Logo size="sm" />
-          <p className="text-[10px] text-outline uppercase tracking-widest mt-1 pl-9">
-            <Trans>Unity Ledger</Trans>
+      <aside className="w-72 bg-primary shadow-2xl flex flex-col p-6 shrink-0 font-headline font-bold tracking-tight">
+        <div className="mb-10 px-2">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-secondary flex items-center justify-center rounded-lg">
+              <Icon name="trending_up" filled className="text-primary text-xl" />
+            </div>
+            <span className="text-2xl font-extrabold text-white tracking-tighter">Nosko</span>
+          </div>
+          <p className="text-[10px] text-slate-400 uppercase tracking-widest mt-4 pl-0">
+            <Trans>Joint Wealth Management</Trans>
           </p>
         </div>
 
-        <nav className="space-y-1 flex-1">
+        <nav className="space-y-2 flex-1">
           {navItems.map((item) => (
             <NavItem
               key={item.to}
@@ -78,27 +79,27 @@ export function AppLayout() {
           ))}
         </nav>
 
-        <div className="space-y-2 mt-auto">
-          <Button type="button" variant="primary" size="md" fullWidth className="space-x-2 mb-4">
-            <Icon name="add" className="text-lg" />
-            <span>
-              <Trans>Add Transaction</Trans>
-            </span>
-          </Button>
+        <div className="space-y-2 mt-auto pt-6">
+          <button
+            type="button"
+            className="w-full mb-6 py-3 bg-secondary text-primary rounded-xl font-extrabold hover:opacity-90 transition-opacity cursor-pointer"
+          >
+            <Trans>Add Transaction</Trans>
+          </button>
 
           <button
             type="button"
-            className="flex items-center space-x-3 px-4 py-2.5 text-sm text-on-surface-variant hover:text-on-surface transition-colors w-full cursor-pointer"
+            className="flex items-center space-x-3 px-4 py-2 text-sm text-slate-300 hover:text-white transition-all w-full cursor-pointer"
           >
-            <Icon name="help_outline" className="text-xl" />
+            <Icon name="help" className="text-xl" />
             <span>
-              <Trans>Support</Trans>
+              <Trans>Help Center</Trans>
             </span>
           </button>
 
           <button
             type="button"
-            className="flex items-center space-x-3 px-4 py-2.5 text-sm text-on-surface-variant hover:text-error transition-colors w-full cursor-pointer"
+            className="flex items-center space-x-3 px-4 py-2 text-sm text-slate-300 hover:text-white transition-all w-full cursor-pointer"
           >
             <Icon name="logout" className="text-xl" />
             <span>

@@ -1,24 +1,25 @@
 import { Trans } from '@lingui/react/macro';
 import { Button } from '@/presentation/components/Button';
 import { Icon } from '@/presentation/components/Icon';
+import { Logo } from '@/presentation/components/Logo';
 
 export function ConfirmEmailPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 relative overflow-hidden">
       <header className="mb-12 text-center">
-        <h1 className="font-headline text-2xl font-bold text-on-surface tracking-tight">Nosko</h1>
-        <p className="text-xs text-outline uppercase tracking-widest mt-1">
+        <Logo className="justify-center" />
+        <p className="text-xs text-secondary uppercase tracking-widest mt-2">
           <Trans>Unity Ledger</Trans>
         </p>
       </header>
 
       <main className="w-full max-w-md">
-        <div className="bg-surface-container-lowest rounded-3xl p-10 shadow-[0_20px_50px_-12px_rgba(25,28,29,0.06)] text-center">
-          <div className="w-14 h-14 bg-secondary/10 rounded-2xl flex items-center justify-center mx-auto mb-8">
+        <div className="bg-surface-container rounded-[2rem] p-10 shadow-sm text-center">
+          <div className="w-14 h-14 bg-secondary-container rounded-2xl flex items-center justify-center mx-auto mb-8">
             <Icon name="mark_email_read" filled className="text-secondary text-3xl" />
           </div>
 
-          <h2 className="font-headline text-3xl font-bold text-on-surface tracking-tight mb-4">
+          <h2 className="font-headline text-3xl font-bold text-primary tracking-tight mb-4">
             <Trans>Check your inbox</Trans>
           </h2>
           <p className="text-on-surface-variant leading-relaxed mb-8">
@@ -28,12 +29,12 @@ export function ConfirmEmailPage() {
             </Trans>
           </p>
 
-          <div className="flex items-center space-x-3 bg-surface-container-low rounded-xl p-4 mb-8">
+          <div className="flex items-center space-x-3 bg-surface-container-high rounded-xl p-4 mb-8">
             <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center shrink-0">
-              <Icon name="hourglass_top" className="text-white text-sm" />
+              <Icon name="hourglass_top" className="text-on-primary text-sm" />
             </div>
             <div className="text-left">
-              <p className="text-xs font-bold text-on-surface-variant uppercase tracking-wider">
+              <p className="text-[10px] font-bold text-secondary uppercase tracking-wider">
                 <Trans>Verification Status</Trans>
               </p>
               <p className="text-sm text-on-surface">

@@ -1,216 +1,143 @@
 import { Trans } from '@lingui/react/macro';
 import { Avatar } from '@/presentation/components/Avatar';
-import { Badge } from '@/presentation/components/Badge';
-import { Button } from '@/presentation/components/Button';
 import { Card } from '@/presentation/components/Card';
 import { Icon } from '@/presentation/components/Icon';
 import { IconBox } from '@/presentation/components/IconBox';
-import { PageHeader } from '@/presentation/components/PageHeader';
 import { ProgressBar } from '@/presentation/components/ProgressBar';
-import { SectionHeader } from '@/presentation/components/SectionHeader';
+
+function TopBar() {
+  return (
+    <header className="sticky top-0 h-20 bg-background/80 backdrop-blur-xl shadow-sm flex justify-between items-center px-10 z-40 font-headline font-extrabold tracking-tight">
+      <div className="flex items-center gap-8 flex-1">
+        <div className="relative w-64">
+          <Icon
+            name="search"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/40"
+          />
+          <input
+            type="text"
+            placeholder="Search portfolios..."
+            className="w-full bg-white/50 border-0 rounded-full py-2 pl-10 focus:ring-2 focus:ring-tertiary text-sm font-medium"
+          />
+        </div>
+        <nav className="hidden lg:flex items-center gap-6">
+          <span className="text-primary border-b-2 border-secondary pb-1 cursor-pointer">
+            <Trans>Portfolio</Trans>
+          </span>
+          <span className="text-on-surface-variant hover:text-primary transition-opacity cursor-pointer">
+            <Trans>Insights</Trans>
+          </span>
+          <span className="text-on-surface-variant hover:text-primary transition-opacity cursor-pointer">
+            <Trans>Planning</Trans>
+          </span>
+        </nav>
+      </div>
+      <div className="flex items-center gap-6">
+        <button
+          type="button"
+          className="bg-primary text-on-primary px-5 py-2 rounded-full text-sm font-bold hover:opacity-80 transition-opacity cursor-pointer"
+        >
+          <Trans>Sync Accounts</Trans>
+        </button>
+        <div className="flex items-center gap-4 text-primary">
+          <Icon name="notifications" className="text-xl cursor-pointer hover:opacity-80" />
+          <Icon name="settings" className="text-xl cursor-pointer hover:opacity-80" />
+          <Avatar size="md" />
+        </div>
+      </div>
+    </header>
+  );
+}
 
 function BalanceCard() {
   return (
-    <Card variant="hero" padding="lg" className="flex-1">
-      <p className="text-xs font-bold uppercase tracking-widest text-on-primary-container mb-4">
-        <Trans>Total Combined Balance</Trans>
-      </p>
-      <div className="flex items-baseline space-x-1 mb-6">
-        <span className="text-5xl font-headline font-bold">€42,890</span>
-        <span className="text-2xl font-headline text-on-primary-container">.45</span>
-      </div>
-      <Badge variant="success" size="md" className="mb-6 space-x-1">
-        <Icon name="trending_up" className="text-sm" />
-        <span>
-          <Trans>Growing +4.2%</Trans>
-        </span>
-      </Badge>
-      <div className="grid grid-cols-2 gap-3">
-        <Card variant="glass" padding="sm" className="rounded-xl">
-          <p className="text-[10px] uppercase tracking-wider text-on-primary-container mb-1">
-            <Trans>Savings Pool</Trans>
-          </p>
-          <p className="text-xl font-bold">€28,400</p>
-        </Card>
-        <Card variant="glass" padding="sm" className="rounded-xl">
-          <p className="text-[10px] uppercase tracking-wider text-on-primary-container mb-1">
-            <Trans>Checking stream</Trans>
-          </p>
-          <p className="text-xl font-bold">€14,490</p>
-        </Card>
-      </div>
-    </Card>
-  );
-}
-
-function GoalCard() {
-  return (
-    <Card variant="default" padding="md" className="w-72 shrink-0">
-      <div className="flex items-center space-x-2 mb-4">
-        <Icon name="favorite" filled className="text-error text-sm" />
-        <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">
-          <Trans>Dream Home Goal</Trans>
+    <Card
+      variant="hero"
+      padding="xl"
+      className="col-span-12 lg:col-span-8 h-[400px] flex flex-col justify-between"
+    >
+      <div className="relative z-10">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="px-3 py-1 bg-tertiary-container/30 text-tertiary text-[10px] font-bold uppercase tracking-widest rounded-full">
+            <Trans>Consolidated Portfolio</Trans>
+          </span>
+          <span className="text-secondary flex items-center text-sm font-bold">
+            <Icon name="trending_up" className="text-sm mr-1" />
+            +12.4%
+          </span>
+        </div>
+        <h3 className="text-sm font-bold text-primary/50 uppercase tracking-widest mb-2">
+          <Trans>Total Net Worth</Trans>
+        </h3>
+        <p className="text-7xl font-extrabold font-headline tracking-tighter text-primary">
+          $482,904.32
         </p>
       </div>
-      <h3 className="font-headline text-xl font-bold text-on-surface mb-3">
-        <Trans>Summer House in Porvoo</Trans>
-      </h3>
-      <div className="flex items-baseline space-x-2 mb-2">
-        <span className="text-sm font-bold text-on-surface">€125,000</span>
-        <span className="text-xs text-outline">/ €250k</span>
-        <span className="text-xs font-bold text-secondary ml-auto">
-          <Trans>50% Achieved</Trans>
-        </span>
-      </div>
-      <ProgressBar value={50} size="lg" className="mb-4" />
-      <div className="flex items-center space-x-2 text-xs text-on-surface-variant">
-        <Icon name="group" className="text-sm" />
-        <span>
-          <Trans>Active Joint Effort</Trans>
-        </span>
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-secondary-container/20 to-transparent pointer-events-none rounded-[2rem]" />
+      <div className="relative z-10 grid grid-cols-3 gap-8 pt-8 border-t border-surface-container-highest">
+        <div>
+          <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mb-1">
+            <Trans>Checking</Trans>
+          </p>
+          <p className="text-xl font-bold text-primary">$42k</p>
+        </div>
+        <div>
+          <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mb-1">
+            <Trans>Savings</Trans>
+          </p>
+          <p className="text-xl font-bold text-primary">$310k</p>
+        </div>
+        <div>
+          <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mb-1">
+            <Trans>Investment</Trans>
+          </p>
+          <p className="text-xl font-bold text-primary">$130k</p>
+        </div>
       </div>
     </Card>
   );
 }
 
-const trajectoryItems = [
-  {
-    icon: 'home',
-    labelKey: 'Rent & Mortgage',
-    descKey: 'Automatic debit scheduled',
-    amount: '€1,850',
-    total: '€1,850',
-    value: 100,
-  },
-  {
-    icon: 'restaurant',
-    labelKey: 'Dining & Groceries',
-    descKey: 'High frequency this week',
-    amount: '€642',
-    total: '€800',
-    value: 80,
-  },
-  {
-    icon: 'bolt',
-    labelKey: 'Utility Bills',
-    descKey: 'Electricity & Water',
-    amount: '€210',
-    total: '€350',
-    value: 60,
-  },
-];
-
-function TrajectoryLabel({ labelKey }: { labelKey: string }) {
-  switch (labelKey) {
-    case 'Rent & Mortgage':
-      return <Trans>Rent &amp; Mortgage</Trans>;
-    case 'Dining & Groceries':
-      return <Trans>Dining &amp; Groceries</Trans>;
-    case 'Utility Bills':
-      return <Trans>Utility Bills</Trans>;
-    default:
-      return labelKey;
-  }
-}
-
-function TrajectoryDescription({ descKey }: { descKey: string }) {
-  switch (descKey) {
-    case 'Automatic debit scheduled':
-      return <Trans>Automatic debit scheduled</Trans>;
-    case 'High frequency this week':
-      return <Trans>High frequency this week</Trans>;
-    case 'Electricity & Water':
-      return <Trans>Electricity &amp; Water</Trans>;
-    default:
-      return descKey;
-  }
-}
-
-function MonthlyTrajectory() {
-  return (
-    <section>
-      <SectionHeader
-        title={<Trans>Monthly Trajectory</Trans>}
-        action={
-          <button
-            type="button"
-            className="text-sm font-medium text-on-surface-variant hover:text-secondary transition-colors cursor-pointer flex items-center space-x-1"
-          >
-            <span>
-              <Trans>Adjust Limits</Trans>
-            </span>
-            <Icon name="chevron_right" className="text-base" />
-          </button>
-        }
-      />
-      <div className="space-y-6">
-        {trajectoryItems.map((item) => (
-          <div key={item.labelKey} className="flex items-center space-x-4">
-            <IconBox icon={item.icon} size="md" tone="surface" />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between mb-1">
-                <p className="font-bold text-sm text-on-surface">
-                  <TrajectoryLabel labelKey={item.labelKey} />
-                </p>
-                <div className="text-right">
-                  <span className="font-bold text-sm text-on-surface">{item.amount}</span>
-                  <span className="text-xs text-outline ml-2">
-                    <Trans>of {item.total}</Trans>
-                  </span>
-                </div>
-              </div>
-              <p className="text-xs text-on-surface-variant mb-2">
-                <TrajectoryDescription descKey={item.descKey} />
-              </p>
-              <ProgressBar value={item.value} size="md" />
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-const ledgerItems = [
-  {
-    icon: 'store',
-    name: 'Artek Helsinki',
-    category: 'HOME & DECOR',
-    amount: '-€124.00',
-    time: 'Just',
-    tag: 'Joint',
-  },
-  {
-    icon: 'train',
-    name: 'VR Railways',
-    category: 'TRAVEL',
-    amount: '-€42.50',
-    time: 'Today, 10:45',
-    tag: '',
-  },
-  {
-    icon: 'coffee',
-    name: 'Kaffa Roastery',
-    category: 'LIFESTYLE',
-    amount: '-€8.20',
-    time: 'Yesterday',
-    tag: '',
-  },
-  {
-    icon: 'shopping_bag',
-    name: 'Stockmann Oyj',
-    category: 'CLOTHING',
-    amount: '-€215.00',
-    time: 'Sep. 10',
-    tag: '',
-  },
-];
-
 function ActivityLedger() {
+  const items = [
+    {
+      icon: 'store',
+      name: 'Apple Store',
+      category: 'ELECTRONICS',
+      amount: '-$2,100.00',
+      time: 'Today',
+      positive: false,
+    },
+    {
+      icon: 'trending_up',
+      name: 'Quarterly Dividend',
+      category: 'INVESTMENT',
+      amount: '+$442.55',
+      time: 'Yesterday',
+      positive: true,
+    },
+    {
+      icon: 'bolt',
+      name: 'Consolidated Edison',
+      category: 'UTILITIES',
+      amount: '-$843.30',
+      time: 'Sep 12',
+      positive: false,
+    },
+    {
+      icon: 'home',
+      name: 'Monthly Rent',
+      category: 'HOUSING',
+      amount: '-$1,000.00',
+      time: 'Sep 10',
+      positive: false,
+    },
+  ];
+
   return (
-    <Card variant="default" padding="md">
+    <Card variant="default" padding="lg" className="col-span-12 lg:col-span-4">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="font-headline text-lg font-bold text-on-surface">
+        <h3 className="font-headline text-lg font-bold text-primary">
           <Trans>Activity Ledger</Trans>
         </h3>
         <button type="button" className="cursor-pointer">
@@ -221,71 +148,151 @@ function ActivityLedger() {
         </button>
       </div>
       <div className="space-y-5">
-        {ledgerItems.map((item) => (
+        {items.map((item) => (
           <div key={item.name} className="flex items-start space-x-3">
             <IconBox icon={item.icon} size="sm" shape="circle" tone="surface" />
             <div className="flex-1 min-w-0">
               <div className="flex items-start justify-between">
-                <p className="font-bold text-sm text-on-surface">{item.name}</p>
-                <p className="font-bold text-sm text-on-surface shrink-0 ml-2">{item.amount}</p>
+                <p className="font-bold text-sm text-primary">{item.name}</p>
+                <p
+                  className={`font-bold text-sm shrink-0 ml-2 ${item.positive ? 'text-tertiary' : 'text-primary'}`}
+                >
+                  {item.amount}
+                </p>
               </div>
               <div className="flex items-center justify-between mt-0.5">
-                <div className="flex items-center space-x-2">
-                  <span className="text-[10px] uppercase tracking-wider text-outline">
-                    {item.category}
-                  </span>
-                  {item.tag && (
-                    <Badge variant="success" size="sm">
-                      {item.tag}
-                    </Badge>
-                  )}
-                </div>
+                <span className="text-[10px] uppercase tracking-wider text-outline">
+                  {item.category}
+                </span>
                 <span className="text-[10px] text-outline">{item.time}</span>
               </div>
             </div>
           </div>
         ))}
       </div>
-      <Button type="button" variant="ghost" size="md" fullWidth className="mt-6 space-x-2">
-        <span>
-          <Trans>Export Ledger (PDF)</Trans>
-        </span>
-        <Icon name="download" className="text-base" />
-      </Button>
+    </Card>
+  );
+}
+
+const trajectoryItems = [
+  {
+    icon: 'home',
+    labelKey: 'Rent / Mortgage',
+    amount: '$3,200',
+    total: '$3,200',
+    value: 100,
+  },
+  {
+    icon: 'restaurant',
+    labelKey: 'Dining & Social',
+    amount: '$840',
+    total: '$1,000',
+    value: 84,
+  },
+  {
+    icon: 'bolt',
+    labelKey: 'Utility Bills',
+    amount: '$510',
+    total: '$600',
+    value: 85,
+  },
+];
+
+function TrajectoryLabel({ labelKey }: { labelKey: string }) {
+  switch (labelKey) {
+    case 'Rent / Mortgage':
+      return <Trans>Rent / Mortgage</Trans>;
+    case 'Dining & Social':
+      return <Trans>Dining &amp; Social</Trans>;
+    case 'Utility Bills':
+      return <Trans>Utility Bills</Trans>;
+    default:
+      return labelKey;
+  }
+}
+
+function MonthlyTrajectory() {
+  return (
+    <Card variant="default" padding="lg" className="col-span-12 lg:col-span-8">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="font-headline text-xl font-bold text-primary">
+          <Trans>Monthly Trajectory</Trans>
+        </h2>
+        <button
+          type="button"
+          className="text-sm font-medium text-on-surface-variant hover:text-secondary transition-colors cursor-pointer flex items-center space-x-1"
+        >
+          <span>
+            <Trans>Adjust Limits</Trans>
+          </span>
+          <Icon name="chevron_right" className="text-base" />
+        </button>
+      </div>
+      <div className="space-y-6">
+        {trajectoryItems.map((item) => (
+          <div key={item.labelKey} className="flex items-center space-x-4">
+            <IconBox icon={item.icon} size="md" tone="surface" />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between mb-1">
+                <p className="font-bold text-sm text-primary">
+                  <TrajectoryLabel labelKey={item.labelKey} />
+                </p>
+                <div className="text-right">
+                  <span className="font-bold text-sm text-primary">{item.amount}</span>
+                  <span className="text-xs text-outline ml-2">
+                    <Trans>of {item.total}</Trans>
+                  </span>
+                </div>
+              </div>
+              <ProgressBar value={item.value} size="md" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </Card>
+  );
+}
+
+function InsightsCard() {
+  return (
+    <Card variant="dark" padding="lg" className="col-span-12 lg:col-span-4">
+      <h3 className="text-lg font-bold font-headline mb-6">
+        <Trans>Generate Narrative Insights</Trans>
+      </h3>
+      <p className="text-white/60 text-sm leading-relaxed mb-8">
+        <Trans>AI-powered analysis of your spending patterns and investment trajectory.</Trans>
+      </p>
+      <button
+        type="button"
+        className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest border border-white/20 text-white cursor-pointer hover:bg-white/20 transition-colors"
+      >
+        <Trans>Launch Curator</Trans>
+      </button>
     </Card>
   );
 }
 
 export function DashboardPage() {
   return (
-    <div className="p-8">
-      <PageHeader
-        overline={<Trans>Overview</Trans>}
-        title={<Trans>Financial Narrative</Trans>}
-        actions={
-          <>
-            <button
-              type="button"
-              className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center cursor-pointer hover:bg-surface-variant transition-colors"
-            >
-              <Icon name="notifications" className="text-xl text-on-surface-variant" />
-            </button>
-            <Avatar size="md" />
-          </>
-        }
-      />
-
-      <div className="flex gap-6 mb-10">
-        <BalanceCard />
-        <GoalCard />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-        <div className="lg:col-span-3">
-          <MonthlyTrajectory />
+    <div>
+      <TopBar />
+      <div className="px-10 pb-12 pt-8">
+        <div className="flex justify-between items-end mb-10">
+          <div>
+            <p className="text-[10px] uppercase font-semibold tracking-widest text-primary/60 mb-1">
+              <Trans>Overview</Trans>
+            </p>
+            <h2 className="text-4xl font-extrabold font-headline tracking-tighter text-primary">
+              <Trans>Financial Narrative</Trans>
+            </h2>
+          </div>
         </div>
-        <div className="lg:col-span-2">
+
+        <div className="grid grid-cols-12 gap-6">
+          <BalanceCard />
           <ActivityLedger />
+          <MonthlyTrajectory />
+          <InsightsCard />
         </div>
       </div>
     </div>

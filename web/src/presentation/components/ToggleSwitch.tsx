@@ -15,7 +15,7 @@ export function ToggleSwitch({ checked, onChange, className }: Props) {
       onClick={() => onChange(!checked)}
       className={cn(
         'relative inline-flex h-7 w-12 items-center rounded-full transition-colors cursor-pointer shrink-0',
-        checked ? 'bg-secondary' : 'bg-outline-variant',
+        checked ? 'bg-tertiary' : 'bg-outline-variant',
         className,
       )}
     >

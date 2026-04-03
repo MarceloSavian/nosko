@@ -1,6 +1,5 @@
 import { Trans, useLingui } from '@lingui/react/macro';
 import { Link } from '@tanstack/react-router';
-import { Badge } from '@/presentation/components/Badge';
 import { Button } from '@/presentation/components/Button';
 import { Icon } from '@/presentation/components/Icon';
 import { InfoBanner } from '@/presentation/components/InfoBanner';
@@ -14,7 +13,7 @@ export function InvitePartnerPage() {
       <div className="w-full max-w-md">
         <Link
           to="/profile"
-          className="inline-flex items-center space-x-1 text-sm text-on-surface-variant hover:text-on-surface transition-colors mb-8"
+          className="inline-flex items-center space-x-1 text-sm text-on-surface-variant hover:text-primary transition-colors mb-8"
         >
           <Icon name="chevron_left" className="text-base" />
           <span>
@@ -22,19 +21,19 @@ export function InvitePartnerPage() {
           </span>
         </Link>
 
-        <Badge variant="success" size="md" className="mb-6">
-          <Trans>Partner Setup &bull; Step 01</Trans>
-        </Badge>
+        <p className="text-[10px] font-bold text-tertiary uppercase tracking-widest mb-6">
+          <Trans>Partner Integration &bull; Step 01</Trans>
+        </p>
 
-        <h1 className="font-headline text-4xl font-bold text-on-surface leading-tight mb-2">
+        <h1 className="font-headline text-4xl font-bold text-primary leading-tight mb-2">
           <Trans>
             Invite your <span className="text-secondary italic">Financial Partner</span>
           </Trans>
         </h1>
         <p className="text-on-surface-variant leading-relaxed mb-8">
           <Trans>
-            Sharing a ledger is the first step toward collaborative prosperity. Enter their email to
-            begin the syncing process.
+            Unified wealth management starts with shared visibility. Enter your partner&apos;s email
+            to sync your Unity Ledger.
           </Trans>
         </p>
 
@@ -43,22 +42,22 @@ export function InvitePartnerPage() {
             id="partner-email"
             name="partnerEmail"
             type="email"
-            label={t`Partner Email`}
-            placeholder={t`name@example.com`}
+            label={t`Partner's Email Address`}
+            placeholder={t`partner@nosko.com`}
             autoComplete="email"
             icon={<Icon name="mail" className="text-lg" />}
           />
           <p className="text-xs text-on-surface-variant flex items-center space-x-2">
-            <Icon name="info" className="text-sm text-outline" />
+            <Icon name="lock" className="text-sm text-outline" />
             <span>
-              <Trans>They&apos;ll receive an invitation to join your shared dashboard.</Trans>
+              <Trans>Secure invitation link will be sent instantly.</Trans>
             </span>
           </p>
 
           <Link to="/partner-setup/select-accounts">
-            <Button type="button" variant="dark" size="lg" fullWidth className="space-x-2">
+            <Button type="button" variant="secondary" size="lg" fullWidth className="space-x-2">
               <span>
-                <Trans>Next Step</Trans>
+                <Trans>Send Invitation</Trans>
               </span>
               <Icon name="arrow_forward" className="text-lg" />
             </Button>
@@ -68,18 +67,18 @@ export function InvitePartnerPage() {
         <InfoBanner
           icon="favorite"
           iconFilled
-          title={<Trans>Building Harmony</Trans>}
+          title={<Trans>Unity Connection</Trans>}
           description={
             <Trans>
-              Financial transparency is the foundation of a resilient partnership. Once connected,
-              you can both view assets and set shared goals.
+              Collaborative planning is the core of Nosko. Once accepted, you&apos;ll gain access to
+              shared visibility across accounts and joint wealth targets.
             </Trans>
           }
           className="mt-8"
         />
 
         <p className="mt-12 text-center text-[10px] uppercase tracking-widest text-outline">
-          <Trans>Secured by Financial Harmony Editorial Ledger</Trans>
+          <Trans>Protected via Nosko Unity Protocol</Trans>
         </p>
       </div>
     </div>

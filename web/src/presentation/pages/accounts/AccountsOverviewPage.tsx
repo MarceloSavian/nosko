@@ -1,196 +1,274 @@
 import { Trans } from '@lingui/react/macro';
-import { Badge } from '@/presentation/components/Badge';
-import { Button } from '@/presentation/components/Button';
+import { Avatar } from '@/presentation/components/Avatar';
 import { Card } from '@/presentation/components/Card';
 import { Icon } from '@/presentation/components/Icon';
-import { IconBox } from '@/presentation/components/IconBox';
-import { PageHeader } from '@/presentation/components/PageHeader';
-import { ProgressBar } from '@/presentation/components/ProgressBar';
-import { SectionHeader } from '@/presentation/components/SectionHeader';
+
+function TopBar() {
+  return (
+    <header className="sticky top-0 h-20 bg-background/80 backdrop-blur-xl shadow-sm flex justify-between items-center px-10 z-40 font-headline font-extrabold tracking-tight">
+      <div className="flex items-center gap-8 flex-1">
+        <div className="relative w-64">
+          <Icon
+            name="search"
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/40"
+          />
+          <input
+            type="text"
+            placeholder="Search portfolios..."
+            className="w-full bg-white/50 border-0 rounded-full py-2 pl-10 focus:ring-2 focus:ring-tertiary text-sm font-medium"
+          />
+        </div>
+        <nav className="hidden lg:flex items-center gap-6">
+          <span className="text-primary border-b-2 border-secondary pb-1 cursor-pointer">
+            <Trans>Portfolio</Trans>
+          </span>
+          <span className="text-on-surface-variant hover:text-primary transition-opacity cursor-pointer">
+            <Trans>Insights</Trans>
+          </span>
+          <span className="text-on-surface-variant hover:text-primary transition-opacity cursor-pointer">
+            <Trans>Planning</Trans>
+          </span>
+        </nav>
+      </div>
+      <div className="flex items-center gap-6">
+        <button
+          type="button"
+          className="bg-primary text-on-primary px-5 py-2 rounded-full text-sm font-bold hover:opacity-80 transition-opacity cursor-pointer"
+        >
+          <Trans>Sync Accounts</Trans>
+        </button>
+        <div className="flex items-center gap-4 text-primary">
+          <Icon name="notifications" className="text-xl cursor-pointer hover:opacity-80" />
+          <Icon name="settings" className="text-xl cursor-pointer hover:opacity-80" />
+          <Avatar size="md" />
+        </div>
+      </div>
+    </header>
+  );
+}
 
 function NetWorthHero() {
   return (
-    <Card variant="hero" padding="lg" className="flex-1">
-      <p className="text-[10px] font-bold uppercase tracking-widest text-on-primary-container mb-4">
-        <Trans>Total Net Worth (Combined)</Trans>
-      </p>
-      <p className="text-5xl font-headline font-bold mb-4">$142,890.45</p>
-      <Badge variant="success" size="md" className="mb-6 space-x-1">
-        <Icon name="trending_up" className="text-sm" />
-        <span>
-          <Trans>+2.4% this month</Trans>
-        </span>
-      </Badge>
-      <p className="text-xs text-on-primary-container mb-1">
-        <Trans>Updated 12 mins ago</Trans>
-      </p>
-
-      <div className="mt-6">
-        <div className="flex items-center justify-between mb-2">
-          <p className="text-xs text-on-primary-container">
-            <Trans>Annual Savings Goal</Trans>
-          </p>
-          <p className="text-xs font-bold text-white">
-            <Trans>72% Reached</Trans>
-          </p>
+    <Card
+      variant="hero"
+      padding="xl"
+      className="col-span-12 lg:col-span-8 h-[400px] flex flex-col justify-between"
+    >
+      <div className="relative z-10">
+        <div className="flex items-center gap-2 mb-4">
+          <span className="px-3 py-1 bg-tertiary-container/30 text-tertiary text-[10px] font-bold uppercase tracking-widest rounded-full">
+            <Trans>Consolidated Portfolio</Trans>
+          </span>
+          <span className="text-secondary flex items-center text-sm font-bold">
+            <Icon name="trending_up" className="text-sm mr-1" />
+            +12.4%
+          </span>
         </div>
-        <ProgressBar value={72} size="lg" color="gradient" trackClassName="bg-white/20" />
-        <div className="flex items-center space-x-3 mt-3">
-          <div className="flex items-center space-x-1.5">
-            <span className="w-2 h-2 rounded-full bg-secondary" />
-            <span className="text-[10px] text-on-primary-container">
-              <Trans>ALEX</Trans>
-            </span>
-          </div>
-          <div className="flex items-center space-x-1.5">
-            <span className="w-2 h-2 rounded-full bg-tertiary-fixed-dim" />
-            <span className="text-[10px] text-on-primary-container">
-              <Trans>JORDAN</Trans>
-            </span>
-          </div>
+        <h3 className="text-sm font-bold text-primary/50 uppercase tracking-widest mb-2">
+          <Trans>Total Net Worth</Trans>
+        </h3>
+        <p className="text-7xl font-extrabold font-headline tracking-tighter text-primary">
+          $2,842,190.42
+        </p>
+      </div>
+      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-secondary-container/20 to-transparent pointer-events-none rounded-[2rem]" />
+      <div className="relative z-10 grid grid-cols-3 gap-8 pt-8 border-t border-surface-container-highest">
+        <div>
+          <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mb-1">
+            <Trans>Liquid Assets</Trans>
+          </p>
+          <p className="text-xl font-bold text-primary">$842,000</p>
+        </div>
+        <div>
+          <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mb-1">
+            <Trans>Investments</Trans>
+          </p>
+          <p className="text-xl font-bold text-primary">$1,650,190</p>
+        </div>
+        <div>
+          <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mb-1">
+            <Trans>Real Estate</Trans>
+          </p>
+          <p className="text-xl font-bold text-primary">$350,000</p>
         </div>
       </div>
     </Card>
   );
 }
 
-function CurrencyCards() {
+function MarketInsightsCard() {
   return (
-    <div className="flex flex-col gap-3 w-44 shrink-0">
-      <Card variant="outlined" padding="sm" className="rounded-2xl">
-        <p className="text-xs font-bold text-secondary uppercase tracking-wider">USD</p>
-        <p className="text-[10px] text-on-surface-variant mt-1">
-          <Trans>US Dollar</Trans>
-        </p>
-        <p className="text-xl font-headline font-bold text-on-surface mt-2">$82,400</p>
-      </Card>
-      <Card variant="outlined" padding="sm" className="rounded-2xl">
-        <p className="text-xs font-bold text-tertiary uppercase tracking-wider">GBP</p>
-        <p className="text-[10px] text-on-surface-variant mt-1">
-          <Trans>Pound Sterling</Trans>
-        </p>
-        <p className="text-xl font-headline font-bold text-on-surface mt-2">£34,120</p>
-      </Card>
-    </div>
-  );
-}
-
-function CollaborativeCashCard() {
-  return (
-    <Card padding="md" className="bg-tertiary rounded-2xl text-white w-44 shrink-0">
-      <p className="text-[10px] font-bold uppercase tracking-widest text-tertiary-fixed-dim mb-2">
-        <Trans>Collaborative Cash</Trans>
-      </p>
-      <p className="text-2xl font-headline font-bold">€12,500</p>
-      <div className="flex justify-end mt-4">
-        <IconBox
-          icon="group"
-          size="sm"
-          shape="circle"
-          className="bg-white/20"
-          iconClassName="text-white"
-        />
+    <Card variant="dark" padding="lg" className="col-span-12 lg:col-span-4 flex flex-col">
+      <h3 className="text-lg font-bold font-headline mb-6">
+        <Trans>Market Insights</Trans>
+      </h3>
+      <div className="space-y-6">
+        <div className="flex gap-4">
+          <div className="h-10 w-10 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
+            <Icon name="rocket_launch" className="text-secondary" />
+          </div>
+          <div>
+            <p className="text-sm font-bold">
+              <Trans>Yield Optimization</Trans>
+            </p>
+            <p className="text-xs text-slate-400 mt-1">
+              <Trans>Transfer $42k from Chase to Savings for 4.5% APY increase.</Trans>
+            </p>
+          </div>
+        </div>
+        <div className="flex gap-4">
+          <div className="h-10 w-10 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
+            <Icon name="warning" className="text-tertiary-fixed" />
+          </div>
+          <div>
+            <p className="text-sm font-bold">
+              <Trans>Tax Exposure</Trans>
+            </p>
+            <p className="text-xs text-slate-400 mt-1">
+              <Trans>Upcoming dividend distributions may trigger capital gains.</Trans>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="mt-auto pt-8">
+        <button
+          type="button"
+          className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest border border-white/20 text-white cursor-pointer hover:bg-white/20 transition-colors"
+        >
+          <Trans>View Detail Analysis</Trans>
+        </button>
       </div>
     </Card>
   );
 }
 
-const institutions = [
+const accounts = [
   {
-    initial: 'C',
-    color: 'bg-primary',
-    name: 'Chase Sapphire Checking',
-    detail: '••••4421',
-    balanceLabel: 'AVAILABLE BALANCE',
-    balance: '$42,109.20',
-    change: '+12% YoY',
-    footer: 'Primary US Account',
-    tag: '',
+    icon: 'account_balance',
+    iconBg: 'bg-surface-container-high',
+    iconColor: 'text-primary',
+    bank: 'Chase Bank',
+    name: 'Premier Platinum',
+    balance: '$142,500.00',
+    footer: 'Synced 2m ago',
   },
   {
-    initial: 'G',
-    color: 'bg-on-surface',
-    name: 'Revolut Premium',
-    detail: 'Multi-currency (EUR/USD)',
-    balanceLabel: 'TOTAL VALUE',
-    balance: '€18,440.00',
-    change: '',
-    footer: '12 Transactions this week',
-    tag: 'SHARED',
+    icon: 'payments',
+    iconBg: 'bg-tertiary-container/20',
+    iconColor: 'text-tertiary',
+    bank: 'Revolut',
+    name: 'Global Business',
+    balance: '$86,210.15',
+    footer: 'Synced 5m ago',
   },
   {
-    initial: 'H',
-    color: 'bg-error',
-    name: 'HSBC Premier UK',
-    detail: '••••9901',
-    balanceLabel: 'CURRENT BALANCE',
-    balance: '£34,120.50',
-    change: '',
-    footer: 'Updated yesterday',
-    tag: 'International',
+    icon: 'savings',
+    iconBg: 'bg-secondary-container/30',
+    iconColor: 'text-secondary',
+    bank: 'HSBC UK',
+    name: 'Private Wealth',
+    balance: '£612,900.00',
+    footer: 'Updated 1hr ago',
   },
 ];
 
-function InstitutionCard({ institution }: { institution: (typeof institutions)[number] }) {
+function ConnectedAccounts() {
   return (
-    <Card variant="default" padding="md">
-      <div className="flex items-start justify-between mb-4">
-        <div
-          className={`w-10 h-10 ${institution.color} rounded-xl flex items-center justify-center text-white font-bold text-sm`}
+    <>
+      <div className="col-span-12 mt-4">
+        <h3 className="text-xl font-bold font-headline text-primary">
+          <Trans>Connected Accounts</Trans>
+        </h3>
+      </div>
+      {accounts.map((account) => (
+        <Card
+          key={account.name}
+          variant="default"
+          padding="md"
+          className="col-span-12 md:col-span-4 hover:shadow-md transition-shadow group cursor-pointer"
         >
-          {institution.initial}
-        </div>
-        <button type="button" className="cursor-pointer">
-          <Icon name="more_vert" className="text-xl text-outline" />
-        </button>
-      </div>
-      <h3 className="font-bold text-on-surface mb-1">{institution.name}</h3>
-      <p className="text-xs text-on-surface-variant mb-4">{institution.detail}</p>
-      <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">
-        {institution.balanceLabel}
-      </p>
-      <div className="flex items-baseline space-x-2">
-        <p className="text-2xl font-headline font-bold text-on-surface">{institution.balance}</p>
-        {institution.tag && (
-          <Badge variant="success" size="sm">
-            {institution.tag}
-          </Badge>
-        )}
-      </div>
-      {institution.change && (
-        <p className="text-xs text-secondary font-bold mt-1">{institution.change}</p>
-      )}
-      <div className="flex items-center justify-between mt-4 pt-4 border-t border-outline-variant/10">
-        <span className="text-xs text-secondary font-medium">{institution.footer}</span>
-        <Icon name="arrow_forward" className="text-base text-outline" />
-      </div>
-    </Card>
+          <div className="flex justify-between items-start mb-8">
+            <div
+              className={`h-12 w-12 rounded-2xl ${account.iconBg} flex items-center justify-center`}
+            >
+              <Icon name={account.icon} className={`${account.iconColor} text-3xl`} />
+            </div>
+            <Icon
+              name="arrow_outward"
+              className="text-primary/20 group-hover:text-primary transition-colors"
+            />
+          </div>
+          <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mb-1">
+            {account.bank}
+          </p>
+          <p className="text-lg font-bold text-primary mb-4">{account.name}</p>
+          <p className="text-2xl font-extrabold font-headline tracking-tight text-primary">
+            {account.balance}
+          </p>
+          <div className="mt-6 pt-4 border-t border-surface-container-highest flex justify-between items-center">
+            <span className="text-[10px] font-medium text-primary/60">{account.footer}</span>
+          </div>
+        </Card>
+      ))}
+    </>
   );
 }
 
-function RecommendationBanner() {
+const recentActivity = [
+  {
+    icon: 'store',
+    name: 'Apple Store Manhattan',
+    amount: '-$1,299.00',
+    detail: 'ELECTRONICS · 1h ago',
+  },
+  {
+    icon: 'trending_up',
+    name: 'Inbound Dividend Payment',
+    amount: '+$4,250.40',
+    detail: 'INVESTMENT · Yesterday',
+  },
+  {
+    icon: 'restaurant',
+    name: 'The French Laundry',
+    amount: '-$850.00',
+    detail: 'DINING · 2 days ago',
+  },
+];
+
+function RecentActivity() {
   return (
-    <Card padding="lg" className="bg-tertiary-fixed/30 rounded-3xl mt-8">
-      <div className="flex items-center justify-between">
-        <div className="flex-1 mr-8">
-          <h3 className="font-headline text-xl font-bold text-on-surface mb-2">
-            <Trans>Maximize Your Joint Portfolio</Trans>
-          </h3>
-          <p className="text-sm text-on-surface-variant leading-relaxed">
-            <Trans>
-              Financial Harmony has detected that transferring £5,000 to your high-yield savings
-              could net you an extra $240 in interest annually.
-            </Trans>
-          </p>
-        </div>
-        <div className="flex items-center space-x-3 shrink-0">
-          <Button type="button" variant="primary" size="md">
-            <Trans>Explore Opportunities</Trans>
-          </Button>
-          <Button type="button" variant="ghost" size="md">
-            <Trans>Dismiss</Trans>
-          </Button>
-        </div>
+    <Card variant="default" padding="lg" className="col-span-12">
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-xl font-bold font-headline text-primary">
+          <Trans>Recent Activity</Trans>
+        </h3>
+        <button
+          type="button"
+          className="text-sm font-medium text-secondary hover:underline cursor-pointer flex items-center space-x-1"
+        >
+          <span>
+            <Trans>View All Transactions</Trans>
+          </span>
+          <Icon name="chevron_right" className="text-base" />
+        </button>
+      </div>
+      <div className="space-y-5">
+        {recentActivity.map((item) => (
+          <div key={item.name} className="flex items-center space-x-4">
+            <div className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center shrink-0">
+              <Icon name={item.icon} className="text-primary text-xl" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-bold text-sm text-primary">{item.name}</p>
+              <p className="text-[10px] uppercase tracking-wider text-outline">{item.detail}</p>
+            </div>
+            <p
+              className={`font-bold text-sm shrink-0 ${item.amount.startsWith('+') ? 'text-tertiary' : 'text-primary'}`}
+            >
+              {item.amount}
+            </p>
+          </div>
+        ))}
       </div>
     </Card>
   );
@@ -198,44 +276,47 @@ function RecommendationBanner() {
 
 export function AccountsOverviewPage() {
   return (
-    <div className="p-8">
-      <PageHeader
-        title={<Trans>Accounts Overview</Trans>}
-        subtitle={<Trans>Your global liquidity at a glance.</Trans>}
-        actions={
-          <>
-            <Badge variant="success" size="md" className="space-x-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-secondary" />
-              <span>
-                <Trans>3 Active Connections</Trans>
-              </span>
-            </Badge>
-            <button type="button" className="cursor-pointer">
-              <Icon
-                name="sync"
-                className="text-xl text-on-surface-variant hover:text-secondary transition-colors"
-              />
+    <div>
+      <TopBar />
+      <div className="px-10 pb-12 pt-8">
+        <div className="flex justify-between items-end mb-10">
+          <div>
+            <p className="text-[10px] uppercase font-semibold tracking-widest text-primary/60 mb-1">
+              <Trans>Welcome back</Trans>
+            </p>
+            <h2 className="text-4xl font-extrabold font-headline tracking-tighter text-primary">
+              <Trans>Nosko Overview</Trans>
+            </h2>
+          </div>
+          <div className="bg-surface-container-high p-1 rounded-2xl flex gap-1">
+            <button
+              type="button"
+              className="px-4 py-1.5 bg-primary text-white rounded-xl text-xs font-bold shadow-sm cursor-pointer"
+            >
+              USD
             </button>
-          </>
-        }
-      />
-
-      <div className="flex gap-4 mb-10">
-        <NetWorthHero />
-        <div className="flex flex-col gap-4">
-          <CurrencyCards />
+            <button
+              type="button"
+              className="px-4 py-1.5 text-primary/60 hover:bg-white/50 rounded-xl text-xs font-bold transition-all cursor-pointer"
+            >
+              EUR
+            </button>
+            <button
+              type="button"
+              className="px-4 py-1.5 text-primary/60 hover:bg-white/50 rounded-xl text-xs font-bold transition-all cursor-pointer"
+            >
+              GBP
+            </button>
+          </div>
         </div>
-        <CollaborativeCashCard />
-      </div>
 
-      <SectionHeader title={<Trans>Connected Institutions</Trans>} />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {institutions.map((inst) => (
-          <InstitutionCard key={inst.name} institution={inst} />
-        ))}
+        <div className="grid grid-cols-12 gap-6">
+          <NetWorthHero />
+          <MarketInsightsCard />
+          <ConnectedAccounts />
+          <RecentActivity />
+        </div>
       </div>
-
-      <RecommendationBanner />
     </div>
   );
 }

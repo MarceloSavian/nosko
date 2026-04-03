@@ -2,13 +2,14 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import type { HTMLAttributes, ReactNode } from 'react';
 import { cn } from '@/presentation/lib/cn';
 
-const cardVariants = cva('rounded-3xl', {
+const cardVariants = cva('rounded-[2rem]', {
   variants: {
     variant: {
-      default: 'bg-surface-container-lowest shadow-sm',
-      elevated: 'bg-surface-container-lowest shadow-[0_20px_50px_-12px_rgba(25,28,29,0.06)]',
-      outlined: 'bg-surface-container-lowest border border-outline-variant/20',
-      hero: 'bg-gradient-to-br from-primary to-primary-container text-white',
+      default: 'bg-surface-container shadow-sm',
+      elevated: 'bg-surface-container shadow-[0_20px_50px_-12px_rgba(8,58,79,0.06)]',
+      outlined: 'bg-surface-container border border-outline-variant/20',
+      hero: 'bg-surface-container shadow-sm relative overflow-hidden',
+      dark: 'bg-primary text-white',
       glass: 'bg-white/10 backdrop-blur-xl',
     },
     padding: {

@@ -53,7 +53,7 @@ describe('SignUpPage', () => {
   describe('render', () => {
     it('should display the signup form heading', async () => {
       makeSut();
-      expect(await screen.findByText('Create your account')).toBeInTheDocument();
+      expect(await screen.findByText('Create your ledger')).toBeInTheDocument();
     });
 
     it('should display name, email, password, and language fields', async () => {
@@ -73,14 +73,12 @@ describe('SignUpPage', () => {
 
     it('should display the submit button', async () => {
       makeSut();
-      expect(
-        await screen.findByRole('button', { name: 'Create Unity Ledger' }),
-      ).toBeInTheDocument();
+      expect(await screen.findByRole('button', { name: 'Initialize Account' })).toBeInTheDocument();
     });
 
     it('should display link to login page', async () => {
       makeSut();
-      expect(await screen.findByText('Log In')).toBeInTheDocument();
+      expect(await screen.findByText('Sign in')).toBeInTheDocument();
     });
   });
 
@@ -110,7 +108,7 @@ describe('SignUpPage', () => {
       const { signUpSpy } = makeSut();
       const user = userEvent.setup();
 
-      const submitButton = await screen.findByRole('button', { name: 'Create Unity Ledger' });
+      const submitButton = await screen.findByRole('button', { name: 'Initialize Account' });
       await user.click(submitButton);
 
       await waitFor(() => {
@@ -127,7 +125,7 @@ describe('SignUpPage', () => {
       await user.type(screen.getByLabelText('Full Name'), 'Test User');
       await user.type(screen.getByLabelText('Email Address'), 'invalid-email');
       await user.type(screen.getByLabelText('Password'), 'password123');
-      await user.click(screen.getByRole('button', { name: 'Create Unity Ledger' }));
+      await user.click(screen.getByRole('button', { name: 'Initialize Account' }));
 
       await waitFor(() => {
         expect(screen.getByText('Invalid email')).toBeInTheDocument();
@@ -143,7 +141,7 @@ describe('SignUpPage', () => {
       await user.type(screen.getByLabelText('Full Name'), 'Test User');
       await user.type(screen.getByLabelText('Email Address'), 'test@example.com');
       await user.type(screen.getByLabelText('Password'), 'short');
-      await user.click(screen.getByRole('button', { name: 'Create Unity Ledger' }));
+      await user.click(screen.getByRole('button', { name: 'Initialize Account' }));
 
       await waitFor(() => {
         expect(screen.getByText('Password must be at least 8 characters')).toBeInTheDocument();
@@ -159,7 +157,7 @@ describe('SignUpPage', () => {
       await user.type(screen.getByLabelText('Full Name'), 'Test User');
       await user.type(screen.getByLabelText('Email Address'), 'test@example.com');
       await user.type(screen.getByLabelText('Password'), 'password123');
-      await user.click(screen.getByRole('button', { name: 'Create Unity Ledger' }));
+      await user.click(screen.getByRole('button', { name: 'Initialize Account' }));
     };
 
     it('should call signUp.execute with form data including language', async () => {

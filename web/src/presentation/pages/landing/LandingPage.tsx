@@ -1,172 +1,101 @@
-import { Trans, useLingui } from '@lingui/react/macro';
-import { FeatureCard } from '@/presentation/components/FeatureCard';
+import { Trans } from '@lingui/react/macro';
 import { Icon } from '@/presentation/components/Icon';
 import { LinkButton } from '@/presentation/components/LinkButton';
 import { Logo } from '@/presentation/components/Logo';
 
 function Navbar() {
   return (
-    <nav className="fixed top-0 w-full z-50 bg-white/60 backdrop-blur-xl shadow-sm h-16">
-      <div className="flex justify-between items-center px-8 h-full max-w-7xl mx-auto">
-        <div className="flex items-center space-x-12">
-          <Logo />
-          <div className="hidden md:flex space-x-8 items-center font-headline tracking-tight font-medium text-sm">
-            <a
-              className="text-on-surface-variant hover:text-primary transition-colors"
-              href="#benefits"
-            >
-              <Trans>Benefits</Trans>
-            </a>
-            <a
-              className="text-on-surface-variant hover:text-primary transition-colors"
-              href="#features"
-            >
-              <Trans>The Ledger</Trans>
-            </a>
-          </div>
-        </div>
-        <div className="flex items-center space-x-4">
-          <LinkButton to="/signup" variant="primary" size="sm">
-            <Trans>Sign Up</Trans>
-          </LinkButton>
-          <LinkButton to="/login" variant="link" size="sm">
-            <Trans>Log In</Trans>
-          </LinkButton>
-        </div>
+    <header className="fixed top-0 right-0 left-0 h-20 bg-background/80 backdrop-blur-xl shadow-sm z-50 flex justify-between items-center px-10 w-full">
+      <div className="flex items-center gap-8">
+        <Logo />
+        <nav className="hidden md:flex gap-8 items-center">
+          <a
+            className="text-primary border-b-2 border-secondary pb-1 font-extrabold tracking-tight text-sm"
+            href="#benefits"
+          >
+            <Trans>Portfolio</Trans>
+          </a>
+          <a
+            className="text-on-surface-variant hover:text-primary transition-opacity font-extrabold tracking-tight text-sm"
+            href="#features"
+          >
+            <Trans>Insights</Trans>
+          </a>
+          <a
+            className="text-on-surface-variant hover:text-primary transition-opacity font-extrabold tracking-tight text-sm"
+            href="#planning"
+          >
+            <Trans>Planning</Trans>
+          </a>
+        </nav>
       </div>
-      <div className="bg-gradient-to-r from-transparent via-outline-variant/30 to-transparent h-px" />
-    </nav>
+      <div className="flex items-center gap-4">
+        <div className="hidden lg:flex items-center gap-4 text-sm font-semibold tracking-wide text-primary/70">
+          <a className="hover:text-primary transition-colors" href="#benefits">
+            <Trans>Benefits</Trans>
+          </a>
+          <a className="hover:text-primary transition-colors" href="#pricing">
+            <Trans>Pricing</Trans>
+          </a>
+        </div>
+        <LinkButton to="/signup" variant="primary" size="sm">
+          <Trans>Get Started</Trans>
+        </LinkButton>
+        <LinkButton to="/login" variant="link" size="sm">
+          <Trans>Log In</Trans>
+        </LinkButton>
+      </div>
+    </header>
   );
 }
 
 function HeroSection() {
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-gradient-to-br from-primary to-primary-container">
-      <div className="absolute inset-0 pointer-events-none opacity-20">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-bl from-secondary/20 to-transparent" />
-      </div>
-      <div className="relative z-10 max-w-7xl mx-auto px-8 w-full">
-        <div className="max-w-2xl">
-          <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10 mb-8">
-            <span className="w-2 h-2 rounded-full bg-secondary-fixed shadow-[0_0_8px_rgba(172,244,164,0.6)]" />
-            <span className="text-xs font-bold text-primary-fixed uppercase tracking-widest">
-              <Trans>Now Private Beta</Trans>
+    <section className="relative min-h-[90vh] flex items-center px-6 md:px-10 lg:px-20 overflow-hidden">
+      <div className="max-w-4xl z-10">
+        <div className="mb-6 inline-flex items-center gap-2 bg-white/50 backdrop-blur-md px-4 py-2 rounded-full shadow-sm">
+          <span className="w-2 h-2 bg-secondary rounded-full" />
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-primary/60">
+            <Trans>Estate Level Management</Trans>
+          </span>
+        </div>
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tighter text-primary leading-[0.95] mb-8 font-headline">
+          <Trans>
+            Financial unity starts with <span className="text-secondary italic">precision.</span>
+          </Trans>
+        </h1>
+        <p className="text-lg md:text-xl text-primary/70 max-w-xl mb-12 font-medium leading-relaxed">
+          <Trans>
+            A digital curator for high-end financial lucidity. Consolidate your wealth with a
+            sophisticated, sand-based neutral experience.
+          </Trans>
+        </p>
+        <div className="flex flex-wrap gap-4">
+          <LinkButton to="/signup" variant="primary" size="lg" className="space-x-3">
+            <span>
+              <Trans>Get Started</Trans>
             </span>
-          </div>
-          <h1 className="text-6xl md:text-7xl font-extrabold text-white font-headline leading-[1.1] tracking-tighter mb-6">
-            <Trans>Finance for</Trans> <br />
-            <span className="text-secondary-fixed">
-              <Trans>Two.</Trans>
-            </span>
-          </h1>
-          <p className="text-xl text-primary-fixed-dim font-body mb-10 leading-relaxed max-w-lg">
-            <Trans>
-              The Unity Ledger is more than a bank account. It&apos;s a beautifully curated
-              financial narrative designed to help couples grow, dream, and build together.
-            </Trans>
-          </p>
-          <LinkButton to="/signup" variant="primary" size="lg" className="shadow-xl">
-            <Trans>Start Your Journey</Trans>
+            <Icon name="arrow_forward" className="text-lg" />
           </LinkButton>
+          <button
+            type="button"
+            className="bg-white text-primary border border-primary/10 px-10 py-4 rounded-2xl font-bold text-lg hover:bg-white/50 transition-all flex items-center gap-3"
+          >
+            <Icon name="play_circle" filled className="text-2xl" />
+            <Trans>Watch Film</Trans>
+          </button>
         </div>
       </div>
-      <SharedGoalCard />
-    </section>
-  );
-}
-
-function SharedGoalCard() {
-  return (
-    <div className="absolute bottom-20 right-8 hidden lg:block">
-      <div className="bg-white/10 backdrop-blur-xl border border-white/20 p-6 rounded-3xl w-80 shadow-2xl rotate-3">
-        <div className="flex justify-between items-center mb-6">
-          <span className="text-white/60 text-xs font-bold uppercase tracking-wider">
-            <Trans>Shared Goal</Trans>
+      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1/2 h-[80%] hidden lg:block">
+        <div className="absolute right-10 bottom-20 left-20 bg-primary p-10 rounded-[2rem] shadow-2xl text-white z-10">
+          <span className="text-[10px] font-semibold uppercase tracking-widest opacity-60">
+            <Trans>Portfolio Yield</Trans>
           </span>
-          <Icon name="favorite" className="text-tertiary-fixed-dim" />
-        </div>
-        <h4 className="text-white font-headline text-xl font-bold mb-2">
-          <Trans>Summer in Tuscany</Trans>
-        </h4>
-        <div className="flex items-center justify-between text-sm mb-4">
-          <span className="text-primary-fixed-dim">
-            <Trans>$8,450 saved</Trans>
-          </span>
-          <span className="text-white">84%</span>
-        </div>
-        <div className="h-3 w-full bg-white/10 rounded-full overflow-hidden flex">
-          <div className="h-full bg-secondary-fixed w-3/5" />
-          <div className="h-full bg-tertiary-fixed-dim w-1/4" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function FeaturesSection() {
-  const { t } = useLingui();
-
-  return (
-    <section id="benefits" className="py-32 bg-background px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
-          <div className="md:col-span-8 bg-surface-container-lowest p-12 rounded-[2.5rem] relative overflow-hidden group">
-            <div className="relative z-10">
-              <h2 className="text-4xl font-extrabold font-headline tracking-tighter mb-6 text-primary">
-                <Trans>The Shared Narrative</Trans>
-              </h2>
-              <p className="text-lg text-on-surface-variant max-w-md leading-relaxed mb-12">
-                <Trans>
-                  Every transaction tells a story. From morning coffees to mortgage payments, Nosko
-                  translates your data into a cohesive editorial ledger.
-                </Trans>
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <FeatureCard
-                  className="bg-surface-container-low"
-                  icon={<Icon name="account_balance_wallet" filled className="text-secondary" />}
-                  title={t`Unity Accounts`}
-                  description={t`Seamlessly blend your individual accounts into one shared visual interface.`}
-                />
-                <FeatureCard
-                  className="bg-surface-container-low"
-                  icon={<Icon name="forum" className="text-tertiary" />}
-                  title={t`In-Line Context`}
-                  description={t`Comment on transactions, add photos of memories, and plan together.`}
-                />
-              </div>
-            </div>
-            <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-tertiary-fixed/30 rounded-full blur-3xl group-hover:scale-125 transition-transform duration-700" />
-          </div>
-          <div className="md:col-span-4 flex flex-col gap-8">
-            <div className="flex-1 bg-primary p-8 rounded-[2.5rem] text-white flex flex-col justify-between">
-              <Icon name="security" className="text-4xl text-secondary-fixed" />
-              <div>
-                <h3 className="text-2xl font-bold font-headline mb-4">
-                  <Trans>Ironclad Privacy</Trans>
-                </h3>
-                <p className="text-primary-fixed-dim text-sm">
-                  <Trans>
-                    Bank-grade encryption with a couple-focused permission layer that respects
-                    individual autonomy.
-                  </Trans>
-                </p>
-              </div>
-            </div>
-            <div className="flex-1 bg-secondary-fixed p-8 rounded-[2.5rem] text-on-secondary-fixed flex flex-col justify-between">
-              <Icon name="trending_up" className="text-4xl" />
-              <div>
-                <h3 className="text-2xl font-bold font-headline mb-4">
-                  <Trans>Grow Together</Trans>
-                </h3>
-                <p className="text-on-secondary-fixed-variant text-sm">
-                  <Trans>
-                    Predictive insights that help you anticipate future expenses and hit savings
-                    milestones faster.
-                  </Trans>
-                </p>
-              </div>
-            </div>
+          <div className="text-5xl font-extrabold tracking-tighter mt-2 font-headline">+12.4%</div>
+          <div className="mt-4 flex gap-1">
+            <div className="h-1 w-12 bg-secondary rounded-full" />
+            <div className="h-1 w-4 bg-white/20 rounded-full" />
+            <div className="h-1 w-4 bg-white/20 rounded-full" />
           </div>
         </div>
       </div>
@@ -174,56 +103,147 @@ function FeaturesSection() {
   );
 }
 
-function DesignedForSection() {
-  const { t } = useLingui();
-
-  const items = [
-    {
-      icon: 'auto_awesome',
-      iconBg: 'bg-primary-fixed',
-      iconColor: 'text-primary',
-      title: t`Smart Asymmetry`,
-      description: t`Our layout prioritizes what matters to you specifically, not a generic grid of numbers.`,
-    },
-    {
-      icon: 'diversity_1',
-      iconBg: 'bg-tertiary-fixed',
-      iconColor: 'text-tertiary',
-      title: t`Collaborative Planning`,
-      description: t`Real-time sync ensures you're always on the same page, whether it's grocery lists or global investments.`,
-    },
-    {
-      icon: 'eco',
-      iconBg: 'bg-secondary-fixed',
-      iconColor: 'text-secondary',
-      title: t`Growth Focus`,
-      description: t`We don't just track spending; we celebrate every step towards your shared flourishing.`,
-    },
-  ];
-
+function BentoGridSection() {
   return (
-    <section id="features" className="py-24 bg-surface-container-low relative">
-      <div className="max-w-7xl mx-auto px-8">
-        <div className="flex flex-col md:flex-row items-center gap-16">
-          <div className="w-full md:w-1/2">
-            <h2 className="text-5xl font-extrabold font-headline tracking-tighter mb-8 text-primary">
-              <Trans>Designed for the Modern Couple.</Trans>
-            </h2>
-            <ul className="space-y-6">
-              {items.map((item) => (
-                <li key={item.title} className="flex items-start space-x-4">
-                  <div
-                    className={`w-10 h-10 rounded-xl ${item.iconBg} flex items-center justify-center shrink-0`}
-                  >
-                    <Icon name={item.icon} className={item.iconColor} />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-lg">{item.title}</h4>
-                    <p className="text-on-surface-variant">{item.description}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
+    <section id="benefits" className="px-6 md:px-10 lg:px-20 py-24 bg-background">
+      <div className="mb-16">
+        <h2 className="text-4xl font-extrabold tracking-tighter text-primary font-headline">
+          <Trans>The New Standard.</Trans>
+        </h2>
+        <div className="h-1 w-20 bg-secondary mt-4" />
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[300px]">
+        <div className="md:col-span-8 bg-white rounded-[2rem] p-10 shadow-sm flex flex-col justify-between overflow-hidden relative group">
+          <div className="z-10">
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-primary/40">
+              <Trans>Analytics Engine</Trans>
+            </span>
+            <h3 className="text-3xl font-extrabold tracking-tight mt-2 max-w-md font-headline">
+              <Trans>Precision-driven wealth oversight for complex partners.</Trans>
+            </h3>
+          </div>
+          <div className="flex gap-4 items-center z-10">
+            <div className="h-12 w-12 bg-tertiary-container rounded-2xl flex items-center justify-center">
+              <Icon name="analytics" className="text-primary" />
+            </div>
+            <span className="font-bold">
+              <Trans>Real-time data synchronization across 15,000+ institutions.</Trans>
+            </span>
+          </div>
+        </div>
+        <div className="md:col-span-4 bg-primary text-white rounded-[2rem] p-10 shadow-sm flex flex-col justify-between">
+          <Icon name="security" filled className="text-4xl text-secondary" />
+          <div>
+            <h3 className="text-2xl font-extrabold tracking-tight mb-2 font-headline">
+              <Trans>Immutable Security.</Trans>
+            </h3>
+            <p className="text-white/60 text-sm leading-relaxed">
+              <Trans>
+                256-bit encryption with decentralized validation protocols for every sync.
+              </Trans>
+            </p>
+          </div>
+        </div>
+        <div className="md:col-span-4 bg-secondary-container rounded-[2rem] p-10 shadow-sm flex flex-col justify-center">
+          <div className="text-6xl font-extrabold tracking-tighter text-primary font-headline">
+            99.9%
+          </div>
+          <p className="text-sm font-bold uppercase tracking-widest text-primary/60 mt-4">
+            <Trans>Uptime Accuracy</Trans>
+          </p>
+        </div>
+        <div className="md:col-span-4 bg-white rounded-[2rem] p-10 shadow-sm flex flex-col justify-between">
+          <div>
+            <span className="text-[10px] font-semibold uppercase tracking-widest text-primary/40">
+              <Trans>Sync Tech</Trans>
+            </span>
+            <h3 className="text-xl font-extrabold tracking-tight mt-2 font-headline">
+              <Trans>Global Liquidity View</Trans>
+            </h3>
+          </div>
+          <div className="flex -space-x-2">
+            <div className="w-10 h-10 rounded-full border-2 border-white bg-primary-fixed-dim" />
+            <div className="w-10 h-10 rounded-full border-2 border-white bg-tertiary-fixed-dim" />
+            <div className="w-10 h-10 rounded-full border-2 border-white bg-primary flex items-center justify-center text-[10px] font-bold text-white">
+              +12
+            </div>
+          </div>
+        </div>
+        <div className="md:col-span-4 bg-tertiary text-white rounded-[2rem] p-10 shadow-sm overflow-hidden relative">
+          <h3 className="text-2xl font-extrabold tracking-tight z-10 relative font-headline">
+            <Trans>Joint Management.</Trans>
+          </h3>
+          <p className="text-white/80 text-sm mt-4 z-10 relative">
+            <Trans>Designed for couples and partners managing shared wealth estates.</Trans>
+          </p>
+          <Icon name="group" className="absolute -right-4 -bottom-4 text-[120px] opacity-20" />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ProductPreviewSection() {
+  return (
+    <section id="features" className="px-6 md:px-10 lg:px-20 py-24 overflow-hidden">
+      <div className="bg-white rounded-[3rem] p-12 lg:p-20 shadow-2xl flex flex-col lg:flex-row items-center gap-16 relative">
+        <div className="flex-1">
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-secondary">
+            <Trans>Premium Dashboard</Trans>
+          </span>
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tighter text-primary mt-4 mb-8 font-headline">
+            <Trans>Clarity across every asset class.</Trans>
+          </h2>
+          <ul className="space-y-6">
+            <li className="flex items-start gap-4">
+              <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center mt-1">
+                <Icon name="check" className="text-secondary text-sm" />
+              </div>
+              <div>
+                <p className="font-bold text-primary">
+                  <Trans>Automated Categorization</Trans>
+                </p>
+                <p className="text-sm text-primary/60">
+                  <Trans>Machine learning labels for 100+ transaction types.</Trans>
+                </p>
+              </div>
+            </li>
+            <li className="flex items-start gap-4">
+              <div className="w-6 h-6 rounded-full bg-secondary/20 flex items-center justify-center mt-1">
+                <Icon name="check" className="text-secondary text-sm" />
+              </div>
+              <div>
+                <p className="font-bold text-primary">
+                  <Trans>Estate Projections</Trans>
+                </p>
+                <p className="text-sm text-primary/60">
+                  <Trans>Future wealth forecasting based on current trajectory.</Trans>
+                </p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div className="flex-1 w-full max-w-lg">
+          <div className="bg-background/50 p-8 rounded-[2rem] border border-white/40 shadow-inner relative">
+            <div className="flex justify-between items-end h-64 gap-3">
+              <div className="flex-1 bg-primary/10 rounded-t-xl h-[40%]" />
+              <div className="flex-1 bg-primary/10 rounded-t-xl h-[55%]" />
+              <div className="flex-1 bg-primary/10 rounded-t-xl h-[35%]" />
+              <div className="flex-1 bg-primary/10 rounded-t-xl h-[70%]" />
+              <div className="flex-1 bg-secondary rounded-t-xl h-[95%] shadow-lg" />
+            </div>
+            <div className="absolute top-10 right-10 bg-white/90 backdrop-blur-xl p-6 rounded-2xl shadow-xl border border-secondary/20">
+              <div className="text-[10px] font-bold text-primary/40 uppercase tracking-widest">
+                <Trans>Net Worth</Trans>
+              </div>
+              <div className="text-3xl font-extrabold text-primary tracking-tighter mt-1 font-headline">
+                $2,481,092
+              </div>
+              <div className="flex items-center gap-1 text-tertiary text-xs font-bold mt-2">
+                <Icon name="trending_up" className="text-sm" />
+                <Trans>+2.4% This Month</Trans>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -233,84 +253,99 @@ function DesignedForSection() {
 
 function CtaSection() {
   return (
-    <section className="py-32 px-8">
-      <div className="max-w-4xl mx-auto text-center">
-        <h2 className="text-5xl font-extrabold font-headline tracking-tighter mb-8">
-          <Trans>Ready to sync your</Trans> <br />
-          <span className="text-secondary italic">
-            <Trans>financial rhythm?</Trans>
-          </span>
-        </h2>
-        <p className="text-xl text-on-surface-variant mb-12 max-w-2xl mx-auto">
-          <Trans>
-            Join thousands of couples who have moved beyond spreadsheets and discovered a more
-            harmonious way to manage their lives.
-          </Trans>
-        </p>
-        <LinkButton to="/signup" variant="dark" size="lg">
-          <Trans>Get Early Access</Trans>
+    <section id="planning" className="px-6 md:px-10 lg:px-20 py-32 text-center">
+      <h2 className="text-5xl md:text-6xl font-extrabold tracking-tighter text-primary mb-12 font-headline">
+        <Trans>
+          Elevate your wealth <br />
+          management.
+        </Trans>
+      </h2>
+      <div className="flex justify-center gap-6">
+        <LinkButton to="/signup" variant="dark" size="lg" className="shadow-xl">
+          <Trans>Begin Onboarding</Trans>
         </LinkButton>
-        <p className="mt-6 text-sm text-outline">
-          <Trans>No credit card required. Invite your partner later.</Trans>
-        </p>
       </div>
+      <p className="mt-12 text-primary/40 font-medium tracking-wide">
+        <Trans>Available on Web, iOS and Android.</Trans>
+      </p>
     </section>
   );
 }
 
 function Footer() {
   return (
-    <footer className="bg-surface-container-low pt-24 pb-12 px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12 mb-20">
-          <div className="col-span-2">
-            <Logo className="mb-6" />
-            <p className="text-on-surface-variant leading-relaxed max-w-xs">
-              <Trans>
-                Crafting the future of shared finance with beauty, trust, and editorial precision.
-              </Trans>
-            </p>
-          </div>
-          <div>
-            <h5 className="font-bold mb-6">
-              <Trans>Product</Trans>
-            </h5>
-            <ul className="space-y-4 text-sm text-on-surface-variant">
-              <li>
-                <a className="hover:text-primary transition-colors" href="#benefits">
-                  <Trans>Features</Trans>
-                </a>
-              </li>
-              <li>
-                <a className="hover:text-primary transition-colors" href="#features">
-                  <Trans>The Ledger</Trans>
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h5 className="font-bold mb-6">
-              <Trans>Company</Trans>
-            </h5>
-            <ul className="space-y-4 text-sm text-on-surface-variant">
-              <li>
-                <span className="hover:text-primary transition-colors cursor-pointer">
-                  <Trans>About Us</Trans>
-                </span>
-              </li>
-              <li>
-                <span className="hover:text-primary transition-colors cursor-pointer">
-                  <Trans>Contact</Trans>
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-outline-variant/20">
-          <p className="text-xs text-outline mb-4 md:mb-0">
-            <Trans>&copy; 2024 Nosko Financial Technologies. All rights reserved.</Trans>
+    <footer className="bg-primary text-white px-10 py-20">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div className="col-span-1">
+          <Logo tone="light" className="mb-8" />
+          <p className="text-white/60 text-sm leading-relaxed">
+            <Trans>
+              Defining the next era of partner-centric wealth management through precision and
+              clarity.
+            </Trans>
           </p>
         </div>
+        <div>
+          <h4 className="font-bold mb-6 text-secondary uppercase text-xs tracking-widest">
+            <Trans>Platform</Trans>
+          </h4>
+          <ul className="space-y-4 text-sm text-white/80 font-medium">
+            <li>
+              <a className="hover:text-white transition-colors" href="#benefits">
+                <Trans>Benefits</Trans>
+              </a>
+            </li>
+            <li>
+              <span className="hover:text-white transition-colors cursor-pointer">
+                <Trans>Pricing</Trans>
+              </span>
+            </li>
+            <li>
+              <span className="hover:text-white transition-colors cursor-pointer">
+                <Trans>Security</Trans>
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-bold mb-6 text-secondary uppercase text-xs tracking-widest">
+            <Trans>Company</Trans>
+          </h4>
+          <ul className="space-y-4 text-sm text-white/80 font-medium">
+            <li>
+              <span className="hover:text-white transition-colors cursor-pointer">
+                <Trans>Our Vision</Trans>
+              </span>
+            </li>
+            <li>
+              <span className="hover:text-white transition-colors cursor-pointer">
+                <Trans>Contact</Trans>
+              </span>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h4 className="font-bold mb-6 text-secondary uppercase text-xs tracking-widest">
+            <Trans>Resources</Trans>
+          </h4>
+          <ul className="space-y-4 text-sm text-white/80 font-medium">
+            <li>
+              <span className="hover:text-white transition-colors cursor-pointer">
+                <Trans>Help Center</Trans>
+              </span>
+            </li>
+            <li>
+              <span className="hover:text-white transition-colors cursor-pointer">
+                <Trans>Legal &amp; Privacy</Trans>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div className="max-w-7xl mx-auto border-t border-white/10 mt-20 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+        <p className="text-[10px] text-white/40 tracking-widest uppercase">
+          <Trans>&copy; 2024 Nosko Wealth Management. All rights reserved.</Trans>
+        </p>
       </div>
     </footer>
   );
@@ -320,10 +355,10 @@ export function LandingPage() {
   return (
     <div className="bg-background text-on-background font-body">
       <Navbar />
-      <main className="pt-16">
+      <main className="pt-20">
         <HeroSection />
-        <FeaturesSection />
-        <DesignedForSection />
+        <BentoGridSection />
+        <ProductPreviewSection />
         <CtaSection />
       </main>
       <Footer />

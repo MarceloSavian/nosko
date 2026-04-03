@@ -23,7 +23,7 @@ describe('App', () => {
           <RouterProvider router={testRouter as any} />
         </I18nProvider>,
       );
-      expect(await screen.findByText('Finance for')).toBeInTheDocument();
+      expect(await screen.findByText('The New Standard.')).toBeInTheDocument();
     });
   });
 

@@ -1,7 +1,6 @@
 import { Trans } from '@lingui/react/macro';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
-import { Badge } from '@/presentation/components/Badge';
 import { Button } from '@/presentation/components/Button';
 import { Card } from '@/presentation/components/Card';
 import { Icon } from '@/presentation/components/Icon';
@@ -86,11 +85,11 @@ export function ContributionRulesPage() {
   return (
     <div className="flex items-center justify-center min-h-full p-8">
       <div className="w-full max-w-2xl text-center">
-        <Badge variant="neutral" size="md" className="mb-6">
+        <p className="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-6">
           <Trans>Step 3 of 3</Trans>
-        </Badge>
+        </p>
 
-        <h1 className="font-headline text-4xl font-bold text-on-surface tracking-tight mb-3">
+        <h1 className="font-headline text-4xl font-bold text-primary tracking-tight mb-3">
           <Trans>Contribution Rules</Trans>
         </h1>
         <p className="text-on-surface-variant leading-relaxed mb-10 max-w-md mx-auto">
@@ -113,7 +112,7 @@ export function ContributionRulesPage() {
                   tone={selected === option.id ? 'secondary' : 'surface'}
                   className="mx-auto mb-4"
                 />
-                <h3 className="font-bold text-on-surface mb-2">
+                <h3 className="font-bold text-primary mb-2">
                   <RuleTitle titleKey={option.titleKey} />
                 </h3>
                 <p className="text-xs text-on-surface-variant leading-relaxed mb-3">
@@ -141,7 +140,7 @@ export function ContributionRulesPage() {
               </p>
             </div>
             <div className="text-right">
-              <p className="text-2xl font-headline font-bold text-on-surface">$3,450.00</p>
+              <p className="text-2xl font-headline font-bold text-primary">$3,450.00</p>
               <p className="text-[10px] uppercase tracking-wider text-on-surface-variant">
                 <Trans>Total Household Spend</Trans>
               </p>
@@ -154,10 +153,10 @@ export function ContributionRulesPage() {
               <span className="text-on-surface-variant">
                 <Trans>Alex&apos;s Share</Trans>
               </span>
-              <span className="font-bold text-on-surface">$1,725.00</span>
+              <span className="font-bold text-primary">$1,725.00</span>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="font-bold text-on-surface">$1,725.00</span>
+              <span className="font-bold text-primary">$1,725.00</span>
               <span className="text-on-surface-variant">
                 <Trans>Lori&apos;s Share</Trans>
               </span>
@@ -169,14 +168,14 @@ export function ContributionRulesPage() {
         <div className="flex items-center justify-between">
           <Link
             to="/partner-setup/select-accounts"
-            className="inline-flex items-center space-x-1 text-sm text-on-surface-variant hover:text-on-surface transition-colors"
+            className="inline-flex items-center space-x-1 text-sm text-on-surface-variant hover:text-primary transition-colors"
           >
             <Icon name="chevron_left" className="text-base" />
             <span>
               <Trans>Back to Earnings</Trans>
             </span>
           </Link>
-          <Button type="button" variant="primary" size="lg" className="space-x-2">
+          <Button type="button" variant="secondary" size="lg" className="space-x-2">
             <span>
               <Trans>Finish Setup</Trans>
             </span>
@@ -187,7 +186,7 @@ export function ContributionRulesPage() {
         <p className="mt-8 text-xs text-on-surface-variant">
           <Trans>
             You can adjust these rules anytime in{' '}
-            <span className="font-bold text-on-surface">Shared Settings</span>.
+            <span className="font-bold text-primary">Shared Settings</span>.
           </Trans>
         </p>
       </div>

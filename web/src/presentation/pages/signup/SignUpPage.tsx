@@ -8,7 +8,6 @@ import { type SignupInput, SupportedLocale, signupInputSchema } from '@/domain/m
 import type { ISignUp } from '@/domain/usecases/auth/ISignUp';
 import { Button } from '@/presentation/components/Button';
 import { Icon } from '@/presentation/components/Icon';
-import { Logo } from '@/presentation/components/Logo';
 import { Select } from '@/presentation/components/Select';
 import { TextInput } from '@/presentation/components/TextInput';
 
@@ -48,11 +47,8 @@ export function SignUpPage({ signUp }: Props) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 md:p-12 lg:p-24 relative overflow-hidden bg-background">
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary-fixed-dim/20 rounded-full blur-[120px]" />
-      <div className="absolute bottom-[-5%] right-[-5%] w-[40%] h-[40%] bg-tertiary-fixed-dim/10 rounded-full blur-[100px]" />
-
-      <main className="relative w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-0 overflow-hidden shadow-[0_30px_60px_-15px_rgba(25,28,29,0.08)] rounded-[2.5rem]">
+    <div className="min-h-screen flex items-center justify-center p-4 md:p-8 bg-background">
+      <main className="w-full max-w-6xl grid grid-cols-1 lg:grid-cols-2 gap-0 bg-surface-container-lowest rounded-[2rem] shadow-sm overflow-hidden min-h-[870px]">
         <BrandingPanel />
         <SignUpForm
           showPassword={showPassword}
@@ -64,56 +60,75 @@ export function SignUpPage({ signUp }: Props) {
           isSubmitting={isSubmitting}
         />
       </main>
-
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center space-x-6 text-xs font-bold text-outline uppercase tracking-wider">
-        <Link to="/" className="hover:text-primary transition-colors">
-          <Trans>Home</Trans>
-        </Link>
-        <span className="w-1 h-1 bg-outline-variant rounded-full" />
-        <span className="hover:text-primary transition-colors cursor-pointer">
-          <Trans>Contact Support</Trans>
-        </span>
-      </div>
     </div>
   );
 }
 
 function BrandingPanel() {
   return (
-    <section className="hidden lg:flex lg:col-span-7 bg-gradient-to-br from-primary to-primary-container p-16 flex-col justify-between relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none opacity-30">
-        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-secondary/10 to-transparent" />
-      </div>
+    <section className="hidden lg:flex bg-primary p-12 lg:p-20 flex-col justify-between relative overflow-hidden">
+      <div className="absolute inset-0 opacity-10 pointer-events-none bg-gradient-to-br from-secondary/20 to-transparent" />
 
       <div className="relative z-10">
-        <Logo size="lg" tone="light" className="mb-12" />
-        <h1 className="font-headline text-5xl font-bold text-white leading-tight mb-6 max-w-md">
-          <Trans>
-            The Editorial Ledger for the <span className="text-secondary-fixed">Modern Couple</span>
-            .
-          </Trans>
-        </h1>
-        <p className="text-on-primary-container text-lg max-w-sm leading-relaxed">
-          <Trans>
-            Secure your shared future with a financial space designed for growth, transparency, and
-            high-end curation.
-          </Trans>
-        </p>
+        <div className="flex items-center gap-2 mb-16">
+          <div className="w-10 h-10 bg-secondary rounded-full flex items-center justify-center">
+            <Icon name="payments" className="text-white text-xl" />
+          </div>
+          <span className="text-2xl font-extrabold text-white tracking-tighter font-headline">
+            Nosko
+          </span>
+        </div>
+        <div className="max-w-md">
+          <p className="text-secondary text-[10px] font-semibold tracking-widest uppercase mb-4">
+            <Trans>The Editorial Ledger</Trans>
+          </p>
+          <h1 className="text-white text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight mb-8 font-headline">
+            <Trans>Financial clarity for the modern couple.</Trans>
+          </h1>
+          <p className="text-on-primary-container text-lg leading-relaxed mb-12">
+            <Trans>
+              Designed for partners who value transparency, aesthetics, and shared growth.
+              Experience the world&apos;s most sophisticated joint wealth management platform.
+            </Trans>
+          </p>
+          <div className="space-y-8">
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center shrink-0">
+                <Icon name="shield_with_heart" filled className="text-secondary" />
+              </div>
+              <div>
+                <h3 className="text-white font-bold text-lg leading-none mb-1">
+                  <Trans>Estate-Grade Security</Trans>
+                </h3>
+                <p className="text-on-primary-container text-sm">
+                  <Trans>Your data is protected by multi-layered encryption protocols.</Trans>
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 bg-white/5 rounded-2xl flex items-center justify-center shrink-0">
+                <Icon name="auto_graph" filled className="text-secondary" />
+              </div>
+              <div>
+                <h3 className="text-white font-bold text-lg leading-none mb-1">
+                  <Trans>Growth Syncing</Trans>
+                </h3>
+                <p className="text-on-primary-container text-sm">
+                  <Trans>Automated reconciliation for all your joint assets and accounts.</Trans>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <div className="relative z-10 bg-white/10 backdrop-blur-xl p-6 rounded-2xl">
-        <div className="flex -space-x-2 mb-3">
-          <div className="w-8 h-8 rounded-full ring-2 ring-primary bg-primary-fixed-dim" />
-          <div className="w-8 h-8 rounded-full ring-2 ring-primary bg-tertiary-fixed-dim" />
+      <div className="relative z-10 mt-12 flex items-center gap-6">
+        <div className="flex -space-x-3">
+          <div className="w-10 h-10 rounded-full border-2 border-primary bg-primary-fixed-dim" />
+          <div className="w-10 h-10 rounded-full border-2 border-primary bg-tertiary-fixed-dim" />
         </div>
-        <p className="text-white/90 text-sm italic leading-relaxed mb-2">
-          <Trans>
-            &ldquo;Nosko transformed how we see our wealth. It&apos;s not just a tracker; it&apos;s
-            our digital home for our dreams.&rdquo;
-          </Trans>
-        </p>
-        <p className="text-secondary-fixed text-xs font-bold">
-          <Trans>Alex & Jordan &middot; Premium Members</Trans>
+        <p className="text-on-primary-container text-xs font-medium">
+          <Trans>Joined by 12,000+ couples this month.</Trans>
         </p>
       </div>
     </section>
@@ -142,18 +157,23 @@ function SignUpForm({
   const { t } = useLingui();
 
   return (
-    <section className="col-span-1 lg:col-span-5 bg-surface-container-lowest p-8 md:p-16 flex flex-col justify-center">
-      <div className="lg:hidden mb-12">
-        <Logo />
+    <section className="bg-surface-container-low p-8 lg:p-20 flex flex-col justify-center">
+      <div className="lg:hidden flex items-center gap-2 mb-12">
+        <div className="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
+          <Icon name="payments" className="text-white text-sm" />
+        </div>
+        <span className="font-headline text-xl font-extrabold text-primary tracking-tight">
+          Nosko
+        </span>
       </div>
 
-      <div className="max-w-sm mx-auto w-full">
+      <div className="max-w-md mx-auto w-full">
         <header className="mb-10">
-          <h2 className="font-headline text-3xl font-bold text-on-surface tracking-tight mb-2">
-            <Trans>Create your account</Trans>
+          <h2 className="text-primary text-3xl font-extrabold tracking-tight mb-2 font-headline">
+            <Trans>Create your ledger</Trans>
           </h2>
-          <p className="text-on-surface-variant font-medium">
-            <Trans>Start your shared financial journey today.</Trans>
+          <p className="text-on-surface-variant text-sm">
+            <Trans>Start your 30-day premium trial today. No credit card required.</Trans>
           </p>
         </header>
 
@@ -170,7 +190,6 @@ function SignUpForm({
             label={t`Full Name`}
             placeholder={t`Your name`}
             autoComplete="name"
-            icon={<Icon name="person" className="text-lg" />}
             error={errors.name?.message}
             {...register('name')}
           />
@@ -179,9 +198,8 @@ function SignUpForm({
             id="email"
             type="email"
             label={t`Email Address`}
-            placeholder={t`hello@example.com`}
+            placeholder={t`name@partnership.com`}
             autoComplete="email"
-            icon={<Icon name="mail" className="text-lg" />}
             error={errors.email?.message}
             {...register('email')}
           />
@@ -192,11 +210,10 @@ function SignUpForm({
             label={t`Password`}
             placeholder="••••••••"
             autoComplete="new-password"
-            icon={<Icon name="lock" className="text-lg" />}
             error={errors.password?.message}
             trailing={
               <button
-                className="text-outline hover:text-on-surface-variant cursor-pointer"
+                className="text-outline hover:text-primary cursor-pointer"
                 type="button"
                 onClick={onTogglePassword}
               >
@@ -209,7 +226,6 @@ function SignUpForm({
           <Select
             id="language"
             label={t`Language`}
-            icon={<Icon name="language" className="text-lg" />}
             error={errors.language?.message}
             {...register('language')}
           >
@@ -217,47 +233,30 @@ function SignUpForm({
             <option value="pt-BR">Portugu&ecirc;s (BR)</option>
           </Select>
 
-          <div className="pt-2">
-            <Button
-              type="submit"
-              variant="primary"
-              size="lg"
-              fullWidth
-              className="space-x-2"
-              disabled={isSubmitting}
-            >
-              <span>
-                {isSubmitting ? <Trans>Creating...</Trans> : <Trans>Create Unity Ledger</Trans>}
-              </span>
-            </Button>
-          </div>
+          <Button type="submit" variant="primary" size="lg" fullWidth disabled={isSubmitting}>
+            {isSubmitting ? <Trans>Creating...</Trans> : <Trans>Initialize Account</Trans>}
+          </Button>
         </form>
 
-        <footer className="mt-12 text-center">
+        <div className="mt-12 text-center">
           <p className="text-on-surface-variant text-sm">
             <Trans>Already have an account?</Trans>{' '}
-            <Link
-              to="/login"
-              className="text-secondary font-bold hover:underline decoration-2 underline-offset-4 ml-1"
-            >
-              <Trans>Log In</Trans>
+            <Link to="/login" className="text-secondary font-bold hover:underline ml-1">
+              <Trans>Sign in</Trans>
             </Link>
           </p>
-        </footer>
+        </div>
 
-        <div className="mt-8 flex items-center justify-center space-x-4 text-xs text-outline">
-          <div className="flex items-center space-x-1">
-            <Icon name="lock" className="text-sm" />
-            <span>
-              <Trans>256-BIT SSL</Trans>
-            </span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <Icon name="verified_user" className="text-sm" />
-            <span>
-              <Trans>ENCRYPTED</Trans>
-            </span>
-          </div>
+        <div className="mt-16 flex justify-center lg:justify-start gap-6">
+          <span className="text-[10px] font-bold text-primary/40 uppercase tracking-widest hover:text-primary transition-colors cursor-pointer">
+            <Trans>Privacy</Trans>
+          </span>
+          <span className="text-[10px] font-bold text-primary/40 uppercase tracking-widest hover:text-primary transition-colors cursor-pointer">
+            <Trans>Terms</Trans>
+          </span>
+          <span className="text-[10px] font-bold text-primary/40 uppercase tracking-widest hover:text-primary transition-colors cursor-pointer">
+            <Trans>Compliance</Trans>
+          </span>
         </div>
       </div>
     </section>

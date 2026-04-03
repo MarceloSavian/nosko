@@ -21,9 +21,9 @@ const logoVariants = cva('flex items-center', {
 });
 
 const iconSizeMap = {
-  sm: 'w-7 h-7 rounded-md',
-  md: 'w-8 h-8 rounded-lg',
-  lg: 'w-10 h-10 rounded-xl',
+  sm: 'w-8 h-8',
+  md: 'w-10 h-10',
+  lg: 'w-10 h-10',
 } as const;
 
 const textSizeMap = {
@@ -42,13 +42,16 @@ export function Logo({ size = 'md', tone = 'dark', className }: Props) {
   return (
     <div className={cn(logoVariants({ size, tone }), className)}>
       <div
-        className={cn('bg-secondary flex items-center justify-center', iconSizeMap[resolvedSize])}
+        className={cn(
+          'bg-secondary rounded-full flex items-center justify-center',
+          iconSizeMap[resolvedSize],
+        )}
       >
-        <Icon name="account_balance" filled className="text-on-secondary text-sm" />
+        <Icon name="payments" filled className="text-white text-xl" />
       </div>
       <span
         className={cn(
-          'font-bold tracking-tighter font-headline',
+          'font-extrabold tracking-tighter font-headline',
           textSizeMap[resolvedSize],
           tone === 'light' ? 'text-white' : 'text-primary',
         )}

@@ -5,12 +5,12 @@ import { cn } from '@/presentation/lib/cn';
 const badgeVariants = cva('inline-flex items-center font-bold', {
   variants: {
     variant: {
-      success: 'bg-secondary/10 text-secondary',
+      success: 'bg-tertiary-container/30 text-tertiary',
       info: 'bg-primary/10 text-primary',
       neutral: 'bg-surface-container-high text-on-surface-variant',
       error: 'bg-error/10 text-error',
       outline: 'border border-secondary text-secondary',
-      purple: 'bg-tertiary/10 text-tertiary',
+      gold: 'bg-secondary-container text-on-secondary-container',
       light: 'bg-white/10 text-white',
     },
     size: {
