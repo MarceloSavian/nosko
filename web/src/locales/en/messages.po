@@ -14,12 +14,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/presentation/pages/signup/SignUpPage.tsx:110
-msgid "“Suomi transformed how we see our wealth. It's not just a tracker; it's our digital home for our dreams.”"
-msgstr "“Suomi transformed how we see our wealth. It's not just a tracker; it's our digital home for our dreams.”"
+msgid "“Nosko transformed how we see our wealth. It's not just a tracker; it's our digital home for our dreams.”"
+msgstr "“Nosko transformed how we see our wealth. It's not just a tracker; it's our digital home for our dreams.”"
 
 #: src/presentation/pages/landing/LandingPage.tsx:311
-msgid "© 2024 Suomi Financial Technologies. All rights reserved."
-msgstr "© 2024 Suomi Financial Technologies. All rights reserved."
+msgid "© 2024 Nosko Financial Technologies. All rights reserved."
+msgstr "© 2024 Nosko Financial Technologies. All rights reserved."
 
 #: src/presentation/pages/login/LoginPage.tsx:74
 msgid "+12.5% this month"
@@ -349,8 +349,8 @@ msgid "Estimated monthly commitment based on your last 30 days."
 msgstr "Estimated monthly commitment based on your last 30 days."
 
 #: src/presentation/pages/landing/LandingPage.tsx:119
-msgid "Every transaction tells a story. From morning coffees to mortgage payments, Suomi translates your data into a cohesive editorial ledger."
-msgstr "Every transaction tells a story. From morning coffees to mortgage payments, Suomi translates your data into a cohesive editorial ledger."
+msgid "Every transaction tells a story. From morning coffees to mortgage payments, Nosko translates your data into a cohesive editorial ledger."
+msgstr "Every transaction tells a story. From morning coffees to mortgage payments, Nosko translates your data into a cohesive editorial ledger."
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:188
 msgid "Explore Opportunities"
@@ -702,8 +702,8 @@ msgid "Sharing a ledger is the first step toward collaborative prosperity. Enter
 msgstr "Sharing a ledger is the first step toward collaborative prosperity. Enter their email to begin the syncing process."
 
 #: src/presentation/pages/login/LoginPage.tsx:154
-msgid "Sign In to Suomi"
-msgstr "Sign In to Suomi"
+msgid "Sign In to Nosko"
+msgstr "Sign In to Nosko"
 
 #: src/presentation/components/AppLayout.tsx:105
 #: src/presentation/pages/profile/UserProfilePage.tsx:129
@@ -755,16 +755,16 @@ msgid "Summer Nordic Getaway"
 msgstr "Summer Nordic Getaway"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:147
-msgid "Suomi Financial Architecture v4.2"
-msgstr "Suomi Financial Architecture v4.2"
+msgid "Nosko Financial Architecture v4.2"
+msgstr "Nosko Financial Architecture v4.2"
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:75
-msgid "Suomi's Portion (60%)"
-msgstr "Suomi's Portion (60%)"
+msgid "Nosko's Portion (60%)"
+msgstr "Nosko's Portion (60%)"
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:121
-msgid "Suomi's share"
-msgstr "Suomi's share"
+msgid "Nosko's share"
+msgstr "Nosko's share"
 
 #: src/presentation/components/AppLayout.tsx:95
 msgid "Support"

@@ -108,7 +108,7 @@ function BrandingPanel() {
         </div>
         <p className="text-white/90 text-sm italic leading-relaxed mb-2">
           <Trans>
-            &ldquo;Suomi transformed how we see our wealth. It&apos;s not just a tracker; it&apos;s
+            &ldquo;Nosko transformed how we see our wealth. It&apos;s not just a tracker; it&apos;s
             our digital home for our dreams.&rdquo;
           </Trans>
         </p>

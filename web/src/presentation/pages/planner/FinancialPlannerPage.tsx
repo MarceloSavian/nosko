@@ -72,7 +72,7 @@ function JointPlanningSection() {
             </p>
             <div className="flex items-center justify-between mb-2 text-[10px] uppercase tracking-wider text-on-surface-variant">
               <span>
-                <Trans>Suomi&apos;s Portion (60%)</Trans>
+                <Trans>Nosko&apos;s Portion (60%)</Trans>
               </span>
               <span className="font-bold">$1,300.00</span>
             </div>
@@ -118,7 +118,7 @@ function JointPlanningSection() {
           <div className="flex items-baseline space-x-1 mt-1">
             <span className="text-xl font-headline font-bold text-on-surface">$10.00</span>
             <span className="text-xs text-outline">
-              <Trans>Suomi&apos;s share</Trans>
+              <Trans>Nosko&apos;s share</Trans>
             </span>
           </div>
         </Card>

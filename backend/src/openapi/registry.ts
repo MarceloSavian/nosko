@@ -15,7 +15,7 @@ export function generateDocument() {
   return generator.generateDocument({
     openapi: '3.1.0',
     info: {
-      title: 'Suomi API',
+      title: 'Nosko API',
       version: '1.0.0',
       description: 'Financial management API for couples',
     },

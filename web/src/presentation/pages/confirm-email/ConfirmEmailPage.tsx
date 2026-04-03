@@ -6,7 +6,7 @@ export function ConfirmEmailPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 relative overflow-hidden">
       <header className="mb-12 text-center">
-        <h1 className="font-headline text-2xl font-bold text-on-surface tracking-tight">Suomi</h1>
+        <h1 className="font-headline text-2xl font-bold text-on-surface tracking-tight">Nosko</h1>
         <p className="text-xs text-outline uppercase tracking-widest mt-1">
           <Trans>Unity Ledger</Trans>
         </p>

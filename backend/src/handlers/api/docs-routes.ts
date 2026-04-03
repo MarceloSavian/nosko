@@ -23,7 +23,7 @@ function serveSwaggerUi(): () => Promise<APIGatewayProxyResult> {
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Suomi API Docs</title>
+  <title>Nosko API Docs</title>
   <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
 </head>
 <body>

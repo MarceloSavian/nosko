@@ -144,7 +144,7 @@ function ArchitectureFooter() {
             <Trans>Designed for the Modern Ledger</Trans>
           </p>
           <p className="font-headline text-lg font-bold text-on-surface">
-            <Trans>Suomi Financial Architecture v4.2</Trans>
+            <Trans>Nosko Financial Architecture v4.2</Trans>
           </p>
         </div>
       </div>

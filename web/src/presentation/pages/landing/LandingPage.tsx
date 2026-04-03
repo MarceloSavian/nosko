@@ -117,7 +117,7 @@ function FeaturesSection() {
               </h2>
               <p className="text-lg text-on-surface-variant max-w-md leading-relaxed mb-12">
                 <Trans>
-                  Every transaction tells a story. From morning coffees to mortgage payments, Suomi
+                  Every transaction tells a story. From morning coffees to mortgage payments, Nosko
                   translates your data into a cohesive editorial ledger.
                 </Trans>
               </p>
@@ -308,7 +308,7 @@ function Footer() {
         </div>
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-outline-variant/20">
           <p className="text-xs text-outline mb-4 md:mb-0">
-            <Trans>&copy; 2024 Suomi Financial Technologies. All rights reserved.</Trans>
+            <Trans>&copy; 2024 Nosko Financial Technologies. All rights reserved.</Trans>
           </p>
         </div>
       </div>

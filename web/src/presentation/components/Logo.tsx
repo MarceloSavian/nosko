@@ -53,7 +53,7 @@ export function Logo({ size = 'md', tone = 'dark', className }: Props) {
           tone === 'light' ? 'text-white' : 'text-primary',
         )}
       >
-        Suomi
+        Nosko
       </span>
     </div>
   );

@@ -1,6 +1,6 @@
-# Suomi
+# Nosko
 
-Suomi is a financial management app designed for couples.
+Nosko is a financial management app designed for couples.
 
 Users can connect multiple bank accounts from different countries and currencies, upload their bank data, and plan their finances together or individually by month. The app provides a consolidated view comparing planned vs actual spending, shared couple planning, and per-person budgeting.
 
@@ -15,7 +15,7 @@ Users can connect multiple bank accounts from different countries and currencies
 ## Repository Structure
 
 ```
-suomi/
+nosko/
 ├── backend/    # TypeScript REST API — Clean Architecture, Node.js, AWS Lambda
 ├── iac/        # Infrastructure as Code — cloud resources, deployment configuration
 ├── web/        # Web frontend
@@ -26,14 +26,14 @@ suomi/
 
 Every change must be done in a **git worktree** branched off `main`. Never commit directly to `main`.
 
-- Create the worktree at `../../git/worktrees/{name-of-the-change}/suomi` (relative to the repo root, i.e. `/home/marcelo/Documents/git/worktrees/{name-of-the-change}/suomi`)
+- Create the worktree at `../../git/worktrees/{name-of-the-change}/nosko` (relative to the repo root, i.e. `/home/marcelo/Documents/git/worktrees/{name-of-the-change}/nosko`)
 - Branch name should match the worktree folder name (e.g. `feat/add-login-page`)
 - After the branch is merged into `main`, delete the worktree and its branch
 
 ```bash
-git worktree add -b feat/my-change ../../git/worktrees/feat/my-change/suomi main
+git worktree add -b feat/my-change ../../git/worktrees/feat/my-change/nosko main
 # ... do work, commit, push, merge PR ...
-git worktree remove ../../git/worktrees/feat/my-change/suomi
+git worktree remove ../../git/worktrees/feat/my-change/nosko
 git branch -d feat/my-change
 ```
 

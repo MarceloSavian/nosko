@@ -1,4 +1,4 @@
-# Suomi Web — Coding Conventions
+# Nosko Web — Coding Conventions
 
 This document defines the architecture, patterns, and rules for all frontend code in this project.
 It is intended to be read by LLMs generating code so that all output is consistent with the established standards.

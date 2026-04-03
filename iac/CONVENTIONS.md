@@ -1,4 +1,4 @@
-# Suomi IaC — Conventions
+# Nosko IaC — Conventions
 
 This document defines the patterns and rules for all infrastructure code in this project.
 
@@ -53,8 +53,8 @@ Then change one `source` line in the environment root.
 | Capability modules | kebab-case | `api-routing`, `compute` |
 | Provider folders | `{cloud}-{service}` | `aws-lambda`, `aws-apigw-v2` |
 | Environment files | by concern | `compute.tf`, `api-routing.tf`, `secrets.tf` |
-| Resource names | `${var.project}-${var.environment}-{name}` | `suomi-prod-customer-v1` |
-| SSM parameters | `/${project}/${environment}/${key}` | `/suomi/prod/DATABASE_URL` |
+| Resource names | `${var.project}-${var.environment}-{name}` | `nosko-prod-customer-v1` |
+| SSM parameters | `/${project}/${environment}/${key}` | `/nosko/prod/DATABASE_URL` |
 
 ---
 
@@ -108,7 +108,7 @@ cd iac/environments/prod && terraform apply               # deploy
 
 ```bash
 cd web && npm run build
-aws s3 sync dist/ s3://suomi-prod-static-site --delete
+aws s3 sync dist/ s3://nosko-prod-static-site --delete
 aws cloudfront create-invalidation --distribution-id <ID> --paths "/*"
 ```
 
@@ -117,7 +117,7 @@ aws cloudfront create-invalidation --distribution-id <ID> --paths "/*"
 Database migrations run via a dedicated `migration-v1` Lambda, not on cold start. Trigger with:
 
 ```bash
-aws lambda invoke --function-name suomi-prod-migration-v1 --no-cli-pager /dev/stdout
+aws lambda invoke --function-name nosko-prod-migration-v1 --no-cli-pager /dev/stdout
 ```
 
 ---

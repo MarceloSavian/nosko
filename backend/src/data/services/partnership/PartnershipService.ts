@@ -56,7 +56,7 @@ export class PartnershipService implements IPartnershipService {
     await this.emailService.send(
       input.email,
       'You have been invited to join a shared ledger',
-      `<p><strong>${customer?.name ?? customer?.email}</strong> has invited you to share finances on Suomi.</p><p>Open the app to accept or decline the invitation.</p>`,
+      `<p><strong>${customer?.name ?? customer?.email}</strong> has invited you to share finances on Nosko.</p><p>Open the app to accept or decline the invitation.</p>`,
     );
 
     return invitation;

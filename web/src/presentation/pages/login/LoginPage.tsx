@@ -151,7 +151,7 @@ function LoginForm({ showPassword, onTogglePassword, onSubmit }: LoginFormProps)
           <div className="pt-2">
             <Button type="submit" variant="primary" size="lg" fullWidth className="space-x-2">
               <span>
-                <Trans>Sign In to Suomi</Trans>
+                <Trans>Sign In to Nosko</Trans>
               </span>
               <Icon name="arrow_forward" className="text-lg" />
             </Button>
