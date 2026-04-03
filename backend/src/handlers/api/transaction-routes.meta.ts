@@ -1,9 +1,17 @@
+import { z } from 'zod/v4';
 import {
   createTransactionInputSchema,
   transactionSchema,
   updateTransactionInputSchema,
 } from '../../domain/models/transaction/Transaction.js';
 import type { RouteMeta } from '../../openapi/route-descriptor.js';
+
+const paginatedTransactionsSchema = z.object({
+  data: transactionSchema.array(),
+  total: z.number(),
+  limit: z.number(),
+  offset: z.number(),
+});
 
 export const transactionRouteMetas: RouteMeta[] = [
   {
@@ -13,7 +21,7 @@ export const transactionRouteMetas: RouteMeta[] = [
     tags: ['Transactions'],
     auth: true,
     responses: {
-      200: { description: 'Paginated list of transactions' },
+      200: { description: 'Paginated list of transactions', schema: paginatedTransactionsSchema },
     },
   },
   {

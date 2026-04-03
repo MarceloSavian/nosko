@@ -18,6 +18,37 @@ const budgetPlanWithItemsSchema = z.object({
   items: budgetItemSchema.array(),
 });
 
+const budgetSummarySchema = z.object({
+  yearMonth: z.string(),
+  personalIncome: z.number(),
+  personalExpenses: z.number(),
+  jointExpenses: z.number(),
+  yourJointShare: z.number(),
+  freeAmount: z.number(),
+  personalItems: z
+    .object({
+      itemId: z.string(),
+      name: z.string(),
+      categoryId: z.string(),
+      direction: z.string(),
+      type: z.string(),
+      plannedAmount: z.number(),
+      actualAmount: z.number(),
+    })
+    .array(),
+  jointItems: z
+    .object({
+      itemId: z.string(),
+      name: z.string(),
+      categoryId: z.string(),
+      direction: z.string(),
+      type: z.string(),
+      plannedAmount: z.number(),
+      actualAmount: z.number(),
+    })
+    .array(),
+});
+
 export const budgetRouteMetas: RouteMeta[] = [
   {
     method: 'get',
@@ -137,7 +168,7 @@ export const budgetRouteMetas: RouteMeta[] = [
     tags: ['Budget Plans'],
     auth: true,
     responses: {
-      200: { description: 'Budget summary' },
+      200: { description: 'Budget summary', schema: budgetSummarySchema },
     },
   },
   {

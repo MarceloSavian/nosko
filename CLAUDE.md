@@ -29,6 +29,8 @@ suomi/
 ### `backend/`
 TypeScript backend running on AWS Lambda with PostgreSQL (Neon). Follows Clean Architecture with strict layer separation. See `backend/CONVENTIONS.md` for all architecture rules, coding standards, and patterns to follow when generating backend code.
 
+API documentation is auto-generated from Zod schemas via `@asteasolutions/zod-to-openapi`. Each route file has a co-located `*.meta.ts` file with OpenAPI metadata. Run `npm run generate:openapi` to regenerate `openapi.json`. Swagger UI is served at `/v1/docs` by the `docs-v1` Lambda.
+
 ### `iac/`
 Terraform infrastructure using cloud-agnostic module patterns. Modules are named by capability (`compute`, `api-routing`, `secrets`), not by AWS service names, with provider-specific implementations nested inside (e.g., `modules/compute/aws-lambda/`). Environment roots in `environments/{env}/` wire modules together. See `iac/CONVENTIONS.md` for module design rules and patterns. Shared infra (domain, ACM cert) lives in a separate [terraform repo](https://github.com/MarceloSavian/terraform).
 

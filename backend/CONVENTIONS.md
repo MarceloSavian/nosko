@@ -55,6 +55,7 @@ infra/
 
 handlers/
   api/user-routes.ts                        # Route factories + makeUserHandler + routeHandler
+  api/user-routes.meta.ts                   # OpenAPI metadata for the feature's routes
   api/user-routes.test.ts                   # Tests for all route factories and handler
   api/user-v1.ts                            # Lambda entry point — imports factory + makeHandler
   domain/proxy.ts                           # ProxyRoute type definition
@@ -199,6 +200,36 @@ import { customerService } from '../factories/customer.js';
 import { makeCustomerHandler } from './customer-routes.js';
 
 export const handler = makeCustomerHandler(customerService);
+```
+
+### `handlers/api/{feature}-routes.meta.ts`
+OpenAPI metadata for each feature's routes. Co-located with the route file, suffix `.meta.ts`. Exports a `RouteMeta[]` array describing every endpoint's method, path, auth, request/response schemas.
+
+- Import Zod schemas from `domain/models/` — never duplicate schema definitions
+- For composite response shapes not defined in the domain (e.g. `{ plan, items }`), define a local Zod schema in the meta file
+- Set `auth: false` for unauthenticated endpoints, `auth: true` for authenticated ones
+- Every success response (200, 201) must include a `schema` — only omit for 204 (no content) and error responses
+- After adding or changing meta files, regenerate the spec: `npm run generate:openapi`
+
+```typescript
+// handlers/api/customer-routes.meta.ts
+import { customerSchema, signupInputSchema } from '../../domain/models/customer/Customer.js';
+import type { RouteMeta } from '../../openapi/route-descriptor.js';
+
+export const customerRouteMetas: RouteMeta[] = [
+  {
+    method: 'post',
+    path: '/v1/signup',
+    summary: 'Create a new account',
+    tags: ['Auth'],
+    auth: false,
+    request: { body: signupInputSchema },
+    responses: {
+      201: { description: 'Account created', schema: customerSchema },
+      400: { description: 'Validation error' },
+    },
+  },
+];
 ```
 
 ---
@@ -375,6 +406,7 @@ Use `async/await` consistently — no raw `.then()` chains.
 | Purpose | Package |
 |---|---|
 | Schema validation | `zod` |
+| OpenAPI generation | `@asteasolutions/zod-to-openapi` |
 | Testing | `node:test` (built-in) |
 | HTTP types | `@types/aws-lambda` |
 | Linting & formatting | `@biomejs/biome` |
@@ -441,3 +473,4 @@ When generating code for this project, always:
 10. Write tests with `node:test`, co-located, using the `makeSut()` pattern
 11. Never write types manually when a Zod schema already defines the shape
 12. Any new third-party package must be wrapped in `infra/` with a corresponding interface in `data/domain/` — never import packages directly in `data/` or `domain/`
+13. Every route file must have a co-located `*.meta.ts` file with OpenAPI metadata — register it in `openapi/generate.ts` and regenerate the spec

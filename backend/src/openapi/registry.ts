@@ -19,7 +19,7 @@ export function generateDocument() {
       version: '1.0.0',
       description: 'Financial management API for couples',
     },
-    servers: [{ url: '/v1', description: 'API v1' }],
+    servers: [{ url: '/', description: 'API' }],
     security: [{ bearerAuth: [] }],
   });
 }

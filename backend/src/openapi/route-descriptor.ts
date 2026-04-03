@@ -44,9 +44,7 @@ function toRouteConfig(meta: RouteMeta): RouteConfig {
     summary: meta.summary,
     tags: meta.tags,
     responses,
-    ...(meta.auth && {
-      security: [{ bearerAuth: [] }],
-    }),
+    security: meta.auth ? [{ bearerAuth: [] }] : [],
   };
 
   if (meta.request?.body) {

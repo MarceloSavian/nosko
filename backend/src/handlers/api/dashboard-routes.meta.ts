@@ -1,4 +1,25 @@
+import { z } from 'zod/v4';
 import type { RouteMeta } from '../../openapi/route-descriptor.js';
+
+const dashboardDataSchema = z.object({
+  yearMonth: z.string(),
+  totalSpending: z.number(),
+  budgetSummary: z
+    .object({
+      categoryName: z.string(),
+      planned: z.number(),
+      actual: z.number(),
+    })
+    .array(),
+  recentTransactions: z
+    .object({
+      id: z.string(),
+      description: z.string().nullable(),
+      amount: z.number(),
+      transactionDate: z.string(),
+    })
+    .array(),
+});
 
 export const dashboardRouteMetas: RouteMeta[] = [
   {
@@ -8,7 +29,7 @@ export const dashboardRouteMetas: RouteMeta[] = [
     tags: ['Dashboard'],
     auth: true,
     responses: {
-      200: { description: 'Dashboard data' },
+      200: { description: 'Dashboard data', schema: dashboardDataSchema },
     },
   },
 ];

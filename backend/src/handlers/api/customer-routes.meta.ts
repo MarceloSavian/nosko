@@ -1,3 +1,4 @@
+import { z } from 'zod/v4';
 import {
   customerSchema,
   loginInputSchema,
@@ -8,6 +9,10 @@ import {
   verifyEmailInputSchema,
 } from '../../domain/models/customer/Customer.js';
 import type { RouteMeta } from '../../openapi/route-descriptor.js';
+
+const loginResultSchema = z.object({
+  accessToken: z.string(),
+});
 
 export const customerRouteMetas: RouteMeta[] = [
   {
@@ -30,7 +35,7 @@ export const customerRouteMetas: RouteMeta[] = [
     auth: false,
     request: { body: loginInputSchema },
     responses: {
-      200: { description: 'Login successful' },
+      200: { description: 'Login successful', schema: loginResultSchema },
       401: { description: 'Invalid credentials' },
     },
   },

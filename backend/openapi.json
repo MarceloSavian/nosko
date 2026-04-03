@@ -7,8 +7,8 @@
   },
   "servers": [
     {
-      "url": "/v1",
-      "description": "API v1"
+      "url": "/",
+      "description": "API"
     }
   ],
   "security": [
@@ -34,6 +34,7 @@
         "tags": [
           "Auth"
         ],
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -133,6 +134,7 @@
         "tags": [
           "Auth"
         ],
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -158,7 +160,22 @@
         },
         "responses": {
           "200": {
-            "description": "Login successful"
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "accessToken"
+                  ]
+                }
+              }
+            }
           },
           "401": {
             "description": "Invalid credentials"
@@ -172,6 +189,7 @@
         "tags": [
           "Auth"
         ],
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -260,6 +278,7 @@
         "tags": [
           "Auth"
         ],
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -291,6 +310,7 @@
         "tags": [
           "Auth"
         ],
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -322,6 +342,7 @@
         "tags": [
           "Auth"
         ],
+        "security": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1867,7 +1888,82 @@
         ],
         "responses": {
           "200": {
-            "description": "Paginated list of transactions"
+            "description": "Paginated list of transactions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "bankAccountId": {
+                            "type": "string"
+                          },
+                          "categoryId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "budgetItemId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "amount": {
+                            "type": "integer"
+                          },
+                          "description": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "transactionDate": {
+                            "type": "string"
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "bankAccountId",
+                          "categoryId",
+                          "budgetItemId",
+                          "amount",
+                          "description",
+                          "transactionDate",
+                          "createdAt"
+                        ]
+                      }
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "limit": {
+                      "type": "number"
+                    },
+                    "offset": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "data",
+                    "total",
+                    "limit",
+                    "offset"
+                  ]
+                }
+              }
+            }
           },
           "401": {
             "description": "Missing or invalid authentication token"
@@ -3138,7 +3234,120 @@
         ],
         "responses": {
           "200": {
-            "description": "Budget summary"
+            "description": "Budget summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "yearMonth": {
+                      "type": "string"
+                    },
+                    "personalIncome": {
+                      "type": "number"
+                    },
+                    "personalExpenses": {
+                      "type": "number"
+                    },
+                    "jointExpenses": {
+                      "type": "number"
+                    },
+                    "yourJointShare": {
+                      "type": "number"
+                    },
+                    "freeAmount": {
+                      "type": "number"
+                    },
+                    "personalItems": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "itemId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "categoryId": {
+                            "type": "string"
+                          },
+                          "direction": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "plannedAmount": {
+                            "type": "number"
+                          },
+                          "actualAmount": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "itemId",
+                          "name",
+                          "categoryId",
+                          "direction",
+                          "type",
+                          "plannedAmount",
+                          "actualAmount"
+                        ]
+                      }
+                    },
+                    "jointItems": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "itemId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "categoryId": {
+                            "type": "string"
+                          },
+                          "direction": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "plannedAmount": {
+                            "type": "number"
+                          },
+                          "actualAmount": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "itemId",
+                          "name",
+                          "categoryId",
+                          "direction",
+                          "type",
+                          "plannedAmount",
+                          "actualAmount"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "yearMonth",
+                    "personalIncome",
+                    "personalExpenses",
+                    "jointExpenses",
+                    "yourJointShare",
+                    "freeAmount",
+                    "personalItems",
+                    "jointItems"
+                  ]
+                }
+              }
+            }
           },
           "401": {
             "description": "Missing or invalid authentication token"
@@ -3481,7 +3690,79 @@
         ],
         "responses": {
           "200": {
-            "description": "Dashboard data"
+            "description": "Dashboard data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "yearMonth": {
+                      "type": "string"
+                    },
+                    "totalSpending": {
+                      "type": "number"
+                    },
+                    "budgetSummary": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "categoryName": {
+                            "type": "string"
+                          },
+                          "planned": {
+                            "type": "number"
+                          },
+                          "actual": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "categoryName",
+                          "planned",
+                          "actual"
+                        ]
+                      }
+                    },
+                    "recentTransactions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "amount": {
+                            "type": "number"
+                          },
+                          "transactionDate": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "description",
+                          "amount",
+                          "transactionDate"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "yearMonth",
+                    "totalSpending",
+                    "budgetSummary",
+                    "recentTransactions"
+                  ]
+                }
+              }
+            }
           },
           "401": {
             "description": "Missing or invalid authentication token"

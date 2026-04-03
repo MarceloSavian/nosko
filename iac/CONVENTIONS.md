@@ -97,8 +97,8 @@ data "aws_route53_zone" "main" { zone_id = "Z06808202W4XW561C8KYB" }
 ### Deploy Steps
 
 ```bash
-cd backend && npm run build                        # bundle handlers
-cd iac/environments/prod && terraform apply        # deploy
+cd backend && npm run generate:openapi && npm run build   # generate spec + bundle handlers
+cd iac/environments/prod && terraform apply               # deploy
 ```
 
 ### Migrations
