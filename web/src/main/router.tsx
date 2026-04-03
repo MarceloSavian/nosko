@@ -5,6 +5,9 @@ import { ConfirmEmailPage } from '@/presentation/pages/confirm-email/ConfirmEmai
 import { DashboardPage } from '@/presentation/pages/dashboard/DashboardPage';
 import { LandingPage } from '@/presentation/pages/landing/LandingPage';
 import { LoginPage } from '@/presentation/pages/login/LoginPage';
+import { ContributionRulesPage } from '@/presentation/pages/partner-setup/ContributionRulesPage';
+import { InvitePartnerPage } from '@/presentation/pages/partner-setup/InvitePartnerPage';
+import { SelectSharedAccountsPage } from '@/presentation/pages/partner-setup/SelectSharedAccountsPage';
 import { FinancialPlannerPage } from '@/presentation/pages/planner/FinancialPlannerPage';
 import { UserProfilePage } from '@/presentation/pages/profile/UserProfilePage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
@@ -67,12 +70,38 @@ const profileRoute = createRoute({
   component: UserProfilePage,
 });
 
+const partnerSetupInviteRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/partner-setup/invite',
+  component: InvitePartnerPage,
+});
+
+const partnerSetupAccountsRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/partner-setup/select-accounts',
+  component: SelectSharedAccountsPage,
+});
+
+const partnerSetupRulesRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/partner-setup/contribution-rules',
+  component: ContributionRulesPage,
+});
+
 const routeTree = rootRoute.addChildren([
   landingRoute,
   loginRoute,
   signupRoute,
   confirmEmailRoute,
-  appLayoutRoute.addChildren([dashboardRoute, accountsRoute, plannerRoute, profileRoute]),
+  appLayoutRoute.addChildren([
+    dashboardRoute,
+    accountsRoute,
+    plannerRoute,
+    profileRoute,
+    partnerSetupInviteRoute,
+    partnerSetupAccountsRoute,
+    partnerSetupRulesRoute,
+  ]),
 ]);
 
 export const router = createRouter({ routeTree });
