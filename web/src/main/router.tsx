@@ -1,4 +1,5 @@
 import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/react-router';
+import { AppLayout } from '@/presentation/components/AppLayout';
 import { ConfirmEmailPage } from '@/presentation/pages/confirm-email/ConfirmEmailPage';
 import { LandingPage } from '@/presentation/pages/landing/LandingPage';
 import { LoginPage } from '@/presentation/pages/login/LoginPage';
@@ -32,7 +33,43 @@ const confirmEmailRoute = createRoute({
   component: ConfirmEmailPage,
 });
 
-const routeTree = rootRoute.addChildren([landingRoute, loginRoute, signupRoute, confirmEmailRoute]);
+const appLayoutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  id: 'app',
+  component: AppLayout,
+});
+
+const dashboardRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/dashboard',
+  component: () => <div>Dashboard</div>,
+});
+
+const accountsRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/accounts',
+  component: () => <div>Accounts</div>,
+});
+
+const plannerRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/planner',
+  component: () => <div>Planner</div>,
+});
+
+const profileRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/profile',
+  component: () => <div>Profile</div>,
+});
+
+const routeTree = rootRoute.addChildren([
+  landingRoute,
+  loginRoute,
+  signupRoute,
+  confirmEmailRoute,
+  appLayoutRoute.addChildren([dashboardRoute, accountsRoute, plannerRoute, profileRoute]),
+]);
 
 export const router = createRouter({ routeTree });
 
