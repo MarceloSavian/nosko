@@ -5,6 +5,7 @@ import { ConfirmEmailPage } from '@/presentation/pages/confirm-email/ConfirmEmai
 import { DashboardPage } from '@/presentation/pages/dashboard/DashboardPage';
 import { LandingPage } from '@/presentation/pages/landing/LandingPage';
 import { LoginPage } from '@/presentation/pages/login/LoginPage';
+import { FinancialPlannerPage } from '@/presentation/pages/planner/FinancialPlannerPage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
 
 const rootRoute = createRootRoute({
@@ -56,7 +57,7 @@ const accountsRoute = createRoute({
 const plannerRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/planner',
-  component: () => <div>Planner</div>,
+  component: FinancialPlannerPage,
 });
 
 const profileRoute = createRoute({
