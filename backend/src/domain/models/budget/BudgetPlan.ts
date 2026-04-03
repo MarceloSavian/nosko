@@ -1,6 +1,5 @@
 import { z } from 'zod/v4';
 
-// Budget Plan
 export const budgetPlanSchema = z.object({
   id: z.string(),
   customerId: z.string().nullable(),
@@ -21,7 +20,6 @@ export const createBudgetPlanInputSchema = z.object({
 
 export type CreateBudgetPlanInput = z.infer<typeof createBudgetPlanInputSchema>;
 
-// Budget Item Direction
 export const BudgetItemDirection = {
   INCOME: 'INCOME',
   EXPENSE: 'EXPENSE',
@@ -34,7 +32,6 @@ const budgetItemDirectionValues = Object.values(BudgetItemDirection) as [
   ...BudgetItemDirection[],
 ];
 
-// Budget Item
 export const BudgetItemType = {
   FIXED: 'FIXED',
   ESTIMATED: 'ESTIMATED',

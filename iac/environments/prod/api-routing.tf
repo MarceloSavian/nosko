@@ -63,6 +63,10 @@ locals {
 
     # dashboard-v1
     "GET /v1/dashboard" = "dashboard-v1"
+
+    # docs-v1
+    "GET /v1/docs"              = "docs-v1"
+    "GET /v1/docs/openapi.json" = "docs-v1"
   }
 
 }

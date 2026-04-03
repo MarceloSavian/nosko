@@ -86,7 +86,6 @@ describe('BudgetPlanService', () => {
     it('should create plan with no carry-forward when no previous plan exists', async () => {
       const { sut } = makeSut();
       mock.method(mockBudgetPlanRepository, 'insertPersonal', async () => plan);
-      // No previous plan
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => null);
 
       const result = await sut.createPersonalPlan('customer-id', {
@@ -128,7 +127,6 @@ describe('BudgetPlanService', () => {
       };
 
       mock.method(mockBudgetPlanRepository, 'insertPersonal', async () => newPlan);
-      // First call: duplicate check (current month) returns null, second call: carry-forward (prev month) returns prev plan
       let findCallCount = 0;
       mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => {
         findCallCount++;
@@ -322,7 +320,6 @@ describe('BudgetPlanService', () => {
       });
 
       assert.equal(result.items.length, 1);
-      // Verify it looked up December 2024 (second call, after duplicate check)
       const findArgs = mockBudgetPlanRepository.findByCustomerAndMonth.mock.calls[1]?.arguments;
       assert.equal(findArgs?.[1], '2024-12');
     });

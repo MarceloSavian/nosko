@@ -1,6 +1,5 @@
 import { z } from 'zod/v4';
 
-// Partner Invitations
 export const InvitationStatus = {
   PENDING: 'PENDING',
   ACCEPTED: 'ACCEPTED',
@@ -32,7 +31,6 @@ export const invitePartnerInputSchema = z.object({
 
 export type InvitePartnerInput = z.infer<typeof invitePartnerInputSchema>;
 
-// Partnerships
 export const partnershipSchema = z.object({
   id: z.string(),
   invitationId: z.string(),
@@ -43,7 +41,6 @@ export const partnershipSchema = z.object({
 
 export type PartnershipSchema = z.infer<typeof partnershipSchema>;
 
-// Contribution Rules
 export const ContributionType = {
   EQUAL: 'EQUAL',
   SALARY_PROPORTIONAL: 'SALARY_PROPORTIONAL',
@@ -77,7 +74,6 @@ export const setContributionRuleInputSchema = z.object({
 
 export type SetContributionRuleInput = z.infer<typeof setContributionRuleInputSchema>;
 
-// Shared Accounts
 export const setSharedAccountsInputSchema = z.object({
   bankAccountIds: z.array(z.uuid()),
 });

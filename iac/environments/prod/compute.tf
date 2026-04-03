@@ -38,6 +38,7 @@ locals {
     transaction-v1 = { env_vars = local.common_env, secret_arns = local.common_secret_arns, concurrency = -1 }
     budget-v1      = { env_vars = local.common_env, secret_arns = local.common_secret_arns, concurrency = -1 }
     dashboard-v1   = { env_vars = local.common_env, secret_arns = local.common_secret_arns, concurrency = -1 }
+    docs-v1        = { env_vars = {}, secret_arns = [], concurrency = -1 }
     migration-v1   = { env_vars = local.db_env, secret_arns = local.db_secret_arns, concurrency = -1 }
   }
 }

@@ -11,6 +11,7 @@ const handlers = [
   'transaction-v1',
   'budget-v1',
   'dashboard-v1',
+  'docs-v1',
   'migration-v1',
 ];
 
@@ -53,7 +54,10 @@ for (const handler of handlers) {
     },
   });
 
-  // Copy migration SQL files into the migration handler bundle
+  if (handler === 'docs-v1') {
+    cpSync('openapi.json', join(bundleDir, 'openapi.json'));
+  }
+
   if (handler === 'migration-v1') {
     const migrationsOut = join(bundleDir, 'migrations');
     mkdirSync(migrationsOut, { recursive: true });

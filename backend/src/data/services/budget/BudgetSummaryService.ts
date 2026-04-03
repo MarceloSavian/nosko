@@ -34,7 +34,6 @@ export class BudgetSummaryService implements IBudgetSummaryService {
         : null;
     const transactions = allTransactions ? allTransactions.data : [];
 
-    // Personal plan
     const personalPlan = await this.planRepository.findByCustomerAndMonth(customerId, yearMonth);
     const personalItems = personalPlan
       ? await this.itemRepository.findByPlanId(personalPlan.id)
@@ -52,7 +51,6 @@ export class BudgetSummaryService implements IBudgetSummaryService {
       .filter((i) => i.direction === BudgetItemDirection.EXPENSE)
       .reduce((sum, i) => sum + i.plannedAmount, 0);
 
-    // Joint plan
     const partnership = await this.partnershipRepository.findByCustomerId(customerId);
     let jointItems: BudgetSummaryItem[] = [];
     let jointExpenses = 0;

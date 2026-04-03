@@ -167,10 +167,8 @@ export class PartnershipService implements IPartnershipService {
       if (!isOwner) throw new SharedAccountNotOwnedError();
     }
 
-    // Remove existing shared ownerships for this partnership+partner
     await this.ownershipRepository.deleteByPartnershipAndCustomer(partnership.id, partnerId);
 
-    // Create new ownerships for partner
     for (const accountId of input.bankAccountIds) {
       await this.ownershipRepository.insert(accountId, partnerId, partnership.id);
     }
