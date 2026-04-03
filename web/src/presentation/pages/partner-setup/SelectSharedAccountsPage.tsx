@@ -115,12 +115,13 @@ export function SelectSharedAccountsPage() {
 }
 
 function ProgressDots({ current, total }: { current: number; total: number }) {
+  const dots = Array.from({ length: total }, (_, i) => `step-${i + 1}`);
+
   return (
     <div className="flex items-center space-x-1.5">
-      {Array.from({ length: total }, (_, i) => (
-        // biome-ignore lint/suspicious/noArrayIndexKey: static decorative dots
+      {dots.map((id, i) => (
         <span
-          key={i}
+          key={id}
           className={`rounded-full transition-all ${
             i + 1 === current ? 'w-6 h-2 bg-secondary' : 'w-2 h-2 bg-outline-variant'
           }`}
