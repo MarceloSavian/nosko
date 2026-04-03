@@ -6,6 +6,7 @@ import { DashboardPage } from '@/presentation/pages/dashboard/DashboardPage';
 import { LandingPage } from '@/presentation/pages/landing/LandingPage';
 import { LoginPage } from '@/presentation/pages/login/LoginPage';
 import { FinancialPlannerPage } from '@/presentation/pages/planner/FinancialPlannerPage';
+import { UserProfilePage } from '@/presentation/pages/profile/UserProfilePage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
 
 const rootRoute = createRootRoute({
@@ -63,7 +64,7 @@ const plannerRoute = createRoute({
 const profileRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/profile',
-  component: () => <div>Profile</div>,
+  component: UserProfilePage,
 });
 
 const routeTree = rootRoute.addChildren([
