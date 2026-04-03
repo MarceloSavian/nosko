@@ -222,6 +222,56 @@ describe('BudgetSummaryService', () => {
       assert.equal(result.yourJointShare, 120000);
     });
 
+    it('should calculate joint share with salary proportional split', async () => {
+      const { sut } = makeSut();
+      const partnership = {
+        id: 'partnership-id',
+        invitationId: 'inv-id',
+        customerAId: 'customer-id',
+        customerBId: 'partner-id',
+        createdAt: '',
+      };
+      const jointPlan = {
+        ...personalPlan,
+        id: 'joint-plan',
+        customerId: null,
+        partnershipId: 'partnership-id',
+        isJoint: true,
+      };
+      const rentItem = {
+        ...gymItem,
+        id: 'rent-item',
+        planId: 'joint-plan',
+        name: 'Rent',
+        plannedAmount: 200000,
+      };
+
+      mock.method(mockOwnershipRepository, 'findAccountIdsByCustomerId', async () => ['acc-id']);
+      mock.method(mockTransactionRepository, 'findByFilters', async () => ({
+        data: [],
+        total: 0,
+        limit: 1000,
+        offset: 0,
+      }));
+      mock.method(mockBudgetPlanRepository, 'findByCustomerAndMonth', async () => null);
+      mock.method(mockBudgetItemRepository, 'findByPlanId', async () => [rentItem]);
+      mock.method(mockPartnershipRepository, 'findByCustomerId', async () => partnership);
+      mock.method(mockBudgetPlanRepository, 'findByPartnershipAndMonth', async () => jointPlan);
+      mock.method(mockContributionRuleRepository, 'findByPartnershipId', async () => ({
+        id: 'rule-id',
+        partnershipId: 'partnership-id',
+        type: ContributionType.SALARY_PROPORTIONAL,
+        customerAPercentage: null,
+        customerBPercentage: null,
+        createdAt: '',
+        updatedAt: '',
+      }));
+
+      const result = await sut.getSummary('customer-id', '2024-09');
+
+      assert.equal(result.yourJointShare, 100000);
+    });
+
     it('should calculate actual amounts from linked transactions', async () => {
       const { sut } = makeSut();
       const transactions = [

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "node --import tsx --test 'src/**/*.test.ts'",
-    "test:coverage": "c8 --all --src src --exclude 'src/**/*.test.ts' --exclude 'src/test/**' --exclude 'src/data/domain/**' --exclude 'src/domain/usecases/**' --exclude 'src/domain/models/**' --exclude 'src/handlers/domain/**' --exclude 'src/handlers/factories/**' --exclude 'src/handlers/api/*-v*.ts' node --import tsx --test 'src/**/*.test.ts'",
+    "test:coverage": "c8 --all --src src --exclude 'src/**/*.test.ts' --exclude 'src/test/**' --exclude 'src/data/domain/**' --exclude 'src/domain/usecases/**' --exclude 'src/domain/models/**' --exclude 'src/handlers/domain/**' --exclude 'src/handlers/factories/**' --exclude 'src/handlers/api/*-v*.ts' --exclude 'src/openapi/**' --exclude 'src/**/*.meta.ts' node --import tsx --test 'src/**/*.test.ts'",
     "test:watch": "node --import tsx --test --watch 'src/**/*.test.ts'",
     "check": "biome check .",
     "check:fix": "biome check --write .",
@@ -14,23 +14,23 @@
     "generate:openapi": "node --import tsx src/openapi/generate.ts"
   },
   "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@types/aws-lambda": "^8.10.161",
-    "@types/bcryptjs": "^2.4.6",
-    "@types/pg": "^8.20.0",
-    "archiver": "^7.0.1",
-    "c8": "^11.0.0",
-    "esbuild": "^0.25.0",
-    "pg-mem": "^3.0.14",
-    "tsx": "^4.21.0",
-    "typescript": "^5.8.3"
+    "@biomejs/biome": "1.9.4",
+    "@types/aws-lambda": "8.10.161",
+    "@types/bcryptjs": "2.4.6",
+    "@types/pg": "8.20.0",
+    "archiver": "7.0.1",
+    "c8": "11.0.0",
+    "esbuild": "0.25.0",
+    "pg-mem": "3.0.14",
+    "tsx": "4.21.0",
+    "typescript": "5.8.3"
   },
   "dependencies": {
-    "@asteasolutions/zod-to-openapi": "^8.5.0",
-    "bcryptjs": "^3.0.3",
-    "jose": "^6.2.2",
-    "pg": "^8.20.0",
-    "resend": "^6.10.0",
-    "zod": "^4.3.6"
+    "@asteasolutions/zod-to-openapi": "8.5.0",
+    "bcryptjs": "3.0.3",
+    "jose": "6.2.2",
+    "pg": "8.20.0",
+    "resend": "6.10.0",
+    "zod": "4.3.6"
   }
 }

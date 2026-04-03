@@ -303,6 +303,28 @@ describe('TransactionRepository', () => {
       assert.equal(result.categoryId, CATEGORY_ID);
     });
 
+    it('should update the budgetItemId', async () => {
+      const tx = await sut.insert({
+        bankAccountId: BANK_ACCOUNT_ID,
+        amount: -50,
+        transactionDate: '2026-04-01',
+      });
+      await pool.query(
+        "INSERT INTO budget_plans (id, customer_id, year_month, currency_code, is_joint) VALUES ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', $1, '2026-04', 'EUR', false)",
+        [CUSTOMER_ID],
+      );
+      await pool.query(
+        "INSERT INTO budget_items (id, plan_id, category_id, name, planned_amount, direction, type, recurrence) VALUES ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', $1, 'Food', 5000, 'EXPENSE', 'FIXED', 'PERMANENT')",
+        [CATEGORY_ID],
+      );
+
+      const result = await sut.update(tx.id, {
+        budgetItemId: 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb',
+      });
+
+      assert.equal(result.budgetItemId, 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb');
+    });
+
     it('should update the transactionDate', async () => {
       const tx = await sut.insert({
         bankAccountId: BANK_ACCOUNT_ID,

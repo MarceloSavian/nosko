@@ -135,6 +135,21 @@ describe('PartnershipService', () => {
     });
   });
 
+  describe('listInvitations()', () => {
+    it('should return invitations for the customer', async () => {
+      const { sut } = makeSut();
+      mock.method(mockPartnerInvitationRepository, 'findByCustomerId', async () => [invitation]);
+
+      const result = await sut.listInvitations('customer-id');
+
+      assert.deepEqual(result, [invitation]);
+      assert.equal(
+        mockPartnerInvitationRepository.findByCustomerId.mock.calls[0]?.arguments[0],
+        'customer-id',
+      );
+    });
+  });
+
   describe('acceptInvitation()', () => {
     it('should accept invitation and create partnership', async () => {
       const { sut } = makeSut();
