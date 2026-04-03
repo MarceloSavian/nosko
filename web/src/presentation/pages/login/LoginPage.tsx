@@ -161,9 +161,12 @@ function LoginForm({ showPassword, onTogglePassword, onSubmit }: LoginFormProps)
         <footer className="mt-12 text-center">
           <p className="text-on-surface-variant text-sm">
             <Trans>Don&apos;t have an account?</Trans>{' '}
-            <span className="text-secondary font-bold hover:underline decoration-2 underline-offset-4 ml-1 cursor-pointer">
+            <Link
+              to="/signup"
+              className="text-secondary font-bold hover:underline decoration-2 underline-offset-4 ml-1"
+            >
               <Trans>Start your journey</Trans>
-            </span>
+            </Link>
           </p>
         </footer>
       </div>

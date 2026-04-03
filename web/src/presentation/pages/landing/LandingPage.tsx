@@ -25,9 +25,14 @@ function Navbar() {
             </a>
           </div>
         </div>
-        <LinkButton to="/login" variant="link" size="sm">
-          <Trans>Log In</Trans>
-        </LinkButton>
+        <div className="flex items-center space-x-4">
+          <LinkButton to="/signup" variant="primary" size="sm">
+            <Trans>Sign Up</Trans>
+          </LinkButton>
+          <LinkButton to="/login" variant="link" size="sm">
+            <Trans>Log In</Trans>
+          </LinkButton>
+        </div>
       </div>
       <div className="bg-gradient-to-r from-transparent via-outline-variant/30 to-transparent h-px" />
     </nav>
@@ -60,7 +65,7 @@ function HeroSection() {
               financial narrative designed to help couples grow, dream, and build together.
             </Trans>
           </p>
-          <LinkButton to="/login" variant="primary" size="lg" className="shadow-xl">
+          <LinkButton to="/signup" variant="primary" size="lg" className="shadow-xl">
             <Trans>Start Your Journey</Trans>
           </LinkButton>
         </div>
@@ -242,7 +247,7 @@ function CtaSection() {
             harmonious way to manage their lives.
           </Trans>
         </p>
-        <LinkButton to="/login" variant="dark" size="lg">
+        <LinkButton to="/signup" variant="dark" size="lg">
           <Trans>Get Early Access</Trans>
         </LinkButton>
         <p className="mt-6 text-sm text-outline">

@@ -1,24 +1,22 @@
-import { forwardRef, type InputHTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, type ReactNode, type SelectHTMLAttributes } from 'react';
 import { cn } from '@/presentation/lib/cn';
 
-type Props = Omit<InputHTMLAttributes<HTMLInputElement>, 'className'> & {
+type Props = Omit<SelectHTMLAttributes<HTMLSelectElement>, 'className'> & {
   label: string;
   icon?: ReactNode;
-  trailing?: ReactNode;
-  headerRight?: ReactNode;
   error?: string;
+  children: ReactNode;
   className?: string;
 };
 
-export const TextInput = forwardRef<HTMLInputElement, Props>(
-  ({ label, icon, trailing, headerRight, error, id, className, ...rest }, ref) => {
+export const Select = forwardRef<HTMLSelectElement, Props>(
+  ({ label, icon, error, children, id, className, ...rest }, ref) => {
     return (
       <div className="space-y-2">
         <div className="flex justify-between items-center px-1">
           <label className="block text-sm font-semibold text-on-surface-variant" htmlFor={id}>
             {label}
           </label>
-          {headerRight}
         </div>
         <div className="relative group">
           {icon && (
@@ -26,21 +24,19 @@ export const TextInput = forwardRef<HTMLInputElement, Props>(
               {icon}
             </div>
           )}
-          <input
+          <select
             ref={ref}
             id={id}
             className={cn(
-              'block w-full py-4 bg-surface-container-high border-none rounded-xl text-on-surface placeholder:text-outline focus:ring-2 focus:ring-tertiary/20 transition-all duration-200 outline-none',
+              'block w-full py-4 pr-4 bg-surface-container-high border-none rounded-xl text-on-surface focus:ring-2 focus:ring-tertiary/20 transition-all duration-200 outline-none appearance-none cursor-pointer',
               icon ? 'pl-11' : 'pl-4',
-              trailing ? 'pr-12' : 'pr-4',
               error && 'ring-2 ring-error/40',
               className,
             )}
             {...rest}
-          />
-          {trailing && (
-            <div className="absolute inset-y-0 right-0 pr-4 flex items-center">{trailing}</div>
-          )}
+          >
+            {children}
+          </select>
         </div>
         {error && <p className="text-error text-xs px-1">{error}</p>}
       </div>

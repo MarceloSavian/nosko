@@ -24,7 +24,7 @@ describe('TokenRepository', () => {
       email: 'token@test.com',
       passwordHash: 'hashed',
       name: 'Test',
-      language: 'en',
+      language: 'en-US',
     });
     customerId = customer.id;
   });

@@ -6,7 +6,7 @@ const defaultCustomer: CustomerSchema = {
   id: '',
   email: '',
   name: null,
-  language: 'en',
+  language: 'en-US',
   avatarUrl: null,
   verifiedAt: null,
   createdAt: '',
