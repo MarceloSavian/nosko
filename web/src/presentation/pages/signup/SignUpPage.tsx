@@ -1,16 +1,50 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Trans, useLingui } from '@lingui/react/macro';
-import { Link } from '@tanstack/react-router';
-import { type FormEvent, useState } from 'react';
+import { Link, useNavigate } from '@tanstack/react-router';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { EmailAlreadyRegisteredError } from '@/domain/errors/auth';
+import { type SignupInput, SupportedLocale, signupInputSchema } from '@/domain/models/auth/Auth';
+import type { ISignUp } from '@/domain/usecases/auth/ISignUp';
 import { Button } from '@/presentation/components/Button';
 import { Icon } from '@/presentation/components/Icon';
 import { Logo } from '@/presentation/components/Logo';
+import { Select } from '@/presentation/components/Select';
 import { TextInput } from '@/presentation/components/TextInput';
 
-export function SignUpPage() {
-  const [showPassword, setShowPassword] = useState(false);
+type Props = {
+  signUp: ISignUp;
+};
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+export function SignUpPage({ signUp }: Props) {
+  const [showPassword, setShowPassword] = useState(false);
+  const [serverError, setServerError] = useState('');
+  const navigate = useNavigate();
+  const { t } = useLingui();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignupInput>({
+    resolver: zodResolver(signupInputSchema),
+    defaultValues: {
+      language: navigator.language.startsWith('pt') ? SupportedLocale.PT_BR : SupportedLocale.EN_US,
+    },
+  });
+
+  const onSubmit = async (data: SignupInput) => {
+    setServerError('');
+    try {
+      await signUp.execute(data);
+      await navigate({ to: '/confirm-email' });
+    } catch (error) {
+      if (error instanceof EmailAlreadyRegisteredError) {
+        setServerError(t`Email already registered`);
+        return;
+      }
+      setServerError(t`Something went wrong. Please try again.`);
+    }
   };
 
   return (
@@ -23,7 +57,11 @@ export function SignUpPage() {
         <SignUpForm
           showPassword={showPassword}
           onTogglePassword={() => setShowPassword((prev) => !prev)}
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
+          register={register}
+          errors={errors}
+          serverError={serverError}
+          isSubmitting={isSubmitting}
         />
       </main>
 
@@ -85,10 +123,22 @@ function BrandingPanel() {
 type SignUpFormProps = {
   showPassword: boolean;
   onTogglePassword: () => void;
-  onSubmit: (e: FormEvent) => void;
+  onSubmit: (e: React.FormEvent) => void;
+  register: ReturnType<typeof useForm<SignupInput>>['register'];
+  errors: ReturnType<typeof useForm<SignupInput>>['formState']['errors'];
+  serverError: string;
+  isSubmitting: boolean;
 };
 
-function SignUpForm({ showPassword, onTogglePassword, onSubmit }: SignUpFormProps) {
+function SignUpForm({
+  showPassword,
+  onTogglePassword,
+  onSubmit,
+  register,
+  errors,
+  serverError,
+  isSubmitting,
+}: SignUpFormProps) {
   const { t } = useLingui();
 
   return (
@@ -107,25 +157,43 @@ function SignUpForm({ showPassword, onTogglePassword, onSubmit }: SignUpFormProp
           </p>
         </header>
 
-        <form className="space-y-6" onSubmit={onSubmit}>
+        {serverError && (
+          <div className="mb-6 p-4 bg-error/10 rounded-xl text-error text-sm font-medium">
+            {serverError}
+          </div>
+        )}
+
+        <form className="space-y-6" onSubmit={onSubmit} noValidate>
+          <TextInput
+            id="name"
+            type="text"
+            label={t`Full Name`}
+            placeholder={t`Your name`}
+            autoComplete="name"
+            icon={<Icon name="person" className="text-lg" />}
+            error={errors.name?.message}
+            {...register('name')}
+          />
+
           <TextInput
             id="email"
-            name="email"
             type="email"
             label={t`Email Address`}
             placeholder={t`hello@example.com`}
             autoComplete="email"
             icon={<Icon name="mail" className="text-lg" />}
+            error={errors.email?.message}
+            {...register('email')}
           />
 
           <TextInput
             id="password"
-            name="password"
             type={showPassword ? 'text' : 'password'}
             label={t`Password`}
             placeholder="••••••••"
             autoComplete="new-password"
             icon={<Icon name="lock" className="text-lg" />}
+            error={errors.password?.message}
             trailing={
               <button
                 className="text-outline hover:text-on-surface-variant cursor-pointer"
@@ -135,12 +203,31 @@ function SignUpForm({ showPassword, onTogglePassword, onSubmit }: SignUpFormProp
                 <Icon name={showPassword ? 'visibility_off' : 'visibility'} className="text-lg" />
               </button>
             }
+            {...register('password')}
           />
 
+          <Select
+            id="language"
+            label={t`Language`}
+            icon={<Icon name="language" className="text-lg" />}
+            error={errors.language?.message}
+            {...register('language')}
+          >
+            <option value="en-US">English (US)</option>
+            <option value="pt-BR">Portugu&ecirc;s (BR)</option>
+          </Select>
+
           <div className="pt-2">
-            <Button type="submit" variant="primary" size="lg" fullWidth className="space-x-2">
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              fullWidth
+              className="space-x-2"
+              disabled={isSubmitting}
+            >
               <span>
-                <Trans>Create Unity Ledger</Trans>
+                {isSubmitting ? <Trans>Creating...</Trans> : <Trans>Create Unity Ledger</Trans>}
               </span>
             </Button>
           </div>

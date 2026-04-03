@@ -47,7 +47,7 @@ describe('customer-routes', () => {
         email: 'test@test.com',
         password: 'password123',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       }),
       ...overrides,
     }) as unknown as APIGatewayProxyEventV2;
@@ -56,7 +56,7 @@ describe('customer-routes', () => {
     id: 'id-1',
     email: 'test@test.com',
     name: null,
-    language: 'en',
+    language: 'en-US',
     avatarUrl: null,
     verifiedAt: null,
     createdAt: '2024-01-01T00:00:00.000Z',
@@ -149,7 +149,7 @@ describe('customer-routes', () => {
             email: 'test@test.com',
             password: 'password123',
             name: 'Test',
-            language: 'en',
+            language: 'en-US',
           }),
         }),
       );
@@ -365,7 +365,7 @@ describe('customer-routes', () => {
             email: 'test@test.com',
             password: 'password123',
             name: 'Test',
-            language: 'en',
+            language: 'en-US',
           }),
         }),
       );

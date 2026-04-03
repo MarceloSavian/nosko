@@ -24,7 +24,7 @@ describe('CustomerRepository', () => {
         email: 'insert@test.com',
         passwordHash: 'hashed',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       assert.ok(result.id);
@@ -38,7 +38,7 @@ describe('CustomerRepository', () => {
         email: 'uuid@test.com',
         passwordHash: 'hashed',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       assert.match(result.id, /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/);
@@ -49,11 +49,16 @@ describe('CustomerRepository', () => {
         email: 'dup@test.com',
         passwordHash: 'hashed',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       await assert.rejects(async () =>
-        sut.insert({ email: 'dup@test.com', passwordHash: 'hashed', name: 'Test', language: 'en' }),
+        sut.insert({
+          email: 'dup@test.com',
+          passwordHash: 'hashed',
+          name: 'Test',
+          language: 'en-US',
+        }),
       );
     });
   });
@@ -64,7 +69,7 @@ describe('CustomerRepository', () => {
         email: 'findid@test.com',
         passwordHash: 'hashed',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       const result = await sut.findById(customer.id);
@@ -87,7 +92,7 @@ describe('CustomerRepository', () => {
         email: 'find@test.com',
         passwordHash: 'hashed',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       const result = await sut.findByEmail('find@test.com');
@@ -110,7 +115,7 @@ describe('CustomerRepository', () => {
         email: 'withpw@test.com',
         passwordHash: 'secret-hash',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       const result = await sut.findByEmailWithPassword('withpw@test.com');
@@ -133,7 +138,7 @@ describe('CustomerRepository', () => {
         email: 'verify@test.com',
         passwordHash: 'hashed',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
       assert.equal(customer.verifiedAt, null);
 
@@ -151,7 +156,7 @@ describe('CustomerRepository', () => {
         email: 'pwupdate@test.com',
         passwordHash: 'old-hash',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       await sut.updatePassword(customer.id, 'new-hash');
@@ -167,7 +172,7 @@ describe('CustomerRepository', () => {
         email: 'profile1@test.com',
         passwordHash: 'hashed',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       const result = await sut.updateProfile(customer.id, { name: 'Alice' });
@@ -181,7 +186,7 @@ describe('CustomerRepository', () => {
         email: 'profile2@test.com',
         passwordHash: 'hashed',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       const result = await sut.updateProfile(customer.id, { language: 'fi' });
@@ -194,7 +199,7 @@ describe('CustomerRepository', () => {
         email: 'profile3@test.com',
         passwordHash: 'hashed',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       const result = await sut.updateProfile(customer.id, {
@@ -209,7 +214,7 @@ describe('CustomerRepository', () => {
         email: 'profile4@test.com',
         passwordHash: 'hashed',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       const result = await sut.updateProfile(customer.id, {
@@ -230,7 +235,7 @@ describe('CustomerRepository', () => {
         email: 'del@test.com',
         passwordHash: 'hashed',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       await sut.delete(customer.id);

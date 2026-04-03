@@ -26,7 +26,7 @@ describe('profile-routes', () => {
     id: 'customer-id',
     email: 'test@test.com',
     name: 'Alex',
-    language: 'en',
+    language: 'en-US',
     avatarUrl: null,
     verifiedAt: '2024-01-01T01:00:00.000Z',
     createdAt: '2024-01-01T00:00:00.000Z',

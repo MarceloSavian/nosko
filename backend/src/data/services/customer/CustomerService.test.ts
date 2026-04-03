@@ -34,7 +34,7 @@ describe('CustomerService', () => {
     id: 'customer-id',
     email: 'test@test.com',
     name: null,
-    language: 'en',
+    language: 'en-US',
     avatarUrl: null,
     verifiedAt: null,
     createdAt: '2024-01-01T00:00:00.000Z',
@@ -63,7 +63,7 @@ describe('CustomerService', () => {
         email: 'test@test.com',
         password: 'password123',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       assert.equal(mockCustomerRepository.findByEmail.mock.calls[0]?.arguments[0], 'test@test.com');
@@ -80,7 +80,7 @@ describe('CustomerService', () => {
             email: 'test@test.com',
             password: 'password123',
             name: 'Test',
-            language: 'en',
+            language: 'en-US',
           }),
         new EmailAlreadyRegisteredError(),
       );
@@ -98,7 +98,7 @@ describe('CustomerService', () => {
         email: 'test@test.com',
         password: 'password123',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       assert.equal(mockHasher.hash.mock.calls[0]?.arguments[0], 'password123');
@@ -116,7 +116,7 @@ describe('CustomerService', () => {
         email: 'test@test.com',
         password: 'password123',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       assert.equal(mockEmailService.send.mock.callCount(), 1);
@@ -135,7 +135,7 @@ describe('CustomerService', () => {
         email: 'test@test.com',
         password: 'password123',
         name: 'Test',
-        language: 'en',
+        language: 'en-US',
       });
 
       assert.deepEqual(result, customer);

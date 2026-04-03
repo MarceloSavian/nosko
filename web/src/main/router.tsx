@@ -11,6 +11,7 @@ import { SelectSharedAccountsPage } from '@/presentation/pages/partner-setup/Sel
 import { FinancialPlannerPage } from '@/presentation/pages/planner/FinancialPlannerPage';
 import { UserProfilePage } from '@/presentation/pages/profile/UserProfilePage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
+import { signUp } from './factories/auth';
 
 const rootRoute = createRootRoute({
   component: Outlet,
@@ -31,7 +32,7 @@ const loginRoute = createRoute({
 const signupRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/signup',
-  component: SignUpPage,
+  component: () => <SignUpPage signUp={signUp} />,
 });
 
 const confirmEmailRoute = createRoute({
