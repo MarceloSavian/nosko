@@ -22,6 +22,21 @@ suomi/
 └── mobile/     # Kotlin Multiplatform — Android and web mobile app
 ```
 
+## Git Workflow
+
+Every change must be done in a **git worktree** branched off `main`. Never commit directly to `main`.
+
+- Create the worktree at `../../git/worktrees/{name-of-the-change}/suomi` (relative to the repo root, i.e. `/home/marcelo/Documents/git/worktrees/{name-of-the-change}/suomi`)
+- Branch name should match the worktree folder name (e.g. `feat/add-login-page`)
+- After the branch is merged into `main`, delete the worktree and its branch
+
+```bash
+git worktree add -b feat/my-change ../../git/worktrees/feat/my-change/suomi main
+# ... do work, commit, push, merge PR ...
+git worktree remove ../../git/worktrees/feat/my-change/suomi
+git branch -d feat/my-change
+```
+
 ## Code Style
 
 - Do not add comments to the code. The code should be self-explanatory. The only exception is `biome-ignore` directives required by the linter.
