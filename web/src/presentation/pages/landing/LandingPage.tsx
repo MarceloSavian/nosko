@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/react/macro';
 import { useState } from 'react';
 import { Icon } from '@/presentation/components/Icon';
+import { LanguageSwitcher } from '@/presentation/components/LanguageSwitcher';
 import { LinkButton } from '@/presentation/components/LinkButton';
 import { Logo } from '@/presentation/components/Logo';
 
@@ -49,13 +50,7 @@ function Navbar() {
       </div>
       <div className="flex items-center gap-4">
         <div className="hidden lg:flex items-center">
-          <button
-            type="button"
-            className="flex items-center gap-1 text-sm font-semibold text-primary/70 hover:text-primary transition-colors cursor-pointer"
-          >
-            <Icon name="language" className="text-xl" />
-            <span>EN</span>
-          </button>
+          <LanguageSwitcher />
         </div>
         <LinkButton to="/signup" variant="primary" size="sm">
           <Trans>Get Started</Trans>
