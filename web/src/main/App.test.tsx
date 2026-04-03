@@ -1,6 +1,8 @@
+import { I18nProvider } from '@lingui/react';
 import { createMemoryHistory, createRouter, RouterProvider } from '@tanstack/react-router';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
+import { i18n } from '@/test/i18n';
 import { router } from './router';
 
 const createTestRouter = (initialPath: string) => {
@@ -15,8 +17,12 @@ describe('App', () => {
   describe('landing route', () => {
     it('should render the landing page at /', async () => {
       const testRouter = createTestRouter('/');
-      // biome-ignore lint/suspicious/noExplicitAny: test router type mismatch with register
-      render(<RouterProvider router={testRouter as any} />);
+      render(
+        <I18nProvider i18n={i18n}>
+          {/* biome-ignore lint/suspicious/noExplicitAny: test router type mismatch with register */}
+          <RouterProvider router={testRouter as any} />
+        </I18nProvider>,
+      );
       expect(await screen.findByText('Finance for')).toBeInTheDocument();
     });
   });
@@ -24,8 +30,12 @@ describe('App', () => {
   describe('login route', () => {
     it('should render the login page at /login', async () => {
       const testRouter = createTestRouter('/login');
-      // biome-ignore lint/suspicious/noExplicitAny: test router type mismatch with register
-      render(<RouterProvider router={testRouter as any} />);
+      render(
+        <I18nProvider i18n={i18n}>
+          {/* biome-ignore lint/suspicious/noExplicitAny: test router type mismatch with register */}
+          <RouterProvider router={testRouter as any} />
+        </I18nProvider>,
+      );
       expect(await screen.findByText('Welcome back')).toBeInTheDocument();
     });
   });

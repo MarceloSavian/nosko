@@ -1,0 +1,233 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-04-03 20:43+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: pt\n"
+
+#: src/presentation/pages/landing/LandingPage.tsx:307
+msgid "© 2024 Suomi Financial Technologies. All rights reserved."
+msgstr "© 2024 Suomi Financial Technologies. Todos os direitos reservados."
+
+#: src/presentation/pages/login/LoginPage.tsx:75
+msgid "+12.5% this month"
+msgstr "+12,5% este mês"
+
+#: src/presentation/pages/landing/LandingPage.tsx:89
+msgid "$8,450 saved"
+msgstr "$8.450 economizados"
+
+#: src/presentation/pages/landing/LandingPage.tsx:294
+msgid "About Us"
+msgstr "Sobre Nós"
+
+#: src/presentation/pages/landing/LandingPage.tsx:145
+msgid "Bank-grade encryption with a couple-focused permission layer that respects individual autonomy."
+msgstr "Criptografia de nível bancário com uma camada de permissões focada no casal que respeita a autonomia individual."
+
+#: src/presentation/pages/landing/LandingPage.tsx:19
+msgid "Benefits"
+msgstr "Benefícios"
+
+#: src/presentation/pages/login/LoginPage.tsx:84
+msgid "Collaborative goal: \u201cNew Home\u201d at 68%"
+msgstr "Meta colaborativa: \u201cCasa Nova\u201d em 68%"
+
+#: src/presentation/pages/landing/LandingPage.tsx:188
+msgid "Collaborative Planning"
+msgstr "Planejamento Colaborativo"
+
+#: src/presentation/pages/landing/LandingPage.tsx:131
+msgid "Comment on transactions, add photos of memories, and plan together."
+msgstr "Comente transações, adicione fotos de memórias e planejem juntos."
+
+#: src/presentation/pages/landing/LandingPage.tsx:289
+msgid "Company"
+msgstr "Empresa"
+
+#: src/presentation/pages/landing/LandingPage.tsx:299
+msgid "Contact"
+msgstr "Contato"
+
+#: src/presentation/pages/login/LoginPage.tsx:37
+msgid "Contact Support"
+msgstr "Fale com o Suporte"
+
+#: src/presentation/pages/login/LoginPage.tsx:113
+msgid "Continue to your Unity Ledger"
+msgstr "Continue para o seu Unity Ledger"
+
+#: src/presentation/pages/landing/LandingPage.tsx:265
+msgid "Crafting the future of shared finance with beauty, trust, and editorial precision."
+msgstr "Construindo o futuro das finanças compartilhadas com beleza, confiança e precisão editorial."
+
+#: src/presentation/pages/login/LoginPage.tsx:60
+msgid "Curate your wealth with a platform designed for clarity, growth, and collaborative harmony."
+msgstr "Cuide da sua riqueza com uma plataforma projetada para clareza, crescimento e harmonia colaborativa."
+
+#: src/presentation/pages/landing/LandingPage.tsx:206
+msgid "Designed for the Modern Couple."
+msgstr "Projetado para o Casal Moderno."
+
+#: src/presentation/pages/login/LoginPage.tsx:164
+msgid "Don't have an account?"
+msgstr "Não tem uma conta?"
+
+#: src/presentation/pages/login/LoginPage.tsx:122
+msgid "Email Address"
+msgstr "Endereço de E-mail"
+
+#: src/presentation/pages/landing/LandingPage.tsx:115
+msgid "Every transaction tells a story. From morning coffees to mortgage payments, Suomi translates your data into a cohesive editorial ledger."
+msgstr "Cada transação conta uma história. Do café da manhã ao pagamento da hipoteca, o Suomi traduz seus dados em um livro-razão editorial coeso."
+
+#: src/presentation/pages/landing/LandingPage.tsx:277
+msgid "Features"
+msgstr "Funcionalidades"
+
+#: src/presentation/pages/landing/LandingPage.tsx:53
+msgid "Finance for"
+msgstr "Finanças para"
+
+#: src/presentation/pages/landing/LandingPage.tsx:237
+msgid "financial rhythm?"
+msgstr "ritmo financeiro?"
+
+#: src/presentation/pages/login/LoginPage.tsx:138
+msgid "Forgot Password?"
+msgstr "Esqueceu a Senha?"
+
+#: src/presentation/pages/landing/LandingPage.tsx:247
+msgid "Get Early Access"
+msgstr "Obter Acesso Antecipado"
+
+#: src/presentation/pages/landing/LandingPage.tsx:156
+msgid "Grow Together"
+msgstr "Cresçam Juntos"
+
+#: src/presentation/pages/landing/LandingPage.tsx:195
+msgid "Growth Focus"
+msgstr "Foco no Crescimento"
+
+#: src/presentation/pages/login/LoginPage.tsx:33
+msgid "Home"
+msgstr "Início"
+
+#: src/presentation/pages/landing/LandingPage.tsx:130
+msgid "In-Line Context"
+msgstr "Contexto em Linha"
+
+#: src/presentation/pages/landing/LandingPage.tsx:142
+msgid "Ironclad Privacy"
+msgstr "Privacidade Blindada"
+
+#: src/presentation/pages/landing/LandingPage.tsx:241
+msgid "Join thousands of couples who have moved beyond spreadsheets and discovered a more harmonious way to manage their lives."
+msgstr "Junte-se a milhares de casais que deixaram as planilhas para trás e descobriram uma forma mais harmoniosa de gerenciar suas vidas."
+
+#: src/presentation/pages/landing/LandingPage.tsx:30
+msgid "Log In"
+msgstr "Entrar"
+
+#: src/presentation/pages/login/LoginPage.tsx:123
+msgid "name@company.com"
+msgstr "nome@empresa.com"
+
+#: src/presentation/pages/landing/LandingPage.tsx:250
+msgid "No credit card required. Invite your partner later."
+msgstr "Sem necessidade de cartão de crédito. Convide seu parceiro depois."
+
+#: src/presentation/pages/landing/LandingPage.tsx:49
+msgid "Now Private Beta"
+msgstr "Agora em Beta Privado"
+
+#: src/presentation/pages/landing/LandingPage.tsx:182
+msgid "Our layout prioritizes what matters to you specifically, not a generic grid of numbers."
+msgstr "Nosso layout prioriza o que importa especificamente para você, não uma grade genérica de números."
+
+#: src/presentation/pages/login/LoginPage.tsx:132
+msgid "Password"
+msgstr "Senha"
+
+#: src/presentation/pages/landing/LandingPage.tsx:159
+msgid "Predictive insights that help you anticipate future expenses and hit savings milestones faster."
+msgstr "Insights preditivos que ajudam você a antecipar despesas futuras e alcançar metas de economia mais rápido."
+
+#: src/presentation/pages/landing/LandingPage.tsx:272
+msgid "Product"
+msgstr "Produto"
+
+#: src/presentation/pages/landing/LandingPage.tsx:235
+msgid "Ready to sync your"
+msgstr "Pronto para sincronizar seu"
+
+#: src/presentation/pages/landing/LandingPage.tsx:189
+msgid "Real-time sync ensures you're always on the same page, whether it's grocery lists or global investments."
+msgstr "Sincronização em tempo real garante que vocês estejam sempre na mesma página, seja na lista de compras ou em investimentos globais."
+
+#: src/presentation/pages/landing/LandingPage.tsx:125
+msgid "Seamlessly blend your individual accounts into one shared visual interface."
+msgstr "Combine perfeitamente suas contas individuais em uma interface visual compartilhada."
+
+#: src/presentation/pages/landing/LandingPage.tsx:80
+msgid "Shared Goal"
+msgstr "Meta Compartilhada"
+
+#: src/presentation/pages/login/LoginPage.tsx:155
+msgid "Sign In to Suomi"
+msgstr "Entrar no Suomi"
+
+#: src/presentation/pages/landing/LandingPage.tsx:181
+msgid "Smart Asymmetry"
+msgstr "Assimetria Inteligente"
+
+#: src/presentation/pages/login/LoginPage.tsx:166
+msgid "Start your journey"
+msgstr "Comece sua jornada"
+
+#: src/presentation/pages/landing/LandingPage.tsx:65
+msgid "Start Your Journey"
+msgstr "Comece Sua Jornada"
+
+#: src/presentation/pages/landing/LandingPage.tsx:85
+msgid "Summer in Tuscany"
+msgstr "Verão na Toscana"
+
+#: src/presentation/pages/login/LoginPage.tsx:54
+msgid "The Editorial <0>Ledger</0> of Your Financial Life."
+msgstr "O <0>Livro-Razão</0> Editorial da Sua Vida Financeira."
+
+#: src/presentation/pages/landing/LandingPage.tsx:25
+#: src/presentation/pages/landing/LandingPage.tsx:282
+msgid "The Ledger"
+msgstr "O Livro-Razão"
+
+#: src/presentation/pages/landing/LandingPage.tsx:112
+msgid "The Shared Narrative"
+msgstr "A Narrativa Compartilhada"
+
+#: src/presentation/pages/landing/LandingPage.tsx:59
+msgid "The Unity Ledger is more than a bank account. It's a beautifully curated financial narrative designed to help couples grow, dream, and build together."
+msgstr "O Unity Ledger é mais do que uma conta bancária. É uma narrativa financeira cuidadosamente curada, projetada para ajudar casais a crescer, sonhar e construir juntos."
+
+#: src/presentation/pages/login/LoginPage.tsx:70
+msgid "Total Harmony"
+msgstr "Harmonia Total"
+
+#: src/presentation/pages/landing/LandingPage.tsx:55
+msgid "Two."
+msgstr "Dois."
+
+#: src/presentation/pages/landing/LandingPage.tsx:124
+msgid "Unity Accounts"
+msgstr "Contas Unificadas"
+
+#: src/presentation/pages/landing/LandingPage.tsx:196
+msgid "We don't just track spending; we celebrate every step towards your shared flourishing."
+msgstr "Não apenas rastreamos gastos; celebramos cada passo rumo ao florescimento compartilhado de vocês."
+
+#: src/presentation/pages/login/LoginPage.tsx:110
+msgid "Welcome back"
+msgstr "Bem-vindo de volta"
