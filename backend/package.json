@@ -9,14 +9,17 @@
     "test:watch": "node --import tsx --test --watch 'src/**/*.test.ts'",
     "check": "biome check .",
     "check:fix": "biome check --write .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build": "node build.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/aws-lambda": "^8.10.161",
     "@types/bcryptjs": "^2.4.6",
     "@types/pg": "^8.20.0",
+    "archiver": "^7.0.1",
     "c8": "^11.0.0",
+    "esbuild": "^0.25.0",
     "pg-mem": "^3.0.14",
     "tsx": "^4.21.0",
     "typescript": "^5.8.3"
