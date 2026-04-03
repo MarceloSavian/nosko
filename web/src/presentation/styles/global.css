@@ -1,1 +1,68 @@
 @import "tailwindcss";
+
+@theme {
+  --font-headline: "Manrope", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Inter", sans-serif;
+
+  --color-primary: #001830;
+  --color-primary-container: #002d52;
+  --color-primary-fixed: #d2e4ff;
+  --color-primary-fixed-dim: #a7c9f6;
+  --color-on-primary: #ffffff;
+  --color-on-primary-fixed: #001c37;
+  --color-on-primary-fixed-variant: #25486f;
+  --color-on-primary-container: #7495c0;
+  --color-inverse-primary: #a7c9f6;
+
+  --color-secondary: #2a6b2c;
+  --color-secondary-container: #acf4a4;
+  --color-secondary-fixed: #acf4a4;
+  --color-secondary-fixed-dim: #91d78a;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-fixed: #002203;
+  --color-on-secondary-fixed-variant: #0c5216;
+  --color-on-secondary-container: #307231;
+
+  --color-tertiary: #21004e;
+  --color-tertiary-container: #38166c;
+  --color-tertiary-fixed: #ebdcff;
+  --color-tertiary-fixed-dim: #d4bbff;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-fixed: #270058;
+  --color-on-tertiary-fixed-variant: #543589;
+  --color-on-tertiary-container: #a383dc;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
+
+  --color-surface: #f8f9fa;
+  --color-surface-dim: #d9dadb;
+  --color-surface-bright: #f8f9fa;
+  --color-surface-variant: #e1e3e4;
+  --color-surface-tint: #3f6088;
+  --color-surface-container: #edeeef;
+  --color-surface-container-low: #f3f4f5;
+  --color-surface-container-high: #e7e8e9;
+  --color-surface-container-highest: #e1e3e4;
+  --color-surface-container-lowest: #ffffff;
+
+  --color-background: #f8f9fa;
+  --color-on-background: #191c1d;
+  --color-on-surface: #191c1d;
+  --color-on-surface-variant: #43474e;
+  --color-outline: #73777f;
+  --color-outline-variant: #c3c6cf;
+  --color-inverse-surface: #2e3132;
+  --color-inverse-on-surface: #f0f1f2;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-body);
+    color: var(--color-on-surface);
+    background-color: var(--color-background);
+  }
+}
