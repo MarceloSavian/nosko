@@ -1,5 +1,6 @@
 import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/react-router';
 import { AppLayout } from '@/presentation/components/AppLayout';
+import { AccountsOverviewPage } from '@/presentation/pages/accounts/AccountsOverviewPage';
 import { ConfirmEmailPage } from '@/presentation/pages/confirm-email/ConfirmEmailPage';
 import { DashboardPage } from '@/presentation/pages/dashboard/DashboardPage';
 import { LandingPage } from '@/presentation/pages/landing/LandingPage';
@@ -49,7 +50,7 @@ const dashboardRoute = createRoute({
 const accountsRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/accounts',
-  component: () => <div>Accounts</div>,
+  component: AccountsOverviewPage,
 });
 
 const plannerRoute = createRoute({
