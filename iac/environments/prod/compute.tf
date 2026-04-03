@@ -24,6 +24,7 @@ locals {
     transaction-v1 = { env_vars = local.common_env }
     budget-v1      = { env_vars = local.common_env }
     dashboard-v1   = { env_vars = local.common_env }
+    docs-v1        = { env_vars = {} }
     migration-v1   = { env_vars = local.db_env }
   }
 }
