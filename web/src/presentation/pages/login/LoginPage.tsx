@@ -1,3 +1,4 @@
+import { Trans, useLingui } from '@lingui/react/macro';
 import { Link } from '@tanstack/react-router';
 import { type FormEvent, useState } from 'react';
 import { Button } from '@/presentation/components/Button';
@@ -28,10 +29,12 @@ export function LoginPage() {
 
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center space-x-6 text-xs font-bold text-outline uppercase tracking-wider">
         <Link to="/" className="hover:text-primary transition-colors">
-          Home
+          <Trans>Home</Trans>
         </Link>
         <span className="w-1 h-1 bg-outline-variant rounded-full" />
-        <span className="hover:text-primary transition-colors cursor-pointer">Contact Support</span>
+        <span className="hover:text-primary transition-colors cursor-pointer">
+          <Trans>Contact Support</Trans>
+        </span>
       </div>
     </div>
   );
@@ -47,23 +50,28 @@ function BrandingPanel() {
       <div className="relative z-10">
         <Logo size="lg" tone="light" className="mb-12" />
         <h1 className="font-headline text-5xl font-bold text-white leading-tight mb-6 max-w-md">
-          The Editorial <span className="text-secondary-fixed">Ledger</span> of Your Financial Life.
+          <Trans>
+            The Editorial <span className="text-secondary-fixed">Ledger</span> of Your Financial
+            Life.
+          </Trans>
         </h1>
         <p className="text-on-primary-container text-lg max-w-sm leading-relaxed">
-          Curate your wealth with a platform designed for clarity, growth, and collaborative
-          harmony.
+          <Trans>
+            Curate your wealth with a platform designed for clarity, growth, and collaborative
+            harmony.
+          </Trans>
         </p>
       </div>
 
       <div className="relative z-10 grid grid-cols-2 gap-4">
         <div className="bg-white/10 backdrop-blur-xl p-6 rounded-2xl">
           <div className="text-on-primary-fixed-variant text-sm font-medium mb-1">
-            Total Harmony
+            <Trans>Total Harmony</Trans>
           </div>
           <div className="text-white text-2xl font-bold font-headline">$142,850.00</div>
           <div className="flex items-center text-secondary-fixed text-xs mt-2">
             <Icon name="trending_up" className="text-sm mr-1" />
-            +12.5% this month
+            <Trans>+12.5% this month</Trans>
           </div>
         </div>
         <div className="bg-white/10 p-6 rounded-2xl backdrop-blur-md">
@@ -72,7 +80,7 @@ function BrandingPanel() {
             <div className="w-8 h-8 rounded-full ring-2 ring-primary bg-tertiary-fixed-dim" />
           </div>
           <div className="text-white/80 text-sm">
-            Collaborative goal: &ldquo;New Home&rdquo; at 68%
+            <Trans>Collaborative goal: &ldquo;New Home&rdquo; at 68%</Trans>
           </div>
         </div>
       </div>
@@ -87,6 +95,8 @@ type LoginFormProps = {
 };
 
 function LoginForm({ showPassword, onTogglePassword, onSubmit }: LoginFormProps) {
+  const { t } = useLingui();
+
   return (
     <section className="col-span-1 lg:col-span-5 bg-surface-container-lowest p-8 md:p-16 flex flex-col justify-center">
       <div className="lg:hidden mb-12">
@@ -96,9 +106,11 @@ function LoginForm({ showPassword, onTogglePassword, onSubmit }: LoginFormProps)
       <div className="max-w-sm mx-auto w-full">
         <header className="mb-10">
           <h2 className="font-headline text-3xl font-bold text-on-surface tracking-tight mb-2">
-            Welcome back
+            <Trans>Welcome back</Trans>
           </h2>
-          <p className="text-on-surface-variant font-medium">Continue to your Unity Ledger</p>
+          <p className="text-on-surface-variant font-medium">
+            <Trans>Continue to your Unity Ledger</Trans>
+          </p>
         </header>
 
         <form className="space-y-6" onSubmit={onSubmit}>
@@ -106,8 +118,8 @@ function LoginForm({ showPassword, onTogglePassword, onSubmit }: LoginFormProps)
             id="email"
             name="email"
             type="email"
-            label="Email Address"
-            placeholder="name@company.com"
+            label={t`Email Address`}
+            placeholder={t`name@company.com`}
             autoComplete="email"
             icon={<Icon name="mail" className="text-lg" />}
           />
@@ -116,13 +128,13 @@ function LoginForm({ showPassword, onTogglePassword, onSubmit }: LoginFormProps)
             id="password"
             name="password"
             type={showPassword ? 'text' : 'password'}
-            label="Password"
+            label={t`Password`}
             placeholder="••••••••"
             autoComplete="current-password"
             icon={<Icon name="lock" className="text-lg" />}
             headerRight={
               <Button type="button" variant="link" size="sm" className="text-xs p-0">
-                Forgot Password?
+                <Trans>Forgot Password?</Trans>
               </Button>
             }
             trailing={
@@ -138,7 +150,9 @@ function LoginForm({ showPassword, onTogglePassword, onSubmit }: LoginFormProps)
 
           <div className="pt-2">
             <Button type="submit" variant="primary" size="lg" fullWidth className="space-x-2">
-              <span>Sign In to Suomi</span>
+              <span>
+                <Trans>Sign In to Suomi</Trans>
+              </span>
               <Icon name="arrow_forward" className="text-lg" />
             </Button>
           </div>
@@ -146,9 +160,9 @@ function LoginForm({ showPassword, onTogglePassword, onSubmit }: LoginFormProps)
 
         <footer className="mt-12 text-center">
           <p className="text-on-surface-variant text-sm">
-            Don&apos;t have an account?{' '}
+            <Trans>Don&apos;t have an account?</Trans>{' '}
             <span className="text-secondary font-bold hover:underline decoration-2 underline-offset-4 ml-1 cursor-pointer">
-              Start your journey
+              <Trans>Start your journey</Trans>
             </span>
           </p>
         </footer>
