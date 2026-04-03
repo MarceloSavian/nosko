@@ -1,0 +1,3494 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Suomi API",
+    "version": "1.0.0",
+    "description": "Financial management API for couples"
+  },
+  "servers": [
+    {
+      "url": "/v1",
+      "description": "API v1"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {},
+    "parameters": {}
+  },
+  "paths": {
+    "/v1/signup": {
+      "post": {
+        "summary": "Create a new account",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 10
+                  }
+                },
+                "required": [
+                  "email",
+                  "password",
+                  "name",
+                  "language"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Account created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "language": {
+                      "type": "string"
+                    },
+                    "avatarUrl": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "verifiedAt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "email",
+                    "name",
+                    "language",
+                    "avatarUrl",
+                    "verifiedAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/v1/login": {
+      "post": {
+        "summary": "Authenticate and get access token",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "email",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful"
+          },
+          "401": {
+            "description": "Invalid credentials"
+          }
+        }
+      }
+    },
+    "/v1/verify-email": {
+      "post": {
+        "summary": "Verify email with 6-digit code",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "code": {
+                    "type": "string",
+                    "minLength": 6,
+                    "maxLength": 6
+                  }
+                },
+                "required": [
+                  "email",
+                  "code"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Email verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "language": {
+                      "type": "string"
+                    },
+                    "avatarUrl": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "verifiedAt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "email",
+                    "name",
+                    "language",
+                    "avatarUrl",
+                    "verifiedAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or expired code"
+          }
+        }
+      }
+    },
+    "/v1/resend-verification": {
+      "post": {
+        "summary": "Resend email verification code",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Verification code sent"
+          }
+        }
+      }
+    },
+    "/v1/request-password-reset": {
+      "post": {
+        "summary": "Request a password reset code",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reset code sent if email exists"
+          }
+        }
+      }
+    },
+    "/v1/reset-password": {
+      "post": {
+        "summary": "Reset password with code",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "code": {
+                    "type": "string",
+                    "minLength": 6,
+                    "maxLength": 6
+                  },
+                  "newPassword": {
+                    "type": "string",
+                    "minLength": 8
+                  }
+                },
+                "required": [
+                  "email",
+                  "code",
+                  "newPassword"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Password reset successfully"
+          },
+          "400": {
+            "description": "Invalid or expired code"
+          }
+        }
+      }
+    },
+    "/v1/accounts": {
+      "get": {
+        "summary": "List all bank accounts",
+        "tags": [
+          "Accounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of bank accounts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "institutionId": {
+                        "type": "string"
+                      },
+                      "accountName": {
+                        "type": "string"
+                      },
+                      "currencyCode": {
+                        "type": "string"
+                      },
+                      "balance": {
+                        "type": "integer"
+                      },
+                      "accountType": {
+                        "type": "string",
+                        "enum": [
+                          "CHECKING",
+                          "SAVINGS",
+                          "CREDIT",
+                          "INVESTMENT"
+                        ]
+                      },
+                      "balanceUpdatedAt": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "institutionId",
+                      "accountName",
+                      "currencyCode",
+                      "balance",
+                      "accountType",
+                      "balanceUpdatedAt",
+                      "createdAt"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a bank account",
+        "tags": [
+          "Accounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "institutionId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "accountName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "currencyCode": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 3
+                  },
+                  "accountType": {
+                    "type": "string",
+                    "enum": [
+                      "CHECKING",
+                      "SAVINGS",
+                      "CREDIT",
+                      "INVESTMENT"
+                    ],
+                    "default": "CHECKING"
+                  },
+                  "balance": {
+                    "type": "integer",
+                    "default": 0
+                  }
+                },
+                "required": [
+                  "institutionId",
+                  "accountName",
+                  "currencyCode"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Account created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "institutionId": {
+                      "type": "string"
+                    },
+                    "accountName": {
+                      "type": "string"
+                    },
+                    "currencyCode": {
+                      "type": "string"
+                    },
+                    "balance": {
+                      "type": "integer"
+                    },
+                    "accountType": {
+                      "type": "string",
+                      "enum": [
+                        "CHECKING",
+                        "SAVINGS",
+                        "CREDIT",
+                        "INVESTMENT"
+                      ]
+                    },
+                    "balanceUpdatedAt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "institutionId",
+                    "accountName",
+                    "currencyCode",
+                    "balance",
+                    "accountType",
+                    "balanceUpdatedAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/accounts/overview": {
+      "get": {
+        "summary": "Get accounts overview with totals by currency",
+        "tags": [
+          "Accounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Account overview",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "totalsByCurrency": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "currencyCode": {
+                            "type": "string"
+                          },
+                          "total": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "currencyCode",
+                          "total"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "totalsByCurrency"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/accounts/{id}": {
+      "get": {
+        "summary": "Get a bank account by ID",
+        "tags": [
+          "Accounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bank account details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "institutionId": {
+                      "type": "string"
+                    },
+                    "accountName": {
+                      "type": "string"
+                    },
+                    "currencyCode": {
+                      "type": "string"
+                    },
+                    "balance": {
+                      "type": "integer"
+                    },
+                    "accountType": {
+                      "type": "string",
+                      "enum": [
+                        "CHECKING",
+                        "SAVINGS",
+                        "CREDIT",
+                        "INVESTMENT"
+                      ]
+                    },
+                    "balanceUpdatedAt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "institutionId",
+                    "accountName",
+                    "currencyCode",
+                    "balance",
+                    "accountType",
+                    "balanceUpdatedAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          },
+          "404": {
+            "description": "Account not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a bank account",
+        "tags": [
+          "Accounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "accountName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "balance": {
+                    "type": "integer"
+                  },
+                  "accountType": {
+                    "type": "string",
+                    "enum": [
+                      "CHECKING",
+                      "SAVINGS",
+                      "CREDIT",
+                      "INVESTMENT"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Account updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "institutionId": {
+                      "type": "string"
+                    },
+                    "accountName": {
+                      "type": "string"
+                    },
+                    "currencyCode": {
+                      "type": "string"
+                    },
+                    "balance": {
+                      "type": "integer"
+                    },
+                    "accountType": {
+                      "type": "string",
+                      "enum": [
+                        "CHECKING",
+                        "SAVINGS",
+                        "CREDIT",
+                        "INVESTMENT"
+                      ]
+                    },
+                    "balanceUpdatedAt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "institutionId",
+                    "accountName",
+                    "currencyCode",
+                    "balance",
+                    "accountType",
+                    "balanceUpdatedAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          },
+          "404": {
+            "description": "Account not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a bank account",
+        "tags": [
+          "Accounts"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Account deleted"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          },
+          "404": {
+            "description": "Account not found"
+          }
+        }
+      }
+    },
+    "/v1/me": {
+      "get": {
+        "summary": "Get current user profile",
+        "tags": [
+          "Profile"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "language": {
+                      "type": "string"
+                    },
+                    "avatarUrl": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "verifiedAt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "email",
+                    "name",
+                    "language",
+                    "avatarUrl",
+                    "verifiedAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update current user profile",
+        "tags": [
+          "Profile"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "language": {
+                    "type": "string",
+                    "minLength": 2,
+                    "maxLength": 10
+                  },
+                  "avatarUrl": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "uri"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "language": {
+                      "type": "string"
+                    },
+                    "avatarUrl": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "verifiedAt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "email",
+                    "name",
+                    "language",
+                    "avatarUrl",
+                    "verifiedAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete current user account",
+        "tags": [
+          "Profile"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Account deleted"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/me/currencies": {
+      "get": {
+        "summary": "Get currency display defaults",
+        "tags": [
+          "Profile"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Currency defaults",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "currencyCode": {
+                        "type": "string"
+                      },
+                      "displayOrder": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "currencyCode",
+                      "displayOrder"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      },
+      "put": {
+        "summary": "Set currency display defaults",
+        "tags": [
+          "Profile"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "currencies": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "currencyCode": {
+                          "type": "string",
+                          "minLength": 3,
+                          "maxLength": 3
+                        },
+                        "displayOrder": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
+                      },
+                      "required": [
+                        "currencyCode",
+                        "displayOrder"
+                      ]
+                    },
+                    "minItems": 1
+                  }
+                },
+                "required": [
+                  "currencies"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Currency defaults updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "currencyCode": {
+                        "type": "string"
+                      },
+                      "displayOrder": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "currencyCode",
+                      "displayOrder"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/institutions": {
+      "get": {
+        "summary": "List all financial institutions",
+        "tags": [
+          "Institutions"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of institutions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "countryCode": {
+                        "type": "string"
+                      },
+                      "logoUrl": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "countryCode",
+                      "logoUrl"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/partnership/invite": {
+      "post": {
+        "summary": "Invite a partner by email",
+        "tags": [
+          "Partnership"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                },
+                "required": [
+                  "email"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Invitation sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "inviterId": {
+                      "type": "string"
+                    },
+                    "inviteeEmail": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "PENDING",
+                        "ACCEPTED",
+                        "DECLINED",
+                        "EXPIRED"
+                      ]
+                    },
+                    "acceptedAt": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "inviterId",
+                    "inviteeEmail",
+                    "status",
+                    "acceptedAt",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/partnership/invitations": {
+      "get": {
+        "summary": "List partner invitations",
+        "tags": [
+          "Partnership"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of invitations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "inviterId": {
+                        "type": "string"
+                      },
+                      "inviteeEmail": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "PENDING",
+                          "ACCEPTED",
+                          "DECLINED",
+                          "EXPIRED"
+                        ]
+                      },
+                      "acceptedAt": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "inviterId",
+                      "inviteeEmail",
+                      "status",
+                      "acceptedAt",
+                      "createdAt"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/partnership/invitations/{id}/accept": {
+      "post": {
+        "summary": "Accept a partner invitation",
+        "tags": [
+          "Partnership"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Invitation accepted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "invitationId": {
+                      "type": "string"
+                    },
+                    "customerAId": {
+                      "type": "string"
+                    },
+                    "customerBId": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "invitationId",
+                    "customerAId",
+                    "customerBId",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          },
+          "404": {
+            "description": "Invitation not found"
+          }
+        }
+      }
+    },
+    "/v1/partnership/invitations/{id}/decline": {
+      "post": {
+        "summary": "Decline a partner invitation",
+        "tags": [
+          "Partnership"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Invitation declined"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          },
+          "404": {
+            "description": "Invitation not found"
+          }
+        }
+      }
+    },
+    "/v1/partnership/invitations/{id}": {
+      "delete": {
+        "summary": "Cancel a sent invitation",
+        "tags": [
+          "Partnership"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Invitation cancelled"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          },
+          "404": {
+            "description": "Invitation not found"
+          }
+        }
+      }
+    },
+    "/v1/partnership": {
+      "get": {
+        "summary": "Get current partnership",
+        "tags": [
+          "Partnership"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Partnership details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "invitationId": {
+                      "type": "string"
+                    },
+                    "customerAId": {
+                      "type": "string"
+                    },
+                    "customerBId": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "invitationId",
+                    "customerAId",
+                    "customerBId",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Dissolve current partnership",
+        "tags": [
+          "Partnership"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Partnership dissolved"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/partnership/contribution-rules": {
+      "get": {
+        "summary": "Get contribution rules",
+        "tags": [
+          "Partnership"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Contribution rules",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "partnershipId": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "EQUAL",
+                        "SALARY_PROPORTIONAL",
+                        "CUSTOM_PERCENTAGE"
+                      ]
+                    },
+                    "customerAPercentage": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "customerBPercentage": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "partnershipId",
+                    "type",
+                    "customerAPercentage",
+                    "customerBPercentage",
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      },
+      "put": {
+        "summary": "Set contribution rules",
+        "tags": [
+          "Partnership"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "EQUAL",
+                      "SALARY_PROPORTIONAL",
+                      "CUSTOM_PERCENTAGE"
+                    ]
+                  },
+                  "customerAPercentage": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000
+                  },
+                  "customerBPercentage": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 10000
+                  }
+                },
+                "required": [
+                  "type"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rules updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "partnershipId": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "EQUAL",
+                        "SALARY_PROPORTIONAL",
+                        "CUSTOM_PERCENTAGE"
+                      ]
+                    },
+                    "customerAPercentage": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "customerBPercentage": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "partnershipId",
+                    "type",
+                    "customerAPercentage",
+                    "customerBPercentage",
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/partnership/shared-accounts": {
+      "get": {
+        "summary": "Get shared bank accounts",
+        "tags": [
+          "Partnership"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Shared accounts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "institutionId": {
+                        "type": "string"
+                      },
+                      "accountName": {
+                        "type": "string"
+                      },
+                      "currencyCode": {
+                        "type": "string"
+                      },
+                      "balance": {
+                        "type": "integer"
+                      },
+                      "accountType": {
+                        "type": "string",
+                        "enum": [
+                          "CHECKING",
+                          "SAVINGS",
+                          "CREDIT",
+                          "INVESTMENT"
+                        ]
+                      },
+                      "balanceUpdatedAt": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "institutionId",
+                      "accountName",
+                      "currencyCode",
+                      "balance",
+                      "accountType",
+                      "balanceUpdatedAt",
+                      "createdAt"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      },
+      "put": {
+        "summary": "Set shared bank accounts",
+        "tags": [
+          "Partnership"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "bankAccountIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    }
+                  }
+                },
+                "required": [
+                  "bankAccountIds"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Shared accounts updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "institutionId": {
+                        "type": "string"
+                      },
+                      "accountName": {
+                        "type": "string"
+                      },
+                      "currencyCode": {
+                        "type": "string"
+                      },
+                      "balance": {
+                        "type": "integer"
+                      },
+                      "accountType": {
+                        "type": "string",
+                        "enum": [
+                          "CHECKING",
+                          "SAVINGS",
+                          "CREDIT",
+                          "INVESTMENT"
+                        ]
+                      },
+                      "balanceUpdatedAt": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "institutionId",
+                      "accountName",
+                      "currencyCode",
+                      "balance",
+                      "accountType",
+                      "balanceUpdatedAt",
+                      "createdAt"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/transactions": {
+      "get": {
+        "summary": "List transactions with optional filters",
+        "tags": [
+          "Transactions"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated list of transactions"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a transaction",
+        "tags": [
+          "Transactions"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "bankAccountId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "categoryId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "uuid"
+                  },
+                  "budgetItemId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "uuid"
+                  },
+                  "amount": {
+                    "type": "integer"
+                  },
+                  "description": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 500
+                  },
+                  "transactionDate": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                },
+                "required": [
+                  "bankAccountId",
+                  "amount",
+                  "transactionDate"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Transaction created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "bankAccountId": {
+                      "type": "string"
+                    },
+                    "categoryId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "budgetItemId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "amount": {
+                      "type": "integer"
+                    },
+                    "description": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "transactionDate": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "bankAccountId",
+                    "categoryId",
+                    "budgetItemId",
+                    "amount",
+                    "description",
+                    "transactionDate",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/transactions/{id}": {
+      "put": {
+        "summary": "Update a transaction",
+        "tags": [
+          "Transactions"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "categoryId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "uuid"
+                  },
+                  "budgetItemId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "uuid"
+                  },
+                  "amount": {
+                    "type": "integer"
+                  },
+                  "description": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "maxLength": 500
+                  },
+                  "transactionDate": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Transaction updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "bankAccountId": {
+                      "type": "string"
+                    },
+                    "categoryId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "budgetItemId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "amount": {
+                      "type": "integer"
+                    },
+                    "description": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "transactionDate": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "bankAccountId",
+                    "categoryId",
+                    "budgetItemId",
+                    "amount",
+                    "description",
+                    "transactionDate",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          },
+          "404": {
+            "description": "Transaction not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a transaction",
+        "tags": [
+          "Transactions"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Transaction deleted"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          },
+          "404": {
+            "description": "Transaction not found"
+          }
+        }
+      }
+    },
+    "/v1/budget-categories": {
+      "get": {
+        "summary": "List all budget categories",
+        "tags": [
+          "Budget Categories"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of categories",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "icon": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "isSystem": {
+                        "type": "boolean"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "icon",
+                      "isSystem",
+                      "createdAt"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a budget category",
+        "tags": [
+          "Budget Categories"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "icon": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Category created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "icon": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "isSystem": {
+                      "type": "boolean"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "icon",
+                    "isSystem",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/budget-categories/{id}": {
+      "put": {
+        "summary": "Update a budget category",
+        "tags": [
+          "Budget Categories"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "icon": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Category updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "icon": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "isSystem": {
+                      "type": "boolean"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "icon",
+                    "isSystem",
+                    "createdAt"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          },
+          "404": {
+            "description": "Category not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a budget category",
+        "tags": [
+          "Budget Categories"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Category deleted"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          },
+          "404": {
+            "description": "Category not found"
+          }
+        }
+      }
+    },
+    "/v1/budget-plans": {
+      "get": {
+        "summary": "Get personal budget plan for a month",
+        "tags": [
+          "Budget Plans"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Personal plan with items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "plan": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "customerId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "partnershipId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "yearMonth": {
+                          "type": "string"
+                        },
+                        "currencyCode": {
+                          "type": "string"
+                        },
+                        "isJoint": {
+                          "type": "boolean"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "customerId",
+                        "partnershipId",
+                        "yearMonth",
+                        "currencyCode",
+                        "isJoint",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "planId": {
+                            "type": "string"
+                          },
+                          "categoryId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "plannedAmount": {
+                            "type": "integer"
+                          },
+                          "direction": {
+                            "type": "string",
+                            "enum": [
+                              "INCOME",
+                              "EXPENSE"
+                            ]
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "FIXED",
+                              "ESTIMATED"
+                            ]
+                          },
+                          "recurrence": {
+                            "type": "string",
+                            "enum": [
+                              "PERMANENT",
+                              "ONE_TIME",
+                              "INSTALLMENT"
+                            ]
+                          },
+                          "installmentTotal": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "installmentNumber": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "sourceItemId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "updatedAt": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "planId",
+                          "categoryId",
+                          "name",
+                          "plannedAmount",
+                          "direction",
+                          "type",
+                          "recurrence",
+                          "installmentTotal",
+                          "installmentNumber",
+                          "sourceItemId",
+                          "createdAt",
+                          "updatedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "plan",
+                    "items"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a personal budget plan",
+        "tags": [
+          "Budget Plans"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "yearMonth": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}$"
+                  },
+                  "currencyCode": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 3
+                  }
+                },
+                "required": [
+                  "yearMonth",
+                  "currencyCode"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Plan created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "plan": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "customerId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "partnershipId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "yearMonth": {
+                          "type": "string"
+                        },
+                        "currencyCode": {
+                          "type": "string"
+                        },
+                        "isJoint": {
+                          "type": "boolean"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "customerId",
+                        "partnershipId",
+                        "yearMonth",
+                        "currencyCode",
+                        "isJoint",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "planId": {
+                            "type": "string"
+                          },
+                          "categoryId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "plannedAmount": {
+                            "type": "integer"
+                          },
+                          "direction": {
+                            "type": "string",
+                            "enum": [
+                              "INCOME",
+                              "EXPENSE"
+                            ]
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "FIXED",
+                              "ESTIMATED"
+                            ]
+                          },
+                          "recurrence": {
+                            "type": "string",
+                            "enum": [
+                              "PERMANENT",
+                              "ONE_TIME",
+                              "INSTALLMENT"
+                            ]
+                          },
+                          "installmentTotal": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "installmentNumber": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "sourceItemId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "updatedAt": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "planId",
+                          "categoryId",
+                          "name",
+                          "plannedAmount",
+                          "direction",
+                          "type",
+                          "recurrence",
+                          "installmentTotal",
+                          "installmentNumber",
+                          "sourceItemId",
+                          "createdAt",
+                          "updatedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "plan",
+                    "items"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/budget-plans/{id}": {
+      "delete": {
+        "summary": "Delete a personal budget plan",
+        "tags": [
+          "Budget Plans"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Plan deleted"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          },
+          "404": {
+            "description": "Plan not found"
+          }
+        }
+      }
+    },
+    "/v1/partnership/budget-plans": {
+      "get": {
+        "summary": "Get joint budget plan for a month",
+        "tags": [
+          "Budget Plans"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Joint plan with items",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "plan": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "customerId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "partnershipId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "yearMonth": {
+                          "type": "string"
+                        },
+                        "currencyCode": {
+                          "type": "string"
+                        },
+                        "isJoint": {
+                          "type": "boolean"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "customerId",
+                        "partnershipId",
+                        "yearMonth",
+                        "currencyCode",
+                        "isJoint",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "planId": {
+                            "type": "string"
+                          },
+                          "categoryId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "plannedAmount": {
+                            "type": "integer"
+                          },
+                          "direction": {
+                            "type": "string",
+                            "enum": [
+                              "INCOME",
+                              "EXPENSE"
+                            ]
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "FIXED",
+                              "ESTIMATED"
+                            ]
+                          },
+                          "recurrence": {
+                            "type": "string",
+                            "enum": [
+                              "PERMANENT",
+                              "ONE_TIME",
+                              "INSTALLMENT"
+                            ]
+                          },
+                          "installmentTotal": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "installmentNumber": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "sourceItemId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "updatedAt": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "planId",
+                          "categoryId",
+                          "name",
+                          "plannedAmount",
+                          "direction",
+                          "type",
+                          "recurrence",
+                          "installmentTotal",
+                          "installmentNumber",
+                          "sourceItemId",
+                          "createdAt",
+                          "updatedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "plan",
+                    "items"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a joint budget plan",
+        "tags": [
+          "Budget Plans"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "yearMonth": {
+                    "type": "string",
+                    "pattern": "^\\d{4}-\\d{2}$"
+                  },
+                  "currencyCode": {
+                    "type": "string",
+                    "minLength": 3,
+                    "maxLength": 3
+                  }
+                },
+                "required": [
+                  "yearMonth",
+                  "currencyCode"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Joint plan created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "plan": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "customerId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "partnershipId": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "yearMonth": {
+                          "type": "string"
+                        },
+                        "currencyCode": {
+                          "type": "string"
+                        },
+                        "isJoint": {
+                          "type": "boolean"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "customerId",
+                        "partnershipId",
+                        "yearMonth",
+                        "currencyCode",
+                        "isJoint",
+                        "createdAt",
+                        "updatedAt"
+                      ]
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "planId": {
+                            "type": "string"
+                          },
+                          "categoryId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "plannedAmount": {
+                            "type": "integer"
+                          },
+                          "direction": {
+                            "type": "string",
+                            "enum": [
+                              "INCOME",
+                              "EXPENSE"
+                            ]
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "FIXED",
+                              "ESTIMATED"
+                            ]
+                          },
+                          "recurrence": {
+                            "type": "string",
+                            "enum": [
+                              "PERMANENT",
+                              "ONE_TIME",
+                              "INSTALLMENT"
+                            ]
+                          },
+                          "installmentTotal": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "installmentNumber": {
+                            "type": [
+                              "number",
+                              "null"
+                            ]
+                          },
+                          "sourceItemId": {
+                            "type": [
+                              "string",
+                              "null"
+                            ]
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "updatedAt": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "planId",
+                          "categoryId",
+                          "name",
+                          "plannedAmount",
+                          "direction",
+                          "type",
+                          "recurrence",
+                          "installmentTotal",
+                          "installmentNumber",
+                          "sourceItemId",
+                          "createdAt",
+                          "updatedAt"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "plan",
+                    "items"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/partnership/budget-plans/{id}": {
+      "delete": {
+        "summary": "Delete a joint budget plan",
+        "tags": [
+          "Budget Plans"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Joint plan deleted"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          },
+          "404": {
+            "description": "Plan not found"
+          }
+        }
+      }
+    },
+    "/v1/budget-plans/summary": {
+      "get": {
+        "summary": "Get budget summary comparing planned vs actual",
+        "tags": [
+          "Budget Plans"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Budget summary"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/budget-plans/{planId}/items": {
+      "post": {
+        "summary": "Add an item to a budget plan",
+        "tags": [
+          "Budget Items"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "categoryId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "plannedAmount": {
+                    "type": "integer",
+                    "exclusiveMinimum": 0
+                  },
+                  "direction": {
+                    "type": "string",
+                    "enum": [
+                      "INCOME",
+                      "EXPENSE"
+                    ]
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "FIXED",
+                      "ESTIMATED"
+                    ]
+                  },
+                  "recurrence": {
+                    "type": "string",
+                    "enum": [
+                      "PERMANENT",
+                      "ONE_TIME",
+                      "INSTALLMENT"
+                    ]
+                  },
+                  "installmentTotal": {
+                    "type": "integer",
+                    "minimum": 2
+                  }
+                },
+                "required": [
+                  "categoryId",
+                  "name",
+                  "plannedAmount",
+                  "direction",
+                  "type",
+                  "recurrence"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Item added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "planId": {
+                      "type": "string"
+                    },
+                    "categoryId": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "plannedAmount": {
+                      "type": "integer"
+                    },
+                    "direction": {
+                      "type": "string",
+                      "enum": [
+                        "INCOME",
+                        "EXPENSE"
+                      ]
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "FIXED",
+                        "ESTIMATED"
+                      ]
+                    },
+                    "recurrence": {
+                      "type": "string",
+                      "enum": [
+                        "PERMANENT",
+                        "ONE_TIME",
+                        "INSTALLMENT"
+                      ]
+                    },
+                    "installmentTotal": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "installmentNumber": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "sourceItemId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "planId",
+                    "categoryId",
+                    "name",
+                    "plannedAmount",
+                    "direction",
+                    "type",
+                    "recurrence",
+                    "installmentTotal",
+                    "installmentNumber",
+                    "sourceItemId",
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    },
+    "/v1/budget-plans/{planId}/items/{id}": {
+      "put": {
+        "summary": "Update a budget item",
+        "tags": [
+          "Budget Items"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "plannedAmount": {
+                    "type": "number",
+                    "exclusiveMinimum": 0
+                  },
+                  "categoryId": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Item updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "planId": {
+                      "type": "string"
+                    },
+                    "categoryId": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "plannedAmount": {
+                      "type": "integer"
+                    },
+                    "direction": {
+                      "type": "string",
+                      "enum": [
+                        "INCOME",
+                        "EXPENSE"
+                      ]
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "FIXED",
+                        "ESTIMATED"
+                      ]
+                    },
+                    "recurrence": {
+                      "type": "string",
+                      "enum": [
+                        "PERMANENT",
+                        "ONE_TIME",
+                        "INSTALLMENT"
+                      ]
+                    },
+                    "installmentTotal": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "installmentNumber": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "sourceItemId": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "planId",
+                    "categoryId",
+                    "name",
+                    "plannedAmount",
+                    "direction",
+                    "type",
+                    "recurrence",
+                    "installmentTotal",
+                    "installmentNumber",
+                    "sourceItemId",
+                    "createdAt",
+                    "updatedAt"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          },
+          "404": {
+            "description": "Item not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a budget item",
+        "tags": [
+          "Budget Items"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Item deleted"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          },
+          "404": {
+            "description": "Item not found"
+          }
+        }
+      }
+    },
+    "/v1/dashboard": {
+      "get": {
+        "summary": "Get dashboard with spending overview and recent transactions",
+        "tags": [
+          "Dashboard"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dashboard data"
+          },
+          "401": {
+            "description": "Missing or invalid authentication token"
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {}
+}

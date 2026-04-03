@@ -25,8 +25,6 @@ function extractQueryParam(event: APIGatewayProxyEventV2, name: string): string 
   return event.queryStringParameters?.[name] ?? '';
 }
 
-// Category routes
-
 export function makeListCategoriesRoute(service: IBudgetCategoryService) {
   return async (
     _event: APIGatewayProxyEventV2,
@@ -85,8 +83,6 @@ export function makeDeleteCategoryRoute(service: IBudgetCategoryService) {
     }
   };
 }
-
-// Plan routes
 
 export function makeGetPersonalPlanRoute(service: IBudgetPlanService) {
   return async (
@@ -178,8 +174,6 @@ export function makeDeleteJointPlanRoute(service: IBudgetPlanService) {
   };
 }
 
-// Item routes
-
 export function makeAddItemRoute(service: IBudgetPlanService) {
   return async (
     event: APIGatewayProxyEventV2,
@@ -250,7 +244,6 @@ export function makeBudgetHandler(
   jwtService: IJwtService,
 ) {
   const routes: ProxyRoute = {
-    // Categories
     'GET /v1/budget-categories': withAuth(jwtService, makeListCategoriesRoute(categoryService)),
     'POST /v1/budget-categories': withAuth(jwtService, makeCreateCategoryRoute(categoryService)),
     'PUT /v1/budget-categories/{id}': withAuth(
@@ -261,11 +254,9 @@ export function makeBudgetHandler(
       jwtService,
       makeDeleteCategoryRoute(categoryService),
     ),
-    // Personal plans
     'GET /v1/budget-plans': withAuth(jwtService, makeGetPersonalPlanRoute(planService)),
     'POST /v1/budget-plans': withAuth(jwtService, makeCreatePersonalPlanRoute(planService)),
     'DELETE /v1/budget-plans/{id}': withAuth(jwtService, makeDeletePersonalPlanRoute(planService)),
-    // Joint plans
     'GET /v1/partnership/budget-plans': withAuth(jwtService, makeGetJointPlanRoute(planService)),
     'POST /v1/partnership/budget-plans': withAuth(
       jwtService,
@@ -275,9 +266,7 @@ export function makeBudgetHandler(
       jwtService,
       makeDeleteJointPlanRoute(planService),
     ),
-    // Summary
     'GET /v1/budget-plans/summary': withAuth(jwtService, makeGetSummaryRoute(summaryService)),
-    // Items
     'POST /v1/budget-plans/{planId}/items': withAuth(jwtService, makeAddItemRoute(planService)),
     'PUT /v1/budget-plans/{planId}/items/{id}': withAuth(
       jwtService,

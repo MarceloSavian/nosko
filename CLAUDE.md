@@ -22,6 +22,10 @@ suomi/
 └── mobile/     # Kotlin Multiplatform — Android and web mobile app
 ```
 
+## Code Style
+
+- Do not add comments to the code. The code should be self-explanatory. The only exception is `biome-ignore` directives required by the linter.
+
 ### `backend/`
 TypeScript backend running on AWS Lambda with PostgreSQL (Neon). Follows Clean Architecture with strict layer separation. See `backend/CONVENTIONS.md` for all architecture rules, coding standards, and patterns to follow when generating backend code.
 

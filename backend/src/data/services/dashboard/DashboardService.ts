@@ -22,7 +22,6 @@ export class DashboardService implements IDashboardService {
   async getDashboard(customerId: string, yearMonth: string): Promise<DashboardData> {
     const bankAccountIds = await this.ownershipRepository.findAccountIdsByCustomerId(customerId);
 
-    // Get transactions for the month
     const allTransactions =
       bankAccountIds.length > 0
         ? await this.transactionRepository.findByFilters(
@@ -34,7 +33,6 @@ export class DashboardService implements IDashboardService {
 
     const totalSpending = transactions.reduce((sum, tx) => sum + tx.amount, 0);
 
-    // Get budget plan for the month
     const plan = await this.planRepository.findByCustomerAndMonth(customerId, yearMonth);
     let budgetSummary: DashboardData['budgetSummary'] = [];
 

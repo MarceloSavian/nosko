@@ -218,7 +218,6 @@ export class BudgetPlanService implements IBudgetPlanService {
         continue;
       }
 
-      // PERMANENT
       const copied = await this.itemRepository.insert(
         targetPlanId,
         {
