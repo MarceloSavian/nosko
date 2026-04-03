@@ -15,8 +15,10 @@ iac/
 │   │   └── aws-lambda/        # Current implementation
 │   ├── api-routing/
 │   │   └── aws-apigw-v2/
-│   └── secrets/
-│       └── aws-ssm/
+│   ├── secrets/
+│   │   └── aws-ssm/
+│   └── static-site/
+│       └── aws-s3-cloudfront/
 └── environments/
     └── prod/                  # Wires modules together
 ```
@@ -67,7 +69,8 @@ environments/prod/
 ├── data.tf          # data sources for existing resources
 ├── secrets.tf       # secrets module wiring
 ├── compute.tf       # compute module wiring + handler definitions
-└── api-routing.tf   # API routing module wiring + route map
+├── api-routing.tf   # API routing module wiring + route map
+└── static-site.tf   # static site module wiring (S3 + CloudFront)
 ```
 
 ### Secrets
@@ -99,6 +102,14 @@ data "aws_route53_zone" "main" { zone_id = "Z06808202W4XW561C8KYB" }
 ```bash
 cd backend && npm run generate:openapi && npm run build   # generate spec + bundle handlers
 cd iac/environments/prod && terraform apply               # deploy
+```
+
+### Web App Deployment
+
+```bash
+cd web && npm run build
+aws s3 sync dist/ s3://suomi-prod-static-site --delete
+aws cloudfront create-invalidation --distribution-id <ID> --paths "/*"
 ```
 
 ### Migrations
