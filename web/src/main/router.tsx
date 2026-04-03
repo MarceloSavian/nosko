@@ -1,4 +1,5 @@
 import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/react-router';
+import { ConfirmEmailPage } from '@/presentation/pages/confirm-email/ConfirmEmailPage';
 import { LandingPage } from '@/presentation/pages/landing/LandingPage';
 import { LoginPage } from '@/presentation/pages/login/LoginPage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
@@ -25,7 +26,13 @@ const signupRoute = createRoute({
   component: SignUpPage,
 });
 
-const routeTree = rootRoute.addChildren([landingRoute, loginRoute, signupRoute]);
+const confirmEmailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/confirm-email',
+  component: ConfirmEmailPage,
+});
+
+const routeTree = rootRoute.addChildren([landingRoute, loginRoute, signupRoute, confirmEmailRoute]);
 
 export const router = createRouter({ routeTree });
 
