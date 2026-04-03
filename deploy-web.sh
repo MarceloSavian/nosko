@@ -9,4 +9,4 @@ BUCKET=$(cd ../iac/environments/prod && terraform output -raw static_site_bucket
 DISTRIBUTION_ID=$(cd ../iac/environments/prod && terraform output -raw static_site_distribution_id)
 
 aws s3 sync dist/ "s3://${BUCKET}" --delete
-aws cloudfront create-invalidation --distribution-id "${DISTRIBUTION_ID}" --paths "/*"
+aws cloudfront create-invalidation --distribution-id "${DISTRIBUTION_ID}" --paths "/*" --no-cli-pager
