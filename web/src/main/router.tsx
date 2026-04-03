@@ -1,6 +1,7 @@
 import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/react-router';
 import { AppLayout } from '@/presentation/components/AppLayout';
 import { ConfirmEmailPage } from '@/presentation/pages/confirm-email/ConfirmEmailPage';
+import { DashboardPage } from '@/presentation/pages/dashboard/DashboardPage';
 import { LandingPage } from '@/presentation/pages/landing/LandingPage';
 import { LoginPage } from '@/presentation/pages/login/LoginPage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
@@ -42,7 +43,7 @@ const appLayoutRoute = createRoute({
 const dashboardRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/dashboard',
-  component: () => <div>Dashboard</div>,
+  component: DashboardPage,
 });
 
 const accountsRoute = createRoute({
