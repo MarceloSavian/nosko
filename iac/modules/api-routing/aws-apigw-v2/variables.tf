@@ -40,3 +40,20 @@ variable "zone_id" {
   type        = string
   default     = null
 }
+
+variable "cors_origins" {
+  description = "List of allowed CORS origins"
+  type        = list(string)
+}
+
+variable "throttling_burst_limit" {
+  description = "Max concurrent requests (burst)"
+  type        = number
+  default     = 20
+}
+
+variable "throttling_rate_limit" {
+  description = "Steady-state requests per second"
+  type        = number
+  default     = 20
+}

@@ -18,12 +18,10 @@ describe('formatResponse', () => {
       assert.equal(result.body, JSON.stringify(data));
     });
 
-    it('should include CORS headers', () => {
+    it('should include Content-Type header', () => {
       const result = formatResponse(200, {});
 
-      assert.equal(result.headers?.['Access-Control-Allow-Origin'], '*');
-      assert.equal(result.headers?.['Access-Control-Allow-Headers'], 'Content-Type,Authorization');
-      assert.equal(result.headers?.['Access-Control-Allow-Methods'], 'GET,POST,PUT,DELETE,OPTIONS');
+      assert.equal(result.headers?.['Content-Type'], 'application/json');
     });
   });
 });

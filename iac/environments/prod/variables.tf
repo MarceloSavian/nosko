@@ -45,3 +45,8 @@ variable "email_from" {
   type        = string
   default     = "noreply@marcelosavian.com"
 }
+
+variable "alarm_email" {
+  description = "Email address to receive CloudWatch alarm notifications"
+  type        = string
+}
