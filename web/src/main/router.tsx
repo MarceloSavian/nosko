@@ -18,6 +18,7 @@ import { FinancialPlannerPage } from '@/presentation/pages/planner/FinancialPlan
 import { UserProfilePage } from '@/presentation/pages/profile/UserProfilePage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
 import { login, resendVerification, signUp, verifyEmail } from './factories/auth';
+import { deleteAccount, loadProfile, updateProfile } from './factories/profile';
 
 const rootRoute = createRootRoute({
   component: Outlet,
@@ -92,7 +93,13 @@ const plannerRoute = createRoute({
 const profileRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/profile',
-  component: UserProfilePage,
+  component: () => (
+    <UserProfilePage
+      loadProfile={loadProfile}
+      updateProfile={updateProfile}
+      deleteAccount={deleteAccount}
+    />
+  ),
 });
 
 const partnerSetupInviteRoute = createRoute({
