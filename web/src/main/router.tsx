@@ -18,6 +18,20 @@ import { FinancialPlannerPage } from '@/presentation/pages/planner/FinancialPlan
 import { UserProfilePage } from '@/presentation/pages/profile/UserProfilePage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
 import { login, resendVerification, signUp, verifyEmail } from './factories/auth';
+import {
+  acceptInvitation,
+  cancelInvitation,
+  declineInvitation,
+  dissolvePartnership,
+  invitePartner,
+  loadAccounts,
+  loadContributionRules,
+  loadInvitations,
+  loadPartnership,
+  loadSharedAccounts,
+  setContributionRules,
+  setSharedAccounts,
+} from './factories/partnership';
 
 const rootRoute = createRootRoute({
   component: Outlet,
@@ -98,19 +112,40 @@ const profileRoute = createRoute({
 const partnerSetupInviteRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/partner-setup/invite',
-  component: InvitePartnerPage,
+  component: () => (
+    <InvitePartnerPage
+      invitePartnerUseCase={invitePartner}
+      loadInvitationsUseCase={loadInvitations}
+      acceptInvitationUseCase={acceptInvitation}
+      declineInvitationUseCase={declineInvitation}
+      cancelInvitationUseCase={cancelInvitation}
+      loadPartnershipUseCase={loadPartnership}
+      dissolvePartnershipUseCase={dissolvePartnership}
+    />
+  ),
 });
 
 const partnerSetupAccountsRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/partner-setup/select-accounts',
-  component: SelectSharedAccountsPage,
+  component: () => (
+    <SelectSharedAccountsPage
+      loadAccountsUseCase={loadAccounts}
+      loadSharedAccountsUseCase={loadSharedAccounts}
+      setSharedAccountsUseCase={setSharedAccounts}
+    />
+  ),
 });
 
 const partnerSetupRulesRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/partner-setup/contribution-rules',
-  component: ContributionRulesPage,
+  component: () => (
+    <ContributionRulesPage
+      loadContributionRulesUseCase={loadContributionRules}
+      setContributionRulesUseCase={setContributionRules}
+    />
+  ),
 });
 
 const routeTree = rootRoute.addChildren([
