@@ -17,6 +17,14 @@ import { SelectSharedAccountsPage } from '@/presentation/pages/partner-setup/Sel
 import { FinancialPlannerPage } from '@/presentation/pages/planner/FinancialPlannerPage';
 import { UserProfilePage } from '@/presentation/pages/profile/UserProfilePage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
+import {
+  createAccount,
+  deleteAccount,
+  loadAccountOverview,
+  loadAccounts,
+  loadInstitutions,
+  updateAccount,
+} from './factories/account';
 import { login, resendVerification, signUp, verifyEmail } from './factories/auth';
 
 const rootRoute = createRootRoute({
@@ -80,7 +88,16 @@ const dashboardRoute = createRoute({
 const accountsRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/accounts',
-  component: AccountsOverviewPage,
+  component: () => (
+    <AccountsOverviewPage
+      loadAccounts={loadAccounts}
+      createAccount={createAccount}
+      updateAccount={updateAccount}
+      deleteAccount={deleteAccount}
+      loadAccountOverview={loadAccountOverview}
+      loadInstitutions={loadInstitutions}
+    />
+  ),
 });
 
 const plannerRoute = createRoute({
