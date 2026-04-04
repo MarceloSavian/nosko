@@ -18,6 +18,21 @@ import { FinancialPlannerPage } from '@/presentation/pages/planner/FinancialPlan
 import { UserProfilePage } from '@/presentation/pages/profile/UserProfilePage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
 import { login, resendVerification, signUp, verifyEmail } from './factories/auth';
+import {
+  addBudgetItem,
+  createBudgetCategory,
+  createBudgetPlan,
+  createJointBudgetPlan,
+  deleteBudgetCategory,
+  deleteBudgetItem,
+  deleteBudgetPlan,
+  deleteJointBudgetPlan,
+  loadBudgetCategories,
+  loadBudgetPlan,
+  loadBudgetSummary,
+  loadJointBudgetPlan,
+  updateBudgetItem,
+} from './factories/budget';
 
 const rootRoute = createRootRoute({
   component: Outlet,
@@ -86,7 +101,23 @@ const accountsRoute = createRoute({
 const plannerRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/planner',
-  component: FinancialPlannerPage,
+  component: () => (
+    <FinancialPlannerPage
+      loadCategories={loadBudgetCategories}
+      createCategory={createBudgetCategory}
+      deleteCategory={deleteBudgetCategory}
+      loadPlan={loadBudgetPlan}
+      createPlan={createBudgetPlan}
+      deletePlan={deleteBudgetPlan}
+      loadJointPlan={loadJointBudgetPlan}
+      createJointPlan={createJointBudgetPlan}
+      deleteJointPlan={deleteJointBudgetPlan}
+      addItem={addBudgetItem}
+      updateItem={updateBudgetItem}
+      deleteItem={deleteBudgetItem}
+      loadSummary={loadBudgetSummary}
+    />
+  ),
 });
 
 const profileRoute = createRoute({
