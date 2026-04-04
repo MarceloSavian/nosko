@@ -34,3 +34,29 @@ export const signupResultSchema = z.object({
 });
 
 export type SignupResult = z.infer<typeof signupResultSchema>;
+
+export const loginInputSchema = z.object({
+  email: z.email('Invalid email'),
+  password: z.string().min(1, 'Password is required'),
+});
+
+export type LoginInput = z.infer<typeof loginInputSchema>;
+
+export const loginResultSchema = z.object({
+  accessToken: z.string(),
+});
+
+export type LoginResult = z.infer<typeof loginResultSchema>;
+
+export const verifyEmailInputSchema = z.object({
+  email: z.email('Invalid email'),
+  code: z.string().length(6, 'Code must be 6 digits'),
+});
+
+export type VerifyEmailInput = z.infer<typeof verifyEmailInputSchema>;
+
+export const resendVerificationInputSchema = z.object({
+  email: z.email('Invalid email'),
+});
+
+export type ResendVerificationInput = z.infer<typeof resendVerificationInputSchema>;

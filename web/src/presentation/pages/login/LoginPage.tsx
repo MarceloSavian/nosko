@@ -1,16 +1,55 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Trans, useLingui } from '@lingui/react/macro';
-import { Link } from '@tanstack/react-router';
-import { type FormEvent, useState } from 'react';
+import { Link, Navigate } from '@tanstack/react-router';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { EmailNotVerifiedError, InvalidCredentialsError } from '@/domain/errors/auth';
+import { type LoginInput, loginInputSchema } from '@/domain/models/auth/Auth';
+import type { ILogin } from '@/domain/usecases/auth/ILogin';
 import { Button } from '@/presentation/components/Button';
 import { Icon } from '@/presentation/components/Icon';
 import { TextInput } from '@/presentation/components/TextInput';
+import { useAuth } from '@/presentation/contexts/AuthContext';
 
-export function LoginPage() {
+type Props = {
+  loginUseCase: ILogin;
+};
+
+export function LoginPage({ loginUseCase }: Props) {
   const [showPassword, setShowPassword] = useState(false);
+  const [serverError, setServerError] = useState('');
+  const [unverifiedEmail, setUnverifiedEmail] = useState('');
+  const { login, isAuthenticated } = useAuth();
+  const { t } = useLingui();
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginInput>({
+    resolver: zodResolver(loginInputSchema),
+  });
+
+  const onSubmit = async (data: LoginInput) => {
+    setServerError('');
+    try {
+      const result = await loginUseCase.execute(data);
+      login(result.accessToken);
+    } catch (error) {
+      if (error instanceof InvalidCredentialsError) {
+        setServerError(t`Invalid email or password`);
+        return;
+      }
+      if (error instanceof EmailNotVerifiedError) {
+        setUnverifiedEmail(data.email);
+        return;
+      }
+      setServerError(t`Something went wrong. Please try again.`);
+    }
   };
+
+  if (isAuthenticated) return <Navigate to="/dashboard" />;
+  if (unverifiedEmail) return <Navigate to="/confirm-email" search={{ email: unverifiedEmail }} />;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 md:p-8 bg-background">
@@ -19,7 +58,11 @@ export function LoginPage() {
         <LoginForm
           showPassword={showPassword}
           onTogglePassword={() => setShowPassword((prev) => !prev)}
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
+          register={register}
+          errors={errors}
+          serverError={serverError}
+          isSubmitting={isSubmitting}
         />
       </main>
 
@@ -98,10 +141,22 @@ function BrandingPanel() {
 type LoginFormProps = {
   showPassword: boolean;
   onTogglePassword: () => void;
-  onSubmit: (e: FormEvent) => void;
+  onSubmit: (e: React.FormEvent) => void;
+  register: ReturnType<typeof useForm<LoginInput>>['register'];
+  errors: ReturnType<typeof useForm<LoginInput>>['formState']['errors'];
+  serverError: string;
+  isSubmitting: boolean;
 };
 
-function LoginForm({ showPassword, onTogglePassword, onSubmit }: LoginFormProps) {
+function LoginForm({
+  showPassword,
+  onTogglePassword,
+  onSubmit,
+  register,
+  errors,
+  serverError,
+  isSubmitting,
+}: LoginFormProps) {
   const { t } = useLingui();
 
   return (
@@ -125,25 +180,32 @@ function LoginForm({ showPassword, onTogglePassword, onSubmit }: LoginFormProps)
           </p>
         </header>
 
-        <form className="space-y-6" onSubmit={onSubmit}>
+        {serverError && (
+          <div className="mb-6 p-4 bg-error/10 rounded-xl text-error text-sm font-medium">
+            {serverError}
+          </div>
+        )}
+
+        <form className="space-y-6" onSubmit={onSubmit} noValidate>
           <TextInput
             id="email"
-            name="email"
             type="email"
             label={t`Email Address`}
             placeholder={t`name@company.com`}
             autoComplete="email"
             icon={<Icon name="mail" className="text-lg" />}
+            error={errors.email?.message}
+            {...register('email')}
           />
 
           <TextInput
             id="password"
-            name="password"
             type={showPassword ? 'text' : 'password'}
             label={t`Password`}
             placeholder="••••••••"
             autoComplete="current-password"
             icon={<Icon name="lock" className="text-lg" />}
+            error={errors.password?.message}
             headerRight={
               <button
                 type="button"
@@ -161,6 +223,7 @@ function LoginForm({ showPassword, onTogglePassword, onSubmit }: LoginFormProps)
                 <Icon name={showPassword ? 'visibility_off' : 'visibility'} className="text-lg" />
               </button>
             }
+            {...register('password')}
           />
 
           <div className="pt-2 flex flex-col space-y-4">
@@ -170,10 +233,9 @@ function LoginForm({ showPassword, onTogglePassword, onSubmit }: LoginFormProps)
               size="lg"
               fullWidth
               className="space-x-2 shadow-xl shadow-secondary/20"
+              disabled={isSubmitting}
             >
-              <span>
-                <Trans>Sign In</Trans>
-              </span>
+              <span>{isSubmitting ? <Trans>Signing in...</Trans> : <Trans>Sign In</Trans>}</span>
               <Icon name="login" className="text-lg" />
             </Button>
 

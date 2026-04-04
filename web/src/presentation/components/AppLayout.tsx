@@ -1,7 +1,8 @@
 import { Trans } from '@lingui/react/macro';
-import { Link, Outlet, useMatchRoute } from '@tanstack/react-router';
+import { Link, Navigate, Outlet, useMatchRoute } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 import { Icon } from '@/presentation/components/Icon';
+import { useAuth } from '@/presentation/contexts/AuthContext';
 import { cn } from '@/presentation/lib/cn';
 
 const navItems = [
@@ -50,6 +51,9 @@ function NavItemLabel({ labelKey }: { labelKey: string }) {
 
 export function AppLayout() {
   const matchRoute = useMatchRoute();
+  const { isAuthenticated, logout } = useAuth();
+
+  if (!isAuthenticated) return <Navigate to="/login" />;
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -99,6 +103,7 @@ export function AppLayout() {
 
           <button
             type="button"
+            onClick={logout}
             className="flex items-center space-x-3 px-4 py-2 text-sm text-slate-300 hover:text-white transition-all w-full cursor-pointer"
           >
             <Icon name="logout" className="text-xl" />
