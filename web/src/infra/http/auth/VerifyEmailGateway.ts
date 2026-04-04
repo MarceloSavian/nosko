@@ -4,6 +4,7 @@ import type {
 } from '@/data/protocols/auth/IVerifyEmailGateway';
 import type { IHttpClient } from '@/data/protocols/http/IHttpClient';
 import {
+  EmailAlreadyVerifiedError,
   InvalidVerificationCodeError,
   UnexpectedError,
   VerificationCodeExpiredError,
@@ -27,6 +28,7 @@ export class VerifyEmailGateway implements IVerifyEmailGateway {
 
     if (response.statusCode === 400) {
       const message = response.body?.message;
+      if (message === 'Email already verified') throw new EmailAlreadyVerifiedError();
       if (message === 'Verification code expired') throw new VerificationCodeExpiredError();
       throw new InvalidVerificationCodeError();
     }

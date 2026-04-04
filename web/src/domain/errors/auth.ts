@@ -25,3 +25,10 @@ export class VerificationCodeExpiredError extends Error {
     this.name = 'VerificationCodeExpiredError';
   }
 }
+
+export class EmailAlreadyVerifiedError extends Error {
+  constructor() {
+    super('Email already verified');
+    this.name = 'EmailAlreadyVerifiedError';
+  }
+}

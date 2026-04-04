@@ -1,7 +1,11 @@
 import { Trans, useLingui } from '@lingui/react/macro';
 import { Link, Navigate } from '@tanstack/react-router';
 import { type ChangeEvent, type KeyboardEvent, useRef, useState } from 'react';
-import { InvalidVerificationCodeError, VerificationCodeExpiredError } from '@/domain/errors/auth';
+import {
+  EmailAlreadyVerifiedError,
+  InvalidVerificationCodeError,
+  VerificationCodeExpiredError,
+} from '@/domain/errors/auth';
 import type { IResendVerification } from '@/domain/usecases/auth/IResendVerification';
 import type { IVerifyEmail } from '@/domain/usecases/auth/IVerifyEmail';
 import { Button } from '@/presentation/components/Button';
@@ -82,6 +86,10 @@ export function ConfirmEmailPage({ email, verifyEmail, resendVerification }: Pro
       await verifyEmail.execute({ email, code: fullCode });
       setVerified(true);
     } catch (error) {
+      if (error instanceof EmailAlreadyVerifiedError) {
+        setVerified(true);
+        return;
+      }
       if (error instanceof InvalidVerificationCodeError) {
         setServerError(t`Invalid verification code. Please check and try again.`);
       } else if (error instanceof VerificationCodeExpiredError) {
@@ -101,7 +109,11 @@ export function ConfirmEmailPage({ email, verifyEmail, resendVerification }: Pro
     try {
       await resendVerification.execute({ email });
       setResendSuccess(true);
-    } catch {
+    } catch (error) {
+      if (error instanceof EmailAlreadyVerifiedError) {
+        setVerified(true);
+        return;
+      }
       setServerError(t`Failed to resend verification email. Please try again.`);
     } finally {
       setIsResending(false);

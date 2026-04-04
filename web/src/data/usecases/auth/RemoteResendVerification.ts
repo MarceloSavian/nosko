@@ -1,5 +1,5 @@
 import type { IResendVerificationGateway } from '@/data/protocols/auth/IResendVerificationGateway';
-import { UnexpectedError } from '@/domain/errors/auth';
+import { EmailAlreadyVerifiedError, UnexpectedError } from '@/domain/errors/auth';
 import type { ResendVerificationInput } from '@/domain/models/auth/Auth';
 import type { IResendVerification } from '@/domain/usecases/auth/IResendVerification';
 
@@ -13,7 +13,8 @@ export class RemoteResendVerification implements IResendVerification {
   async execute(input: ResendVerificationInput): Promise<void> {
     try {
       await this.gateway.resendVerification(input);
-    } catch {
+    } catch (error) {
+      if (error instanceof EmailAlreadyVerifiedError) throw error;
       throw new UnexpectedError();
     }
   }

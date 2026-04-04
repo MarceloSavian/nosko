@@ -1,5 +1,6 @@
 import type { IVerifyEmailGateway } from '@/data/protocols/auth/IVerifyEmailGateway';
 import {
+  EmailAlreadyVerifiedError,
   InvalidVerificationCodeError,
   UnexpectedError,
   VerificationCodeExpiredError,
@@ -18,6 +19,7 @@ export class RemoteVerifyEmail implements IVerifyEmail {
     try {
       await this.gateway.verifyEmail(input);
     } catch (error) {
+      if (error instanceof EmailAlreadyVerifiedError) throw error;
       if (error instanceof InvalidVerificationCodeError) throw error;
       if (error instanceof VerificationCodeExpiredError) throw error;
       throw new UnexpectedError();
