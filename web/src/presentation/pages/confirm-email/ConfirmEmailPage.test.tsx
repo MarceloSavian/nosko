@@ -50,6 +50,12 @@ function renderWithRouter(
   return { router };
 }
 
+function getDigitInputs() {
+  const inputs = screen.getAllByRole('textbox');
+  if (inputs.length !== 6) throw new Error('Expected 6 digit inputs');
+  return inputs as [HTMLElement, HTMLElement, HTMLElement, HTMLElement, HTMLElement, HTMLElement];
+}
+
 describe('ConfirmEmailPage', () => {
   const makeSut = () => {
     const verifyEmailSpy: IVerifyEmail = { execute: vi.fn() };
@@ -118,7 +124,7 @@ describe('ConfirmEmailPage', () => {
       const user = userEvent.setup();
 
       await screen.findByText('Check your inbox');
-      const inputs = screen.getAllByRole('textbox');
+      const inputs = getDigitInputs();
       await user.type(inputs[0], '1');
       await user.type(inputs[1], '2');
       await user.type(inputs[2], '3');
@@ -135,7 +141,7 @@ describe('ConfirmEmailPage', () => {
     const fillCode = async () => {
       const user = userEvent.setup();
       await screen.findByText('Check your inbox');
-      const inputs = screen.getAllByRole('textbox');
+      const inputs = getDigitInputs();
       await user.type(inputs[0], '1');
       await user.type(inputs[1], '2');
       await user.type(inputs[2], '3');

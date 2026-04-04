@@ -50,9 +50,9 @@ function renderWithRouter(loginSpy: ILogin, initialPath = '/login') {
   ]);
   const memoryHistory = createMemoryHistory({ initialEntries: [initialPath] });
   const router = createRouter({ routeTree, history: memoryHistory });
-  // biome-ignore lint/suspicious/noExplicitAny: test router type mismatch with register
   renderWithI18n(
     <AuthProvider>
+      {/* biome-ignore lint/suspicious/noExplicitAny: test router type mismatch with register */}
       <RouterProvider router={router as any} />
     </AuthProvider>,
   );
