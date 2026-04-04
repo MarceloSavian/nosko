@@ -29,6 +29,7 @@ import {
   updateAccount,
 } from './factories/account';
 import { login, resendVerification, signUp, verifyEmail } from './factories/auth';
+import {
   addBudgetItem,
   createBudgetCategory,
   createBudgetPlan,
@@ -43,6 +44,7 @@ import { login, resendVerification, signUp, verifyEmail } from './factories/auth
   loadJointBudgetPlan,
   updateBudgetItem,
 } from './factories/budget';
+import { loadDashboard } from './factories/dashboard';
 import { requestPasswordReset, resetPassword } from './factories/password-reset';
 import {
   acceptInvitation,
@@ -145,7 +147,7 @@ const appLayoutRoute = createRoute({
 const dashboardRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/dashboard',
-  component: DashboardPage,
+  component: () => <DashboardPage loadDashboard={loadDashboard} />,
 });
 
 const accountsRoute = createRoute({
