@@ -47,3 +47,16 @@ export const loginResultSchema = z.object({
 });
 
 export type LoginResult = z.infer<typeof loginResultSchema>;
+
+export const verifyEmailInputSchema = z.object({
+  email: z.email('Invalid email'),
+  code: z.string().length(6, 'Code must be 6 digits'),
+});
+
+export type VerifyEmailInput = z.infer<typeof verifyEmailInputSchema>;
+
+export const resendVerificationInputSchema = z.object({
+  email: z.email('Invalid email'),
+});
+
+export type ResendVerificationInput = z.infer<typeof resendVerificationInputSchema>;

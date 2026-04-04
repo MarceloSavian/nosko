@@ -18,6 +18,7 @@ type Props = {
 export function LoginPage({ loginUseCase }: Props) {
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState('');
+  const [unverifiedEmail, setUnverifiedEmail] = useState('');
   const { login, isAuthenticated } = useAuth();
   const { t } = useLingui();
 
@@ -40,7 +41,7 @@ export function LoginPage({ loginUseCase }: Props) {
         return;
       }
       if (error instanceof EmailNotVerifiedError) {
-        setServerError(t`Please verify your email before signing in`);
+        setUnverifiedEmail(data.email);
         return;
       }
       setServerError(t`Something went wrong. Please try again.`);
@@ -48,6 +49,7 @@ export function LoginPage({ loginUseCase }: Props) {
   };
 
   if (isAuthenticated) return <Navigate to="/dashboard" />;
+  if (unverifiedEmail) return <Navigate to="/confirm-email" search={{ email: unverifiedEmail }} />;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 md:p-8 bg-background">
