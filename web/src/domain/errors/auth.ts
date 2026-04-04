@@ -12,6 +12,20 @@ export class UnexpectedError extends Error {
   }
 }
 
+export class InvalidCredentialsError extends Error {
+  constructor() {
+    super('Invalid credentials');
+    this.name = 'InvalidCredentialsError';
+  }
+}
+
+export class EmailNotVerifiedError extends Error {
+  constructor() {
+    super('Email not verified');
+    this.name = 'EmailNotVerifiedError';
+  }
+}
+
 export class InvalidVerificationCodeError extends Error {
   constructor() {
     super('Invalid verification code');
