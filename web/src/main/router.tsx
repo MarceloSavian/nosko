@@ -1,4 +1,10 @@
-import { createRootRoute, createRoute, createRouter, Outlet } from '@tanstack/react-router';
+import {
+  createRootRoute,
+  createRoute,
+  createRouter,
+  Outlet,
+  useSearch,
+} from '@tanstack/react-router';
 import { AppLayout } from '@/presentation/components/AppLayout';
 import { AccountsOverviewPage } from '@/presentation/pages/accounts/AccountsOverviewPage';
 import { ConfirmEmailPage } from '@/presentation/pages/confirm-email/ConfirmEmailPage';
@@ -11,7 +17,7 @@ import { SelectSharedAccountsPage } from '@/presentation/pages/partner-setup/Sel
 import { FinancialPlannerPage } from '@/presentation/pages/planner/FinancialPlannerPage';
 import { UserProfilePage } from '@/presentation/pages/profile/UserProfilePage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
-import { signUp } from './factories/auth';
+import { resendVerification, signUp, verifyEmail } from './factories/auth';
 
 const rootRoute = createRootRoute({
   component: Outlet,
@@ -35,10 +41,28 @@ const signupRoute = createRoute({
   component: () => <SignUpPage signUp={signUp} />,
 });
 
+type ConfirmEmailSearch = {
+  email: string;
+};
+
+function ConfirmEmailWrapper() {
+  const { email } = useSearch({ from: '/confirm-email' });
+  return (
+    <ConfirmEmailPage
+      email={email}
+      verifyEmail={verifyEmail}
+      resendVerification={resendVerification}
+    />
+  );
+}
+
 const confirmEmailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/confirm-email',
-  component: ConfirmEmailPage,
+  component: ConfirmEmailWrapper,
+  validateSearch: (search: Record<string, unknown>): ConfirmEmailSearch => ({
+    email: (search.email as string) ?? '',
+  }),
 });
 
 const appLayoutRoute = createRoute({

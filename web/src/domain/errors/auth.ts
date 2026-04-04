@@ -11,3 +11,17 @@ export class UnexpectedError extends Error {
     this.name = 'UnexpectedError';
   }
 }
+
+export class InvalidVerificationCodeError extends Error {
+  constructor() {
+    super('Invalid verification code');
+    this.name = 'InvalidVerificationCodeError';
+  }
+}
+
+export class VerificationCodeExpiredError extends Error {
+  constructor() {
+    super('Verification code expired');
+    this.name = 'VerificationCodeExpiredError';
+  }
+}
