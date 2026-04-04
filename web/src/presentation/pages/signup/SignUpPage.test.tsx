@@ -190,14 +190,15 @@ describe('SignUpPage', () => {
       });
     });
 
-    it('should show error message when email is already registered', async () => {
-      const { signUpSpy } = makeSut();
+    it('should navigate to /confirm-email when email is already registered', async () => {
+      const signUpSpy: ISignUp = { execute: vi.fn() };
       vi.spyOn(signUpSpy, 'execute').mockRejectedValueOnce(new EmailAlreadyRegisteredError());
+      renderWithRouter(signUpSpy);
 
       await fillAndSubmitForm();
 
       await waitFor(() => {
-        expect(screen.getByText('Email already registered')).toBeInTheDocument();
+        expect(screen.getByText('Confirm Email Page')).toBeInTheDocument();
       });
     });
 

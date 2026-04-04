@@ -3,7 +3,7 @@ import { I18nProvider } from '@lingui/react';
 import type { RenderOptions } from '@testing-library/react';
 import { render } from '@testing-library/react';
 import type { ReactNode } from 'react';
-import { messages } from '@/locales/en/messages.mjs';
+import { messages } from '@/locales/en/messages';
 
 i18n.load('en', messages);
 i18n.activate('en');
