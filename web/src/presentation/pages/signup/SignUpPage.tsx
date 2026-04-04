@@ -36,10 +36,10 @@ export function SignUpPage({ signUp }: Props) {
     setServerError('');
     try {
       await signUp.execute(data);
-      await navigate({ to: '/confirm-email' });
+      await navigate({ to: '/confirm-email', search: { email: data.email } });
     } catch (error) {
       if (error instanceof EmailAlreadyRegisteredError) {
-        setServerError(t`Email already registered`);
+        await navigate({ to: '/confirm-email', search: { email: data.email } });
         return;
       }
       setServerError(t`Something went wrong. Please try again.`);

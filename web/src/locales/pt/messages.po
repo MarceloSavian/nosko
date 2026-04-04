@@ -25,7 +25,7 @@ msgstr ""
 msgid "© 2024 Nosko Wealth Management. All rights reserved."
 msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:119
+#: src/presentation/pages/login/LoginPage.tsx:121
 msgid "+12.5% growth"
 msgstr ""
 
@@ -85,7 +85,11 @@ msgstr ""
 msgid "A digital curator for high-end financial lucidity. Consolidate your wealth with a sophisticated, sand-based neutral experience."
 msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:104
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:156
+msgid "A new verification code has been sent to your email."
+msgstr ""
+
+#: src/presentation/pages/login/LoginPage.tsx:106
 msgid "A professional-grade ledger designed for modern individuals and collaborative wealth management."
 msgstr ""
 
@@ -106,8 +110,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:41
-msgid "Activation link expires in 24 hours"
-msgstr ""
+#~ msgid "Activation link expires in 24 hours"
+#~ msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:69
 #~ msgid "Active Joint Effort"
@@ -218,7 +222,7 @@ msgstr ""
 msgid "Benefits"
 msgstr "Benefícios"
 
-#: src/presentation/pages/login/LoginPage.tsx:255
+#: src/presentation/pages/login/LoginPage.tsx:257
 msgid "Biometric"
 msgstr ""
 
@@ -246,7 +250,7 @@ msgstr ""
 msgid "Cash Flow Analysis"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:23
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:141
 msgid "Check your inbox"
 msgstr ""
 
@@ -352,7 +356,7 @@ msgstr ""
 #~ msgid "Crafting the future of shared finance with beauty, trust, and editorial precision."
 #~ msgstr "Construindo o futuro das finanças compartilhadas com beleza, confiança e precisão editorial."
 
-#: src/presentation/pages/login/LoginPage.tsx:275
+#: src/presentation/pages/login/LoginPage.tsx:277
 msgid "Create an account"
 msgstr ""
 
@@ -425,8 +429,8 @@ msgid "Designed for partners who value transparency, aesthetics, and shared grow
 msgstr ""
 
 #: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:76
-msgid "Designed for shared financial growth"
-msgstr ""
+#~ msgid "Designed for shared financial growth"
+#~ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:210
 #~ msgid "Designed for the Modern Couple."
@@ -472,14 +476,14 @@ msgstr ""
 msgid "Elevate your wealth <0/>management."
 msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:191
+#: src/presentation/pages/login/LoginPage.tsx:193
 #: src/presentation/pages/signup/SignUpPage.tsx:200
 msgid "Email Address"
 msgstr "Endereço de E-mail"
 
 #: src/presentation/pages/signup/SignUpPage.tsx:42
-msgid "Email already registered"
-msgstr ""
+#~ msgid "Email already registered"
+#~ msgstr ""
 
 #: src/presentation/pages/signup/SignUpPage.tsx:258
 #~ msgid "ENCRYPTED"
@@ -533,8 +537,12 @@ msgstr ""
 #~ msgid "Export Ledger (PDF)"
 #~ msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:264
+#: src/presentation/pages/login/LoginPage.tsx:266
 msgid "Face ID"
+msgstr ""
+
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:117
+msgid "Failed to resend verification email. Please try again."
 msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:281
@@ -585,7 +593,7 @@ msgstr ""
 msgid "Finish Setup"
 msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:212
+#: src/presentation/pages/login/LoginPage.tsx:214
 msgid "Forgot Password?"
 msgstr "Esqueceu a Senha?"
 
@@ -695,8 +703,12 @@ msgstr ""
 msgid "Institutional Standard"
 msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:41
+#: src/presentation/pages/login/LoginPage.tsx:40
 msgid "Invalid email or password"
+msgstr ""
+
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:94
+msgid "Invalid verification code. Please check and try again."
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:177
@@ -831,7 +843,7 @@ msgstr ""
 #~ msgid "My Financial Planner"
 #~ msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:192
+#: src/presentation/pages/login/LoginPage.tsx:194
 msgid "name@company.com"
 msgstr "nome@empresa.com"
 
@@ -847,7 +859,7 @@ msgstr ""
 msgid "Net Worth"
 msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:273
+#: src/presentation/pages/login/LoginPage.tsx:275
 msgid "New to Nosko?"
 msgstr ""
 
@@ -893,8 +905,8 @@ msgid "of {0}"
 msgstr ""
 
 #: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:47
-msgid "Open Mail App"
-msgstr ""
+#~ msgid "Open Mail App"
+#~ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:186
 #~ msgid "Our layout prioritizes what matters to you specifically, not a generic grid of numbers."
@@ -948,7 +960,7 @@ msgstr ""
 msgid "Partnership Sync"
 msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:202
+#: src/presentation/pages/login/LoginPage.tsx:204
 #: src/presentation/pages/signup/SignUpPage.tsx:210
 msgid "Password"
 msgstr "Senha"
@@ -980,13 +992,13 @@ msgstr ""
 msgid "Platform"
 msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:177
+#: src/presentation/pages/login/LoginPage.tsx:179
 msgid "Please enter your credentials"
 msgstr ""
 
 #: src/presentation/pages/login/LoginPage.tsx:45
-msgid "Please verify your email before signing in"
-msgstr ""
+#~ msgid "Please verify your email before signing in"
+#~ msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:23
 #: src/presentation/pages/dashboard/DashboardPage.tsx:25
@@ -1035,8 +1047,8 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:61
-#: src/presentation/pages/login/LoginPage.tsx:69
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:214
+#: src/presentation/pages/login/LoginPage.tsx:71
 msgid "Privacy Policy"
 msgstr ""
 
@@ -1092,9 +1104,13 @@ msgstr ""
 #~ msgid "Rent & Mortgage"
 #~ msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:54
-msgid "Resend verification email"
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:198
+msgid "Resend verification code"
 msgstr ""
+
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:54
+#~ msgid "Resend verification email"
+#~ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:343
 msgid "Resources"
@@ -1104,7 +1120,7 @@ msgstr ""
 msgid "Restore Defaults"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:69
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:222
 msgid "Safety"
 msgstr ""
 
@@ -1136,7 +1152,7 @@ msgstr ""
 #~ msgid "Seamlessly blend your individual accounts into one shared visual interface."
 #~ msgstr "Combine perfeitamente suas contas individuais em uma interface visual compartilhada."
 
-#: src/presentation/pages/login/LoginPage.tsx:243
+#: src/presentation/pages/login/LoginPage.tsx:245
 msgid "Secure Access"
 msgstr ""
 
@@ -1148,7 +1164,7 @@ msgstr ""
 msgid "Secure Logout"
 msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:99
+#: src/presentation/pages/login/LoginPage.tsx:101
 msgid "Secure your <0>financial future</0> with Nosko."
 msgstr ""
 
@@ -1180,6 +1196,10 @@ msgstr ""
 msgid "Send Invitation"
 msgstr ""
 
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:198
+msgid "Sending..."
+msgstr ""
+
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:118
 msgid "Shared Account"
 msgstr ""
@@ -1188,7 +1208,7 @@ msgstr ""
 #~ msgid "Shared Goal"
 #~ msgstr "Meta Compartilhada"
 
-#: src/presentation/pages/login/LoginPage.tsx:128
+#: src/presentation/pages/login/LoginPage.tsx:130
 msgid "Shared goal: “Real Estate”"
 msgstr ""
 
@@ -1208,7 +1228,7 @@ msgstr ""
 msgid "Sign in"
 msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:236
+#: src/presentation/pages/login/LoginPage.tsx:238
 msgid "Sign In"
 msgstr ""
 
@@ -1224,7 +1244,11 @@ msgstr ""
 #~ msgid "Sign Up"
 #~ msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:236
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:206
+msgid "Sign up again"
+msgstr ""
+
+#: src/presentation/pages/login/LoginPage.tsx:238
 msgid "Signing in..."
 msgstr ""
 
@@ -1232,7 +1256,8 @@ msgstr ""
 #~ msgid "Smart Asymmetry"
 #~ msgstr "Assimetria Inteligente"
 
-#: src/presentation/pages/login/LoginPage.tsx:48
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:98
+#: src/presentation/pages/login/LoginPage.tsx:47
 #: src/presentation/pages/signup/SignUpPage.tsx:45
 msgid "Something went wrong. Please try again."
 msgstr ""
@@ -1277,11 +1302,11 @@ msgstr ""
 #~ msgid "Summer Nordic Getaway"
 #~ msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:77
+#: src/presentation/pages/login/LoginPage.tsx:79
 msgid "Support"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:65
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:218
 msgid "Support Center"
 msgstr ""
 
@@ -1299,7 +1324,7 @@ msgstr ""
 msgid "Tax Exposure"
 msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:73
+#: src/presentation/pages/login/LoginPage.tsx:75
 #: src/presentation/pages/signup/SignUpPage.tsx:255
 msgid "Terms"
 msgstr ""
@@ -1341,7 +1366,7 @@ msgstr ""
 #~ msgid "this week"
 #~ msgstr ""
 
-#: src/presentation/pages/login/LoginPage.tsx:114
+#: src/presentation/pages/login/LoginPage.tsx:116
 msgid "Total Assets"
 msgstr ""
 
@@ -1403,7 +1428,7 @@ msgstr ""
 msgid "Unity Connection"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:12
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:130
 msgid "Unity Ledger"
 msgstr ""
 
@@ -1435,8 +1460,20 @@ msgstr ""
 msgid "Utility Bills"
 msgstr ""
 
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:96
+msgid "Verification code has expired. Please request a new one."
+msgstr ""
+
 #: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:38
-msgid "Verification Status"
+#~ msgid "Verification Status"
+#~ msgstr ""
+
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:189
+msgid "Verify Email"
+msgstr ""
+
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:189
+msgid "Verifying..."
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:155
@@ -1463,21 +1500,29 @@ msgstr ""
 #~ msgid "We don't just track spending; we celebrate every step towards your shared flourishing."
 #~ msgstr "Não apenas rastreamos gastos; celebramos cada passo rumo ao florescimento compartilhado de vocês."
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:26
-msgid "We've sent a secure activation link to your email. Click it to verify your account and start your journey toward financial harmony."
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:144
+msgid "We've sent a 6-digit verification code to"
 msgstr ""
+
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:26
+#~ msgid "We've sent a secure activation link to your email. Click it to verify your account and start your journey toward financial harmony."
+#~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:221
 msgid "Weekly"
 msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:285
-#: src/presentation/pages/login/LoginPage.tsx:174
+#: src/presentation/pages/login/LoginPage.tsx:176
 msgid "Welcome back"
 msgstr "Bem-vindo de volta"
 
 #: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:52
 msgid "Which stories shall we share?"
+msgstr ""
+
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:204
+msgid "Wrong email?"
 msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:112
