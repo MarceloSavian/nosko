@@ -18,6 +18,7 @@ import { FinancialPlannerPage } from '@/presentation/pages/planner/FinancialPlan
 import { UserProfilePage } from '@/presentation/pages/profile/UserProfilePage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
 import { login, resendVerification, signUp, verifyEmail } from './factories/auth';
+import { loadDashboard } from './factories/dashboard';
 
 const rootRoute = createRootRoute({
   component: Outlet,
@@ -74,7 +75,7 @@ const appLayoutRoute = createRoute({
 const dashboardRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/dashboard',
-  component: DashboardPage,
+  component: () => <DashboardPage loadDashboard={loadDashboard} />,
 });
 
 const accountsRoute = createRoute({
