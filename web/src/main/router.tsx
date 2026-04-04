@@ -17,7 +17,14 @@ import { SelectSharedAccountsPage } from '@/presentation/pages/partner-setup/Sel
 import { FinancialPlannerPage } from '@/presentation/pages/planner/FinancialPlannerPage';
 import { UserProfilePage } from '@/presentation/pages/profile/UserProfilePage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
+import { TransactionsPage } from '@/presentation/pages/transactions/TransactionsPage';
 import { login, resendVerification, signUp, verifyEmail } from './factories/auth';
+import {
+  createTransaction,
+  deleteTransaction,
+  loadTransactions,
+  updateTransaction,
+} from './factories/transaction';
 
 const rootRoute = createRootRoute({
   component: Outlet,
@@ -95,6 +102,19 @@ const profileRoute = createRoute({
   component: UserProfilePage,
 });
 
+const transactionsRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/transactions',
+  component: () => (
+    <TransactionsPage
+      loadTransactions={loadTransactions}
+      createTransaction={createTransaction}
+      updateTransaction={updateTransaction}
+      deleteTransaction={deleteTransaction}
+    />
+  ),
+});
+
 const partnerSetupInviteRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/partner-setup/invite',
@@ -123,6 +143,7 @@ const routeTree = rootRoute.addChildren([
     accountsRoute,
     plannerRoute,
     profileRoute,
+    transactionsRoute,
     partnerSetupInviteRoute,
     partnerSetupAccountsRoute,
     partnerSetupRulesRoute,
