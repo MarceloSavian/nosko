@@ -9,6 +9,7 @@ import { AppLayout } from '@/presentation/components/AppLayout';
 import { AccountsOverviewPage } from '@/presentation/pages/accounts/AccountsOverviewPage';
 import { ConfirmEmailPage } from '@/presentation/pages/confirm-email/ConfirmEmailPage';
 import { DashboardPage } from '@/presentation/pages/dashboard/DashboardPage';
+import { ForgotPasswordPage } from '@/presentation/pages/forgot-password/ForgotPasswordPage';
 import { LandingPage } from '@/presentation/pages/landing/LandingPage';
 import { LoginPage } from '@/presentation/pages/login/LoginPage';
 import { ContributionRulesPage } from '@/presentation/pages/partner-setup/ContributionRulesPage';
@@ -16,8 +17,10 @@ import { InvitePartnerPage } from '@/presentation/pages/partner-setup/InvitePart
 import { SelectSharedAccountsPage } from '@/presentation/pages/partner-setup/SelectSharedAccountsPage';
 import { FinancialPlannerPage } from '@/presentation/pages/planner/FinancialPlannerPage';
 import { UserProfilePage } from '@/presentation/pages/profile/UserProfilePage';
+import { ResetPasswordPage } from '@/presentation/pages/reset-password/ResetPasswordPage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
 import { login, resendVerification, signUp, verifyEmail } from './factories/auth';
+import { requestPasswordReset, resetPassword } from './factories/password-reset';
 
 const rootRoute = createRootRoute({
   component: Outlet,
@@ -61,6 +64,30 @@ const confirmEmailRoute = createRoute({
   path: '/confirm-email',
   component: ConfirmEmailWrapper,
   validateSearch: (search: Record<string, unknown>): ConfirmEmailSearch => ({
+    email: (search.email as string) ?? '',
+  }),
+});
+
+const forgotPasswordRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/forgot-password',
+  component: () => <ForgotPasswordPage requestPasswordReset={requestPasswordReset} />,
+});
+
+type ResetPasswordSearch = {
+  email: string;
+};
+
+function ResetPasswordWrapper() {
+  const { email } = useSearch({ from: '/reset-password' });
+  return <ResetPasswordPage email={email} resetPassword={resetPassword} />;
+}
+
+const resetPasswordRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/reset-password',
+  component: ResetPasswordWrapper,
+  validateSearch: (search: Record<string, unknown>): ResetPasswordSearch => ({
     email: (search.email as string) ?? '',
   }),
 });
@@ -118,6 +145,8 @@ const routeTree = rootRoute.addChildren([
   loginRoute,
   signupRoute,
   confirmEmailRoute,
+  forgotPasswordRoute,
+  resetPasswordRoute,
   appLayoutRoute.addChildren([
     dashboardRoute,
     accountsRoute,
