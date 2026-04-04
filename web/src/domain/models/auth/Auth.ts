@@ -34,3 +34,16 @@ export const signupResultSchema = z.object({
 });
 
 export type SignupResult = z.infer<typeof signupResultSchema>;
+
+export const loginInputSchema = z.object({
+  email: z.email('Invalid email'),
+  password: z.string().min(1, 'Password is required'),
+});
+
+export type LoginInput = z.infer<typeof loginInputSchema>;
+
+export const loginResultSchema = z.object({
+  accessToken: z.string(),
+});
+
+export type LoginResult = z.infer<typeof loginResultSchema>;

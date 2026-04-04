@@ -11,3 +11,17 @@ export class UnexpectedError extends Error {
     this.name = 'UnexpectedError';
   }
 }
+
+export class InvalidCredentialsError extends Error {
+  constructor() {
+    super('Invalid credentials');
+    this.name = 'InvalidCredentialsError';
+  }
+}
+
+export class EmailNotVerifiedError extends Error {
+  constructor() {
+    super('Email not verified');
+    this.name = 'EmailNotVerifiedError';
+  }
+}

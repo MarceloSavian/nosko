@@ -11,7 +11,7 @@ import { SelectSharedAccountsPage } from '@/presentation/pages/partner-setup/Sel
 import { FinancialPlannerPage } from '@/presentation/pages/planner/FinancialPlannerPage';
 import { UserProfilePage } from '@/presentation/pages/profile/UserProfilePage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
-import { signUp } from './factories/auth';
+import { login, signUp } from './factories/auth';
 
 const rootRoute = createRootRoute({
   component: Outlet,
@@ -26,7 +26,7 @@ const landingRoute = createRoute({
 const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/login',
-  component: LoginPage,
+  component: () => <LoginPage loginUseCase={login} />,
 });
 
 const signupRoute = createRoute({
