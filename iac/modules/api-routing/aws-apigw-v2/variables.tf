@@ -35,12 +35,6 @@ variable "certificate_arn" {
   default     = null
 }
 
-variable "zone_id" {
-  description = "Route53 zone ID for the custom domain DNS record"
-  type        = string
-  default     = null
-}
-
 variable "cors_origins" {
   description = "List of allowed CORS origins"
   type        = list(string)

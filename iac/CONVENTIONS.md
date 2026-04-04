@@ -4,6 +4,38 @@ This document defines the patterns and rules for all infrastructure code in this
 
 ---
 
+## AWS Organizations — Multi-Account Setup
+
+Infrastructure runs across three AWS accounts managed by AWS Organizations:
+
+| Account | Purpose | Domain |
+|---------|---------|--------|
+| **Management** | Organizations, Route53 zone, state bucket | — |
+| **Prod** | Production workloads | `nosko.app`, `api.nosko.app` |
+| **Test** | Test workloads | `test.nosko.app`, `test.api.nosko.app` |
+
+### Cross-Account Provider Pattern
+
+Terraform authenticates as the management account IAM user. Environment roots use `assume_role` to deploy into child accounts, and an `aws.mgmt` provider (no assume_role) for DNS records in the management account's Route53 zone.
+
+```hcl
+provider "aws" {
+  region = var.aws_region
+  assume_role {
+    role_arn = "arn:aws:iam::${var.account_id}:role/OrganizationAccountAccessRole"
+  }
+}
+
+provider "aws" {
+  alias  = "mgmt"
+  region = var.aws_region
+}
+```
+
+DNS records and ACM validation records use `provider = aws.mgmt`. All other resources use the default provider (child account).
+
+---
+
 ## Architecture: Cloud-Agnostic Modules
 
 Modules are named by **capability**, not by cloud service. Each capability has provider-specific implementations nested inside.
@@ -12,7 +44,7 @@ Modules are named by **capability**, not by cloud service. Each capability has p
 iac/
 ├── modules/
 │   ├── compute/
-│   │   └── aws-lambda/        # Current implementation
+│   │   └── aws-lambda/
 │   ├── api-routing/
 │   │   └── aws-apigw-v2/
 │   ├── secrets/
@@ -20,7 +52,9 @@ iac/
 │   └── static-site/
 │       └── aws-s3-cloudfront/
 └── environments/
-    └── prod/                  # Wires modules together
+    ├── mgmt/                  # Management account (org, DNS)
+    ├── prod/                  # Production workloads
+    └── test/                  # Test workloads
 ```
 
 ### Adding a New Provider Implementation
@@ -40,9 +74,10 @@ Then change one `source` line in the environment root.
 ## Module Design Rules
 
 1. **No provider blocks in modules** — modules inherit the provider from the calling environment root
-2. **Stable interface** — all implementations of a capability must expose the same variables and outputs
-3. **Use `for_each` over maps** — prefer a single module call with a map over multiple identical module blocks
-4. **No hardcoded values** — pass project name, environment, and configuration through variables
+2. **No Route53 records in modules** — DNS records are created in the environment root using `aws.mgmt` provider (cross-account)
+3. **Stable interface** — all implementations of a capability must expose the same variables and outputs
+4. **Use `for_each` over maps** — prefer a single module call with a map over multiple identical module blocks
+5. **No hardcoded values** — pass project name, environment, and configuration through variables
 
 ---
 
@@ -60,55 +95,66 @@ Then change one `source` line in the environment root.
 
 ## Environment Structure
 
-Each environment (e.g., `prod`) is a standalone Terraform root:
+Each environment is a standalone Terraform root:
 
 ```
-environments/prod/
-├── main.tf          # provider + backend config
+environments/{env}/
+├── main.tf          # provider + backend config (cross-account assume_role)
 ├── variables.tf     # all input variables
-├── data.tf          # data sources for existing resources
+├── data.tf          # Route53 zone data, ACM certs, DNS records
 ├── secrets.tf       # secrets module wiring
 ├── compute.tf       # compute module wiring + handler definitions
 ├── api-routing.tf   # API routing module wiring + route map
-└── static-site.tf   # static site module wiring (S3 + CloudFront)
+├── static-site.tf   # static site module wiring (S3 + CloudFront)
+└── monitoring.tf    # SNS alarms
 ```
+
+The management environment (`mgmt/`) has a simpler structure: organization, DNS zone, and outputs.
 
 ### Secrets
 
-- Secrets are stored in **SSM Parameter Store** (SecureString)
+- Secrets are stored in **SSM Parameter Store** (SecureString) in each child account
 - Actual values go in `terraform.tfvars` (gitignored, never committed)
 - Secrets are passed as Lambda environment variables at deploy time
 
 ### Shared Infrastructure
 
-Resources shared across projects (Route53 zone, ACM certs for root domain, Resend DNS) live in a **separate terraform repo**, not here. Use `data` sources to reference them:
+The Route53 hosted zone for `nosko.app` lives in the **management account** (`environments/mgmt/`). Child environments reference it via `data` sources using the `aws.mgmt` provider:
 
 ```hcl
-data "aws_route53_zone" "main" { zone_id = "Z06808202W4XW561C8KYB" }
+data "aws_route53_zone" "main" {
+  provider = aws.mgmt
+  name     = "nosko.app"
+}
 ```
 
 ---
 
 ## Build & Deploy
 
+### Deployment Order
+
+1. `terraform apply` in `environments/mgmt/` (creates org, accounts, DNS zone)
+2. `terraform apply` in `environments/test/` or `environments/prod/`
+
 ### Lambda Artifacts
 
 - Built by `backend/build.mjs` using esbuild
-- Output: one zip per handler in `iac/environments/prod/artifacts/`
+- Output: one zip per handler in `iac/environments/{env}/artifacts/`
 - Artifacts are **gitignored** — built before every `terraform apply`
 
 ### Deploy Steps
 
 ```bash
-cd backend && npm run generate:openapi && npm run build   # generate spec + bundle handlers
-cd iac/environments/prod && terraform apply               # deploy
+cd backend && npm run generate:openapi && npm run build
+cd iac/environments/{env} && terraform apply
 ```
 
 ### Web App Deployment
 
 ```bash
 cd web && npm run build
-aws s3 sync dist/ s3://nosko-prod-static-site --delete
+aws s3 sync dist/ s3://nosko-{env}-static-site --delete
 aws cloudfront create-invalidation --distribution-id <ID> --paths "/*"
 ```
 
@@ -117,8 +163,18 @@ aws cloudfront create-invalidation --distribution-id <ID> --paths "/*"
 Database migrations run via a dedicated `migration-v1` Lambda, not on cold start. Trigger with:
 
 ```bash
-aws lambda invoke --function-name nosko-prod-migration-v1 --no-cli-pager /dev/stdout
+aws lambda invoke --function-name nosko-{env}-migration-v1 --no-cli-pager /dev/stdout
 ```
+
+---
+
+## Terraform State
+
+State is stored in S3 in the **management account**:
+
+- Bucket: `nosko-terraform-state` (us-east-1)
+- Lock table: `nosko-terraform-locks` (DynamoDB)
+- State keys: `nosko/{env}/terraform.tfstate`
 
 ---
 
@@ -126,9 +182,9 @@ aws lambda invoke --function-name nosko-prod-migration-v1 --no-cli-pager /dev/st
 
 1. Name modules by capability, not by cloud service
 2. No provider blocks inside modules
-3. Keep the same interface (variables/outputs) across provider implementations
-4. Never commit secrets or `.tfvars` files
-5. Use data sources to reference shared infrastructure from the separate terraform repo
+3. No Route53 records inside modules — DNS is managed cross-account in environment roots
+4. Keep the same interface (variables/outputs) across provider implementations
+5. Never commit secrets or `.tfvars` files
 6. Build artifacts before applying — Terraform only uploads, it doesn't build
 7. One Lambda per API handler — keeps deployments independent
 8. Migrations run via Lambda, never automatically

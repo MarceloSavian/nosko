@@ -18,7 +18,3 @@ variable "certificate_arn" {
   type        = string
 }
 
-variable "zone_id" {
-  description = "Route53 zone ID for the custom domain DNS record"
-  type        = string
-}

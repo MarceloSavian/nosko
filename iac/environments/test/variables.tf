@@ -10,7 +10,7 @@ variable "project" {
 
 variable "environment" {
   type    = string
-  default = "prod"
+  default = "test"
 }
 
 variable "account_id" {
@@ -19,12 +19,12 @@ variable "account_id" {
 
 variable "web_domain" {
   type    = string
-  default = "nosko.app"
+  default = "test.nosko.app"
 }
 
 variable "api_domain" {
   type    = string
-  default = "api.nosko.app"
+  default = "test.api.nosko.app"
 }
 
 variable "database_url" {

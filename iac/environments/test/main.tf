@@ -8,7 +8,7 @@ terraform {
 
   backend "s3" {
     bucket         = "nosko-terraform-state"
-    key            = "nosko/prod/terraform.tfstate"
+    key            = "nosko/test/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "nosko-terraform-locks"
     encrypt        = true
