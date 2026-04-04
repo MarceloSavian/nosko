@@ -135,6 +135,68 @@ describe('ConfirmEmailPage', () => {
       expect(inputs[0]).toHaveValue('1');
       expect(inputs[5]).toHaveValue('6');
     });
+
+    it('should clear current digit on backspace', async () => {
+      makeSut();
+      const user = userEvent.setup();
+
+      await screen.findByText('Check your inbox');
+      const inputs = getDigitInputs();
+      await user.type(inputs[0], '1');
+      await user.type(inputs[1], '2');
+
+      await user.click(inputs[1]);
+      await user.keyboard('{Backspace}');
+
+      expect(inputs[1]).toHaveValue('');
+    });
+
+    it('should move focus to previous input on backspace when current is empty', async () => {
+      makeSut();
+      const user = userEvent.setup();
+
+      await screen.findByText('Check your inbox');
+      const inputs = getDigitInputs();
+      await user.type(inputs[0], '1');
+      await user.type(inputs[1], '2');
+
+      await user.click(inputs[1]);
+      await user.keyboard('{Backspace}');
+      await user.keyboard('{Backspace}');
+
+      expect(inputs[0]).toHaveValue('');
+    });
+
+    it('should handle pasting a full code', async () => {
+      makeSut();
+      const user = userEvent.setup();
+
+      await screen.findByText('Check your inbox');
+      const inputs = getDigitInputs();
+      await user.click(inputs[0]);
+      await user.paste('123456');
+
+      await waitFor(() => {
+        expect(inputs[0]).toHaveValue('1');
+        expect(inputs[1]).toHaveValue('2');
+        expect(inputs[2]).toHaveValue('3');
+        expect(inputs[3]).toHaveValue('4');
+        expect(inputs[4]).toHaveValue('5');
+        expect(inputs[5]).toHaveValue('6');
+      });
+    });
+
+    it('should ignore non-numeric characters when pasting', async () => {
+      makeSut();
+      const user = userEvent.setup();
+
+      await screen.findByText('Check your inbox');
+      const inputs = getDigitInputs();
+      await user.click(inputs[0]);
+      await user.paste('abc');
+
+      expect(inputs[0]).toHaveValue('');
+    });
   });
 
   describe('verify submission', () => {
