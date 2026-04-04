@@ -19,9 +19,10 @@ import { FinancialPlannerPage } from '@/presentation/pages/planner/FinancialPlan
 import { UserProfilePage } from '@/presentation/pages/profile/UserProfilePage';
 import { ResetPasswordPage } from '@/presentation/pages/reset-password/ResetPasswordPage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
+import { TransactionsPage } from '@/presentation/pages/transactions/TransactionsPage';
 import {
   createAccount,
-  deleteAccount,
+  deleteAccount as deleteBankAccount,
   loadAccountOverview,
   loadAccounts,
   loadInstitutions,
@@ -30,6 +31,12 @@ import {
 import { login, resendVerification, signUp, verifyEmail } from './factories/auth';
 import { requestPasswordReset, resetPassword } from './factories/password-reset';
 import { deleteAccount, loadProfile, updateProfile } from './factories/profile';
+import {
+  createTransaction,
+  deleteTransaction,
+  loadTransactions,
+  updateTransaction,
+} from './factories/transaction';
 
 const rootRoute = createRootRoute({
   component: Outlet,
@@ -121,7 +128,7 @@ const accountsRoute = createRoute({
       loadAccounts={loadAccounts}
       createAccount={createAccount}
       updateAccount={updateAccount}
-      deleteAccount={deleteAccount}
+      deleteAccount={deleteBankAccount}
       loadAccountOverview={loadAccountOverview}
       loadInstitutions={loadInstitutions}
     />
@@ -142,6 +149,19 @@ const profileRoute = createRoute({
       loadProfile={loadProfile}
       updateProfile={updateProfile}
       deleteAccount={deleteAccount}
+    />
+  ),
+});
+
+const transactionsRoute = createRoute({
+  getParentRoute: () => appLayoutRoute,
+  path: '/transactions',
+  component: () => (
+    <TransactionsPage
+      loadTransactions={loadTransactions}
+      createTransaction={createTransaction}
+      updateTransaction={updateTransaction}
+      deleteTransaction={deleteTransaction}
     />
   ),
 });
@@ -176,6 +196,7 @@ const routeTree = rootRoute.addChildren([
     accountsRoute,
     plannerRoute,
     profileRoute,
+    transactionsRoute,
     partnerSetupInviteRoute,
     partnerSetupAccountsRoute,
     partnerSetupRulesRoute,
