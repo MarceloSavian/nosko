@@ -21,6 +21,7 @@ import { ResetPasswordPage } from '@/presentation/pages/reset-password/ResetPass
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
 import { login, resendVerification, signUp, verifyEmail } from './factories/auth';
 import { requestPasswordReset, resetPassword } from './factories/password-reset';
+import { deleteAccount, loadProfile, updateProfile } from './factories/profile';
 
 const rootRoute = createRootRoute({
   component: Outlet,
@@ -119,7 +120,13 @@ const plannerRoute = createRoute({
 const profileRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/profile',
-  component: UserProfilePage,
+  component: () => (
+    <UserProfilePage
+      loadProfile={loadProfile}
+      updateProfile={updateProfile}
+      deleteAccount={deleteAccount}
+    />
+  ),
 });
 
 const partnerSetupInviteRoute = createRoute({
