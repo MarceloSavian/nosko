@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Trans, useLingui } from '@lingui/react/macro';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link, Navigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { EmailNotVerifiedError, InvalidCredentialsError } from '@/domain/errors/auth';
@@ -18,8 +18,7 @@ type Props = {
 export function LoginPage({ loginUseCase }: Props) {
   const [showPassword, setShowPassword] = useState(false);
   const [serverError, setServerError] = useState('');
-  const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const { t } = useLingui();
 
   const {
@@ -35,7 +34,6 @@ export function LoginPage({ loginUseCase }: Props) {
     try {
       const result = await loginUseCase.execute(data);
       login(result.accessToken);
-      await navigate({ to: '/dashboard' });
     } catch (error) {
       if (error instanceof InvalidCredentialsError) {
         setServerError(t`Invalid email or password`);
@@ -48,6 +46,8 @@ export function LoginPage({ loginUseCase }: Props) {
       setServerError(t`Something went wrong. Please try again.`);
     }
   };
+
+  if (isAuthenticated) return <Navigate to="/dashboard" />;
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4 md:p-8 bg-background">
