@@ -11,6 +11,7 @@ import type { IVerifyEmail } from '@/domain/usecases/auth/IVerifyEmail';
 import { Button } from '@/presentation/components/Button';
 import { Icon } from '@/presentation/components/Icon';
 import { Logo } from '@/presentation/components/Logo';
+import { EmailVerifiedPage } from './EmailVerifiedPage';
 
 type Props = {
   email: string;
@@ -29,7 +30,7 @@ export function ConfirmEmailPage({ email, verifyEmail, resendVerification }: Pro
   const { t } = useLingui();
 
   if (!email) return <Navigate to="/signup" />;
-  if (verified) return <Navigate to="/login" />;
+  if (verified) return <EmailVerifiedPage />;
 
   const handleChange = (index: number, e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, '');
