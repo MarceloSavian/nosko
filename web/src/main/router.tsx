@@ -44,6 +44,20 @@ import {
   loadJointBudgetPlan,
   updateBudgetItem,
 } from './factories/budget';
+import {
+  acceptInvitation,
+  cancelInvitation,
+  declineInvitation,
+  dissolvePartnership,
+  invitePartner,
+  loadContributionRules,
+  loadInvitations,
+  loadPartnership,
+  loadAccounts as loadPartnershipAccounts,
+  loadSharedAccounts,
+  setContributionRules,
+  setSharedAccounts,
+} from './factories/partnership';
 import { requestPasswordReset, resetPassword } from './factories/password-reset';
 import { deleteAccount, loadProfile, updateProfile } from './factories/profile';
 import {
@@ -200,19 +214,40 @@ const transactionsRoute = createRoute({
 const partnerSetupInviteRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/partner-setup/invite',
-  component: InvitePartnerPage,
+  component: () => (
+    <InvitePartnerPage
+      invitePartnerUseCase={invitePartner}
+      loadInvitationsUseCase={loadInvitations}
+      acceptInvitationUseCase={acceptInvitation}
+      declineInvitationUseCase={declineInvitation}
+      cancelInvitationUseCase={cancelInvitation}
+      loadPartnershipUseCase={loadPartnership}
+      dissolvePartnershipUseCase={dissolvePartnership}
+    />
+  ),
 });
 
 const partnerSetupAccountsRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/partner-setup/select-accounts',
-  component: SelectSharedAccountsPage,
+  component: () => (
+    <SelectSharedAccountsPage
+      loadAccountsUseCase={loadPartnershipAccounts}
+      loadSharedAccountsUseCase={loadSharedAccounts}
+      setSharedAccountsUseCase={setSharedAccounts}
+    />
+  ),
 });
 
 const partnerSetupRulesRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/partner-setup/contribution-rules',
-  component: ContributionRulesPage,
+  component: () => (
+    <ContributionRulesPage
+      loadContributionRulesUseCase={loadContributionRules}
+      setContributionRulesUseCase={setContributionRules}
+    />
+  ),
 });
 
 const routeTree = rootRoute.addChildren([

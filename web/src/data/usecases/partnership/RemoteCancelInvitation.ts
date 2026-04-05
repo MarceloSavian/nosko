@@ -1,0 +1,19 @@
+import { rethrowKnown } from '@/data/helpers/rethrowKnown';
+import type { IPartnershipGateway } from '@/data/protocols/partnership/IPartnershipGateway';
+import type { ICancelInvitation } from '@/domain/usecases/partnership/ICancelInvitation';
+
+export class RemoteCancelInvitation implements ICancelInvitation {
+  private readonly gateway: IPartnershipGateway;
+
+  constructor(gateway: IPartnershipGateway) {
+    this.gateway = gateway;
+  }
+
+  async execute(id: string): Promise<void> {
+    try {
+      await this.gateway.cancelInvitation(id);
+    } catch (error) {
+      rethrowKnown(error);
+    }
+  }
+}

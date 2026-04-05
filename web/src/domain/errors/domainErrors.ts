@@ -12,6 +12,11 @@ import {
   BudgetItemNotFoundError,
   BudgetPlanNotFoundError,
 } from './budget';
+import {
+  InvitationNotFoundError,
+  PartnershipAlreadyExistsError,
+  PartnershipNotFoundError,
+} from './partnership';
 import { InvalidResetCodeError, ResetCodeExpiredError } from './password-reset';
 import { ProfileNotFoundError } from './profile';
 import { TransactionNotFoundError } from './transaction';
@@ -26,9 +31,12 @@ export const domainErrors: Record<string, ErrorConstructor> = {
   EmailAlreadyRegisteredError,
   EmailAlreadyVerifiedError,
   EmailNotVerifiedError,
+  InvitationNotFoundError,
   InvalidCredentialsError,
   InvalidResetCodeError,
   InvalidVerificationCodeError,
+  PartnershipAlreadyExistsError,
+  PartnershipNotFoundError,
   ProfileNotFoundError,
   ResetCodeExpiredError,
   TransactionNotFoundError,
