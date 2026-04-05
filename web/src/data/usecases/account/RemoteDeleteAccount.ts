@@ -1,5 +1,5 @@
+import { rethrowKnown } from '@/data/helpers/rethrowKnown';
 import type { IAccountGateway } from '@/data/protocols/account/IAccountGateway';
-import { AccountNotFoundError, UnexpectedError } from '@/domain/errors/account';
 import type { IDeleteAccount } from '@/domain/usecases/account/IDeleteAccount';
 
 export class RemoteDeleteAccount implements IDeleteAccount {
@@ -13,8 +13,7 @@ export class RemoteDeleteAccount implements IDeleteAccount {
     try {
       await this.gateway.delete(id);
     } catch (error) {
-      if (error instanceof AccountNotFoundError) throw error;
-      throw new UnexpectedError();
+      rethrowKnown(error);
     }
   }
 }

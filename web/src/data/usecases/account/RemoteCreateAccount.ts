@@ -1,5 +1,5 @@
+import { rethrowKnown } from '@/data/helpers/rethrowKnown';
 import type { IAccountGateway } from '@/data/protocols/account/IAccountGateway';
-import { UnexpectedError } from '@/domain/errors/account';
 import type { BankAccount, CreateBankAccountInput } from '@/domain/models/account/Account';
 import type { ICreateAccount } from '@/domain/usecases/account/ICreateAccount';
 
@@ -13,8 +13,8 @@ export class RemoteCreateAccount implements ICreateAccount {
   async execute(input: CreateBankAccountInput): Promise<BankAccount> {
     try {
       return await this.gateway.create(input);
-    } catch {
-      throw new UnexpectedError();
+    } catch (error) {
+      rethrowKnown(error);
     }
   }
 }
