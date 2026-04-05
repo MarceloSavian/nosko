@@ -69,7 +69,7 @@ msgstr ""
 msgid "3 institutions currently synchronized"
 msgstr ""
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:46
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:257
 msgid "50/50 Split"
 msgstr ""
 
@@ -85,7 +85,7 @@ msgstr ""
 msgid "A digital curator for high-end financial lucidity. Consolidate your wealth with a sophisticated, sand-based neutral experience."
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:156
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:157
 msgid "A new verification code has been sent to your email."
 msgstr ""
 
@@ -96,6 +96,10 @@ msgstr ""
 #: src/presentation/pages/landing/LandingPage.tsx:298
 #~ msgid "About Us"
 #~ msgstr "Sobre Nós"
+
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:280
+msgid "Accept"
+msgstr ""
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:111
 msgid "Account Preferences"
@@ -121,11 +125,15 @@ msgstr ""
 msgid "Active Link: Jordan J."
 msgstr ""
 
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:196
+msgid "Active Partnership"
+msgstr ""
+
 #: src/presentation/pages/dashboard/DashboardPage.tsx:141
 msgid "Activity Ledger"
 msgstr ""
 
-#: src/presentation/components/AppLayout.tsx:91
+#: src/presentation/components/AppLayout.tsx:112
 msgid "Add Transaction"
 msgstr ""
 
@@ -150,8 +158,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:154
-msgid "Alex's Share"
-msgstr ""
+#~ msgid "Alex's Share"
+#~ msgstr ""
 
 #: src/presentation/pages/signup/SignUpPage.tsx:243
 msgid "Already have an account?"
@@ -189,14 +197,19 @@ msgstr ""
 msgid "Available on Web, iOS and Android."
 msgstr ""
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:20
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:98
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:312
+msgid "Awaiting response"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:227
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:164
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:159
 msgid "Back"
 msgstr ""
 
 #: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:175
-msgid "Back to Earnings"
-msgstr ""
+#~ msgid "Back to Earnings"
+#~ msgstr ""
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:97
 #~ msgid "Bank Connections"
@@ -246,11 +259,15 @@ msgstr ""
 #~ msgid "Building Harmony"
 #~ msgstr ""
 
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:323
+msgid "Cancel"
+msgstr ""
+
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:208
 msgid "Cash Flow Analysis"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:141
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:142
 msgid "Check your inbox"
 msgstr ""
 
@@ -286,17 +303,21 @@ msgstr ""
 #~ msgid "Collaborative Planning"
 #~ msgstr "Planejamento Colaborativo"
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:72
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:351
 msgid "Collaborative planning is the core of Nosko. Once accepted, you'll gain access to shared visibility across accounts and joint wealth targets."
 msgstr ""
 
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:81
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:142
 msgid "Collaborative Security"
 msgstr ""
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:54
 #~ msgid "Collaborative Spirit"
 #~ msgstr ""
+
+#: src/presentation/components/AppLayout.tsx:158
+msgid "Collapse"
+msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:135
 #~ msgid "Comment on transactions, add photos of memories, and plan together."
@@ -344,12 +365,16 @@ msgstr "Contato"
 #~ msgid "Continue to your Unity Ledger"
 #~ msgstr "Continue para o seu Unity Ledger"
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:61
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:270
 msgid "Contribution ratio automatically scales with your earnings."
 msgstr ""
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:93
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:118
 msgid "Contribution Rules"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:197
+msgid "Contribution split visualization"
 msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:269
@@ -396,19 +421,27 @@ msgstr ""
 #~ msgid "Currency Defaults"
 #~ msgstr ""
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:50
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:261
 msgid "Custom %"
 msgstr ""
 
-#: src/presentation/components/AppLayout.tsx:40
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:167
+msgid "Custom Split"
+msgstr ""
+
+#: src/presentation/components/AppLayout.tsx:42
 msgid "Dashboard"
 msgstr ""
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:96
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:121
 msgid "Decide how you and your partner will split shared expenses and savings goals."
 msgstr ""
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:63
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:289
+msgid "Decline"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:272
 msgid "Define your own unique percentage split per category."
 msgstr ""
 
@@ -452,6 +485,14 @@ msgstr ""
 #~ msgid "Dismiss"
 #~ msgstr ""
 
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:214
+msgid "Dissolve Partnership"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:212
+msgid "Dissolving..."
+msgstr ""
+
 #: src/presentation/pages/login/LoginPage.tsx:163
 #~ msgid "Don't have an account?"
 #~ msgstr "Não tem uma conta?"
@@ -485,6 +526,10 @@ msgstr "Endereço de E-mail"
 #~ msgid "Email already registered"
 #~ msgstr ""
 
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:24
+msgid "Email Verified"
+msgstr ""
+
 #: src/presentation/pages/signup/SignUpPage.tsx:258
 #~ msgid "ENCRYPTED"
 #~ msgstr ""
@@ -505,7 +550,7 @@ msgstr ""
 msgid "English (US) · International Edition"
 msgstr ""
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:74
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:281
 msgid "Equity First"
 msgstr ""
 
@@ -522,8 +567,8 @@ msgid "Estate-Grade Security"
 msgstr ""
 
 #: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:139
-msgid "Estimated monthly commitment based on your last 30 days."
-msgstr ""
+#~ msgid "Estimated monthly commitment based on your last 30 days."
+#~ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:119
 #~ msgid "Every transaction tells a story. From morning coffees to mortgage payments, Nosko translates your data into a cohesive editorial ledger."
@@ -541,8 +586,48 @@ msgstr ""
 msgid "Face ID"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:117
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:98
+msgid "Failed to accept invitation"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:122
+msgid "Failed to cancel invitation"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:110
+msgid "Failed to decline invitation"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:134
+msgid "Failed to dissolve partnership"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:50
+msgid "Failed to load accounts"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:75
+msgid "Failed to load contribution rules"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:71
+msgid "Failed to load partnership data"
+msgstr ""
+
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:118
 msgid "Failed to resend verification email. Please try again."
+msgstr ""
+
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:91
+msgid "Failed to save contribution rules"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:73
+msgid "Failed to save shared accounts"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:88
+msgid "Failed to send invitation"
 msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:281
@@ -569,7 +654,7 @@ msgstr ""
 #~ msgid "Financial Harmony has detected that transferring £5,000 to your high-yield savings could net you an extra $240 in interest annually."
 #~ msgstr ""
 
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:83
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:144
 msgid "Financial Harmony uses military-grade encryption for all shared data. Your partner can view history but cannot perform transactions or modify core settings."
 msgstr ""
 
@@ -589,7 +674,7 @@ msgstr ""
 msgid "Financial unity starts with <0>precision.</0>"
 msgstr ""
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:180
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:237
 msgid "Finish Setup"
 msgstr ""
 
@@ -620,6 +705,10 @@ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:175
 msgid "Global Liquidity View"
+msgstr ""
+
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:34
+msgid "Go to Login"
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:94
@@ -654,7 +743,7 @@ msgstr ""
 #~ msgid "hello@example.com"
 #~ msgstr ""
 
-#: src/presentation/components/AppLayout.tsx:100
+#: src/presentation/components/AppLayout.tsx:123
 #: src/presentation/pages/landing/LandingPage.tsx:348
 msgid "Help Center"
 msgstr ""
@@ -707,7 +796,7 @@ msgstr ""
 msgid "Invalid email or password"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:94
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:95
 msgid "Invalid verification code. Please check and try again."
 msgstr ""
 
@@ -723,7 +812,7 @@ msgstr ""
 msgid "Investments"
 msgstr ""
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:29
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:173
 msgid "Invite your <0>Financial Partner</0>"
 msgstr ""
 
@@ -743,7 +832,7 @@ msgstr ""
 msgid "Joint (58%)"
 msgstr ""
 
-#: src/presentation/components/AppLayout.tsx:42
+#: src/presentation/components/AppLayout.tsx:44
 msgid "Joint Accounts"
 msgstr ""
 
@@ -763,7 +852,7 @@ msgstr ""
 #~ msgid "Joint Share"
 #~ msgstr ""
 
-#: src/presentation/components/AppLayout.tsx:69
+#: src/presentation/components/AppLayout.tsx:80
 msgid "Joint Wealth Management"
 msgstr ""
 
@@ -796,8 +885,8 @@ msgid "Log In"
 msgstr "Entrar"
 
 #: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:161
-msgid "Lori's Share"
-msgstr ""
+#~ msgid "Lori's Share"
+#~ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:221
 msgid "Machine learning labels for 100+ transaction types."
@@ -811,7 +900,7 @@ msgstr ""
 #~ msgid "Maximize Your Joint Portfolio"
 #~ msgstr ""
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:76
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:283
 msgid "Maximum Control"
 msgstr ""
 
@@ -863,13 +952,18 @@ msgstr ""
 msgid "New to Nosko?"
 msgstr ""
 
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:105
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:338
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:170
 msgid "Next"
 msgstr ""
 
 #: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:61
 #~ msgid "Next Step"
 #~ msgstr ""
+
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:135
+msgid "No bank accounts found. Add accounts first to share them."
+msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:254
 #~ msgid "No credit card required. Invite your partner later."
@@ -928,15 +1022,31 @@ msgstr ""
 #~ msgid "PARTNER (57%)"
 #~ msgstr ""
 
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:206
+msgid "Partner A"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:173
+msgid "Partner A %"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:213
+msgid "Partner B"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:181
+msgid "Partner B %"
+msgstr ""
+
 #: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:46
 #~ msgid "Partner Email"
 #~ msgstr ""
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:25
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:169
 msgid "Partner Integration • Step 01"
 msgstr ""
 
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:48
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:91
 msgid "Partner Setup"
 msgstr ""
 
@@ -948,11 +1058,11 @@ msgstr ""
 #~ msgid "Partner Sync Settings"
 #~ msgstr ""
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:45
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:226
 msgid "Partner's Email Address"
 msgstr ""
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:46
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:227
 msgid "partner@nosko.com"
 msgstr ""
 
@@ -965,7 +1075,11 @@ msgstr ""
 msgid "Password"
 msgstr "Senha"
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:72
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:269
+msgid "Pending invitation"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:279
 msgid "Perfect Balance"
 msgstr ""
 
@@ -1035,9 +1149,13 @@ msgstr ""
 msgid "Premium Dashboard"
 msgstr ""
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:136
-msgid "Previewing: 50/50 Split"
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:194
+msgid "Preview"
 msgstr ""
+
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:136
+#~ msgid "Previewing: 50/50 Split"
+#~ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:314
 msgid "Pricing"
@@ -1047,7 +1165,8 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:214
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:215
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:42
 #: src/presentation/pages/login/LoginPage.tsx:71
 msgid "Privacy Policy"
 msgstr ""
@@ -1056,15 +1175,15 @@ msgstr ""
 #~ msgid "Product"
 #~ msgstr "Produto"
 
-#: src/presentation/components/AppLayout.tsx:46
+#: src/presentation/components/AppLayout.tsx:48
 msgid "Profile"
 msgstr ""
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:81
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:360
 msgid "Protected via Nosko Unity Protocol"
 msgstr ""
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:59
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:268
 msgid "Purely equal contribution regardless of income levels."
 msgstr ""
 
@@ -1083,6 +1202,10 @@ msgstr ""
 #: src/presentation/pages/landing/LandingPage.tsx:193
 #~ msgid "Real-time sync ensures you're always on the same page, whether it's grocery lists or global investments."
 #~ msgstr "Sincronização em tempo real garante que vocês estejam sempre na mesma página, seja na lista de compras ou em investimentos globais."
+
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:259
+msgid "Received Invitations"
+msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:243
 msgid "Recent Activity"
@@ -1104,7 +1227,7 @@ msgstr ""
 #~ msgid "Rent & Mortgage"
 #~ msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:198
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:199
 msgid "Resend verification code"
 msgstr ""
 
@@ -1120,23 +1243,33 @@ msgstr ""
 msgid "Restore Defaults"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:222
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:223
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:50
 msgid "Safety"
 msgstr ""
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:48
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:259
 msgid "Salary-Based"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:165
+msgid "Save"
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:183
 msgid "Saved This Month"
 msgstr ""
 
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:237
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:165
+msgid "Saving..."
+msgstr ""
+
 #: src/presentation/pages/dashboard/DashboardPage.tsx:86
 msgid "Savings"
 msgstr ""
 
-#: src/presentation/components/AppLayout.tsx:44
+#: src/presentation/components/AppLayout.tsx:46
 msgid "Savings Goals"
 msgstr ""
 
@@ -1156,7 +1289,7 @@ msgstr ""
 msgid "Secure Access"
 msgstr ""
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:53
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:236
 msgid "Secure invitation link will be sent instantly."
 msgstr ""
 
@@ -1184,7 +1317,7 @@ msgstr ""
 #~ msgid "Security & PIN"
 #~ msgstr ""
 
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:55
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:98
 msgid "Select the accounts you want to sync with your partner's ledger. Visibility can be adjusted per transaction later."
 msgstr ""
 
@@ -1192,12 +1325,17 @@ msgstr ""
 #~ msgid "Select the accounts you want to sync with your partner's ledger. You can adjust visibility settings for individual transactions later."
 #~ msgstr ""
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:60
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:249
 msgid "Send Invitation"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:198
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:199
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:249
 msgid "Sending..."
+msgstr ""
+
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:302
+msgid "Sent Invitations"
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:118
@@ -1236,7 +1374,7 @@ msgstr ""
 #~ msgid "Sign In to Nosko"
 #~ msgstr "Entrar no Nosko"
 
-#: src/presentation/components/AppLayout.tsx:111
+#: src/presentation/components/AppLayout.tsx:139
 msgid "Sign Out"
 msgstr ""
 
@@ -1244,7 +1382,7 @@ msgstr ""
 #~ msgid "Sign Up"
 #~ msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:206
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:207
 msgid "Sign up again"
 msgstr ""
 
@@ -1256,7 +1394,7 @@ msgstr ""
 #~ msgid "Smart Asymmetry"
 #~ msgstr "Assimetria Inteligente"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:98
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:99
 #: src/presentation/pages/login/LoginPage.tsx:47
 #: src/presentation/pages/signup/SignUpPage.tsx:45
 msgid "Something went wrong. Please try again."
@@ -1286,7 +1424,7 @@ msgstr ""
 #~ msgid "Start your shared financial journey today."
 #~ msgstr ""
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:89
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:114
 msgid "Step 3 of 3"
 msgstr ""
 
@@ -1306,7 +1444,8 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:218
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:219
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:46
 msgid "Support Center"
 msgstr ""
 
@@ -1383,8 +1522,8 @@ msgstr ""
 #~ msgstr "Harmonia Total"
 
 #: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:145
-msgid "Total Household Spend"
-msgstr ""
+#~ msgid "Total Household Spend"
+#~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:127
 msgid "Total Joint Responsibility"
@@ -1416,7 +1555,7 @@ msgstr ""
 #~ msgid "Two."
 #~ msgstr "Dois."
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:34
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:178
 msgid "Unified wealth management starts with shared visibility. Enter your partner's email to sync your Unity Ledger."
 msgstr ""
 
@@ -1424,11 +1563,12 @@ msgstr ""
 #~ msgid "Unity Accounts"
 #~ msgstr "Contas Unificadas"
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:70
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:349
 msgid "Unity Connection"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:130
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:131
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:13
 msgid "Unity Ledger"
 msgstr ""
 
@@ -1460,7 +1600,7 @@ msgstr ""
 msgid "Utility Bills"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:96
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:97
 msgid "Verification code has expired. Please request a new one."
 msgstr ""
 
@@ -1468,11 +1608,11 @@ msgstr ""
 #~ msgid "Verification Status"
 #~ msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:189
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:190
 msgid "Verify Email"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:189
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:190
 msgid "Verifying..."
 msgstr ""
 
@@ -1500,7 +1640,7 @@ msgstr ""
 #~ msgid "We don't just track spending; we celebrate every step towards your shared flourishing."
 #~ msgstr "Não apenas rastreamos gastos; celebramos cada passo rumo ao florescimento compartilhado de vocês."
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:144
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:145
 msgid "We've sent a 6-digit verification code to"
 msgstr ""
 
@@ -1517,11 +1657,11 @@ msgstr ""
 msgid "Welcome back"
 msgstr "Bem-vindo de volta"
 
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:52
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:95
 msgid "Which stories shall we share?"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:204
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:205
 msgid "Wrong email?"
 msgstr ""
 
@@ -1533,7 +1673,11 @@ msgstr ""
 #~ msgid "You and your partner are 85% of the way to your goal. At this rate, you'll be ready by July 15th."
 #~ msgstr ""
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:187
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:199
+msgid "You are currently in a partnership"
+msgstr ""
+
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:244
 msgid "You can adjust these rules anytime in <0>Shared Settings</0>."
 msgstr ""
 
@@ -1543,6 +1687,10 @@ msgstr ""
 
 #: src/presentation/pages/signup/SignUpPage.tsx:104
 msgid "Your data is protected by multi-layered encryption protocols."
+msgstr ""
+
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:27
+msgid "Your email has been successfully confirmed. You can now sign in to your account."
 msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:204

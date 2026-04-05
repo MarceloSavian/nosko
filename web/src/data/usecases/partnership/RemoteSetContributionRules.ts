@@ -1,5 +1,5 @@
+import { rethrowKnown } from '@/data/helpers/rethrowKnown';
 import type { IPartnershipGateway } from '@/data/protocols/partnership/IPartnershipGateway';
-import { UnexpectedError } from '@/domain/errors/auth';
 import type {
   ContributionRule,
   SetContributionRuleInput,
@@ -16,8 +16,8 @@ export class RemoteSetContributionRules implements ISetContributionRules {
   async execute(input: SetContributionRuleInput): Promise<ContributionRule> {
     try {
       return await this.gateway.setContributionRules(input);
-    } catch {
-      throw new UnexpectedError();
+    } catch (error) {
+      rethrowKnown(error);
     }
   }
 }

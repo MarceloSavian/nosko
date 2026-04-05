@@ -1,5 +1,5 @@
+import { rethrowKnown } from '@/data/helpers/rethrowKnown';
 import type { IPartnershipGateway } from '@/data/protocols/partnership/IPartnershipGateway';
-import { UnexpectedError } from '@/domain/errors/auth';
 import type { ContributionRule } from '@/domain/models/partnership/Partnership';
 import type { ILoadContributionRules } from '@/domain/usecases/partnership/ILoadContributionRules';
 
@@ -13,8 +13,8 @@ export class RemoteLoadContributionRules implements ILoadContributionRules {
   async execute(): Promise<ContributionRule> {
     try {
       return await this.gateway.loadContributionRules();
-    } catch {
-      throw new UnexpectedError();
+    } catch (error) {
+      rethrowKnown(error);
     }
   }
 }

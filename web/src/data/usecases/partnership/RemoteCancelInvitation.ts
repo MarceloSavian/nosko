@@ -1,6 +1,5 @@
+import { rethrowKnown } from '@/data/helpers/rethrowKnown';
 import type { IPartnershipGateway } from '@/data/protocols/partnership/IPartnershipGateway';
-import { UnexpectedError } from '@/domain/errors/auth';
-import { InvitationNotFoundError } from '@/domain/errors/partnership';
 import type { ICancelInvitation } from '@/domain/usecases/partnership/ICancelInvitation';
 
 export class RemoteCancelInvitation implements ICancelInvitation {
@@ -14,8 +13,7 @@ export class RemoteCancelInvitation implements ICancelInvitation {
     try {
       await this.gateway.cancelInvitation(id);
     } catch (error) {
-      if (error instanceof InvitationNotFoundError) throw error;
-      throw new UnexpectedError();
+      rethrowKnown(error);
     }
   }
 }
