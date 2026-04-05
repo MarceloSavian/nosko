@@ -69,7 +69,7 @@ msgstr "256-bit encryption with decentralized validation protocols for every syn
 msgid "3 institutions currently synchronized"
 msgstr "3 institutions currently synchronized"
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:257
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:46
 msgid "50/50 Split"
 msgstr "50/50 Split"
 
@@ -97,10 +97,6 @@ msgstr "A professional-grade ledger designed for modern individuals and collabor
 #~ msgid "About Us"
 #~ msgstr "About Us"
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:280
-msgid "Accept"
-msgstr "Accept"
-
 #: src/presentation/pages/profile/UserProfilePage.tsx:111
 msgid "Account Preferences"
 msgstr "Account Preferences"
@@ -125,25 +121,21 @@ msgstr "Account Preferences"
 msgid "Active Link: Jordan J."
 msgstr "Active Link: Jordan J."
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:196
-msgid "Active Partnership"
-msgstr "Active Partnership"
-
 #: src/presentation/pages/dashboard/DashboardPage.tsx:141
-msgid "Activity Ledger"
-msgstr "Activity Ledger"
+#~ msgid "Activity Ledger"
+#~ msgstr "Activity Ledger"
 
 #: src/presentation/components/AppLayout.tsx:112
 msgid "Add Transaction"
 msgstr "Add Transaction"
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:226
-msgid "Adjust Limits"
-msgstr "Adjust Limits"
+#~ msgid "Adjust Limits"
+#~ msgstr "Adjust Limits"
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:263
-msgid "AI-powered analysis of your spending patterns and investment trajectory."
-msgstr "AI-powered analysis of your spending patterns and investment trajectory."
+#~ msgid "AI-powered analysis of your spending patterns and investment trajectory."
+#~ msgstr "AI-powered analysis of your spending patterns and investment trajectory."
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:42
 #~ msgid "ALEX"
@@ -158,8 +150,8 @@ msgstr "AI-powered analysis of your spending patterns and investment trajectory.
 #~ msgstr "Alex & Jordan · Premium Members"
 
 #: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:154
-#~ msgid "Alex's Share"
-#~ msgstr "Alex's Share"
+msgid "Alex's Share"
+msgstr "Alex's Share"
 
 #: src/presentation/pages/signup/SignUpPage.tsx:243
 msgid "Already have an account?"
@@ -197,19 +189,14 @@ msgstr "Automated reconciliation for all your joint assets and accounts."
 msgid "Available on Web, iOS and Android."
 msgstr "Available on Web, iOS and Android."
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:312
-msgid "Awaiting response"
-msgstr "Awaiting response"
-
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:227
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:164
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:159
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:20
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:98
 msgid "Back"
 msgstr "Back"
 
 #: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:175
-#~ msgid "Back to Earnings"
-#~ msgstr "Back to Earnings"
+msgid "Back to Earnings"
+msgstr "Back to Earnings"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:97
 #~ msgid "Bank Connections"
@@ -251,6 +238,10 @@ msgstr "Biometric Hardware Verification Active"
 #~ msgid "Budget Adherence"
 #~ msgstr "Budget Adherence"
 
+#: src/presentation/pages/dashboard/DashboardPage.tsx:181
+msgid "Budget Summary"
+msgstr "Budget Summary"
+
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:172
 msgid "Budget Utilization"
 msgstr "Budget Utilization"
@@ -258,10 +249,6 @@ msgstr "Budget Utilization"
 #: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:71
 #~ msgid "Building Harmony"
 #~ msgstr "Building Harmony"
-
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:323
-msgid "Cancel"
-msgstr "Cancel"
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:208
 msgid "Cash Flow Analysis"
@@ -272,8 +259,8 @@ msgid "Check your inbox"
 msgstr "Check your inbox"
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:80
-msgid "Checking"
-msgstr "Checking"
+#~ msgid "Checking"
+#~ msgstr "Checking"
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:37
 #~ msgid "Checking stream"
@@ -299,11 +286,11 @@ msgstr "Clarity across every asset class."
 #~ msgid "Collaborative Planning"
 #~ msgstr "Collaborative Planning"
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:351
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:72
 msgid "Collaborative planning is the core of Nosko. Once accepted, you'll gain access to shared visibility across accounts and joint wealth targets."
 msgstr "Collaborative planning is the core of Nosko. Once accepted, you'll gain access to shared visibility across accounts and joint wealth targets."
 
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:142
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:81
 msgid "Collaborative Security"
 msgstr "Collaborative Security"
 
@@ -344,7 +331,6 @@ msgstr "Connected Accounts"
 #~ msgstr "Connected with Jordan J."
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:60
-#: src/presentation/pages/dashboard/DashboardPage.tsx:62
 msgid "Consolidated Portfolio"
 msgstr "Consolidated Portfolio"
 
@@ -361,17 +347,13 @@ msgstr "Contact"
 #~ msgid "Continue to your Unity Ledger"
 #~ msgstr "Continue to your Unity Ledger"
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:270
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:61
 msgid "Contribution ratio automatically scales with your earnings."
 msgstr "Contribution ratio automatically scales with your earnings."
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:118
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:93
 msgid "Contribution Rules"
 msgstr "Contribution Rules"
-
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:197
-msgid "Contribution split visualization"
-msgstr "Contribution split visualization"
 
 #: src/presentation/pages/landing/LandingPage.tsx:269
 #~ msgid "Crafting the future of shared finance with beauty, trust, and editorial precision."
@@ -417,27 +399,19 @@ msgstr "Creating..."
 #~ msgid "Currency Defaults"
 #~ msgstr "Currency Defaults"
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:261
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:50
 msgid "Custom %"
 msgstr "Custom %"
-
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:167
-msgid "Custom Split"
-msgstr "Custom Split"
 
 #: src/presentation/components/AppLayout.tsx:42
 msgid "Dashboard"
 msgstr "Dashboard"
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:121
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:96
 msgid "Decide how you and your partner will split shared expenses and savings goals."
 msgstr "Decide how you and your partner will split shared expenses and savings goals."
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:289
-msgid "Decline"
-msgstr "Decline"
-
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:272
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:63
 msgid "Define your own unique percentage split per category."
 msgstr "Define your own unique percentage split per category."
 
@@ -474,20 +448,12 @@ msgstr "Designed for partners who value transparency, aesthetics, and shared gro
 #~ msgstr "Dining & Groceries"
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:206
-msgid "Dining & Social"
-msgstr "Dining & Social"
+#~ msgid "Dining & Social"
+#~ msgstr "Dining & Social"
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:191
 #~ msgid "Dismiss"
 #~ msgstr "Dismiss"
-
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:214
-msgid "Dissolve Partnership"
-msgstr "Dissolve Partnership"
-
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:212
-msgid "Dissolving..."
-msgstr "Dissolving..."
 
 #: src/presentation/pages/login/LoginPage.tsx:163
 #~ msgid "Don't have an account?"
@@ -546,7 +512,7 @@ msgstr "Energy & Utilities"
 msgid "English (US) · International Edition"
 msgstr "English (US) · International Edition"
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:281
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:74
 msgid "Equity First"
 msgstr "Equity First"
 
@@ -563,8 +529,8 @@ msgid "Estate-Grade Security"
 msgstr "Estate-Grade Security"
 
 #: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:139
-#~ msgid "Estimated monthly commitment based on your last 30 days."
-#~ msgstr "Estimated monthly commitment based on your last 30 days."
+msgid "Estimated monthly commitment based on your last 30 days."
+msgstr "Estimated monthly commitment based on your last 30 days."
 
 #: src/presentation/pages/landing/LandingPage.tsx:119
 #~ msgid "Every transaction tells a story. From morning coffees to mortgage payments, Nosko translates your data into a cohesive editorial ledger."
@@ -582,49 +548,13 @@ msgstr "Estate-Grade Security"
 msgid "Face ID"
 msgstr "Face ID"
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:98
-msgid "Failed to accept invitation"
-msgstr "Failed to accept invitation"
-
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:122
-msgid "Failed to cancel invitation"
-msgstr "Failed to cancel invitation"
-
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:110
-msgid "Failed to decline invitation"
-msgstr "Failed to decline invitation"
-
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:134
-msgid "Failed to dissolve partnership"
-msgstr "Failed to dissolve partnership"
-
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:50
-msgid "Failed to load accounts"
-msgstr "Failed to load accounts"
-
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:75
-msgid "Failed to load contribution rules"
-msgstr "Failed to load contribution rules"
-
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:71
-msgid "Failed to load partnership data"
-msgstr "Failed to load partnership data"
+#: src/presentation/pages/dashboard/DashboardPage.tsx:59
+msgid "Failed to load dashboard."
+msgstr "Failed to load dashboard."
 
 #: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:118
 msgid "Failed to resend verification email. Please try again."
 msgstr "Failed to resend verification email. Please try again."
-
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:91
-msgid "Failed to save contribution rules"
-msgstr "Failed to save contribution rules"
-
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:73
-msgid "Failed to save shared accounts"
-msgstr "Failed to save shared accounts"
-
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:88
-msgid "Failed to send invitation"
-msgstr "Failed to send invitation"
 
 #: src/presentation/pages/landing/LandingPage.tsx:281
 #~ msgid "Features"
@@ -642,6 +572,10 @@ msgstr "Fiber Internet"
 msgid "Financial clarity for the modern couple."
 msgstr "Financial clarity for the modern couple."
 
+#: src/presentation/pages/dashboard/DashboardPage.tsx:95
+msgid "Financial Dashboard"
+msgstr "Financial Dashboard"
+
 #: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:84
 #~ msgid "Financial Harmony encrypts all shared ledger data. Your partner will see balances and transaction history, but cannot initiate transfers or change account settings."
 #~ msgstr "Financial Harmony encrypts all shared ledger data. Your partner will see balances and transaction history, but cannot initiate transfers or change account settings."
@@ -650,13 +584,13 @@ msgstr "Financial clarity for the modern couple."
 #~ msgid "Financial Harmony has detected that transferring £5,000 to your high-yield savings could net you an extra $240 in interest annually."
 #~ msgstr "Financial Harmony has detected that transferring £5,000 to your high-yield savings could net you an extra $240 in interest annually."
 
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:144
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:83
 msgid "Financial Harmony uses military-grade encryption for all shared data. Your partner can view history but cannot perform transactions or modify core settings."
 msgstr "Financial Harmony uses military-grade encryption for all shared data. Your partner can view history but cannot perform transactions or modify core settings."
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:286
-msgid "Financial Narrative"
-msgstr "Financial Narrative"
+#~ msgid "Financial Narrative"
+#~ msgstr "Financial Narrative"
 
 #: src/presentation/pages/landing/LandingPage.tsx:241
 #~ msgid "financial rhythm?"
@@ -670,7 +604,7 @@ msgstr "Financial Narrative"
 msgid "Financial unity starts with <0>precision.</0>"
 msgstr "Financial unity starts with <0>precision.</0>"
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:237
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:180
 msgid "Finish Setup"
 msgstr "Finish Setup"
 
@@ -687,8 +621,8 @@ msgid "Future wealth forecasting based on current trajectory."
 msgstr "Future wealth forecasting based on current trajectory."
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:260
-msgid "Generate Narrative Insights"
-msgstr "Generate Narrative Insights"
+#~ msgid "Generate Narrative Insights"
+#~ msgstr "Generate Narrative Insights"
 
 #: src/presentation/pages/landing/LandingPage.tsx:251
 #~ msgid "Get Early Access"
@@ -778,7 +712,6 @@ msgstr "Initialize Account"
 #~ msgstr "Insight"
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:26
-#: src/presentation/pages/dashboard/DashboardPage.tsx:28
 #: src/presentation/pages/landing/LandingPage.tsx:19
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:28
 msgid "Insights"
@@ -801,14 +734,14 @@ msgstr "Invalid verification code. Please check and try again."
 #~ msgstr "Investing in your hobbies monetizes your long-term creative equity."
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:92
-msgid "Investment"
-msgstr "Investment"
+#~ msgid "Investment"
+#~ msgstr "Investment"
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:84
 msgid "Investments"
 msgstr "Investments"
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:173
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:29
 msgid "Invite your <0>Financial Partner</0>"
 msgstr "Invite your <0>Financial Partner</0>"
 
@@ -861,8 +794,8 @@ msgid "Language"
 msgstr "Language"
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:269
-msgid "Launch Curator"
-msgstr "Launch Curator"
+#~ msgid "Launch Curator"
+#~ msgstr "Launch Curator"
 
 #: src/presentation/pages/landing/LandingPage.tsx:353
 msgid "Legal & Privacy"
@@ -881,8 +814,8 @@ msgid "Log In"
 msgstr "Log In"
 
 #: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:161
-#~ msgid "Lori's Share"
-#~ msgstr "Lori's Share"
+msgid "Lori's Share"
+msgstr "Lori's Share"
 
 #: src/presentation/pages/landing/LandingPage.tsx:221
 msgid "Machine learning labels for 100+ transaction types."
@@ -896,7 +829,7 @@ msgstr "Market Insights"
 #~ msgid "Maximize Your Joint Portfolio"
 #~ msgstr "Maximize Your Joint Portfolio"
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:283
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:76
 msgid "Maximum Control"
 msgstr "Maximum Control"
 
@@ -912,6 +845,14 @@ msgstr "Monthly"
 msgid "Monthly Growth"
 msgstr "Monthly Growth"
 
+#: src/presentation/pages/dashboard/DashboardPage.tsx:220
+msgid "Monthly Insights"
+msgstr "Monthly Insights"
+
+#: src/presentation/pages/dashboard/DashboardPage.tsx:128
+msgid "Monthly Overview"
+msgstr "Monthly Overview"
+
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:69
 msgid "Monthly Rent"
 msgstr "Monthly Rent"
@@ -921,8 +862,8 @@ msgstr "Monthly Rent"
 #~ msgstr "Monthly residence cost"
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:219
-msgid "Monthly Trajectory"
-msgstr "Monthly Trajectory"
+#~ msgid "Monthly Trajectory"
+#~ msgstr "Monthly Trajectory"
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:236
 #~ msgid "My Financial Planner"
@@ -948,8 +889,7 @@ msgstr "Net Worth"
 msgid "New to Nosko?"
 msgstr "New to Nosko?"
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:338
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:170
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:105
 msgid "Next"
 msgstr "Next"
 
@@ -957,13 +897,17 @@ msgstr "Next"
 #~ msgid "Next Step"
 #~ msgstr "Next Step"
 
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:135
-msgid "No bank accounts found. Add accounts first to share them."
-msgstr "No bank accounts found. Add accounts first to share them."
+#: src/presentation/pages/dashboard/DashboardPage.tsx:187
+msgid "No budget data for this month."
+msgstr "No budget data for this month."
 
 #: src/presentation/pages/landing/LandingPage.tsx:254
 #~ msgid "No credit card required. Invite your partner later."
 #~ msgstr "No credit card required. Invite your partner later."
+
+#: src/presentation/pages/dashboard/DashboardPage.tsx:149
+msgid "No recent transactions."
+msgstr "No recent transactions."
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:159
 msgid "Nosko Financial Architecture v4.2"
@@ -989,10 +933,14 @@ msgstr "Nosko Overview"
 msgid "Oct Month Trend"
 msgstr "Oct Month Trend"
 
-#. placeholder {0}: item.total
-#: src/presentation/pages/dashboard/DashboardPage.tsx:243
+#. placeholder {0}: formatCents(item.planned)
+#: src/presentation/pages/dashboard/DashboardPage.tsx:206
 msgid "of {0}"
 msgstr "of {0}"
+
+#: src/presentation/pages/dashboard/DashboardPage.tsx:241
+msgid "On track"
+msgstr "On track"
 
 #: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:47
 #~ msgid "Open Mail App"
@@ -1006,7 +954,11 @@ msgstr "of {0}"
 msgid "Our Vision"
 msgstr "Our Vision"
 
-#: src/presentation/pages/dashboard/DashboardPage.tsx:283
+#: src/presentation/pages/dashboard/DashboardPage.tsx:241
+msgid "Over budget"
+msgstr "Over budget"
+
+#: src/presentation/pages/dashboard/DashboardPage.tsx:92
 msgid "Overview"
 msgstr "Overview"
 
@@ -1018,31 +970,15 @@ msgstr "Paid – Oct 12"
 #~ msgid "PARTNER (57%)"
 #~ msgstr "PARTNER (57%)"
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:206
-msgid "Partner A"
-msgstr "Partner A"
-
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:173
-msgid "Partner A %"
-msgstr "Partner A %"
-
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:213
-msgid "Partner B"
-msgstr "Partner B"
-
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:181
-msgid "Partner B %"
-msgstr "Partner B %"
-
 #: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:46
 #~ msgid "Partner Email"
 #~ msgstr "Partner Email"
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:169
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:25
 msgid "Partner Integration • Step 01"
 msgstr "Partner Integration • Step 01"
 
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:91
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:48
 msgid "Partner Setup"
 msgstr "Partner Setup"
 
@@ -1054,11 +990,11 @@ msgstr "Partner Setup"
 #~ msgid "Partner Sync Settings"
 #~ msgstr "Partner Sync Settings"
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:226
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:45
 msgid "Partner's Email Address"
 msgstr "Partner's Email Address"
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:227
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:46
 msgid "partner@nosko.com"
 msgstr "partner@nosko.com"
 
@@ -1071,11 +1007,7 @@ msgstr "Partnership Sync"
 msgid "Password"
 msgstr "Password"
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:269
-msgid "Pending invitation"
-msgstr "Pending invitation"
-
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:279
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:72
 msgid "Perfect Balance"
 msgstr "Perfect Balance"
 
@@ -1092,7 +1024,6 @@ msgstr "Personal Growth"
 #~ msgstr "Planner"
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:29
-#: src/presentation/pages/dashboard/DashboardPage.tsx:31
 #: src/presentation/pages/landing/LandingPage.tsx:21
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:31
 msgid "Planning"
@@ -1111,7 +1042,6 @@ msgstr "Please enter your credentials"
 #~ msgstr "Please verify your email before signing in"
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:23
-#: src/presentation/pages/dashboard/DashboardPage.tsx:25
 #: src/presentation/pages/landing/LandingPage.tsx:17
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:25
 msgid "Portfolio"
@@ -1145,13 +1075,9 @@ msgstr "Precision-driven wealth oversight for complex partners."
 msgid "Premium Dashboard"
 msgstr "Premium Dashboard"
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:194
-msgid "Preview"
-msgstr "Preview"
-
 #: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:136
-#~ msgid "Previewing: 50/50 Split"
-#~ msgstr "Previewing: 50/50 Split"
+msgid "Previewing: 50/50 Split"
+msgstr "Previewing: 50/50 Split"
 
 #: src/presentation/pages/landing/LandingPage.tsx:314
 msgid "Pricing"
@@ -1175,11 +1101,11 @@ msgstr "Privacy Policy"
 msgid "Profile"
 msgstr "Profile"
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:360
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:81
 msgid "Protected via Nosko Unity Protocol"
 msgstr "Protected via Nosko Unity Protocol"
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:268
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:59
 msgid "Purely equal contribution regardless of income levels."
 msgstr "Purely equal contribution regardless of income levels."
 
@@ -1199,21 +1125,21 @@ msgstr "Real-time data synchronization across 15,000+ institutions."
 #~ msgid "Real-time sync ensures you're always on the same page, whether it's grocery lists or global investments."
 #~ msgstr "Real-time sync ensures you're always on the same page, whether it's grocery lists or global investments."
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:259
-msgid "Received Invitations"
-msgstr "Received Invitations"
-
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:243
 msgid "Recent Activity"
 msgstr "Recent Activity"
+
+#: src/presentation/pages/dashboard/DashboardPage.tsx:143
+msgid "Recent Transactions"
+msgstr "Recent Transactions"
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:145
 #~ msgid "Recurring Quarterly"
 #~ msgstr "Recurring Quarterly"
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:204
-msgid "Rent / Mortgage"
-msgstr "Rent / Mortgage"
+#~ msgid "Rent / Mortgage"
+#~ msgstr "Rent / Mortgage"
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:61
 #~ msgid "Rent & Housing"
@@ -1244,26 +1170,17 @@ msgstr "Restore Defaults"
 msgid "Safety"
 msgstr "Safety"
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:259
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:48
 msgid "Salary-Based"
 msgstr "Salary-Based"
-
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:165
-msgid "Save"
-msgstr "Save"
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:183
 msgid "Saved This Month"
 msgstr "Saved This Month"
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:237
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:165
-msgid "Saving..."
-msgstr "Saving..."
-
 #: src/presentation/pages/dashboard/DashboardPage.tsx:86
-msgid "Savings"
-msgstr "Savings"
+#~ msgid "Savings"
+#~ msgstr "Savings"
 
 #: src/presentation/components/AppLayout.tsx:46
 msgid "Savings Goals"
@@ -1285,7 +1202,7 @@ msgstr "Scheduled – Oct 28"
 msgid "Secure Access"
 msgstr "Secure Access"
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:236
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:53
 msgid "Secure invitation link will be sent instantly."
 msgstr "Secure invitation link will be sent instantly."
 
@@ -1313,7 +1230,7 @@ msgstr "Security"
 #~ msgid "Security & PIN"
 #~ msgstr "Security & PIN"
 
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:98
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:55
 msgid "Select the accounts you want to sync with your partner's ledger. Visibility can be adjusted per transaction later."
 msgstr "Select the accounts you want to sync with your partner's ledger. Visibility can be adjusted per transaction later."
 
@@ -1321,18 +1238,13 @@ msgstr "Select the accounts you want to sync with your partner's ledger. Visibil
 #~ msgid "Select the accounts you want to sync with your partner's ledger. You can adjust visibility settings for individual transactions later."
 #~ msgstr "Select the accounts you want to sync with your partner's ledger. You can adjust visibility settings for individual transactions later."
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:249
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:60
 msgid "Send Invitation"
 msgstr "Send Invitation"
 
 #: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:199
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:249
 msgid "Sending..."
 msgstr "Sending..."
-
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:302
-msgid "Sent Invitations"
-msgstr "Sent Invitations"
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:118
 msgid "Shared Account"
@@ -1420,7 +1332,7 @@ msgstr "Start your 30-day premium trial today. No credit card required."
 #~ msgid "Start your shared financial journey today."
 #~ msgstr "Start your shared financial journey today."
 
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:114
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:89
 msgid "Step 3 of 3"
 msgstr "Step 3 of 3"
 
@@ -1446,7 +1358,6 @@ msgid "Support Center"
 msgstr "Support Center"
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:38
-#: src/presentation/pages/dashboard/DashboardPage.tsx:40
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:40
 msgid "Sync Accounts"
 msgstr "Sync Accounts"
@@ -1518,15 +1429,14 @@ msgstr "Total Assets"
 #~ msgstr "Total Harmony"
 
 #: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:145
-#~ msgid "Total Household Spend"
-#~ msgstr "Total Household Spend"
+msgid "Total Household Spend"
+msgstr "Total Household Spend"
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:127
 msgid "Total Joint Responsibility"
 msgstr "Total Joint Responsibility"
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:68
-#: src/presentation/pages/dashboard/DashboardPage.tsx:70
 #: src/presentation/pages/profile/UserProfilePage.tsx:23
 msgid "Total Net Worth"
 msgstr "Total Net Worth"
@@ -1539,9 +1449,22 @@ msgstr "Total Net Worth"
 #~ msgid "Total Payments This Month"
 #~ msgstr "Total Payments This Month"
 
+#: src/presentation/pages/dashboard/DashboardPage.tsx:132
+msgid "Total Spending"
+msgstr "Total Spending"
+
+#. placeholder {0}: formatYearMonth(yearMonth)
+#: src/presentation/pages/dashboard/DashboardPage.tsx:223
+msgid "Track your spending patterns and budget utilization across categories for {0}."
+msgstr "Track your spending patterns and budget utilization across categories for {0}."
+
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:280
 msgid "Tracking shared liquidity and individual growth for Nosko & Partner."
 msgstr "Tracking shared liquidity and individual growth for Nosko & Partner."
+
+#: src/presentation/pages/dashboard/DashboardPage.tsx:163
+msgid "Transaction"
+msgstr "Transaction"
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:115
 msgid "Transfer $42k from Chase to Savings for 4.5% APY increase."
@@ -1551,7 +1474,7 @@ msgstr "Transfer $42k from Chase to Savings for 4.5% APY increase."
 #~ msgid "Two."
 #~ msgstr "Two."
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:178
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:34
 msgid "Unified wealth management starts with shared visibility. Enter your partner's email to sync your Unity Ledger."
 msgstr "Unified wealth management starts with shared visibility. Enter your partner's email to sync your Unity Ledger."
 
@@ -1559,7 +1482,7 @@ msgstr "Unified wealth management starts with shared visibility. Enter your part
 #~ msgid "Unity Accounts"
 #~ msgstr "Unity Accounts"
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:349
+#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:70
 msgid "Unity Connection"
 msgstr "Unity Connection"
 
@@ -1593,8 +1516,8 @@ msgstr "User Profile"
 #~ msgstr "Utilities"
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:208
-msgid "Utility Bills"
-msgstr "Utility Bills"
+#~ msgid "Utility Bills"
+#~ msgstr "Utility Bills"
 
 #: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:97
 msgid "Verification code has expired. Please request a new one."
@@ -1653,7 +1576,7 @@ msgstr "Weekly"
 msgid "Welcome back"
 msgstr "Welcome back"
 
-#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:95
+#: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:52
 msgid "Which stories shall we share?"
 msgstr "Which stories shall we share?"
 
@@ -1669,11 +1592,7 @@ msgstr "Yield Optimization"
 #~ msgid "You and your partner are 85% of the way to your goal. At this rate, you'll be ready by July 15th."
 #~ msgstr "You and your partner are 85% of the way to your goal. At this rate, you'll be ready by July 15th."
 
-#: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:199
-msgid "You are currently in a partnership"
-msgstr "You are currently in a partnership"
-
-#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:244
+#: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:187
 msgid "You can adjust these rules anytime in <0>Shared Settings</0>."
 msgstr "You can adjust these rules anytime in <0>Shared Settings</0>."
 

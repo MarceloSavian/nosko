@@ -44,6 +44,7 @@ import {
   loadJointBudgetPlan,
   updateBudgetItem,
 } from './factories/budget';
+import { loadDashboard } from './factories/dashboard';
 import {
   acceptInvitation,
   cancelInvitation,
@@ -146,7 +147,7 @@ const appLayoutRoute = createRoute({
 const dashboardRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/dashboard',
-  component: DashboardPage,
+  component: () => <DashboardPage loadDashboard={loadDashboard} />,
 });
 
 const accountsRoute = createRoute({
