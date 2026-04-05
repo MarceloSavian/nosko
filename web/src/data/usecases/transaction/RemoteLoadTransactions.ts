@@ -1,5 +1,5 @@
+import { rethrowKnown } from '@/data/helpers/rethrowKnown';
 import type { ITransactionGateway } from '@/data/protocols/transaction/ITransactionGateway';
-import { UnexpectedError } from '@/domain/errors/auth';
 import type { PaginatedTransactions } from '@/domain/models/transaction/Transaction';
 import type {
   ILoadTransactions,
@@ -16,8 +16,8 @@ export class RemoteLoadTransactions implements ILoadTransactions {
   async execute(params: LoadTransactionsParams): Promise<PaginatedTransactions> {
     try {
       return await this.gateway.load(params);
-    } catch {
-      throw new UnexpectedError();
+    } catch (error) {
+      rethrowKnown(error);
     }
   }
 }
