@@ -1,3 +1,4 @@
+import { AccountNotFoundError } from './account';
 import {
   EmailAlreadyRegisteredError,
   EmailAlreadyVerifiedError,
@@ -10,6 +11,7 @@ import {
 type ErrorConstructor = new (...args: never[]) => Error;
 
 export const domainErrors: Record<string, ErrorConstructor> = {
+  AccountNotFoundError,
   EmailAlreadyRegisteredError,
   EmailAlreadyVerifiedError,
   EmailNotVerifiedError,
