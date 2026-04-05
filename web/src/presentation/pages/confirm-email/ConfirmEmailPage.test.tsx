@@ -228,7 +228,7 @@ describe('ConfirmEmailPage', () => {
       });
     });
 
-    it('should navigate to /login on successful verification', async () => {
+    it('should show EmailVerifiedPage on successful verification', async () => {
       const verifyEmailSpy: IVerifyEmail = { execute: vi.fn() };
       const resendSpy: IResendVerification = { execute: vi.fn() };
       vi.spyOn(verifyEmailSpy, 'execute').mockResolvedValueOnce();
@@ -238,11 +238,11 @@ describe('ConfirmEmailPage', () => {
       await userEvent.click(screen.getByRole('button', { name: 'Verify Email' }));
 
       await waitFor(() => {
-        expect(screen.getByText('Login Page')).toBeInTheDocument();
+        expect(screen.getByText('Email Verified')).toBeInTheDocument();
       });
     });
 
-    it('should navigate to /login when EmailAlreadyVerifiedError', async () => {
+    it('should show EmailVerifiedPage when EmailAlreadyVerifiedError', async () => {
       const verifyEmailSpy: IVerifyEmail = { execute: vi.fn() };
       const resendSpy: IResendVerification = { execute: vi.fn() };
       vi.spyOn(verifyEmailSpy, 'execute').mockRejectedValueOnce(new EmailAlreadyVerifiedError());
@@ -252,7 +252,7 @@ describe('ConfirmEmailPage', () => {
       await userEvent.click(screen.getByRole('button', { name: 'Verify Email' }));
 
       await waitFor(() => {
-        expect(screen.getByText('Login Page')).toBeInTheDocument();
+        expect(screen.getByText('Email Verified')).toBeInTheDocument();
       });
     });
 
@@ -348,7 +348,7 @@ describe('ConfirmEmailPage', () => {
       });
     });
 
-    it('should navigate to /login when resend returns EmailAlreadyVerifiedError', async () => {
+    it('should show EmailVerifiedPage when resend returns EmailAlreadyVerifiedError', async () => {
       const verifyEmailSpy: IVerifyEmail = { execute: vi.fn() };
       const resendSpy: IResendVerification = { execute: vi.fn() };
       vi.spyOn(resendSpy, 'execute').mockRejectedValueOnce(new EmailAlreadyVerifiedError());
@@ -360,7 +360,7 @@ describe('ConfirmEmailPage', () => {
       await userEvent.click(resendButton);
 
       await waitFor(() => {
-        expect(screen.getByText('Login Page')).toBeInTheDocument();
+        expect(screen.getByText('Email Verified')).toBeInTheDocument();
       });
     });
 
