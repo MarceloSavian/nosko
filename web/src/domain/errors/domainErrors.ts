@@ -7,6 +7,7 @@ import {
   VerificationCodeExpiredError,
 } from './auth';
 import { InvalidResetCodeError, ResetCodeExpiredError } from './password-reset';
+import { ProfileNotFoundError } from './profile';
 
 type ErrorConstructor = new (...args: never[]) => Error;
 
@@ -17,6 +18,7 @@ export const domainErrors: Record<string, ErrorConstructor> = {
   InvalidCredentialsError,
   InvalidResetCodeError,
   InvalidVerificationCodeError,
+  ProfileNotFoundError,
   ResetCodeExpiredError,
   VerificationCodeExpiredError,
 };
