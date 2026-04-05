@@ -6,6 +6,7 @@ import {
   InvalidVerificationCodeError,
   VerificationCodeExpiredError,
 } from './auth';
+import { ProfileNotFoundError } from './profile';
 
 type ErrorConstructor = new (...args: never[]) => Error;
 
@@ -15,5 +16,6 @@ export const domainErrors: Record<string, ErrorConstructor> = {
   EmailNotVerifiedError,
   InvalidCredentialsError,
   InvalidVerificationCodeError,
+  ProfileNotFoundError,
   VerificationCodeExpiredError,
 };

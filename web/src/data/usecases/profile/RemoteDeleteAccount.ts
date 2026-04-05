@@ -1,5 +1,5 @@
+import { rethrowKnown } from '@/data/helpers/rethrowKnown';
 import type { IProfileGateway } from '@/data/protocols/profile/IProfileGateway';
-import { UnexpectedError } from '@/domain/errors/auth';
 import type { IDeleteAccount } from '@/domain/usecases/profile/IDeleteAccount';
 
 export class RemoteDeleteAccount implements IDeleteAccount {
@@ -12,8 +12,8 @@ export class RemoteDeleteAccount implements IDeleteAccount {
   async execute(): Promise<void> {
     try {
       await this.gateway.deleteAccount();
-    } catch {
-      throw new UnexpectedError();
+    } catch (error) {
+      rethrowKnown(error);
     }
   }
 }

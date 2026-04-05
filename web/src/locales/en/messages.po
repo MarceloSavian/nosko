@@ -34,8 +34,8 @@ msgstr "+12.5% growth"
 #~ msgstr "+12.5% this month"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:53
-msgid "+2.4% this month"
-msgstr "+2.4% this month"
+#~ msgid "+2.4% this month"
+#~ msgstr "+2.4% this month"
 
 #: src/presentation/pages/landing/LandingPage.tsx:258
 msgid "+2.4% This Month"
@@ -66,8 +66,8 @@ msgstr "256-bit encryption with decentralized validation protocols for every syn
 #~ msgstr "3 Active institutions linked"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:83
-msgid "3 institutions currently synchronized"
-msgstr "3 institutions currently synchronized"
+#~ msgid "3 institutions currently synchronized"
+#~ msgstr "3 institutions currently synchronized"
 
 #: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:46
 msgid "50/50 Split"
@@ -85,7 +85,7 @@ msgstr "50/50 Split"
 msgid "A digital curator for high-end financial lucidity. Consolidate your wealth with a sophisticated, sand-based neutral experience."
 msgstr "A digital curator for high-end financial lucidity. Consolidate your wealth with a sophisticated, sand-based neutral experience."
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:156
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:157
 msgid "A new verification code has been sent to your email."
 msgstr "A new verification code has been sent to your email."
 
@@ -98,8 +98,8 @@ msgstr "A professional-grade ledger designed for modern individuals and collabor
 #~ msgstr "About Us"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:111
-msgid "Account Preferences"
-msgstr "Account Preferences"
+#~ msgid "Account Preferences"
+#~ msgstr "Account Preferences"
 
 #: src/presentation/components/AppLayout.tsx:45
 #~ msgid "Accounts"
@@ -118,14 +118,14 @@ msgstr "Account Preferences"
 #~ msgstr "Active Joint Effort"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:103
-msgid "Active Link: Jordan J."
-msgstr "Active Link: Jordan J."
+#~ msgid "Active Link: Jordan J."
+#~ msgstr "Active Link: Jordan J."
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:141
 msgid "Activity Ledger"
 msgstr "Activity Ledger"
 
-#: src/presentation/components/AppLayout.tsx:91
+#: src/presentation/components/AppLayout.tsx:112
 msgid "Add Transaction"
 msgstr "Add Transaction"
 
@@ -207,12 +207,12 @@ msgstr "Back to Earnings"
 #~ msgstr "Bank-grade encryption with a couple-focused permission layer that respects individual autonomy."
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:82
-msgid "Banking Integration"
-msgstr "Banking Integration"
+#~ msgid "Banking Integration"
+#~ msgstr "Banking Integration"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:92
-msgid "Base Currencies"
-msgstr "Base Currencies"
+#~ msgid "Base Currencies"
+#~ msgstr "Base Currencies"
 
 #: src/presentation/pages/landing/LandingPage.tsx:279
 msgid "Begin Onboarding"
@@ -227,8 +227,8 @@ msgid "Biometric"
 msgstr "Biometric"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:98
-msgid "Biometric Hardware Verification Active"
-msgstr "Biometric Hardware Verification Active"
+#~ msgid "Biometric Hardware Verification Active"
+#~ msgstr "Biometric Hardware Verification Active"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:113
 #~ msgid "Biometric Unlock Active"
@@ -246,11 +246,16 @@ msgstr "Budget Utilization"
 #~ msgid "Building Harmony"
 #~ msgstr "Building Harmony"
 
+#: src/presentation/pages/profile/UserProfilePage.tsx:178
+#: src/presentation/pages/profile/UserProfilePage.tsx:246
+msgid "Cancel"
+msgstr "Cancel"
+
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:208
 msgid "Cash Flow Analysis"
 msgstr "Cash Flow Analysis"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:141
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:142
 msgid "Check your inbox"
 msgstr "Check your inbox"
 
@@ -293,6 +298,10 @@ msgstr "Collaborative Security"
 #: src/presentation/pages/profile/UserProfilePage.tsx:54
 #~ msgid "Collaborative Spirit"
 #~ msgstr "Collaborative Spirit"
+
+#: src/presentation/components/AppLayout.tsx:158
+msgid "Collapse"
+msgstr "Collapse"
 
 #: src/presentation/pages/landing/LandingPage.tsx:135
 #~ msgid "Comment on transactions, add photos of memories, and plan together."
@@ -396,7 +405,11 @@ msgstr "Creating..."
 msgid "Custom %"
 msgstr "Custom %"
 
-#: src/presentation/components/AppLayout.tsx:40
+#: src/presentation/pages/profile/UserProfilePage.tsx:221
+msgid "Danger Zone"
+msgstr "Danger Zone"
+
+#: src/presentation/components/AppLayout.tsx:42
 msgid "Dashboard"
 msgstr "Dashboard"
 
@@ -413,8 +426,16 @@ msgid "Defining the next era of partner-centric wealth management through precis
 msgstr "Defining the next era of partner-centric wealth management through precision and clarity."
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:16
-msgid "Defining your financial legacy through precision management and strategic growth."
-msgstr "Defining your financial legacy through precision management and strategic growth."
+#~ msgid "Defining your financial legacy through precision management and strategic growth."
+#~ msgstr "Defining your financial legacy through precision management and strategic growth."
+
+#: src/presentation/pages/profile/UserProfilePage.tsx:257
+msgid "Delete Account"
+msgstr "Delete Account"
+
+#: src/presentation/pages/profile/UserProfilePage.tsx:238
+msgid "Deleting..."
+msgstr "Deleting..."
 
 #: src/presentation/pages/landing/LandingPage.tsx:191
 msgid "Designed for couples and partners managing shared wealth estates."
@@ -460,6 +481,10 @@ msgstr "Dining & Social"
 msgid "Due in 4 days"
 msgstr "Due in 4 days"
 
+#: src/presentation/pages/profile/UserProfilePage.tsx:134
+msgid "Edit"
+msgstr "Edit"
+
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:185
 #~ msgid "Efficiency Check"
 #~ msgstr "Efficiency Check"
@@ -472,6 +497,10 @@ msgstr "Due in 4 days"
 msgid "Elevate your wealth <0/>management."
 msgstr "Elevate your wealth <0/>management."
 
+#: src/presentation/pages/profile/UserProfilePage.tsx:198
+msgid "Email"
+msgstr "Email"
+
 #: src/presentation/pages/login/LoginPage.tsx:193
 #: src/presentation/pages/signup/SignUpPage.tsx:200
 msgid "Email Address"
@@ -481,13 +510,17 @@ msgstr "Email Address"
 #~ msgid "Email already registered"
 #~ msgstr "Email already registered"
 
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:24
+msgid "Email Verified"
+msgstr "Email Verified"
+
 #: src/presentation/pages/signup/SignUpPage.tsx:258
 #~ msgid "ENCRYPTED"
 #~ msgstr "ENCRYPTED"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:97
-msgid "Encryption & Security"
-msgstr "Encryption & Security"
+#~ msgid "Encryption & Security"
+#~ msgstr "Encryption & Security"
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:89
 msgid "Energy & Utilities"
@@ -498,8 +531,8 @@ msgstr "Energy & Utilities"
 #~ msgstr "English (US)"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:88
-msgid "English (US) · International Edition"
-msgstr "English (US) · International Edition"
+#~ msgid "English (US) · International Edition"
+#~ msgstr "English (US) · International Edition"
 
 #: src/presentation/pages/partner-setup/ContributionRulesPage.tsx:74
 msgid "Equity First"
@@ -537,9 +570,21 @@ msgstr "Estimated monthly commitment based on your last 30 days."
 msgid "Face ID"
 msgstr "Face ID"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:117
+#: src/presentation/pages/profile/UserProfilePage.tsx:78
+msgid "Failed to delete account."
+msgstr "Failed to delete account."
+
+#: src/presentation/pages/profile/UserProfilePage.tsx:49
+msgid "Failed to load profile."
+msgstr "Failed to load profile."
+
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:118
 msgid "Failed to resend verification email. Please try again."
 msgstr "Failed to resend verification email. Please try again."
+
+#: src/presentation/pages/profile/UserProfilePage.tsx:68
+msgid "Failed to update profile."
+msgstr "Failed to update profile."
 
 #: src/presentation/pages/landing/LandingPage.tsx:281
 #~ msgid "Features"
@@ -618,6 +663,10 @@ msgstr "Get Started"
 msgid "Global Liquidity View"
 msgstr "Global Liquidity View"
 
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:34
+msgid "Go to Login"
+msgstr "Go to Login"
+
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:94
 #~ msgid "Grocery"
 #~ msgstr "Grocery"
@@ -650,7 +699,7 @@ msgstr "Growth Syncing"
 #~ msgid "hello@example.com"
 #~ msgstr "hello@example.com"
 
-#: src/presentation/components/AppLayout.tsx:100
+#: src/presentation/components/AppLayout.tsx:123
 #: src/presentation/pages/landing/LandingPage.tsx:348
 msgid "Help Center"
 msgstr "Help Center"
@@ -669,8 +718,8 @@ msgid "Immutable Security."
 msgstr "Immutable Security."
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:29
-msgid "Impact Score"
-msgstr "Impact Score"
+#~ msgid "Impact Score"
+#~ msgstr "Impact Score"
 
 #: src/presentation/pages/landing/LandingPage.tsx:134
 #~ msgid "In-Line Context"
@@ -696,14 +745,14 @@ msgid "Insights"
 msgstr "Insights"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:156
-msgid "Institutional Standard"
-msgstr "Institutional Standard"
+#~ msgid "Institutional Standard"
+#~ msgstr "Institutional Standard"
 
 #: src/presentation/pages/login/LoginPage.tsx:40
 msgid "Invalid email or password"
 msgstr "Invalid email or password"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:94
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:95
 msgid "Invalid verification code. Please check and try again."
 msgstr "Invalid verification code. Please check and try again."
 
@@ -736,10 +785,10 @@ msgid "Joined by 12,000+ couples this month."
 msgstr "Joined by 12,000+ couples this month."
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:68
-msgid "Joint (58%)"
-msgstr "Joint (58%)"
+#~ msgid "Joint (58%)"
+#~ msgstr "Joint (58%)"
 
-#: src/presentation/components/AppLayout.tsx:42
+#: src/presentation/components/AppLayout.tsx:44
 msgid "Joint Accounts"
 msgstr "Joint Accounts"
 
@@ -759,7 +808,7 @@ msgstr "Joint Planning"
 #~ msgid "Joint Share"
 #~ msgstr "Joint Share"
 
-#: src/presentation/components/AppLayout.tsx:69
+#: src/presentation/components/AppLayout.tsx:80
 msgid "Joint Wealth Management"
 msgstr "Joint Wealth Management"
 
@@ -767,6 +816,8 @@ msgstr "Joint Wealth Management"
 #~ msgid "JORDAN"
 #~ msgstr "JORDAN"
 
+#: src/presentation/pages/profile/UserProfilePage.tsx:153
+#: src/presentation/pages/profile/UserProfilePage.tsx:208
 #: src/presentation/pages/signup/SignUpPage.tsx:228
 msgid "Language"
 msgstr "Language"
@@ -784,8 +835,8 @@ msgid "Liquid Assets"
 msgstr "Liquid Assets"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:87
-msgid "Localization"
-msgstr "Localization"
+#~ msgid "Localization"
+#~ msgstr "Localization"
 
 #: src/presentation/pages/landing/LandingPage.tsx:59
 msgid "Log In"
@@ -811,9 +862,13 @@ msgstr "Market Insights"
 msgid "Maximum Control"
 msgstr "Maximum Control"
 
+#: src/presentation/pages/profile/UserProfilePage.tsx:118
+msgid "Member Since {memberSince}"
+msgstr "Member Since {memberSince}"
+
 #: src/presentation/pages/profile/UserProfilePage.tsx:12
-msgid "Member Since 2021"
-msgstr "Member Since 2021"
+#~ msgid "Member Since 2021"
+#~ msgstr "Member Since 2021"
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:227
 msgid "Monthly"
@@ -838,6 +893,11 @@ msgstr "Monthly Trajectory"
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:236
 #~ msgid "My Financial Planner"
 #~ msgstr "My Financial Planner"
+
+#: src/presentation/pages/profile/UserProfilePage.tsx:144
+#: src/presentation/pages/profile/UserProfilePage.tsx:188
+msgid "Name"
+msgstr "Name"
 
 #: src/presentation/pages/login/LoginPage.tsx:194
 msgid "name@company.com"
@@ -872,8 +932,8 @@ msgstr "Next"
 #~ msgstr "No credit card required. Invite your partner later."
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:159
-msgid "Nosko Financial Architecture v4.2"
-msgstr "Nosko Financial Architecture v4.2"
+#~ msgid "Nosko Financial Architecture v4.2"
+#~ msgstr "Nosko Financial Architecture v4.2"
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:288
 msgid "Nosko Overview"
@@ -953,8 +1013,8 @@ msgid "partner@nosko.com"
 msgstr "partner@nosko.com"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:102
-msgid "Partnership Sync"
-msgstr "Partnership Sync"
+#~ msgid "Partnership Sync"
+#~ msgstr "Partnership Sync"
 
 #: src/presentation/pages/login/LoginPage.tsx:204
 #: src/presentation/pages/signup/SignUpPage.tsx:210
@@ -965,9 +1025,13 @@ msgstr "Password"
 msgid "Perfect Balance"
 msgstr "Perfect Balance"
 
+#: src/presentation/pages/profile/UserProfilePage.tsx:224
+msgid "Permanently delete your account and all associated data. This action cannot be undone."
+msgstr "Permanently delete your account and all associated data. This action cannot be undone."
+
 #: src/presentation/pages/profile/UserProfilePage.tsx:65
-msgid "Personal (42%)"
-msgstr "Personal (42%)"
+#~ msgid "Personal (42%)"
+#~ msgstr "Personal (42%)"
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:255
 msgid "Personal Growth"
@@ -1008,8 +1072,8 @@ msgid "Portfolio Reinvestment"
 msgstr "Portfolio Reinvestment"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:49
-msgid "Portfolio Synergy"
-msgstr "Portfolio Synergy"
+#~ msgid "Portfolio Synergy"
+#~ msgstr "Portfolio Synergy"
 
 #: src/presentation/pages/landing/LandingPage.tsx:106
 msgid "Portfolio Yield"
@@ -1043,7 +1107,8 @@ msgstr "Pricing"
 msgid "Privacy"
 msgstr "Privacy"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:214
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:215
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:42
 #: src/presentation/pages/login/LoginPage.tsx:71
 msgid "Privacy Policy"
 msgstr "Privacy Policy"
@@ -1052,9 +1117,17 @@ msgstr "Privacy Policy"
 #~ msgid "Product"
 #~ msgstr "Product"
 
-#: src/presentation/components/AppLayout.tsx:46
+#: src/presentation/components/AppLayout.tsx:48
 msgid "Profile"
 msgstr "Profile"
+
+#: src/presentation/pages/profile/UserProfilePage.tsx:129
+msgid "Profile Settings"
+msgstr "Profile Settings"
+
+#: src/presentation/pages/profile/UserProfilePage.tsx:66
+msgid "Profile updated successfully."
+msgstr "Profile updated successfully."
 
 #: src/presentation/pages/partner-setup/InvitePartnerPage.tsx:81
 msgid "Protected via Nosko Unity Protocol"
@@ -1100,7 +1173,7 @@ msgstr "Rent / Mortgage"
 #~ msgid "Rent & Mortgage"
 #~ msgstr "Rent & Mortgage"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:198
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:199
 msgid "Resend verification code"
 msgstr "Resend verification code"
 
@@ -1113,10 +1186,11 @@ msgid "Resources"
 msgstr "Resources"
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:117
-msgid "Restore Defaults"
-msgstr "Restore Defaults"
+#~ msgid "Restore Defaults"
+#~ msgstr "Restore Defaults"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:222
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:223
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:50
 msgid "Safety"
 msgstr "Safety"
 
@@ -1124,15 +1198,23 @@ msgstr "Safety"
 msgid "Salary-Based"
 msgstr "Salary-Based"
 
+#: src/presentation/pages/profile/UserProfilePage.tsx:164
+msgid "Save Changes"
+msgstr "Save Changes"
+
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:183
 msgid "Saved This Month"
 msgstr "Saved This Month"
+
+#: src/presentation/pages/profile/UserProfilePage.tsx:164
+msgid "Saving..."
+msgstr "Saving..."
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:86
 msgid "Savings"
 msgstr "Savings"
 
-#: src/presentation/components/AppLayout.tsx:44
+#: src/presentation/components/AppLayout.tsx:46
 msgid "Savings Goals"
 msgstr "Savings Goals"
 
@@ -1157,8 +1239,8 @@ msgid "Secure invitation link will be sent instantly."
 msgstr "Secure invitation link will be sent instantly."
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:142
-msgid "Secure Logout"
-msgstr "Secure Logout"
+#~ msgid "Secure Logout"
+#~ msgstr "Secure Logout"
 
 #: src/presentation/pages/login/LoginPage.tsx:101
 msgid "Secure your <0>financial future</0> with Nosko."
@@ -1192,7 +1274,7 @@ msgstr "Select the accounts you want to sync with your partner's ledger. Visibil
 msgid "Send Invitation"
 msgstr "Send Invitation"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:198
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:199
 msgid "Sending..."
 msgstr "Sending..."
 
@@ -1232,7 +1314,7 @@ msgstr "Sign In"
 #~ msgid "Sign In to Nosko"
 #~ msgstr "Sign In to Nosko"
 
-#: src/presentation/components/AppLayout.tsx:111
+#: src/presentation/components/AppLayout.tsx:139
 msgid "Sign Out"
 msgstr "Sign Out"
 
@@ -1240,7 +1322,7 @@ msgstr "Sign Out"
 #~ msgid "Sign Up"
 #~ msgstr "Sign Up"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:206
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:207
 msgid "Sign up again"
 msgstr "Sign up again"
 
@@ -1252,7 +1334,7 @@ msgstr "Signing in..."
 #~ msgid "Smart Asymmetry"
 #~ msgstr "Smart Asymmetry"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:98
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:99
 #: src/presentation/pages/login/LoginPage.tsx:47
 #: src/presentation/pages/signup/SignUpPage.tsx:45
 msgid "Something went wrong. Please try again."
@@ -1302,7 +1384,8 @@ msgstr "Step 3 of 3"
 msgid "Support"
 msgstr "Support"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:218
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:219
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:46
 msgid "Support Center"
 msgstr "Support Center"
 
@@ -1388,7 +1471,6 @@ msgstr "Total Joint Responsibility"
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:68
 #: src/presentation/pages/dashboard/DashboardPage.tsx:70
-#: src/presentation/pages/profile/UserProfilePage.tsx:23
 msgid "Total Net Worth"
 msgstr "Total Net Worth"
 
@@ -1424,7 +1506,8 @@ msgstr "Unified wealth management starts with shared visibility. Enter your part
 msgid "Unity Connection"
 msgstr "Unity Connection"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:130
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:131
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:13
 msgid "Unity Ledger"
 msgstr "Unity Ledger"
 
@@ -1444,7 +1527,7 @@ msgstr "Uptime Accuracy"
 #~ msgid "US Dollar"
 #~ msgstr "US Dollar"
 
-#: src/presentation/pages/profile/UserProfilePage.tsx:172
+#: src/presentation/pages/profile/UserProfilePage.tsx:101
 msgid "User Profile"
 msgstr "User Profile"
 
@@ -1456,7 +1539,7 @@ msgstr "User Profile"
 msgid "Utility Bills"
 msgstr "Utility Bills"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:96
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:97
 msgid "Verification code has expired. Please request a new one."
 msgstr "Verification code has expired. Please request a new one."
 
@@ -1464,11 +1547,11 @@ msgstr "Verification code has expired. Please request a new one."
 #~ msgid "Verification Status"
 #~ msgstr "Verification Status"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:189
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:190
 msgid "Verify Email"
 msgstr "Verify Email"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:189
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:190
 msgid "Verifying..."
 msgstr "Verifying..."
 
@@ -1496,7 +1579,7 @@ msgstr "Watch Film"
 #~ msgid "We don't just track spending; we celebrate every step towards your shared flourishing."
 #~ msgstr "We don't just track spending; we celebrate every step towards your shared flourishing."
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:144
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:145
 msgid "We've sent a 6-digit verification code to"
 msgstr "We've sent a 6-digit verification code to"
 
@@ -1517,9 +1600,13 @@ msgstr "Welcome back"
 msgid "Which stories shall we share?"
 msgstr "Which stories shall we share?"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:204
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:205
 msgid "Wrong email?"
 msgstr "Wrong email?"
+
+#: src/presentation/pages/profile/UserProfilePage.tsx:238
+msgid "Yes, Delete My Account"
+msgstr "Yes, Delete My Account"
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:112
 msgid "Yield Optimization"
@@ -1534,17 +1621,22 @@ msgid "You can adjust these rules anytime in <0>Shared Settings</0>."
 msgstr "You can adjust these rules anytime in <0>Shared Settings</0>."
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:56
-msgid "Your collaborative efforts have reached a new milestone. 85% of target liquidity goals achieved."
-msgstr "Your collaborative efforts have reached a new milestone. 85% of target liquidity goals achieved."
+#~ msgid "Your collaborative efforts have reached a new milestone. 85% of target liquidity goals achieved."
+#~ msgstr "Your collaborative efforts have reached a new milestone. 85% of target liquidity goals achieved."
 
 #: src/presentation/pages/signup/SignUpPage.tsx:104
 msgid "Your data is protected by multi-layered encryption protocols."
 msgstr "Your data is protected by multi-layered encryption protocols."
 
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:27
+msgid "Your email has been successfully confirmed. You can now sign in to your account."
+msgstr "Your email has been successfully confirmed. You can now sign in to your account."
+
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:204
 #~ msgid "Your global liquidity at a glance."
 #~ msgstr "Your global liquidity at a glance."
 
+#: src/presentation/pages/profile/UserProfilePage.tsx:145
 #: src/presentation/pages/signup/SignUpPage.tsx:191
 msgid "Your name"
 msgstr "Your name"

@@ -1,5 +1,5 @@
+import { rethrowKnown } from '@/data/helpers/rethrowKnown';
 import type { IProfileGateway } from '@/data/protocols/profile/IProfileGateway';
-import { UnexpectedError } from '@/domain/errors/auth';
 import type {
   CurrencyDefaultSchema,
   SetCurrencyDefaultsInput,
@@ -16,8 +16,8 @@ export class RemoteSetCurrencyDefaults implements ISetCurrencyDefaults {
   async execute(input: SetCurrencyDefaultsInput): Promise<CurrencyDefaultSchema[]> {
     try {
       return await this.gateway.setCurrencyDefaults(input);
-    } catch {
-      throw new UnexpectedError();
+    } catch (error) {
+      rethrowKnown(error);
     }
   }
 }
