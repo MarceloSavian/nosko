@@ -1,5 +1,5 @@
+import { rethrowKnown } from '@/data/helpers/rethrowKnown';
 import type { IResendVerificationGateway } from '@/data/protocols/auth/IResendVerificationGateway';
-import { EmailAlreadyVerifiedError, UnexpectedError } from '@/domain/errors/auth';
 import type { ResendVerificationInput } from '@/domain/models/auth/Auth';
 import type { IResendVerification } from '@/domain/usecases/auth/IResendVerification';
 
@@ -14,8 +14,7 @@ export class RemoteResendVerification implements IResendVerification {
     try {
       await this.gateway.resendVerification(input);
     } catch (error) {
-      if (error instanceof EmailAlreadyVerifiedError) throw error;
-      throw new UnexpectedError();
+      rethrowKnown(error);
     }
   }
 }
