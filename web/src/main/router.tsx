@@ -29,6 +29,21 @@ import {
   updateAccount,
 } from './factories/account';
 import { login, resendVerification, signUp, verifyEmail } from './factories/auth';
+import {
+  addBudgetItem,
+  createBudgetCategory,
+  createBudgetPlan,
+  createJointBudgetPlan,
+  deleteBudgetCategory,
+  deleteBudgetItem,
+  deleteBudgetPlan,
+  deleteJointBudgetPlan,
+  loadBudgetCategories,
+  loadBudgetPlan,
+  loadBudgetSummary,
+  loadJointBudgetPlan,
+  updateBudgetItem,
+} from './factories/budget';
 import { requestPasswordReset, resetPassword } from './factories/password-reset';
 import { deleteAccount, loadProfile, updateProfile } from './factories/profile';
 import {
@@ -138,7 +153,23 @@ const accountsRoute = createRoute({
 const plannerRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/planner',
-  component: FinancialPlannerPage,
+  component: () => (
+    <FinancialPlannerPage
+      loadCategories={loadBudgetCategories}
+      createCategory={createBudgetCategory}
+      deleteCategory={deleteBudgetCategory}
+      loadPlan={loadBudgetPlan}
+      createPlan={createBudgetPlan}
+      deletePlan={deleteBudgetPlan}
+      loadJointPlan={loadJointBudgetPlan}
+      createJointPlan={createJointBudgetPlan}
+      deleteJointPlan={deleteJointBudgetPlan}
+      addItem={addBudgetItem}
+      updateItem={updateBudgetItem}
+      deleteItem={deleteBudgetItem}
+      loadSummary={loadBudgetSummary}
+    />
+  ),
 });
 
 const profileRoute = createRoute({
