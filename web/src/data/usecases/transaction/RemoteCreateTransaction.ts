@@ -1,5 +1,5 @@
+import { rethrowKnown } from '@/data/helpers/rethrowKnown';
 import type { ITransactionGateway } from '@/data/protocols/transaction/ITransactionGateway';
-import { UnexpectedError } from '@/domain/errors/auth';
 import type { CreateTransactionInput, Transaction } from '@/domain/models/transaction/Transaction';
 import type { ICreateTransaction } from '@/domain/usecases/transaction/ICreateTransaction';
 
@@ -13,8 +13,8 @@ export class RemoteCreateTransaction implements ICreateTransaction {
   async execute(input: CreateTransactionInput): Promise<Transaction> {
     try {
       return await this.gateway.create(input);
-    } catch {
-      throw new UnexpectedError();
+    } catch (error) {
+      rethrowKnown(error);
     }
   }
 }

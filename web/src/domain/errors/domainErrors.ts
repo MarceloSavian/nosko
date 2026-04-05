@@ -6,6 +6,7 @@ import {
   InvalidVerificationCodeError,
   VerificationCodeExpiredError,
 } from './auth';
+import { TransactionNotFoundError } from './transaction';
 
 type ErrorConstructor = new (...args: never[]) => Error;
 
@@ -16,4 +17,5 @@ export const domainErrors: Record<string, ErrorConstructor> = {
   InvalidCredentialsError,
   InvalidVerificationCodeError,
   VerificationCodeExpiredError,
+  TransactionNotFoundError,
 };
