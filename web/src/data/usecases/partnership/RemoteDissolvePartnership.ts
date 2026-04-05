@@ -1,6 +1,5 @@
+import { rethrowKnown } from '@/data/helpers/rethrowKnown';
 import type { IPartnershipGateway } from '@/data/protocols/partnership/IPartnershipGateway';
-import { UnexpectedError } from '@/domain/errors/auth';
-import { PartnershipNotFoundError } from '@/domain/errors/partnership';
 import type { IDissolvePartnership } from '@/domain/usecases/partnership/IDissolvePartnership';
 
 export class RemoteDissolvePartnership implements IDissolvePartnership {
@@ -14,8 +13,7 @@ export class RemoteDissolvePartnership implements IDissolvePartnership {
     try {
       await this.gateway.dissolvePartnership();
     } catch (error) {
-      if (error instanceof PartnershipNotFoundError) throw error;
-      throw new UnexpectedError();
+      rethrowKnown(error);
     }
   }
 }

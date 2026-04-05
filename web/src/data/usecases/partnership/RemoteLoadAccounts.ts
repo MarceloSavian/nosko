@@ -1,5 +1,5 @@
+import { rethrowKnown } from '@/data/helpers/rethrowKnown';
 import type { IPartnershipGateway } from '@/data/protocols/partnership/IPartnershipGateway';
-import { UnexpectedError } from '@/domain/errors/auth';
 import type { BankAccount } from '@/domain/models/partnership/Partnership';
 import type { ILoadAccounts } from '@/domain/usecases/partnership/ILoadAccounts';
 
@@ -13,8 +13,8 @@ export class RemoteLoadAccounts implements ILoadAccounts {
   async execute(): Promise<BankAccount[]> {
     try {
       return await this.gateway.loadAccounts();
-    } catch {
-      throw new UnexpectedError();
+    } catch (error) {
+      rethrowKnown(error);
     }
   }
 }
