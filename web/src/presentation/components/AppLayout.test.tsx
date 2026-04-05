@@ -190,7 +190,7 @@ describe('AppLayout', () => {
       await user.click(collapseButton);
 
       const links = screen.getAllByRole('link');
-      expect(links).toHaveLength(4);
+      expect(links).toHaveLength(5);
       for (const link of links) {
         expect(link.querySelector('.material-symbols-outlined')).toBeInTheDocument();
       }

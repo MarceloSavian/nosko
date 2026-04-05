@@ -9,6 +9,7 @@ import {
 } from './auth';
 import { InvalidResetCodeError, ResetCodeExpiredError } from './password-reset';
 import { ProfileNotFoundError } from './profile';
+import { TransactionNotFoundError } from './transaction';
 
 type ErrorConstructor = new (...args: never[]) => Error;
 
@@ -22,5 +23,6 @@ export const domainErrors: Record<string, ErrorConstructor> = {
   InvalidVerificationCodeError,
   ProfileNotFoundError,
   ResetCodeExpiredError,
+  TransactionNotFoundError,
   VerificationCodeExpiredError,
 };
