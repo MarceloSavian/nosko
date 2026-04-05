@@ -168,7 +168,7 @@ describe('AppLayout', () => {
 
       const expandButtons = screen.getAllByRole('button');
       const expandButton = expandButtons[expandButtons.length - 1];
-      await user.click(expandButton);
+      await user.click(expandButton!);
 
       expect(screen.getByText('Nosko')).toBeInTheDocument();
       expect(screen.getByText('Dashboard')).toBeInTheDocument();
