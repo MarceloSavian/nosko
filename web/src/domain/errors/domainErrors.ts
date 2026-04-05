@@ -7,6 +7,11 @@ import {
   InvalidVerificationCodeError,
   VerificationCodeExpiredError,
 } from './auth';
+import {
+  BudgetCategoryNotFoundError,
+  BudgetItemNotFoundError,
+  BudgetPlanNotFoundError,
+} from './budget';
 import { InvalidResetCodeError, ResetCodeExpiredError } from './password-reset';
 import { ProfileNotFoundError } from './profile';
 import { TransactionNotFoundError } from './transaction';
@@ -15,6 +20,9 @@ type ErrorConstructor = new (...args: never[]) => Error;
 
 export const domainErrors: Record<string, ErrorConstructor> = {
   AccountNotFoundError,
+  BudgetCategoryNotFoundError,
+  BudgetItemNotFoundError,
+  BudgetPlanNotFoundError,
   EmailAlreadyRegisteredError,
   EmailAlreadyVerifiedError,
   EmailNotVerifiedError,
@@ -23,6 +31,6 @@ export const domainErrors: Record<string, ErrorConstructor> = {
   InvalidVerificationCodeError,
   ProfileNotFoundError,
   ResetCodeExpiredError,
-  VerificationCodeExpiredError,
   TransactionNotFoundError,
+  VerificationCodeExpiredError,
 };
