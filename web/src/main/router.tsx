@@ -19,6 +19,14 @@ import { FinancialPlannerPage } from '@/presentation/pages/planner/FinancialPlan
 import { UserProfilePage } from '@/presentation/pages/profile/UserProfilePage';
 import { ResetPasswordPage } from '@/presentation/pages/reset-password/ResetPasswordPage';
 import { SignUpPage } from '@/presentation/pages/signup/SignUpPage';
+import {
+  createAccount,
+  deleteAccount as deleteBankAccount,
+  loadAccountOverview,
+  loadAccounts,
+  loadInstitutions,
+  updateAccount,
+} from './factories/account';
 import { login, resendVerification, signUp, verifyEmail } from './factories/auth';
 import { requestPasswordReset, resetPassword } from './factories/password-reset';
 import { deleteAccount, loadProfile, updateProfile } from './factories/profile';
@@ -108,7 +116,16 @@ const dashboardRoute = createRoute({
 const accountsRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/accounts',
-  component: AccountsOverviewPage,
+  component: () => (
+    <AccountsOverviewPage
+      loadAccounts={loadAccounts}
+      createAccount={createAccount}
+      updateAccount={updateAccount}
+      deleteAccount={deleteBankAccount}
+      loadAccountOverview={loadAccountOverview}
+      loadInstitutions={loadInstitutions}
+    />
+  ),
 });
 
 const plannerRoute = createRoute({

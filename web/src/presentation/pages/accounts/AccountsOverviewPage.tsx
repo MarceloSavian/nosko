@@ -1,322 +1,563 @@
-import { Trans } from '@lingui/react/macro';
-import { Avatar } from '@/presentation/components/Avatar';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Trans, useLingui } from '@lingui/react/macro';
+import { useCallback, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import {
+  AccountType,
+  type BankAccount,
+  type CreateBankAccountInput,
+  type CurrencyTotal,
+  createBankAccountInputSchema,
+  type UpdateBankAccountInput,
+} from '@/domain/models/account/Account';
+import type { Institution } from '@/domain/models/institution/Institution';
+import type { ICreateAccount } from '@/domain/usecases/account/ICreateAccount';
+import type { IDeleteAccount } from '@/domain/usecases/account/IDeleteAccount';
+import type { ILoadAccountOverview } from '@/domain/usecases/account/ILoadAccountOverview';
+import type { ILoadAccounts } from '@/domain/usecases/account/ILoadAccounts';
+import type { IUpdateAccount } from '@/domain/usecases/account/IUpdateAccount';
+import type { ILoadInstitutions } from '@/domain/usecases/institution/ILoadInstitutions';
+import { Button } from '@/presentation/components/Button';
 import { Card } from '@/presentation/components/Card';
 import { Icon } from '@/presentation/components/Icon';
+import { IconBox } from '@/presentation/components/IconBox';
+import { PageHeader } from '@/presentation/components/PageHeader';
+import { Select } from '@/presentation/components/Select';
+import { TextInput } from '@/presentation/components/TextInput';
 
-function TopBar() {
-  return (
-    <header className="sticky top-0 h-20 bg-background/80 backdrop-blur-xl shadow-sm flex justify-between items-center px-10 z-40 font-headline font-extrabold tracking-tight">
-      <div className="flex items-center gap-8 flex-1">
-        <div className="relative w-64">
-          <Icon
-            name="search"
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/40"
-          />
-          <input
-            type="text"
-            placeholder="Search portfolios..."
-            className="w-full bg-white/50 border-0 rounded-full py-2 pl-10 focus:ring-2 focus:ring-tertiary text-sm font-medium"
-          />
-        </div>
-        <nav className="hidden lg:flex items-center gap-6">
-          <span className="text-primary border-b-2 border-secondary pb-1 cursor-pointer">
-            <Trans>Portfolio</Trans>
-          </span>
-          <span className="text-on-surface-variant hover:text-primary transition-opacity cursor-pointer">
-            <Trans>Insights</Trans>
-          </span>
-          <span className="text-on-surface-variant hover:text-primary transition-opacity cursor-pointer">
-            <Trans>Planning</Trans>
-          </span>
-        </nav>
-      </div>
-      <div className="flex items-center gap-6">
-        <button
-          type="button"
-          className="bg-primary text-on-primary px-5 py-2 rounded-full text-sm font-bold hover:opacity-80 transition-opacity cursor-pointer"
-        >
-          <Trans>Sync Accounts</Trans>
-        </button>
-        <div className="flex items-center gap-4 text-primary">
-          <Icon name="notifications" className="text-xl cursor-pointer hover:opacity-80" />
-          <Icon name="settings" className="text-xl cursor-pointer hover:opacity-80" />
-          <Avatar size="md" />
-        </div>
-      </div>
-    </header>
-  );
+type Props = {
+  loadAccounts: ILoadAccounts;
+  createAccount: ICreateAccount;
+  updateAccount: IUpdateAccount;
+  deleteAccount: IDeleteAccount;
+  loadAccountOverview: ILoadAccountOverview;
+  loadInstitutions: ILoadInstitutions;
+};
+
+const accountTypeIcons: Record<string, string> = {
+  CHECKING: 'account_balance',
+  SAVINGS: 'savings',
+  CREDIT: 'credit_card',
+  INVESTMENT: 'trending_up',
+};
+
+function formatCents(cents: number, currencyCode: string): string {
+  return new Intl.NumberFormat(undefined, {
+    style: 'currency',
+    currency: currencyCode,
+  }).format(cents / 100);
 }
 
-function NetWorthHero() {
-  return (
-    <Card
-      variant="hero"
-      padding="xl"
-      className="col-span-12 lg:col-span-8 h-[400px] flex flex-col justify-between"
-    >
-      <div className="relative z-10">
-        <div className="flex items-center gap-2 mb-4">
-          <span className="px-3 py-1 bg-tertiary-container/30 text-tertiary text-[10px] font-bold uppercase tracking-widest rounded-full">
-            <Trans>Consolidated Portfolio</Trans>
-          </span>
-          <span className="text-secondary flex items-center text-sm font-bold">
-            <Icon name="trending_up" className="text-sm mr-1" />
-            +12.4%
-          </span>
-        </div>
-        <h3 className="text-sm font-bold text-primary/50 uppercase tracking-widest mb-2">
-          <Trans>Total Net Worth</Trans>
-        </h3>
-        <p className="text-7xl font-extrabold font-headline tracking-tighter text-primary">
-          $2,842,190.42
+function OverviewTotals({ totals }: { totals: CurrencyTotal[] }) {
+  if (totals.length === 0) {
+    return (
+      <Card variant="hero" padding="xl" className="mb-8">
+        <p className="text-on-surface-variant text-center py-8">
+          <Trans>No accounts yet. Add your first account to get started.</Trans>
         </p>
-      </div>
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-secondary-container/20 to-transparent pointer-events-none rounded-[2rem]" />
-      <div className="relative z-10 grid grid-cols-3 gap-8 pt-8 border-t border-surface-container-highest">
-        <div>
-          <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mb-1">
-            <Trans>Liquid Assets</Trans>
-          </p>
-          <p className="text-xl font-bold text-primary">$842,000</p>
-        </div>
-        <div>
-          <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mb-1">
-            <Trans>Investments</Trans>
-          </p>
-          <p className="text-xl font-bold text-primary">$1,650,190</p>
-        </div>
-        <div>
-          <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mb-1">
-            <Trans>Real Estate</Trans>
-          </p>
-          <p className="text-xl font-bold text-primary">$350,000</p>
-        </div>
-      </div>
-    </Card>
-  );
-}
+      </Card>
+    );
+  }
 
-function MarketInsightsCard() {
   return (
-    <Card variant="dark" padding="lg" className="col-span-12 lg:col-span-4 flex flex-col">
-      <h3 className="text-lg font-bold font-headline mb-6">
-        <Trans>Market Insights</Trans>
-      </h3>
-      <div className="space-y-6">
-        <div className="flex gap-4">
-          <div className="h-10 w-10 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
-            <Icon name="rocket_launch" className="text-secondary" />
-          </div>
-          <div>
-            <p className="text-sm font-bold">
-              <Trans>Yield Optimization</Trans>
-            </p>
-            <p className="text-xs text-slate-400 mt-1">
-              <Trans>Transfer $42k from Chase to Savings for 4.5% APY increase.</Trans>
-            </p>
-          </div>
-        </div>
-        <div className="flex gap-4">
-          <div className="h-10 w-10 rounded-2xl bg-white/10 flex items-center justify-center shrink-0">
-            <Icon name="warning" className="text-tertiary-fixed" />
-          </div>
-          <div>
-            <p className="text-sm font-bold">
-              <Trans>Tax Exposure</Trans>
-            </p>
-            <p className="text-xs text-slate-400 mt-1">
-              <Trans>Upcoming dividend distributions may trigger capital gains.</Trans>
-            </p>
-          </div>
-        </div>
-      </div>
-      <div className="mt-auto pt-8">
-        <button
-          type="button"
-          className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest border border-white/20 text-white cursor-pointer hover:bg-white/20 transition-colors"
-        >
-          <Trans>View Detail Analysis</Trans>
-        </button>
-      </div>
-    </Card>
-  );
-}
-
-const accounts = [
-  {
-    icon: 'account_balance',
-    iconBg: 'bg-surface-container-high',
-    iconColor: 'text-primary',
-    bank: 'Chase Bank',
-    name: 'Premier Platinum',
-    balance: '$142,500.00',
-    footer: 'Synced 2m ago',
-  },
-  {
-    icon: 'payments',
-    iconBg: 'bg-tertiary-container/20',
-    iconColor: 'text-tertiary',
-    bank: 'Revolut',
-    name: 'Global Business',
-    balance: '$86,210.15',
-    footer: 'Synced 5m ago',
-  },
-  {
-    icon: 'savings',
-    iconBg: 'bg-secondary-container/30',
-    iconColor: 'text-secondary',
-    bank: 'HSBC UK',
-    name: 'Private Wealth',
-    balance: '£612,900.00',
-    footer: 'Updated 1hr ago',
-  },
-];
-
-function ConnectedAccounts() {
-  return (
-    <>
-      <div className="col-span-12 mt-4">
-        <h3 className="text-xl font-bold font-headline text-primary">
-          <Trans>Connected Accounts</Trans>
-        </h3>
-      </div>
-      {accounts.map((account) => (
-        <Card
-          key={account.name}
-          variant="default"
-          padding="md"
-          className="col-span-12 md:col-span-4 hover:shadow-md transition-shadow group cursor-pointer"
-        >
-          <div className="flex justify-between items-start mb-8">
-            <div
-              className={`h-12 w-12 rounded-2xl ${account.iconBg} flex items-center justify-center`}
-            >
-              <Icon name={account.icon} className={`${account.iconColor} text-3xl`} />
-            </div>
-            <Icon
-              name="arrow_outward"
-              className="text-primary/20 group-hover:text-primary transition-colors"
-            />
-          </div>
-          <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mb-1">
-            {account.bank}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+      {totals.map((total) => (
+        <Card key={total.currencyCode} variant="hero" padding="lg">
+          <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mb-2">
+            <Trans>Total Balance</Trans> ({total.currencyCode})
           </p>
-          <p className="text-lg font-bold text-primary mb-4">{account.name}</p>
-          <p className="text-2xl font-extrabold font-headline tracking-tight text-primary">
-            {account.balance}
+          <p className="text-3xl font-extrabold font-headline tracking-tight text-primary">
+            {formatCents(total.total, total.currencyCode)}
           </p>
-          <div className="mt-6 pt-4 border-t border-surface-container-highest flex justify-between items-center">
-            <span className="text-[10px] font-medium text-primary/60">{account.footer}</span>
-          </div>
         </Card>
       ))}
-    </>
+    </div>
   );
 }
 
-const recentActivity = [
-  {
-    icon: 'store',
-    name: 'Apple Store Manhattan',
-    amount: '-$1,299.00',
-    detail: 'ELECTRONICS · 1h ago',
-  },
-  {
-    icon: 'trending_up',
-    name: 'Inbound Dividend Payment',
-    amount: '+$4,250.40',
-    detail: 'INVESTMENT · Yesterday',
-  },
-  {
-    icon: 'restaurant',
-    name: 'The French Laundry',
-    amount: '-$850.00',
-    detail: 'DINING · 2 days ago',
-  },
-];
-
-function RecentActivity() {
+function AccountCard({
+  account,
+  institutionName,
+  onEdit,
+  onDelete,
+}: {
+  account: BankAccount;
+  institutionName: string;
+  onEdit: (account: BankAccount) => void;
+  onDelete: (account: BankAccount) => void;
+}) {
   return (
-    <Card variant="default" padding="lg" className="col-span-12">
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-xl font-bold font-headline text-primary">
-          <Trans>Recent Activity</Trans>
-        </h3>
-        <button
-          type="button"
-          className="text-sm font-medium text-secondary hover:underline cursor-pointer flex items-center space-x-1"
-        >
-          <span>
-            <Trans>View All Transactions</Trans>
-          </span>
-          <Icon name="chevron_right" className="text-base" />
-        </button>
+    <Card variant="default" padding="md" className="hover:shadow-md transition-shadow">
+      <div className="flex justify-between items-start mb-4">
+        <IconBox
+          icon={accountTypeIcons[account.accountType] ?? 'account_balance'}
+          size="md"
+          shape="rounded"
+          tone="surface"
+        />
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => onEdit(account)}
+            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors cursor-pointer"
+          >
+            <Icon name="edit" className="text-base text-on-surface-variant" />
+          </button>
+          <button
+            type="button"
+            onClick={() => onDelete(account)}
+            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-error/10 transition-colors cursor-pointer"
+          >
+            <Icon name="delete" className="text-base text-error" />
+          </button>
+        </div>
       </div>
-      <div className="space-y-5">
-        {recentActivity.map((item) => (
-          <div key={item.name} className="flex items-center space-x-4">
-            <div className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center shrink-0">
-              <Icon name={item.icon} className="text-primary text-xl" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-bold text-sm text-primary">{item.name}</p>
-              <p className="text-[10px] uppercase tracking-wider text-outline">{item.detail}</p>
-            </div>
-            <p
-              className={`font-bold text-sm shrink-0 ${item.amount.startsWith('+') ? 'text-tertiary' : 'text-primary'}`}
-            >
-              {item.amount}
-            </p>
-          </div>
-        ))}
-      </div>
+      <p className="text-[10px] font-bold text-primary/40 uppercase tracking-widest mb-1">
+        {institutionName}
+      </p>
+      <p className="text-lg font-bold text-primary mb-1">{account.accountName}</p>
+      <p className="text-xs text-on-surface-variant mb-4">{account.accountType}</p>
+      <p className="text-2xl font-extrabold font-headline tracking-tight text-primary">
+        {formatCents(account.balance, account.currencyCode)}
+      </p>
     </Card>
   );
 }
 
-export function AccountsOverviewPage() {
-  return (
-    <div>
-      <TopBar />
-      <div className="px-10 pb-12 pt-8">
-        <div className="flex justify-between items-end mb-10">
-          <div>
-            <p className="text-[10px] uppercase font-semibold tracking-widest text-primary/60 mb-1">
-              <Trans>Welcome back</Trans>
-            </p>
-            <h2 className="text-4xl font-extrabold font-headline tracking-tighter text-primary">
-              <Trans>Nosko Overview</Trans>
-            </h2>
-          </div>
-          <div className="bg-surface-container-high p-1 rounded-2xl flex gap-1">
-            <button
-              type="button"
-              className="px-4 py-1.5 bg-primary text-white rounded-xl text-xs font-bold shadow-sm cursor-pointer"
-            >
-              USD
-            </button>
-            <button
-              type="button"
-              className="px-4 py-1.5 text-primary/60 hover:bg-white/50 rounded-xl text-xs font-bold transition-all cursor-pointer"
-            >
-              EUR
-            </button>
-            <button
-              type="button"
-              className="px-4 py-1.5 text-primary/60 hover:bg-white/50 rounded-xl text-xs font-bold transition-all cursor-pointer"
-            >
-              GBP
-            </button>
-          </div>
-        </div>
+function CreateAccountModal({
+  institutions,
+  onSubmit,
+  onClose,
+  isSubmitting,
+}: {
+  institutions: Institution[];
+  onSubmit: (data: CreateBankAccountInput) => void;
+  onClose: () => void;
+  isSubmitting: boolean;
+}) {
+  const { t } = useLingui();
 
-        <div className="grid grid-cols-12 gap-6">
-          <NetWorthHero />
-          <MarketInsightsCard />
-          <ConnectedAccounts />
-          <RecentActivity />
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateBankAccountInput>({
+    resolver: zodResolver(createBankAccountInputSchema),
+    defaultValues: {
+      accountType: AccountType.CHECKING,
+      balance: 0,
+    },
+  });
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <Card variant="default" padding="lg" className="w-full max-w-lg">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-headline text-2xl font-bold text-primary">
+            <Trans>Add Account</Trans>
+          </h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors cursor-pointer"
+          >
+            <Icon name="close" className="text-xl text-on-surface-variant" />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <Select
+            id="institutionId"
+            label={t`Institution`}
+            icon={<Icon name="account_balance" className="text-lg" />}
+            error={errors.institutionId?.message}
+            {...register('institutionId')}
+          >
+            <option value="">{t`Select an institution`}</option>
+            {institutions.map((inst) => (
+              <option key={inst.id} value={inst.id}>
+                {inst.name} ({inst.countryCode})
+              </option>
+            ))}
+          </Select>
+
+          <TextInput
+            id="accountName"
+            label={t`Account Name`}
+            placeholder={t`e.g. Main Checking`}
+            icon={<Icon name="badge" className="text-lg" />}
+            error={errors.accountName?.message}
+            {...register('accountName')}
+          />
+
+          <TextInput
+            id="currencyCode"
+            label={t`Currency Code`}
+            placeholder={t`e.g. USD, EUR, BRL`}
+            icon={<Icon name="currency_exchange" className="text-lg" />}
+            error={errors.currencyCode?.message}
+            {...register('currencyCode')}
+          />
+
+          <Select
+            id="accountType"
+            label={t`Account Type`}
+            icon={<Icon name="category" className="text-lg" />}
+            error={errors.accountType?.message}
+            {...register('accountType')}
+          >
+            <option value={AccountType.CHECKING}>{t`Checking`}</option>
+            <option value={AccountType.SAVINGS}>{t`Savings`}</option>
+            <option value={AccountType.CREDIT}>{t`Credit`}</option>
+            <option value={AccountType.INVESTMENT}>{t`Investment`}</option>
+          </Select>
+
+          <TextInput
+            id="balance"
+            type="number"
+            label={t`Initial Balance (cents)`}
+            placeholder="0"
+            icon={<Icon name="payments" className="text-lg" />}
+            error={errors.balance?.message}
+            {...register('balance', { valueAsNumber: true })}
+          />
+
+          <div className="flex gap-3 pt-4">
+            <Button type="button" variant="ghost" size="md" onClick={onClose}>
+              <Trans>Cancel</Trans>
+            </Button>
+            <Button type="submit" variant="primary" size="md" disabled={isSubmitting}>
+              {isSubmitting ? <Trans>Creating...</Trans> : <Trans>Create Account</Trans>}
+            </Button>
+          </div>
+        </form>
+      </Card>
+    </div>
+  );
+}
+
+function EditAccountModal({
+  account,
+  onSubmit,
+  onClose,
+  isSubmitting,
+}: {
+  account: BankAccount;
+  onSubmit: (data: UpdateBankAccountInput) => void;
+  onClose: () => void;
+  isSubmitting: boolean;
+}) {
+  const { t } = useLingui();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UpdateBankAccountInput>({
+    defaultValues: {
+      accountName: account.accountName,
+      balance: account.balance,
+      accountType: account.accountType,
+    },
+  });
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <Card variant="default" padding="lg" className="w-full max-w-lg">
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="font-headline text-2xl font-bold text-primary">
+            <Trans>Edit Account</Trans>
+          </h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-surface-container-high transition-colors cursor-pointer"
+          >
+            <Icon name="close" className="text-xl text-on-surface-variant" />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <TextInput
+            id="editAccountName"
+            label={t`Account Name`}
+            placeholder={t`e.g. Main Checking`}
+            icon={<Icon name="badge" className="text-lg" />}
+            error={errors.accountName?.message}
+            {...register('accountName')}
+          />
+
+          <Select
+            id="editAccountType"
+            label={t`Account Type`}
+            icon={<Icon name="category" className="text-lg" />}
+            error={errors.accountType?.message}
+            {...register('accountType')}
+          >
+            <option value={AccountType.CHECKING}>{t`Checking`}</option>
+            <option value={AccountType.SAVINGS}>{t`Savings`}</option>
+            <option value={AccountType.CREDIT}>{t`Credit`}</option>
+            <option value={AccountType.INVESTMENT}>{t`Investment`}</option>
+          </Select>
+
+          <TextInput
+            id="editBalance"
+            type="number"
+            label={t`Balance (cents)`}
+            placeholder="0"
+            icon={<Icon name="payments" className="text-lg" />}
+            error={errors.balance?.message}
+            {...register('balance', { valueAsNumber: true })}
+          />
+
+          <div className="flex gap-3 pt-4">
+            <Button type="button" variant="ghost" size="md" onClick={onClose}>
+              <Trans>Cancel</Trans>
+            </Button>
+            <Button type="submit" variant="primary" size="md" disabled={isSubmitting}>
+              {isSubmitting ? <Trans>Saving...</Trans> : <Trans>Save Changes</Trans>}
+            </Button>
+          </div>
+        </form>
+      </Card>
+    </div>
+  );
+}
+
+function DeleteConfirmModal({
+  account,
+  onConfirm,
+  onClose,
+  isDeleting,
+}: {
+  account: BankAccount;
+  onConfirm: () => void;
+  onClose: () => void;
+  isDeleting: boolean;
+}) {
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <Card variant="default" padding="lg" className="w-full max-w-md">
+        <div className="flex items-center gap-3 mb-4">
+          <IconBox icon="warning" size="md" shape="circle" tone="error" />
+          <h2 className="font-headline text-xl font-bold text-primary">
+            <Trans>Delete Account</Trans>
+          </h2>
+        </div>
+        <p className="text-on-surface-variant mb-6">
+          <Trans>
+            Are you sure you want to delete &ldquo;{account.accountName}&rdquo;? This action cannot
+            be undone.
+          </Trans>
+        </p>
+        <div className="flex gap-3">
+          <Button type="button" variant="ghost" size="md" onClick={onClose}>
+            <Trans>Cancel</Trans>
+          </Button>
+          <Button
+            type="button"
+            variant="primary"
+            size="md"
+            className="!bg-error !text-white"
+            onClick={onConfirm}
+            disabled={isDeleting}
+          >
+            {isDeleting ? <Trans>Deleting...</Trans> : <Trans>Delete</Trans>}
+          </Button>
+        </div>
+      </Card>
+    </div>
+  );
+}
+
+export function AccountsOverviewPage({
+  loadAccounts,
+  createAccount,
+  updateAccount,
+  deleteAccount,
+  loadAccountOverview,
+  loadInstitutions,
+}: Props) {
+  const { t } = useLingui();
+  const [accounts, setAccounts] = useState<BankAccount[]>([]);
+  const [totals, setTotals] = useState<CurrencyTotal[]>([]);
+  const [institutions, setInstitutions] = useState<Institution[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingAccount, setEditingAccount] = useState<BankAccount | null>(null);
+  const [deletingAccount, setDeletingAccount] = useState<BankAccount | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const institutionMap = new Map(institutions.map((i) => [i.id, i.name]));
+
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const [accountsData, overviewData, institutionsData] = await Promise.all([
+        loadAccounts.execute(),
+        loadAccountOverview.execute(),
+        loadInstitutions.execute(),
+      ]);
+      setAccounts(accountsData);
+      setTotals(overviewData.totalsByCurrency);
+      setInstitutions(institutionsData);
+    } catch {
+      setError(t`Failed to load accounts. Please try again.`);
+    } finally {
+      setLoading(false);
+    }
+  }, [loadAccounts, loadAccountOverview, loadInstitutions, t]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const handleCreate = async (data: CreateBankAccountInput) => {
+    setIsSubmitting(true);
+    try {
+      await createAccount.execute(data);
+      setShowCreateModal(false);
+      await fetchData();
+    } catch {
+      setError(t`Failed to create account.`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleUpdate = async (data: UpdateBankAccountInput) => {
+    if (!editingAccount) return;
+    setIsSubmitting(true);
+    try {
+      await updateAccount.execute(editingAccount.id, data);
+      setEditingAccount(null);
+      await fetchData();
+    } catch {
+      setError(t`Failed to update account.`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deletingAccount) return;
+    setIsSubmitting(true);
+    try {
+      await deleteAccount.execute(deletingAccount.id);
+      setDeletingAccount(null);
+      await fetchData();
+    } catch {
+      setError(t`Failed to delete account.`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="p-8">
+        <div className="flex items-center justify-center py-20">
+          <Icon name="hourglass_empty" className="text-4xl text-on-surface-variant animate-spin" />
         </div>
       </div>
+    );
+  }
+
+  return (
+    <div className="p-8">
+      <PageHeader
+        overline={<Trans>Financial Accounts</Trans>}
+        title={<Trans>Accounts Overview</Trans>}
+        actions={
+          <Button
+            type="button"
+            variant="primary"
+            size="md"
+            onClick={() => setShowCreateModal(true)}
+          >
+            <Icon name="add" className="text-lg mr-2" />
+            <Trans>Add Account</Trans>
+          </Button>
+        }
+      />
+
+      {error && (
+        <div className="mb-6 p-4 bg-error/10 rounded-xl text-error text-sm font-medium">
+          {error}
+        </div>
+      )}
+
+      <OverviewTotals totals={totals} />
+
+      <div className="mb-6">
+        <h2 className="font-headline text-xl font-bold text-primary mb-4">
+          <Trans>Connected Accounts</Trans>
+        </h2>
+      </div>
+
+      {accounts.length === 0 ? (
+        <Card variant="default" padding="lg" className="text-center py-12">
+          <IconBox
+            icon="account_balance"
+            size="lg"
+            shape="circle"
+            tone="surface"
+            className="mx-auto mb-4"
+          />
+          <p className="text-on-surface-variant mb-4">
+            <Trans>No accounts found. Add your first bank account to get started.</Trans>
+          </p>
+          <Button
+            type="button"
+            variant="primary"
+            size="md"
+            onClick={() => setShowCreateModal(true)}
+          >
+            <Icon name="add" className="text-lg mr-2" />
+            <Trans>Add Account</Trans>
+          </Button>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {accounts.map((account) => (
+            <AccountCard
+              key={account.id}
+              account={account}
+              institutionName={institutionMap.get(account.institutionId) ?? account.institutionId}
+              onEdit={setEditingAccount}
+              onDelete={setDeletingAccount}
+            />
+          ))}
+        </div>
+      )}
+
+      {showCreateModal && (
+        <CreateAccountModal
+          institutions={institutions}
+          onSubmit={handleCreate}
+          onClose={() => setShowCreateModal(false)}
+          isSubmitting={isSubmitting}
+        />
+      )}
+
+      {editingAccount && (
+        <EditAccountModal
+          account={editingAccount}
+          onSubmit={handleUpdate}
+          onClose={() => setEditingAccount(null)}
+          isSubmitting={isSubmitting}
+        />
+      )}
+
+      {deletingAccount && (
+        <DeleteConfirmModal
+          account={deletingAccount}
+          onConfirm={handleDelete}
+          onClose={() => setDeletingAccount(null)}
+          isDeleting={isSubmitting}
+        />
+      )}
     </div>
   );
 }
