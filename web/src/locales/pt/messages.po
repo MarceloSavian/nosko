@@ -85,7 +85,7 @@ msgstr ""
 msgid "A digital curator for high-end financial lucidity. Consolidate your wealth with a sophisticated, sand-based neutral experience."
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:156
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:157
 msgid "A new verification code has been sent to your email."
 msgstr ""
 
@@ -122,20 +122,20 @@ msgid "Active Link: Jordan J."
 msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:141
-msgid "Activity Ledger"
-msgstr ""
+#~ msgid "Activity Ledger"
+#~ msgstr ""
 
-#: src/presentation/components/AppLayout.tsx:91
+#: src/presentation/components/AppLayout.tsx:112
 msgid "Add Transaction"
 msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:226
-msgid "Adjust Limits"
-msgstr ""
+#~ msgid "Adjust Limits"
+#~ msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:263
-msgid "AI-powered analysis of your spending patterns and investment trajectory."
-msgstr ""
+#~ msgid "AI-powered analysis of your spending patterns and investment trajectory."
+#~ msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:42
 #~ msgid "ALEX"
@@ -238,6 +238,10 @@ msgstr ""
 #~ msgid "Budget Adherence"
 #~ msgstr ""
 
+#: src/presentation/pages/dashboard/DashboardPage.tsx:181
+msgid "Budget Summary"
+msgstr ""
+
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:172
 msgid "Budget Utilization"
 msgstr ""
@@ -250,13 +254,13 @@ msgstr ""
 msgid "Cash Flow Analysis"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:141
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:142
 msgid "Check your inbox"
 msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:80
-msgid "Checking"
-msgstr ""
+#~ msgid "Checking"
+#~ msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:37
 #~ msgid "Checking stream"
@@ -298,6 +302,10 @@ msgstr ""
 #~ msgid "Collaborative Spirit"
 #~ msgstr ""
 
+#: src/presentation/components/AppLayout.tsx:158
+msgid "Collapse"
+msgstr ""
+
 #: src/presentation/pages/landing/LandingPage.tsx:135
 #~ msgid "Comment on transactions, add photos of memories, and plan together."
 #~ msgstr "Comente transações, adicione fotos de memórias e planejem juntos."
@@ -327,7 +335,6 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:60
-#: src/presentation/pages/dashboard/DashboardPage.tsx:62
 msgid "Consolidated Portfolio"
 msgstr ""
 
@@ -400,7 +407,7 @@ msgstr ""
 msgid "Custom %"
 msgstr ""
 
-#: src/presentation/components/AppLayout.tsx:40
+#: src/presentation/components/AppLayout.tsx:42
 msgid "Dashboard"
 msgstr ""
 
@@ -445,8 +452,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:206
-msgid "Dining & Social"
-msgstr ""
+#~ msgid "Dining & Social"
+#~ msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:191
 #~ msgid "Dismiss"
@@ -484,6 +491,10 @@ msgstr "Endereço de E-mail"
 #: src/presentation/pages/signup/SignUpPage.tsx:42
 #~ msgid "Email already registered"
 #~ msgstr ""
+
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:24
+msgid "Email Verified"
+msgstr ""
 
 #: src/presentation/pages/signup/SignUpPage.tsx:258
 #~ msgid "ENCRYPTED"
@@ -541,7 +552,11 @@ msgstr ""
 msgid "Face ID"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:117
+#: src/presentation/pages/dashboard/DashboardPage.tsx:59
+msgid "Failed to load dashboard."
+msgstr ""
+
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:118
 msgid "Failed to resend verification email. Please try again."
 msgstr ""
 
@@ -561,6 +576,10 @@ msgstr ""
 msgid "Financial clarity for the modern couple."
 msgstr ""
 
+#: src/presentation/pages/dashboard/DashboardPage.tsx:95
+msgid "Financial Dashboard"
+msgstr ""
+
 #: src/presentation/pages/partner-setup/SelectSharedAccountsPage.tsx:84
 #~ msgid "Financial Harmony encrypts all shared ledger data. Your partner will see balances and transaction history, but cannot initiate transfers or change account settings."
 #~ msgstr ""
@@ -574,8 +593,8 @@ msgid "Financial Harmony uses military-grade encryption for all shared data. You
 msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:286
-msgid "Financial Narrative"
-msgstr ""
+#~ msgid "Financial Narrative"
+#~ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:241
 #~ msgid "financial rhythm?"
@@ -606,8 +625,8 @@ msgid "Future wealth forecasting based on current trajectory."
 msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:260
-msgid "Generate Narrative Insights"
-msgstr ""
+#~ msgid "Generate Narrative Insights"
+#~ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:251
 #~ msgid "Get Early Access"
@@ -620,6 +639,10 @@ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:175
 msgid "Global Liquidity View"
+msgstr ""
+
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:34
+msgid "Go to Login"
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:94
@@ -654,7 +677,7 @@ msgstr ""
 #~ msgid "hello@example.com"
 #~ msgstr ""
 
-#: src/presentation/components/AppLayout.tsx:100
+#: src/presentation/components/AppLayout.tsx:123
 #: src/presentation/pages/landing/LandingPage.tsx:348
 msgid "Help Center"
 msgstr ""
@@ -693,7 +716,6 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:26
-#: src/presentation/pages/dashboard/DashboardPage.tsx:28
 #: src/presentation/pages/landing/LandingPage.tsx:19
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:28
 msgid "Insights"
@@ -707,7 +729,7 @@ msgstr ""
 msgid "Invalid email or password"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:94
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:95
 msgid "Invalid verification code. Please check and try again."
 msgstr ""
 
@@ -716,8 +738,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:92
-msgid "Investment"
-msgstr ""
+#~ msgid "Investment"
+#~ msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:84
 msgid "Investments"
@@ -743,7 +765,7 @@ msgstr ""
 msgid "Joint (58%)"
 msgstr ""
 
-#: src/presentation/components/AppLayout.tsx:42
+#: src/presentation/components/AppLayout.tsx:44
 msgid "Joint Accounts"
 msgstr ""
 
@@ -763,7 +785,7 @@ msgstr ""
 #~ msgid "Joint Share"
 #~ msgstr ""
 
-#: src/presentation/components/AppLayout.tsx:69
+#: src/presentation/components/AppLayout.tsx:80
 msgid "Joint Wealth Management"
 msgstr ""
 
@@ -776,8 +798,8 @@ msgid "Language"
 msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:269
-msgid "Launch Curator"
-msgstr ""
+#~ msgid "Launch Curator"
+#~ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:353
 msgid "Legal & Privacy"
@@ -827,6 +849,14 @@ msgstr ""
 msgid "Monthly Growth"
 msgstr ""
 
+#: src/presentation/pages/dashboard/DashboardPage.tsx:220
+msgid "Monthly Insights"
+msgstr ""
+
+#: src/presentation/pages/dashboard/DashboardPage.tsx:128
+msgid "Monthly Overview"
+msgstr ""
+
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:69
 msgid "Monthly Rent"
 msgstr ""
@@ -836,8 +866,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:219
-msgid "Monthly Trajectory"
-msgstr ""
+#~ msgid "Monthly Trajectory"
+#~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:236
 #~ msgid "My Financial Planner"
@@ -871,9 +901,17 @@ msgstr ""
 #~ msgid "Next Step"
 #~ msgstr ""
 
+#: src/presentation/pages/dashboard/DashboardPage.tsx:187
+msgid "No budget data for this month."
+msgstr ""
+
 #: src/presentation/pages/landing/LandingPage.tsx:254
 #~ msgid "No credit card required. Invite your partner later."
 #~ msgstr "Sem necessidade de cartão de crédito. Convide seu parceiro depois."
+
+#: src/presentation/pages/dashboard/DashboardPage.tsx:149
+msgid "No recent transactions."
+msgstr ""
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:159
 msgid "Nosko Financial Architecture v4.2"
@@ -899,9 +937,13 @@ msgstr ""
 msgid "Oct Month Trend"
 msgstr ""
 
-#. placeholder {0}: item.total
-#: src/presentation/pages/dashboard/DashboardPage.tsx:243
+#. placeholder {0}: formatCents(item.planned)
+#: src/presentation/pages/dashboard/DashboardPage.tsx:206
 msgid "of {0}"
+msgstr ""
+
+#: src/presentation/pages/dashboard/DashboardPage.tsx:241
+msgid "On track"
 msgstr ""
 
 #: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:47
@@ -916,7 +958,11 @@ msgstr ""
 msgid "Our Vision"
 msgstr ""
 
-#: src/presentation/pages/dashboard/DashboardPage.tsx:283
+#: src/presentation/pages/dashboard/DashboardPage.tsx:241
+msgid "Over budget"
+msgstr ""
+
+#: src/presentation/pages/dashboard/DashboardPage.tsx:92
 msgid "Overview"
 msgstr ""
 
@@ -982,7 +1028,6 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:29
-#: src/presentation/pages/dashboard/DashboardPage.tsx:31
 #: src/presentation/pages/landing/LandingPage.tsx:21
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:31
 msgid "Planning"
@@ -1001,7 +1046,6 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:23
-#: src/presentation/pages/dashboard/DashboardPage.tsx:25
 #: src/presentation/pages/landing/LandingPage.tsx:17
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:25
 msgid "Portfolio"
@@ -1047,7 +1091,8 @@ msgstr ""
 msgid "Privacy"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:214
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:215
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:42
 #: src/presentation/pages/login/LoginPage.tsx:71
 msgid "Privacy Policy"
 msgstr ""
@@ -1056,7 +1101,7 @@ msgstr ""
 #~ msgid "Product"
 #~ msgstr "Produto"
 
-#: src/presentation/components/AppLayout.tsx:46
+#: src/presentation/components/AppLayout.tsx:48
 msgid "Profile"
 msgstr ""
 
@@ -1088,13 +1133,17 @@ msgstr ""
 msgid "Recent Activity"
 msgstr ""
 
+#: src/presentation/pages/dashboard/DashboardPage.tsx:143
+msgid "Recent Transactions"
+msgstr ""
+
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:145
 #~ msgid "Recurring Quarterly"
 #~ msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:204
-msgid "Rent / Mortgage"
-msgstr ""
+#~ msgid "Rent / Mortgage"
+#~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:61
 #~ msgid "Rent & Housing"
@@ -1104,7 +1153,7 @@ msgstr ""
 #~ msgid "Rent & Mortgage"
 #~ msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:198
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:199
 msgid "Resend verification code"
 msgstr ""
 
@@ -1120,7 +1169,8 @@ msgstr ""
 msgid "Restore Defaults"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:222
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:223
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:50
 msgid "Safety"
 msgstr ""
 
@@ -1133,10 +1183,10 @@ msgid "Saved This Month"
 msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:86
-msgid "Savings"
-msgstr ""
+#~ msgid "Savings"
+#~ msgstr ""
 
-#: src/presentation/components/AppLayout.tsx:44
+#: src/presentation/components/AppLayout.tsx:46
 msgid "Savings Goals"
 msgstr ""
 
@@ -1196,7 +1246,7 @@ msgstr ""
 msgid "Send Invitation"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:198
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:199
 msgid "Sending..."
 msgstr ""
 
@@ -1236,7 +1286,7 @@ msgstr ""
 #~ msgid "Sign In to Nosko"
 #~ msgstr "Entrar no Nosko"
 
-#: src/presentation/components/AppLayout.tsx:111
+#: src/presentation/components/AppLayout.tsx:139
 msgid "Sign Out"
 msgstr ""
 
@@ -1244,7 +1294,7 @@ msgstr ""
 #~ msgid "Sign Up"
 #~ msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:206
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:207
 msgid "Sign up again"
 msgstr ""
 
@@ -1256,7 +1306,7 @@ msgstr ""
 #~ msgid "Smart Asymmetry"
 #~ msgstr "Assimetria Inteligente"
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:98
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:99
 #: src/presentation/pages/login/LoginPage.tsx:47
 #: src/presentation/pages/signup/SignUpPage.tsx:45
 msgid "Something went wrong. Please try again."
@@ -1306,12 +1356,12 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:218
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:219
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:46
 msgid "Support Center"
 msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:38
-#: src/presentation/pages/dashboard/DashboardPage.tsx:40
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:40
 msgid "Sync Accounts"
 msgstr ""
@@ -1391,7 +1441,6 @@ msgid "Total Joint Responsibility"
 msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:68
-#: src/presentation/pages/dashboard/DashboardPage.tsx:70
 #: src/presentation/pages/profile/UserProfilePage.tsx:23
 msgid "Total Net Worth"
 msgstr ""
@@ -1404,8 +1453,21 @@ msgstr ""
 #~ msgid "Total Payments This Month"
 #~ msgstr ""
 
+#: src/presentation/pages/dashboard/DashboardPage.tsx:132
+msgid "Total Spending"
+msgstr ""
+
+#. placeholder {0}: formatYearMonth(yearMonth)
+#: src/presentation/pages/dashboard/DashboardPage.tsx:223
+msgid "Track your spending patterns and budget utilization across categories for {0}."
+msgstr ""
+
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:280
 msgid "Tracking shared liquidity and individual growth for Nosko & Partner."
+msgstr ""
+
+#: src/presentation/pages/dashboard/DashboardPage.tsx:163
+msgid "Transaction"
 msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:115
@@ -1428,7 +1490,8 @@ msgstr ""
 msgid "Unity Connection"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:130
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:131
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:13
 msgid "Unity Ledger"
 msgstr ""
 
@@ -1457,10 +1520,10 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:208
-msgid "Utility Bills"
-msgstr ""
+#~ msgid "Utility Bills"
+#~ msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:96
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:97
 msgid "Verification code has expired. Please request a new one."
 msgstr ""
 
@@ -1468,11 +1531,11 @@ msgstr ""
 #~ msgid "Verification Status"
 #~ msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:189
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:190
 msgid "Verify Email"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:189
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:190
 msgid "Verifying..."
 msgstr ""
 
@@ -1500,7 +1563,7 @@ msgstr ""
 #~ msgid "We don't just track spending; we celebrate every step towards your shared flourishing."
 #~ msgstr "Não apenas rastreamos gastos; celebramos cada passo rumo ao florescimento compartilhado de vocês."
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:144
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:145
 msgid "We've sent a 6-digit verification code to"
 msgstr ""
 
@@ -1521,7 +1584,7 @@ msgstr "Bem-vindo de volta"
 msgid "Which stories shall we share?"
 msgstr ""
 
-#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:204
+#: src/presentation/pages/confirm-email/ConfirmEmailPage.tsx:205
 msgid "Wrong email?"
 msgstr ""
 
@@ -1543,6 +1606,10 @@ msgstr ""
 
 #: src/presentation/pages/signup/SignUpPage.tsx:104
 msgid "Your data is protected by multi-layered encryption protocols."
+msgstr ""
+
+#: src/presentation/pages/confirm-email/EmailVerifiedPage.tsx:27
+msgid "Your email has been successfully confirmed. You can now sign in to your account."
 msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:204
