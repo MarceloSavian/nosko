@@ -207,12 +207,12 @@ function LoginForm({
             icon={<Icon name="lock" className="text-lg" />}
             error={errors.password?.message}
             headerRight={
-              <button
-                type="button"
+              <Link
+                to="/forgot-password"
                 className="text-xs font-bold text-secondary hover:underline cursor-pointer"
               >
                 <Trans>Forgot Password?</Trans>
-              </button>
+              </Link>
             }
             trailing={
               <button

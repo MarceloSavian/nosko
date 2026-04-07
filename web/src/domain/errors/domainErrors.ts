@@ -6,6 +6,7 @@ import {
   InvalidVerificationCodeError,
   VerificationCodeExpiredError,
 } from './auth';
+import { InvalidResetCodeError, ResetCodeExpiredError } from './password-reset';
 
 type ErrorConstructor = new (...args: never[]) => Error;
 
@@ -14,6 +15,8 @@ export const domainErrors: Record<string, ErrorConstructor> = {
   EmailAlreadyVerifiedError,
   EmailNotVerifiedError,
   InvalidCredentialsError,
+  InvalidResetCodeError,
   InvalidVerificationCodeError,
+  ResetCodeExpiredError,
   VerificationCodeExpiredError,
 };
