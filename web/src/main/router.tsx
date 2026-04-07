@@ -45,21 +45,21 @@ import {
   updateBudgetItem,
 } from './factories/budget';
 import { loadDashboard } from './factories/dashboard';
-import { requestPasswordReset, resetPassword } from './factories/password-reset';
 import {
   acceptInvitation,
   cancelInvitation,
   declineInvitation,
   dissolvePartnership,
   invitePartner,
-  loadAccounts as loadPartnershipAccounts,
   loadContributionRules,
   loadInvitations,
   loadPartnership,
+  loadAccounts as loadPartnershipAccounts,
   loadSharedAccounts,
   setContributionRules,
   setSharedAccounts,
 } from './factories/partnership';
+import { requestPasswordReset, resetPassword } from './factories/password-reset';
 import { deleteAccount, loadProfile, updateProfile } from './factories/profile';
 import {
   createTransaction,
