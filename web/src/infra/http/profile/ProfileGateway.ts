@@ -1,11 +1,13 @@
 import type { IHttpClient } from '@/data/protocols/http/IHttpClient';
 import type { IProfileGateway } from '@/data/protocols/profile/IProfileGateway';
 import { UnexpectedError } from '@/domain/errors/auth';
-import type {
-  CurrencyDefaultSchema,
-  CustomerSchema,
-  SetCurrencyDefaultsInput,
-  UpdateProfileInput,
+import {
+  type CurrencyDefaultSchema,
+  type CustomerSchema,
+  currencyDefaultSchema,
+  customerSchema,
+  type SetCurrencyDefaultsInput,
+  type UpdateProfileInput,
 } from '@/domain/models/profile/Profile';
 
 export class ProfileGateway implements IProfileGateway {
@@ -24,23 +26,29 @@ export class ProfileGateway implements IProfileGateway {
   }
 
   async loadProfile(): Promise<CustomerSchema> {
-    const response = await this.httpClient.request<CustomerSchema>({
+    const response = await this.httpClient.request({
       url: '/v1/me',
       method: 'get',
       headers: this.authHeaders(),
     });
-    if (response.statusCode === 200) return response.body as CustomerSchema;
+    if (response.statusCode === 200) {
+      const parsed = customerSchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
   async updateProfile(input: UpdateProfileInput): Promise<CustomerSchema> {
-    const response = await this.httpClient.request<CustomerSchema>({
+    const response = await this.httpClient.request({
       url: '/v1/me',
       method: 'put',
       body: input,
       headers: this.authHeaders(),
     });
-    if (response.statusCode === 200) return response.body as CustomerSchema;
+    if (response.statusCode === 200) {
+      const parsed = customerSchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
@@ -55,23 +63,29 @@ export class ProfileGateway implements IProfileGateway {
   }
 
   async loadCurrencyDefaults(): Promise<CurrencyDefaultSchema[]> {
-    const response = await this.httpClient.request<CurrencyDefaultSchema[]>({
+    const response = await this.httpClient.request({
       url: '/v1/me/currencies',
       method: 'get',
       headers: this.authHeaders(),
     });
-    if (response.statusCode === 200) return response.body as CurrencyDefaultSchema[];
+    if (response.statusCode === 200) {
+      const parsed = currencyDefaultSchema.array().safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
   async setCurrencyDefaults(input: SetCurrencyDefaultsInput): Promise<CurrencyDefaultSchema[]> {
-    const response = await this.httpClient.request<CurrencyDefaultSchema[]>({
+    const response = await this.httpClient.request({
       url: '/v1/me/currencies',
       method: 'put',
       body: input,
       headers: this.authHeaders(),
     });
-    if (response.statusCode === 200) return response.body as CurrencyDefaultSchema[];
+    if (response.statusCode === 200) {
+      const parsed = currencyDefaultSchema.array().safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 }
