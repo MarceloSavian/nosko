@@ -6,14 +6,18 @@ import {
   PartnershipAlreadyExistsError,
   PartnershipNotFoundError,
 } from '@/domain/errors/partnership';
-import type {
-  BankAccount,
-  ContributionRule,
-  InvitePartnerInput,
-  PartnerInvitation,
-  Partnership,
-  SetContributionRuleInput,
-  SetSharedAccountsInput,
+import {
+  type BankAccount,
+  bankAccountSchema,
+  type ContributionRule,
+  contributionRuleSchema,
+  type InvitePartnerInput,
+  type PartnerInvitation,
+  type Partnership,
+  partnerInvitationSchema,
+  partnershipSchema,
+  type SetContributionRuleInput,
+  type SetSharedAccountsInput,
 } from '@/domain/models/partnership/Partnership';
 
 export class PartnershipGateway implements IPartnershipGateway {
@@ -32,37 +36,46 @@ export class PartnershipGateway implements IPartnershipGateway {
   }
 
   async invitePartner(input: InvitePartnerInput): Promise<PartnerInvitation> {
-    const response = await this.httpClient.request<PartnerInvitation>({
+    const response = await this.httpClient.request({
       url: '/v1/partnership/invite',
       method: 'post',
       body: input,
       headers: this.authHeaders(),
     });
 
-    if (response.statusCode === 201) return response.body;
+    if (response.statusCode === 201) {
+      const parsed = partnerInvitationSchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     if (response.statusCode === 409) throw new PartnershipAlreadyExistsError();
     throw new UnexpectedError();
   }
 
   async loadInvitations(): Promise<PartnerInvitation[]> {
-    const response = await this.httpClient.request<PartnerInvitation[]>({
+    const response = await this.httpClient.request({
       url: '/v1/partnership/invitations',
       method: 'get',
       headers: this.authHeaders(),
     });
 
-    if (response.statusCode === 200) return response.body;
+    if (response.statusCode === 200) {
+      const parsed = partnerInvitationSchema.array().safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
   async acceptInvitation(id: string): Promise<Partnership> {
-    const response = await this.httpClient.request<Partnership>({
+    const response = await this.httpClient.request({
       url: `/v1/partnership/invitations/${id}/accept`,
       method: 'post',
       headers: this.authHeaders(),
     });
 
-    if (response.statusCode === 200) return response.body;
+    if (response.statusCode === 200) {
+      const parsed = partnershipSchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     if (response.statusCode === 404) throw new InvitationNotFoundError();
     throw new UnexpectedError();
   }
@@ -92,13 +105,16 @@ export class PartnershipGateway implements IPartnershipGateway {
   }
 
   async loadPartnership(): Promise<Partnership | null> {
-    const response = await this.httpClient.request<Partnership>({
+    const response = await this.httpClient.request({
       url: '/v1/partnership',
       method: 'get',
       headers: this.authHeaders(),
     });
 
-    if (response.statusCode === 200) return response.body;
+    if (response.statusCode === 200) {
+      const parsed = partnershipSchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     if (response.statusCode === 404) return null;
     throw new UnexpectedError();
   }
@@ -116,59 +132,74 @@ export class PartnershipGateway implements IPartnershipGateway {
   }
 
   async loadContributionRules(): Promise<ContributionRule> {
-    const response = await this.httpClient.request<ContributionRule>({
+    const response = await this.httpClient.request({
       url: '/v1/partnership/contribution-rules',
       method: 'get',
       headers: this.authHeaders(),
     });
 
-    if (response.statusCode === 200) return response.body;
+    if (response.statusCode === 200) {
+      const parsed = contributionRuleSchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
   async setContributionRules(input: SetContributionRuleInput): Promise<ContributionRule> {
-    const response = await this.httpClient.request<ContributionRule>({
+    const response = await this.httpClient.request({
       url: '/v1/partnership/contribution-rules',
       method: 'put',
       body: input,
       headers: this.authHeaders(),
     });
 
-    if (response.statusCode === 200) return response.body;
+    if (response.statusCode === 200) {
+      const parsed = contributionRuleSchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
   async loadSharedAccounts(): Promise<BankAccount[]> {
-    const response = await this.httpClient.request<BankAccount[]>({
+    const response = await this.httpClient.request({
       url: '/v1/partnership/shared-accounts',
       method: 'get',
       headers: this.authHeaders(),
     });
 
-    if (response.statusCode === 200) return response.body;
+    if (response.statusCode === 200) {
+      const parsed = bankAccountSchema.array().safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
   async setSharedAccounts(input: SetSharedAccountsInput): Promise<BankAccount[]> {
-    const response = await this.httpClient.request<BankAccount[]>({
+    const response = await this.httpClient.request({
       url: '/v1/partnership/shared-accounts',
       method: 'put',
       body: input,
       headers: this.authHeaders(),
     });
 
-    if (response.statusCode === 200) return response.body;
+    if (response.statusCode === 200) {
+      const parsed = bankAccountSchema.array().safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
   async loadAccounts(): Promise<BankAccount[]> {
-    const response = await this.httpClient.request<BankAccount[]>({
+    const response = await this.httpClient.request({
       url: '/v1/accounts',
       method: 'get',
       headers: this.authHeaders(),
     });
 
-    if (response.statusCode === 200) return response.body;
+    if (response.statusCode === 200) {
+      const parsed = bankAccountSchema.array().safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 }
