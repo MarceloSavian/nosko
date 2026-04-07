@@ -135,10 +135,19 @@ msgstr ""
 msgid "Activity Ledger"
 msgstr ""
 
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:313
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:665
+msgid "Add"
+msgstr ""
+
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:157
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:480
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:518
 msgid "Add Account"
+msgstr ""
+
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:241
+msgid "Add Item"
 msgstr ""
 
 #: src/presentation/components/AppLayout.tsx:115
@@ -148,6 +157,10 @@ msgstr ""
 
 #: src/presentation/pages/transactions/TransactionsPage.tsx:173
 msgid "Add your first transaction to start tracking your finances."
+msgstr ""
+
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:313
+msgid "Adding..."
 msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:226
@@ -208,8 +221,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:98
-msgid "Auto-synced"
-msgstr ""
+#~ msgid "Auto-synced"
+#~ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:218
 msgid "Automated Categorization"
@@ -288,7 +301,11 @@ msgstr ""
 msgid "Budget Item ID"
 msgstr ""
 
-#: src/presentation/pages/planner/FinancialPlannerPage.tsx:172
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:811
+msgid "Budget Planner"
+msgstr ""
+
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:535
 msgid "Budget Utilization"
 msgstr ""
 
@@ -308,8 +325,8 @@ msgid "Cancel"
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:208
-msgid "Cash Flow Analysis"
-msgstr ""
+#~ msgid "Cash Flow Analysis"
+#~ msgstr ""
 
 #: src/presentation/pages/transactions/TransactionsPage.tsx:368
 msgid "Category ID"
@@ -426,12 +443,20 @@ msgstr ""
 #~ msgid "Crafting the future of shared finance with beauty, trust, and editorial precision."
 #~ msgstr "Construindo o futuro das finanças compartilhadas com beleza, confiança e precisão editorial."
 
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:175
+msgid "Create a plan to start tracking your income and expenses."
+msgstr ""
+
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:229
 msgid "Create Account"
 msgstr ""
 
 #: src/presentation/pages/login/LoginPage.tsx:277
 msgid "Create an account"
+msgstr ""
+
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:198
+msgid "Create Plan"
 msgstr ""
 
 #: src/presentation/pages/transactions/TransactionsPage.tsx:395
@@ -451,6 +476,7 @@ msgid "Create your ledger"
 msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:229
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:198
 #: src/presentation/pages/signup/SignUpPage.tsx:237
 #: src/presentation/pages/transactions/TransactionsPage.tsx:395
 msgid "Creating..."
@@ -527,6 +553,10 @@ msgstr ""
 msgid "Delete Account"
 msgstr ""
 
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:825
+msgid "Delete Plan"
+msgstr ""
+
 #: src/presentation/pages/transactions/TransactionsPage.tsx:511
 msgid "Delete Transaction"
 msgstr ""
@@ -587,8 +617,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:75
-msgid "Due in 4 days"
-msgstr ""
+#~ msgid "Due in 4 days"
+#~ msgstr ""
 
 #: src/presentation/pages/transactions/TransactionsPage.tsx:342
 msgid "e.g. -5000 for $50.00"
@@ -650,8 +680,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:89
-msgid "Energy & Utilities"
-msgstr ""
+#~ msgid "Energy & Utilities"
+#~ msgstr ""
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:103
 #~ msgid "English (US)"
@@ -696,6 +726,10 @@ msgstr ""
 #: src/presentation/pages/landing/LandingPage.tsx:119
 #~ msgid "Every transaction tells a story. From morning coffees to mortgage payments, Nosko translates your data into a cohesive editorial ledger."
 #~ msgstr "Cada transação conta uma história. Do café da manhã ao pagamento da hipoteca, o Nosko traduz seus dados em um livro-razão editorial coeso."
+
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:424
+msgid "Expenses"
+msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:188
 #~ msgid "Explore Opportunities"
@@ -759,8 +793,8 @@ msgstr ""
 #~ msgstr "Funcionalidades"
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:109
-msgid "Fiber Internet"
-msgstr ""
+#~ msgid "Fiber Internet"
+#~ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:57
 #~ msgid "Finance for"
@@ -813,6 +847,10 @@ msgstr ""
 #: src/presentation/pages/login/LoginPage.tsx:214
 msgid "Forgot Password?"
 msgstr "Esqueceu a Senha?"
+
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:522
+msgid "Free Amount"
+msgstr ""
 
 #: src/presentation/pages/signup/SignUpPage.tsx:190
 msgid "Full Name"
@@ -902,6 +940,10 @@ msgstr ""
 #~ msgid "In-Line Context"
 #~ msgstr "Contexto em Linha"
 
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:402
+msgid "Income"
+msgstr ""
+
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:34
 #~ msgid "Individual"
 #~ msgstr ""
@@ -920,7 +962,6 @@ msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:28
 #: src/presentation/pages/landing/LandingPage.tsx:19
-#: src/presentation/pages/planner/FinancialPlannerPage.tsx:28
 msgid "Insights"
 msgstr ""
 
@@ -974,6 +1015,10 @@ msgstr ""
 msgid "Joined by 12,000+ couples this month."
 msgstr ""
 
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:144
+msgid "Joint"
+msgstr ""
+
 #: src/presentation/pages/profile/UserProfilePage.tsx:68
 #~ msgid "Joint (58%)"
 #~ msgstr ""
@@ -982,8 +1027,16 @@ msgstr ""
 msgid "Joint Accounts"
 msgstr ""
 
-#: src/presentation/pages/planner/FinancialPlannerPage.tsx:249
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:854
+msgid "Joint Budget"
+msgstr ""
+
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:506
 msgid "Joint Expenses"
+msgstr ""
+
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:554
+msgid "Joint Items"
 msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:188
@@ -991,8 +1044,8 @@ msgid "Joint Management."
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:58
-msgid "Joint Planning"
-msgstr ""
+#~ msgid "Joint Planning"
+#~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:28
 #~ msgid "Joint Share"
@@ -1052,6 +1105,10 @@ msgstr ""
 msgid "Machine learning labels for 100+ transaction types."
 msgstr ""
 
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:642
+msgid "Manage Categories"
+msgstr ""
+
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:103
 #~ msgid "Market Insights"
 #~ msgstr ""
@@ -1073,20 +1130,24 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:227
-msgid "Monthly"
-msgstr ""
+#~ msgid "Monthly"
+#~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:287
-msgid "Monthly Growth"
-msgstr ""
+#~ msgid "Monthly Growth"
+#~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:69
-msgid "Monthly Rent"
-msgstr ""
+#~ msgid "Monthly Rent"
+#~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:71
 #~ msgid "Monthly residence cost"
 #~ msgstr ""
+
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:485
+msgid "Monthly Summary"
+msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:219
 msgid "Monthly Trajectory"
@@ -1112,6 +1173,10 @@ msgstr "nome@empresa.com"
 
 #: src/presentation/pages/signup/SignUpPage.tsx:201
 msgid "name@partnership.com"
+msgstr ""
+
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:444
+msgid "Net"
 msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:251
@@ -1148,12 +1213,20 @@ msgstr ""
 msgid "No accounts yet. Add your first account to get started."
 msgstr ""
 
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:172
+msgid "No budget plan for this month"
+msgstr ""
+
 #: src/presentation/pages/landing/LandingPage.tsx:254
 #~ msgid "No credit card required. Invite your partner later."
 #~ msgstr "Sem necessidade de cartão de crédito. Convide seu parceiro depois."
 
 #: src/presentation/pages/transactions/TransactionsPage.tsx:245
 msgid "No description"
+msgstr ""
+
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:455
+msgid "No items yet. Add your first income or expense above."
 msgstr ""
 
 #: src/presentation/pages/transactions/TransactionsPage.tsx:170
@@ -1181,8 +1254,8 @@ msgstr ""
 #~ msgstr "Agora em Beta Privado"
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:191
-msgid "Oct Month Trend"
-msgstr ""
+#~ msgid "Oct Month Trend"
+#~ msgstr ""
 
 #. placeholder {0}: item.total
 #: src/presentation/pages/dashboard/DashboardPage.tsx:243
@@ -1211,8 +1284,8 @@ msgid "Overview"
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:95
-msgid "Paid – Oct 12"
-msgstr ""
+#~ msgid "Paid – Oct 12"
+#~ msgstr ""
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:69
 #~ msgid "PARTNER (57%)"
@@ -1267,12 +1340,32 @@ msgstr ""
 msgid "Permanently delete your account and all associated data. This action cannot be undone."
 msgstr ""
 
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:133
+msgid "Personal"
+msgstr ""
+
 #: src/presentation/pages/profile/UserProfilePage.tsx:65
 #~ msgid "Personal (42%)"
 #~ msgstr ""
 
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:852
+msgid "Personal Budget"
+msgstr ""
+
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:498
+msgid "Personal Expenses"
+msgstr ""
+
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:255
-msgid "Personal Growth"
+#~ msgid "Personal Growth"
+#~ msgstr ""
+
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:490
+msgid "Personal Income"
+msgstr ""
+
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:549
+msgid "Personal Items"
 msgstr ""
 
 #: src/presentation/components/AppLayout.tsx:47
@@ -1281,7 +1374,6 @@ msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:31
 #: src/presentation/pages/landing/LandingPage.tsx:21
-#: src/presentation/pages/planner/FinancialPlannerPage.tsx:31
 msgid "Planning"
 msgstr ""
 
@@ -1299,13 +1391,12 @@ msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:25
 #: src/presentation/pages/landing/LandingPage.tsx:17
-#: src/presentation/pages/planner/FinancialPlannerPage.tsx:25
 msgid "Portfolio"
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:261
-msgid "Portfolio Reinvestment"
-msgstr ""
+#~ msgid "Portfolio Reinvestment"
+#~ msgstr ""
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:49
 #~ msgid "Portfolio Synergy"
@@ -1469,8 +1560,8 @@ msgid "Save Changes"
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:183
-msgid "Saved This Month"
-msgstr ""
+#~ msgid "Saved This Month"
+#~ msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:316
 #: src/presentation/pages/profile/UserProfilePage.tsx:164
@@ -1493,8 +1584,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:115
-msgid "Scheduled – Oct 28"
-msgstr ""
+#~ msgid "Scheduled – Oct 28"
+#~ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:129
 #~ msgid "Seamlessly blend your individual accounts into one shared visual interface."
@@ -1558,8 +1649,8 @@ msgid "Sending..."
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:118
-msgid "Shared Account"
-msgstr ""
+#~ msgid "Shared Account"
+#~ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:84
 #~ msgid "Shared Goal"
@@ -1623,8 +1714,8 @@ msgid "Something went wrong. Please try again."
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:78
-msgid "Split 50/50"
-msgstr ""
+#~ msgid "Split 50/50"
+#~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:83
 #~ msgid "Split equally with partner. Due in 4 days."
@@ -1674,12 +1765,15 @@ msgid "Support Center"
 msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:40
-#: src/presentation/pages/planner/FinancialPlannerPage.tsx:40
 msgid "Sync Accounts"
 msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:172
 msgid "Sync Tech"
+msgstr ""
+
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:679
+msgid "System"
 msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:125
@@ -1753,8 +1847,8 @@ msgid "Total Household Spend"
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:127
-msgid "Total Joint Responsibility"
-msgstr ""
+#~ msgid "Total Joint Responsibility"
+#~ msgstr ""
 
 #: src/presentation/pages/dashboard/DashboardPage.tsx:70
 msgid "Total Net Worth"
@@ -1769,8 +1863,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:280
-msgid "Tracking shared liquidity and individual growth for Nosko & Partner."
-msgstr ""
+#~ msgid "Tracking shared liquidity and individual growth for Nosko & Partner."
+#~ msgstr ""
 
 #: src/presentation/components/AppLayout.tsx:49
 #: src/presentation/pages/transactions/TransactionsPage.tsx:126
@@ -1850,8 +1944,8 @@ msgid "Verifying..."
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:155
-msgid "View All"
-msgstr ""
+#~ msgid "View All"
+#~ msgstr ""
 
 #: src/presentation/pages/accounts/AccountsOverviewPage.tsx:250
 #~ msgid "View All Transactions"
@@ -1862,8 +1956,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:211
-msgid "Visualizing your income vs joint and personal expenses over the last 30 days."
-msgstr ""
+#~ msgid "Visualizing your income vs joint and personal expenses over the last 30 days."
+#~ msgstr ""
 
 #: src/presentation/pages/landing/LandingPage.tsx:99
 msgid "Watch Film"
@@ -1882,8 +1976,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:221
-msgid "Weekly"
-msgstr ""
+#~ msgid "Weekly"
+#~ msgstr ""
 
 #: src/presentation/pages/login/LoginPage.tsx:176
 msgid "Welcome back"
@@ -1933,6 +2027,10 @@ msgstr ""
 #~ msgid "Your global liquidity at a glance."
 #~ msgstr ""
 
+#: src/presentation/pages/planner/FinancialPlannerPage.tsx:514
+msgid "Your Joint Share"
+msgstr ""
+
 #: src/presentation/pages/profile/UserProfilePage.tsx:145
 #: src/presentation/pages/signup/SignUpPage.tsx:191
 msgid "Your name"
@@ -1943,13 +2041,13 @@ msgid "Your password has been successfully reset. You can now sign in with your 
 msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:277
-msgid "Your Payments This Month"
-msgstr ""
+#~ msgid "Your Payments This Month"
+#~ msgstr ""
 
 #: src/presentation/pages/profile/UserProfilePage.tsx:57
 #~ msgid "Your shared goals with your partner have reached a new milestone. 85% of joint savings achieved."
 #~ msgstr ""
 
 #: src/presentation/pages/planner/FinancialPlannerPage.tsx:149
-msgid "Your Spending"
-msgstr ""
+#~ msgid "Your Spending"
+#~ msgstr ""
