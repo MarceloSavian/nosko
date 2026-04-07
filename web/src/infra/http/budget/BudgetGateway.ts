@@ -1,18 +1,22 @@
 import type { IBudgetGateway } from '@/data/protocols/budget/IBudgetGateway';
 import type { IHttpClient } from '@/data/protocols/http/IHttpClient';
 import { UnexpectedError } from '@/domain/errors/auth';
-import type {
-  BudgetCategory,
-  CreateBudgetCategoryInput,
-  UpdateBudgetCategoryInput,
+import {
+  type BudgetCategory,
+  budgetCategorySchema,
+  type CreateBudgetCategoryInput,
+  type UpdateBudgetCategoryInput,
 } from '@/domain/models/budget/BudgetCategory';
-import type {
-  AddBudgetItemInput,
-  BudgetItem,
-  BudgetPlanWithItems,
-  BudgetSummary,
-  CreateBudgetPlanInput,
-  UpdateBudgetItemInput,
+import {
+  type AddBudgetItemInput,
+  type BudgetItem,
+  type BudgetPlanWithItems,
+  type BudgetSummary,
+  budgetItemSchema,
+  budgetPlanWithItemsSchema,
+  budgetSummarySchema,
+  type CreateBudgetPlanInput,
+  type UpdateBudgetItemInput,
 } from '@/domain/models/budget/BudgetPlan';
 
 export class BudgetGateway implements IBudgetGateway {
@@ -31,34 +35,43 @@ export class BudgetGateway implements IBudgetGateway {
   }
 
   async loadCategories(): Promise<BudgetCategory[]> {
-    const response = await this.httpClient.request<BudgetCategory[]>({
+    const response = await this.httpClient.request({
       url: '/v1/budget-categories',
       method: 'get',
       headers: this.authHeaders(),
     });
-    if (response.statusCode === 200) return response.body;
+    if (response.statusCode === 200) {
+      const parsed = budgetCategorySchema.array().safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
   async createCategory(input: CreateBudgetCategoryInput): Promise<BudgetCategory> {
-    const response = await this.httpClient.request<BudgetCategory>({
+    const response = await this.httpClient.request({
       url: '/v1/budget-categories',
       method: 'post',
       body: input,
       headers: this.authHeaders(),
     });
-    if (response.statusCode === 201) return response.body;
+    if (response.statusCode === 201) {
+      const parsed = budgetCategorySchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
   async updateCategory(id: string, input: UpdateBudgetCategoryInput): Promise<BudgetCategory> {
-    const response = await this.httpClient.request<BudgetCategory>({
+    const response = await this.httpClient.request({
       url: `/v1/budget-categories/${id}`,
       method: 'put',
       body: input,
       headers: this.authHeaders(),
     });
-    if (response.statusCode === 200) return response.body;
+    if (response.statusCode === 200) {
+      const parsed = budgetCategorySchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
@@ -73,23 +86,30 @@ export class BudgetGateway implements IBudgetGateway {
   }
 
   async loadPlan(yearMonth: string): Promise<BudgetPlanWithItems | null> {
-    const response = await this.httpClient.request<BudgetPlanWithItems | null>({
+    const response = await this.httpClient.request({
       url: `/v1/budget-plans?yearMonth=${yearMonth}`,
       method: 'get',
       headers: this.authHeaders(),
     });
-    if (response.statusCode === 200) return response.body;
+    if (response.statusCode === 200) {
+      if (response.body === null) return null;
+      const parsed = budgetPlanWithItemsSchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
   async createPlan(input: CreateBudgetPlanInput): Promise<BudgetPlanWithItems> {
-    const response = await this.httpClient.request<BudgetPlanWithItems>({
+    const response = await this.httpClient.request({
       url: '/v1/budget-plans',
       method: 'post',
       body: input,
       headers: this.authHeaders(),
     });
-    if (response.statusCode === 201) return response.body;
+    if (response.statusCode === 201) {
+      const parsed = budgetPlanWithItemsSchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
@@ -104,23 +124,30 @@ export class BudgetGateway implements IBudgetGateway {
   }
 
   async loadJointPlan(yearMonth: string): Promise<BudgetPlanWithItems | null> {
-    const response = await this.httpClient.request<BudgetPlanWithItems | null>({
+    const response = await this.httpClient.request({
       url: `/v1/partnership/budget-plans?yearMonth=${yearMonth}`,
       method: 'get',
       headers: this.authHeaders(),
     });
-    if (response.statusCode === 200) return response.body;
+    if (response.statusCode === 200) {
+      if (response.body === null) return null;
+      const parsed = budgetPlanWithItemsSchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
   async createJointPlan(input: CreateBudgetPlanInput): Promise<BudgetPlanWithItems> {
-    const response = await this.httpClient.request<BudgetPlanWithItems>({
+    const response = await this.httpClient.request({
       url: '/v1/partnership/budget-plans',
       method: 'post',
       body: input,
       headers: this.authHeaders(),
     });
-    if (response.statusCode === 201) return response.body;
+    if (response.statusCode === 201) {
+      const parsed = budgetPlanWithItemsSchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
@@ -135,13 +162,16 @@ export class BudgetGateway implements IBudgetGateway {
   }
 
   async addItem(planId: string, input: AddBudgetItemInput): Promise<BudgetItem> {
-    const response = await this.httpClient.request<BudgetItem>({
+    const response = await this.httpClient.request({
       url: `/v1/budget-plans/${planId}/items`,
       method: 'post',
       body: input,
       headers: this.authHeaders(),
     });
-    if (response.statusCode === 201) return response.body;
+    if (response.statusCode === 201) {
+      const parsed = budgetItemSchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
@@ -150,13 +180,16 @@ export class BudgetGateway implements IBudgetGateway {
     itemId: string,
     input: UpdateBudgetItemInput,
   ): Promise<BudgetItem> {
-    const response = await this.httpClient.request<BudgetItem>({
+    const response = await this.httpClient.request({
       url: `/v1/budget-plans/${planId}/items/${itemId}`,
       method: 'put',
       body: input,
       headers: this.authHeaders(),
     });
-    if (response.statusCode === 200) return response.body;
+    if (response.statusCode === 200) {
+      const parsed = budgetItemSchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 
@@ -171,12 +204,15 @@ export class BudgetGateway implements IBudgetGateway {
   }
 
   async loadSummary(yearMonth: string): Promise<BudgetSummary> {
-    const response = await this.httpClient.request<BudgetSummary>({
+    const response = await this.httpClient.request({
       url: `/v1/budget-plans/summary?yearMonth=${yearMonth}`,
       method: 'get',
       headers: this.authHeaders(),
     });
-    if (response.statusCode === 200) return response.body;
+    if (response.statusCode === 200) {
+      const parsed = budgetSummarySchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 }
