@@ -8,6 +8,7 @@ import { cn } from '@/presentation/lib/cn';
 const navItems = [
   { to: '/dashboard' as const, icon: 'dashboard', labelKey: 'Dashboard' },
   { to: '/accounts' as const, icon: 'account_balance_wallet', labelKey: 'Joint Accounts' },
+  { to: '/transactions' as const, icon: 'receipt_long', labelKey: 'Transactions' },
   { to: '/planner' as const, icon: 'savings', labelKey: 'Savings Goals' },
   { to: '/profile' as const, icon: 'person', labelKey: 'Profile' },
 ];
@@ -44,6 +45,8 @@ function NavItemLabel({ labelKey }: { labelKey: string }) {
       return <Trans>Joint Accounts</Trans>;
     case 'Savings Goals':
       return <Trans>Savings Goals</Trans>;
+    case 'Transactions':
+      return <Trans>Transactions</Trans>;
     case 'Profile':
       return <Trans>Profile</Trans>;
     default:
