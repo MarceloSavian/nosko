@@ -1,7 +1,7 @@
 import type { IDashboardGateway } from '@/data/protocols/dashboard/IDashboardGateway';
 import type { IHttpClient } from '@/data/protocols/http/IHttpClient';
 import { UnexpectedError } from '@/domain/errors/auth';
-import type { DashboardData } from '@/domain/models/dashboard/Dashboard';
+import { type DashboardData, dashboardDataSchema } from '@/domain/models/dashboard/Dashboard';
 
 export class DashboardGateway implements IDashboardGateway {
   private readonly httpClient: IHttpClient;
@@ -19,12 +19,15 @@ export class DashboardGateway implements IDashboardGateway {
   }
 
   async loadDashboard(yearMonth: string): Promise<DashboardData> {
-    const response = await this.httpClient.request<DashboardData>({
+    const response = await this.httpClient.request({
       url: `/v1/dashboard?yearMonth=${yearMonth}`,
       method: 'get',
       headers: this.authHeaders(),
     });
-    if (response.statusCode === 200) return response.body as DashboardData;
+    if (response.statusCode === 200) {
+      const parsed = dashboardDataSchema.safeParse(response.body);
+      if (parsed.success) return parsed.data;
+    }
     throw new UnexpectedError();
   }
 }
