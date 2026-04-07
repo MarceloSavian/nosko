@@ -1,204 +1,263 @@
-import { Trans } from '@lingui/react/macro';
-import { Avatar } from '@/presentation/components/Avatar';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Trans, useLingui } from '@lingui/react/macro';
+import { useCallback, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import type { CustomerSchema } from '@/domain/models/profile/Profile';
+import { type UpdateProfileInput, updateProfileInputSchema } from '@/domain/models/profile/Profile';
+import type { IDeleteAccount } from '@/domain/usecases/profile/IDeleteAccount';
+import type { ILoadProfile } from '@/domain/usecases/profile/ILoadProfile';
+import type { IUpdateProfile } from '@/domain/usecases/profile/IUpdateProfile';
+import { Button } from '@/presentation/components/Button';
 import { Card } from '@/presentation/components/Card';
 import { Icon } from '@/presentation/components/Icon';
-import { IconBox } from '@/presentation/components/IconBox';
-import { ProgressBar } from '@/presentation/components/ProgressBar';
+import { Select } from '@/presentation/components/Select';
+import { TextInput } from '@/presentation/components/TextInput';
+import { useAuth } from '@/presentation/contexts/AuthContext';
 
-function ProfileHero() {
-  return (
-    <Card variant="dark" padding="lg" className="mb-8">
-      <span className="px-3 py-1 bg-secondary/20 text-secondary text-[10px] font-bold uppercase tracking-widest rounded-full inline-block mb-6">
-        <Trans>Member Since 2021</Trans>
-      </span>
-      <h2 className="font-headline text-4xl font-bold text-white mb-2">Alex Johnson</h2>
-      <p className="text-sm text-on-primary-container leading-relaxed max-w-md mb-8">
-        <Trans>
-          Defining your financial legacy through precision management and strategic growth.
-        </Trans>
-      </p>
-      <div className="flex items-center space-x-8">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-on-primary-container mb-1">
-            <Trans>Total Net Worth</Trans>
-          </p>
-          <p className="text-3xl font-headline font-bold text-white">$142,500</p>
-        </div>
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-on-primary-container mb-1">
-            <Trans>Impact Score</Trans>
-          </p>
-          <div className="flex items-center space-x-2">
-            <p className="text-3xl font-headline font-bold text-secondary">98</p>
-            <Icon name="auto_awesome" className="text-secondary text-xl" />
-          </div>
-        </div>
+type Props = {
+  loadProfile: ILoadProfile;
+  updateProfile: IUpdateProfile;
+  deleteAccount: IDeleteAccount;
+};
+
+export function UserProfilePage({ loadProfile, updateProfile, deleteAccount }: Props) {
+  const [profile, setProfile] = useState<CustomerSchema | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const [serverError, setServerError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const { logout } = useAuth();
+  const { t } = useLingui();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<UpdateProfileInput>({
+    resolver: zodResolver(updateProfileInputSchema),
+  });
+
+  const fetchProfile = useCallback(async () => {
+    try {
+      const data = await loadProfile.execute();
+      setProfile(data);
+      reset({ name: data.name ?? '', language: data.language as 'en-US' | 'pt-BR' });
+    } catch {
+      setServerError(t`Failed to load profile.`);
+    } finally {
+      setLoading(false);
+    }
+  }, [loadProfile, reset, t]);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
+
+  const onSubmit = async (data: UpdateProfileInput) => {
+    setServerError('');
+    setSuccessMessage('');
+    try {
+      const updated = await updateProfile.execute(data);
+      setProfile(updated);
+      setEditing(false);
+      setSuccessMessage(t`Profile updated successfully.`);
+    } catch {
+      setServerError(t`Failed to update profile.`);
+    }
+  };
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await deleteAccount.execute();
+      logout();
+    } catch {
+      setServerError(t`Failed to delete account.`);
+      setIsDeleting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="p-8 flex items-center justify-center min-h-[400px]">
+        <Icon name="progress_activity" className="text-4xl text-primary animate-spin" />
       </div>
-    </Card>
-  );
-}
+    );
+  }
 
-function PortfolioSynergyCard() {
-  return (
-    <Card variant="default" padding="lg" className="mb-8">
-      <div className="flex gap-8 items-center">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-3">
-            <IconBox icon="groups" size="sm" tone="secondary" shape="circle" />
-            <h3 className="font-headline text-lg font-bold text-primary">
-              <Trans>Portfolio Synergy</Trans>
-            </h3>
-          </div>
-          <span className="text-xs text-tertiary font-bold">
-            <Trans>+2.4% this month</Trans>
-          </span>
-          <p className="text-sm text-on-surface-variant leading-relaxed mt-2">
-            <Trans>
-              Your collaborative efforts have reached a new milestone. 85% of target liquidity goals
-              achieved.
-            </Trans>
-          </p>
-        </div>
-        <div className="w-64 shrink-0">
-          <div className="flex items-center justify-between mb-2 text-xs">
-            <span className="font-bold text-primary">
-              <Trans>Personal (42%)</Trans>
-            </span>
-            <span className="font-bold text-primary">
-              <Trans>Joint (58%)</Trans>
-            </span>
-          </div>
-          <ProgressBar value={42} size="xl" color="gradient" />
-        </div>
-      </div>
-    </Card>
-  );
-}
-
-function AccountPreferences() {
-  const preferences = [
-    {
-      icon: 'account_balance',
-      title: <Trans>Banking Integration</Trans>,
-      subtitle: <Trans>3 institutions currently synchronized</Trans>,
-    },
-    {
-      icon: 'language',
-      title: <Trans>Localization</Trans>,
-      subtitle: <Trans>English (US) · International Edition</Trans>,
-    },
-    {
-      icon: 'currency_exchange',
-      title: <Trans>Base Currencies</Trans>,
-      subtitle: 'USD Primary / EUR Secondary Market',
-    },
-    {
-      icon: 'security',
-      title: <Trans>Encryption &amp; Security</Trans>,
-      subtitle: <Trans>Biometric Hardware Verification Active</Trans>,
-    },
-    {
-      icon: 'sync_alt',
-      title: <Trans>Partnership Sync</Trans>,
-      subtitle: <Trans>Active Link: Jordan J.</Trans>,
-    },
-  ];
+  const memberSince = profile?.createdAt
+    ? new Date(profile.createdAt).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'long',
+      })
+    : '';
 
   return (
-    <section>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="font-headline text-2xl font-bold text-primary">
-          <Trans>Account Preferences</Trans>
+    <div className="p-8 max-w-3xl mx-auto">
+      <h1 className="font-headline text-3xl font-bold text-primary tracking-tight mb-8">
+        <Trans>User Profile</Trans>
+      </h1>
+
+      {serverError && (
+        <div className="mb-6 p-4 bg-error/10 rounded-xl text-error text-sm font-medium">
+          {serverError}
+        </div>
+      )}
+
+      {successMessage && (
+        <div className="mb-6 p-4 bg-tertiary/10 rounded-xl text-tertiary text-sm font-medium">
+          {successMessage}
+        </div>
+      )}
+
+      <Card variant="dark" padding="lg" className="mb-8">
+        <span className="px-3 py-1 bg-secondary/20 text-secondary text-[10px] font-bold uppercase tracking-widest rounded-full inline-block mb-6">
+          <Trans>Member Since {memberSince}</Trans>
+        </span>
+        <h2 className="font-headline text-4xl font-bold text-white mb-2">
+          {profile?.name ?? profile?.email}
         </h2>
-        <button
-          type="button"
-          className="text-sm font-medium text-secondary hover:underline cursor-pointer flex items-center space-x-1"
-        >
-          <Trans>Restore Defaults</Trans>
-          <Icon name="settings_backup_restore" className="text-base" />
-        </button>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        {preferences.map((pref) => (
-          <button
-            key={pref.icon}
-            type="button"
-            className="flex items-center space-x-4 p-4 w-full rounded-2xl bg-surface-container hover:bg-surface-container-high transition-colors cursor-pointer text-left shadow-sm"
-          >
-            <IconBox icon={pref.icon} size="md" shape="circle" tone="surface" />
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-bold text-primary">{pref.title}</p>
-              <p className="text-xs text-on-surface-variant">{pref.subtitle}</p>
+        <p className="text-sm text-on-primary-container">{profile?.email}</p>
+      </Card>
+
+      <Card variant="default" padding="lg" className="mb-8">
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="font-headline text-xl font-bold text-primary">
+            <Trans>Profile Settings</Trans>
+          </h3>
+          {!editing && (
+            <Button variant="ghost" size="sm" onClick={() => setEditing(true)}>
+              <Icon name="edit" className="text-base mr-1" />
+              <Trans>Edit</Trans>
+            </Button>
+          )}
+        </div>
+
+        {editing ? (
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)} noValidate>
+            <TextInput
+              id="name"
+              type="text"
+              label={t`Name`}
+              placeholder={t`Your name`}
+              icon={<Icon name="person" className="text-lg" />}
+              error={errors.name?.message}
+              {...register('name')}
+            />
+
+            <Select
+              id="language"
+              label={t`Language`}
+              icon={<Icon name="language" className="text-lg" />}
+              error={errors.language?.message}
+              {...register('language')}
+            >
+              <option value="en-US">English (US)</option>
+              <option value="pt-BR">Português (BR)</option>
+            </Select>
+
+            <div className="flex space-x-3">
+              <Button type="submit" variant="primary" size="md" disabled={isSubmitting}>
+                {isSubmitting ? <Trans>Saving...</Trans> : <Trans>Save Changes</Trans>}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                size="md"
+                onClick={() => {
+                  setEditing(false);
+                  reset({
+                    name: profile?.name ?? '',
+                    language: profile?.language as 'en-US' | 'pt-BR',
+                  });
+                }}
+              >
+                <Trans>Cancel</Trans>
+              </Button>
             </div>
-            <Icon name="chevron_right" className="text-xl text-outline" />
-          </button>
-        ))}
-        <button
-          type="button"
-          className="flex items-center justify-center space-x-2 p-4 w-full rounded-2xl bg-surface-container hover:bg-error/5 transition-colors cursor-pointer text-error font-bold"
-        >
-          <Icon name="logout" className="text-xl" />
-          <span>
-            <Trans>Secure Logout</Trans>
-          </span>
-        </button>
-      </div>
-    </section>
-  );
-}
+          </form>
+        ) : (
+          <div className="space-y-4">
+            <div className="flex items-center space-x-4 p-4 rounded-2xl bg-surface-container">
+              <Icon name="person" className="text-xl text-on-surface-variant" />
+              <div>
+                <p className="text-xs text-on-surface-variant font-bold uppercase tracking-widest">
+                  <Trans>Name</Trans>
+                </p>
+                <p className="text-sm font-bold text-primary">{profile?.name ?? '—'}</p>
+              </div>
+            </div>
 
-function ArchitectureFooter() {
-  return (
-    <Card variant="default" padding="none" className="mt-10 overflow-hidden">
-      <div className="relative h-32 bg-gradient-to-r from-primary/5 to-tertiary/5 flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-[10px] uppercase tracking-widest text-outline mb-1">
-            <Trans>Institutional Standard</Trans>
-          </p>
-          <p className="font-headline text-lg font-bold text-primary">
-            <Trans>Nosko Financial Architecture v4.2</Trans>
-          </p>
-        </div>
-      </div>
-    </Card>
-  );
-}
+            <div className="flex items-center space-x-4 p-4 rounded-2xl bg-surface-container">
+              <Icon name="mail" className="text-xl text-on-surface-variant" />
+              <div>
+                <p className="text-xs text-on-surface-variant font-bold uppercase tracking-widest">
+                  <Trans>Email</Trans>
+                </p>
+                <p className="text-sm font-bold text-primary">{profile?.email}</p>
+              </div>
+            </div>
 
-export function UserProfilePage() {
-  return (
-    <div className="p-8">
-      <div className="flex items-start justify-between mb-8">
-        <h1 className="font-headline text-3xl font-bold text-primary tracking-tight">
-          <Trans>User Profile</Trans>
-        </h1>
-        <div className="flex items-center space-x-3">
-          <button
-            type="button"
-            className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center cursor-pointer hover:bg-surface-variant transition-colors"
+            <div className="flex items-center space-x-4 p-4 rounded-2xl bg-surface-container">
+              <Icon name="language" className="text-xl text-on-surface-variant" />
+              <div>
+                <p className="text-xs text-on-surface-variant font-bold uppercase tracking-widest">
+                  <Trans>Language</Trans>
+                </p>
+                <p className="text-sm font-bold text-primary">
+                  {profile?.language === 'pt-BR' ? 'Português (BR)' : 'English (US)'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+      </Card>
+
+      <Card variant="default" padding="lg">
+        <h3 className="font-headline text-xl font-bold text-error mb-4">
+          <Trans>Danger Zone</Trans>
+        </h3>
+        <p className="text-sm text-on-surface-variant mb-4">
+          <Trans>
+            Permanently delete your account and all associated data. This action cannot be undone.
+          </Trans>
+        </p>
+
+        {showDeleteConfirm ? (
+          <div className="flex items-center space-x-3">
+            <Button
+              variant="ghost"
+              size="md"
+              className="bg-error/10 text-error hover:bg-error/20"
+              onClick={handleDelete}
+              disabled={isDeleting}
+            >
+              {isDeleting ? <Trans>Deleting...</Trans> : <Trans>Yes, Delete My Account</Trans>}
+            </Button>
+            <Button
+              variant="ghost"
+              size="md"
+              onClick={() => setShowDeleteConfirm(false)}
+              disabled={isDeleting}
+            >
+              <Trans>Cancel</Trans>
+            </Button>
+          </div>
+        ) : (
+          <Button
+            variant="ghost"
+            size="md"
+            className="text-error hover:bg-error/10"
+            onClick={() => setShowDeleteConfirm(true)}
           >
-            <Icon name="notifications" className="text-xl text-on-surface-variant" />
-          </button>
-          <button
-            type="button"
-            className="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center cursor-pointer hover:bg-surface-variant transition-colors"
-          >
-            <Icon name="settings" className="text-xl text-on-surface-variant" />
-          </button>
-          <Avatar size="lg" />
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div className="lg:col-span-2">
-          <ProfileHero />
-        </div>
-        <div>
-          <PortfolioSynergyCard />
-        </div>
-      </div>
-
-      <AccountPreferences />
-      <ArchitectureFooter />
+            <Icon name="delete_forever" className="text-base mr-1" />
+            <Trans>Delete Account</Trans>
+          </Button>
+        )}
+      </Card>
     </div>
   );
 }
