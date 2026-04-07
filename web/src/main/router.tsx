@@ -29,7 +29,6 @@ import {
   updateAccount,
 } from './factories/account';
 import { login, resendVerification, signUp, verifyEmail } from './factories/auth';
-import {
   addBudgetItem,
   createBudgetCategory,
   createBudgetPlan,
@@ -45,6 +44,20 @@ import {
   updateBudgetItem,
 } from './factories/budget';
 import { requestPasswordReset, resetPassword } from './factories/password-reset';
+import {
+  acceptInvitation,
+  cancelInvitation,
+  declineInvitation,
+  dissolvePartnership,
+  invitePartner,
+  loadAccounts as loadPartnershipAccounts,
+  loadContributionRules,
+  loadInvitations,
+  loadPartnership,
+  loadSharedAccounts,
+  setContributionRules,
+  setSharedAccounts,
+} from './factories/partnership';
 import { deleteAccount, loadProfile, updateProfile } from './factories/profile';
 import {
   createTransaction,
@@ -200,19 +213,40 @@ const transactionsRoute = createRoute({
 const partnerSetupInviteRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/partner-setup/invite',
-  component: InvitePartnerPage,
+  component: () => (
+    <InvitePartnerPage
+      invitePartnerUseCase={invitePartner}
+      loadInvitationsUseCase={loadInvitations}
+      acceptInvitationUseCase={acceptInvitation}
+      declineInvitationUseCase={declineInvitation}
+      cancelInvitationUseCase={cancelInvitation}
+      loadPartnershipUseCase={loadPartnership}
+      dissolvePartnershipUseCase={dissolvePartnership}
+    />
+  ),
 });
 
 const partnerSetupAccountsRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/partner-setup/select-accounts',
-  component: SelectSharedAccountsPage,
+  component: () => (
+    <SelectSharedAccountsPage
+      loadAccountsUseCase={loadPartnershipAccounts}
+      loadSharedAccountsUseCase={loadSharedAccounts}
+      setSharedAccountsUseCase={setSharedAccounts}
+    />
+  ),
 });
 
 const partnerSetupRulesRoute = createRoute({
   getParentRoute: () => appLayoutRoute,
   path: '/partner-setup/contribution-rules',
-  component: ContributionRulesPage,
+  component: () => (
+    <ContributionRulesPage
+      loadContributionRulesUseCase={loadContributionRules}
+      setContributionRulesUseCase={setContributionRules}
+    />
+  ),
 });
 
 const routeTree = rootRoute.addChildren([

@@ -1,86 +1,111 @@
-import { Trans } from '@lingui/react/macro';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { Link } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import {
+  type ContributionRule,
+  ContributionType,
+  type SetContributionRuleInput,
+  setContributionRuleInputSchema,
+} from '@/domain/models/partnership/Partnership';
+import type { ILoadContributionRules } from '@/domain/usecases/partnership/ILoadContributionRules';
+import type { ISetContributionRules } from '@/domain/usecases/partnership/ISetContributionRules';
 import { Button } from '@/presentation/components/Button';
 import { Card } from '@/presentation/components/Card';
 import { Icon } from '@/presentation/components/Icon';
 import { IconBox } from '@/presentation/components/IconBox';
 import { ProgressBar } from '@/presentation/components/ProgressBar';
 import { SelectableCard } from '@/presentation/components/SelectableCard';
+import { TextInput } from '@/presentation/components/TextInput';
 
-type RuleOption = 'equal' | 'salary' | 'custom';
+type Props = {
+  loadContributionRulesUseCase: ILoadContributionRules;
+  setContributionRulesUseCase: ISetContributionRules;
+};
 
-const ruleOptions: {
-  id: RuleOption;
+type RuleOption = {
+  id: ContributionType;
   icon: string;
-  titleKey: string;
-  descKey: string;
-  tagKey: string;
-}[] = [
-  {
-    id: 'equal',
-    icon: 'balance',
-    titleKey: '50/50 Split',
-    descKey: 'Purely equal contribution regardless of income levels.',
-    tagKey: 'Perfect Balance',
-  },
-  {
-    id: 'salary',
-    icon: 'bar_chart',
-    titleKey: 'Salary-Based',
-    descKey: 'Contribution ratio automatically scales with your earnings.',
-    tagKey: 'Equity First',
-  },
-  {
-    id: 'custom',
-    icon: 'tune',
-    titleKey: 'Custom %',
-    descKey: 'Define your own unique percentage split per category.',
-    tagKey: 'Maximum Control',
-  },
+};
+
+const ruleOptions: RuleOption[] = [
+  { id: ContributionType.EQUAL, icon: 'balance' },
+  { id: ContributionType.SALARY_PROPORTIONAL, icon: 'bar_chart' },
+  { id: ContributionType.CUSTOM_PERCENTAGE, icon: 'tune' },
 ];
 
-function RuleTitle({ titleKey }: { titleKey: string }) {
-  switch (titleKey) {
-    case '50/50 Split':
-      return <Trans>50/50 Split</Trans>;
-    case 'Salary-Based':
-      return <Trans>Salary-Based</Trans>;
-    case 'Custom %':
-      return <Trans>Custom %</Trans>;
-    default:
-      return titleKey;
-  }
-}
+export function ContributionRulesPage({
+  loadContributionRulesUseCase,
+  setContributionRulesUseCase,
+}: Props) {
+  const { t } = useLingui();
+  const [currentRule, setCurrentRule] = useState<ContributionRule | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [serverError, setServerError] = useState('');
 
-function RuleDescription({ descKey }: { descKey: string }) {
-  switch (descKey) {
-    case 'Purely equal contribution regardless of income levels.':
-      return <Trans>Purely equal contribution regardless of income levels.</Trans>;
-    case 'Contribution ratio automatically scales with your earnings.':
-      return <Trans>Contribution ratio automatically scales with your earnings.</Trans>;
-    case 'Define your own unique percentage split per category.':
-      return <Trans>Define your own unique percentage split per category.</Trans>;
-    default:
-      return descKey;
-  }
-}
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm<SetContributionRuleInput>({
+    resolver: zodResolver(setContributionRuleInputSchema),
+    defaultValues: {
+      type: ContributionType.EQUAL,
+    },
+  });
 
-function RuleTag({ tagKey }: { tagKey: string }) {
-  switch (tagKey) {
-    case 'Perfect Balance':
-      return <Trans>Perfect Balance</Trans>;
-    case 'Equity First':
-      return <Trans>Equity First</Trans>;
-    case 'Maximum Control':
-      return <Trans>Maximum Control</Trans>;
-    default:
-      return tagKey;
-  }
-}
+  const selectedType = watch('type');
+  const customerAPercentage = watch('customerAPercentage');
 
-export function ContributionRulesPage() {
-  const [selected, setSelected] = useState<RuleOption>('equal');
+  const loadData = useCallback(async () => {
+    try {
+      const rule = await loadContributionRulesUseCase.execute();
+      setCurrentRule(rule);
+      setValue('type', rule.type);
+      if (rule.customerAPercentage !== null) {
+        setValue('customerAPercentage', rule.customerAPercentage);
+      }
+      if (rule.customerBPercentage !== null) {
+        setValue('customerBPercentage', rule.customerBPercentage);
+      }
+    } catch {
+      setServerError(t`Failed to load contribution rules`);
+    } finally {
+      setLoading(false);
+    }
+  }, [loadContributionRulesUseCase, setValue, t]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
+  const onSubmit = async (data: SetContributionRuleInput) => {
+    setServerError('');
+    try {
+      const result = await setContributionRulesUseCase.execute(data);
+      setCurrentRule(result);
+    } catch {
+      setServerError(t`Failed to save contribution rules`);
+    }
+  };
+
+  const previewPercentageA =
+    selectedType === ContributionType.EQUAL
+      ? 50
+      : selectedType === ContributionType.CUSTOM_PERCENTAGE
+        ? (customerAPercentage ?? 50)
+        : (currentRule?.customerAPercentage ?? 50);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-full p-8">
+        <Icon name="hourglass_empty" className="text-4xl text-outline animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-center min-h-full p-8">
@@ -98,90 +123,122 @@ export function ContributionRulesPage() {
           </Trans>
         </p>
 
-        <div className="grid grid-cols-3 gap-4 mb-10">
-          {ruleOptions.map((option) => (
-            <SelectableCard
-              key={option.id}
-              selected={selected === option.id}
-              onSelect={() => setSelected(option.id)}
-            >
-              <div className="text-center">
-                <IconBox
-                  icon={option.icon}
-                  size="md"
-                  tone={selected === option.id ? 'secondary' : 'surface'}
-                  className="mx-auto mb-4"
+        {serverError && (
+          <div className="mb-6 p-4 bg-error/10 rounded-xl text-error text-sm font-medium">
+            {serverError}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid grid-cols-3 gap-4 mb-10">
+            {ruleOptions.map((option) => (
+              <SelectableCard
+                key={option.id}
+                selected={selectedType === option.id}
+                onSelect={() => setValue('type', option.id)}
+              >
+                <div className="text-center">
+                  <IconBox
+                    icon={option.icon}
+                    size="md"
+                    tone={selectedType === option.id ? 'secondary' : 'surface'}
+                    className="mx-auto mb-4"
+                  />
+                  <h3 className="font-bold text-primary mb-2">
+                    <RuleTitle type={option.id} />
+                  </h3>
+                  <p className="text-xs text-on-surface-variant leading-relaxed mb-3">
+                    <RuleDescription type={option.id} />
+                  </p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-secondary flex items-center justify-center space-x-1">
+                    {selectedType === option.id && <Icon name="check_circle" className="text-sm" />}
+                    <span>
+                      <RuleTag type={option.id} />
+                    </span>
+                  </p>
+                </div>
+              </SelectableCard>
+            ))}
+          </div>
+
+          {selectedType === ContributionType.CUSTOM_PERCENTAGE && (
+            <Card variant="default" padding="lg" className="text-left mb-8">
+              <p className="text-xs font-bold text-primary uppercase tracking-widest mb-4">
+                <Trans>Custom Split</Trans>
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <TextInput
+                  id="customerAPercentage"
+                  type="number"
+                  label={t`Partner A %`}
+                  placeholder="50"
+                  error={errors.customerAPercentage?.message}
+                  {...register('customerAPercentage', { valueAsNumber: true })}
                 />
-                <h3 className="font-bold text-primary mb-2">
-                  <RuleTitle titleKey={option.titleKey} />
-                </h3>
-                <p className="text-xs text-on-surface-variant leading-relaxed mb-3">
-                  <RuleDescription descKey={option.descKey} />
+                <TextInput
+                  id="customerBPercentage"
+                  type="number"
+                  label={t`Partner B %`}
+                  placeholder="50"
+                  error={errors.customerBPercentage?.message}
+                  {...register('customerBPercentage', { valueAsNumber: true })}
+                />
+              </div>
+            </Card>
+          )}
+
+          <Card variant="default" padding="lg" className="text-left mb-8">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">
+                  <Trans>Preview</Trans>
                 </p>
-                <p className="text-[10px] font-bold uppercase tracking-wider text-secondary flex items-center justify-center space-x-1">
-                  {selected === option.id && <Icon name="check_circle" className="text-sm" />}
-                  <span>
-                    <RuleTag tagKey={option.tagKey} />
-                  </span>
+                <p className="text-xs text-on-surface-variant">
+                  <Trans>Contribution split visualization</Trans>
                 </p>
               </div>
-            </SelectableCard>
-          ))}
-        </div>
+            </div>
+            <ProgressBar value={previewPercentageA} size="xl" color="gradient" className="mb-4" />
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center space-x-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-primary" />
+                <span className="text-on-surface-variant">
+                  <Trans>Partner A</Trans>
+                </span>
+                <span className="font-bold text-primary">{previewPercentageA}%</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="font-bold text-primary">{100 - previewPercentageA}%</span>
+                <span className="text-on-surface-variant">
+                  <Trans>Partner B</Trans>
+                </span>
+                <span className="w-2.5 h-2.5 rounded-full bg-secondary" />
+              </div>
+            </div>
+          </Card>
 
-        <Card variant="default" padding="lg" className="text-left mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">
-                <Trans>Previewing: 50/50 Split</Trans>
-              </p>
-              <p className="text-xs text-on-surface-variant">
-                <Trans>Estimated monthly commitment based on your last 30 days.</Trans>
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-2xl font-headline font-bold text-primary">$3,450.00</p>
-              <p className="text-[10px] uppercase tracking-wider text-on-surface-variant">
-                <Trans>Total Household Spend</Trans>
-              </p>
-            </div>
-          </div>
-          <ProgressBar value={50} size="xl" color="gradient" className="mb-4" />
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center space-x-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-primary" />
-              <span className="text-on-surface-variant">
-                <Trans>Alex&apos;s Share</Trans>
+          <div className="flex items-center justify-between">
+            <Link
+              to="/partner-setup/select-accounts"
+              className="inline-flex items-center space-x-1 text-sm text-on-surface-variant hover:text-primary transition-colors"
+            >
+              <Icon name="chevron_left" className="text-base" />
+              <span>
+                <Trans>Back</Trans>
               </span>
-              <span className="font-bold text-primary">$1,725.00</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <span className="font-bold text-primary">$1,725.00</span>
-              <span className="text-on-surface-variant">
-                <Trans>Lori&apos;s Share</Trans>
-              </span>
-              <span className="w-2.5 h-2.5 rounded-full bg-secondary" />
-            </div>
+            </Link>
+            <Button
+              type="submit"
+              variant="secondary"
+              size="lg"
+              className="space-x-2"
+              disabled={isSubmitting}
+            >
+              <span>{isSubmitting ? <Trans>Saving...</Trans> : <Trans>Finish Setup</Trans>}</span>
+              <Icon name="check_circle" className="text-lg" />
+            </Button>
           </div>
-        </Card>
-
-        <div className="flex items-center justify-between">
-          <Link
-            to="/partner-setup/select-accounts"
-            className="inline-flex items-center space-x-1 text-sm text-on-surface-variant hover:text-primary transition-colors"
-          >
-            <Icon name="chevron_left" className="text-base" />
-            <span>
-              <Trans>Back to Earnings</Trans>
-            </span>
-          </Link>
-          <Button type="button" variant="secondary" size="lg" className="space-x-2">
-            <span>
-              <Trans>Finish Setup</Trans>
-            </span>
-            <Icon name="check_circle" className="text-lg" />
-          </Button>
-        </div>
+        </form>
 
         <p className="mt-8 text-xs text-on-surface-variant">
           <Trans>
@@ -192,4 +249,37 @@ export function ContributionRulesPage() {
       </div>
     </div>
   );
+}
+
+function RuleTitle({ type }: { type: ContributionType }) {
+  switch (type) {
+    case ContributionType.EQUAL:
+      return <Trans>50/50 Split</Trans>;
+    case ContributionType.SALARY_PROPORTIONAL:
+      return <Trans>Salary-Based</Trans>;
+    case ContributionType.CUSTOM_PERCENTAGE:
+      return <Trans>Custom %</Trans>;
+  }
+}
+
+function RuleDescription({ type }: { type: ContributionType }) {
+  switch (type) {
+    case ContributionType.EQUAL:
+      return <Trans>Purely equal contribution regardless of income levels.</Trans>;
+    case ContributionType.SALARY_PROPORTIONAL:
+      return <Trans>Contribution ratio automatically scales with your earnings.</Trans>;
+    case ContributionType.CUSTOM_PERCENTAGE:
+      return <Trans>Define your own unique percentage split per category.</Trans>;
+  }
+}
+
+function RuleTag({ type }: { type: ContributionType }) {
+  switch (type) {
+    case ContributionType.EQUAL:
+      return <Trans>Perfect Balance</Trans>;
+    case ContributionType.SALARY_PROPORTIONAL:
+      return <Trans>Equity First</Trans>;
+    case ContributionType.CUSTOM_PERCENTAGE:
+      return <Trans>Maximum Control</Trans>;
+  }
 }

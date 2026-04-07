@@ -1,6 +1,10 @@
-import { Trans } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { Link } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import type { BankAccount } from '@/domain/models/partnership/Partnership';
+import type { ILoadAccounts } from '@/domain/usecases/partnership/ILoadAccounts';
+import type { ILoadSharedAccounts } from '@/domain/usecases/partnership/ILoadSharedAccounts';
+import type { ISetSharedAccounts } from '@/domain/usecases/partnership/ISetSharedAccounts';
 import { Button } from '@/presentation/components/Button';
 import { Card } from '@/presentation/components/Card';
 import { Icon } from '@/presentation/components/Icon';
@@ -8,38 +12,77 @@ import { IconBox } from '@/presentation/components/IconBox';
 import { InfoBanner } from '@/presentation/components/InfoBanner';
 import { ToggleSwitch } from '@/presentation/components/ToggleSwitch';
 
-const accounts = [
-  {
-    id: 'hsbc',
-    icon: 'account_balance',
-    name: 'HSBC Premier',
-    detail: 'Personal Current • ••••4321',
-    defaultOn: false,
-  },
-  {
-    id: 'chase',
-    icon: 'savings',
-    name: 'Chase Savings',
-    detail: 'Reserve Account • ••••4421',
-    defaultOn: true,
-  },
-  {
-    id: 'revolut',
-    icon: 'credit_card',
-    name: 'Revolut Business',
-    detail: 'Spending Wallet • ••••2209',
-    defaultOn: false,
-  },
-];
+type Props = {
+  loadAccountsUseCase: ILoadAccounts;
+  loadSharedAccountsUseCase: ILoadSharedAccounts;
+  setSharedAccountsUseCase: ISetSharedAccounts;
+};
 
-export function SelectSharedAccountsPage() {
-  const [selected, setSelected] = useState<Record<string, boolean>>(
-    Object.fromEntries(accounts.map((a) => [a.id, a.defaultOn])),
-  );
+const accountTypeIcons: Record<string, string> = {
+  CHECKING: 'account_balance',
+  SAVINGS: 'savings',
+  CREDIT: 'credit_card',
+  INVESTMENT: 'trending_up',
+};
+
+export function SelectSharedAccountsPage({
+  loadAccountsUseCase,
+  loadSharedAccountsUseCase,
+  setSharedAccountsUseCase,
+}: Props) {
+  const { t } = useLingui();
+  const [accounts, setAccounts] = useState<BankAccount[]>([]);
+  const [selected, setSelected] = useState<Record<string, boolean>>({});
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [serverError, setServerError] = useState('');
+
+  const loadData = useCallback(async () => {
+    try {
+      const [allAccounts, sharedAccounts] = await Promise.all([
+        loadAccountsUseCase.execute(),
+        loadSharedAccountsUseCase.execute(),
+      ]);
+      setAccounts(allAccounts);
+      const sharedIds = new Set(sharedAccounts.map((a) => a.id));
+      setSelected(Object.fromEntries(allAccounts.map((a) => [a.id, sharedIds.has(a.id)])));
+    } catch {
+      setServerError(t`Failed to load accounts`);
+    } finally {
+      setLoading(false);
+    }
+  }, [loadAccountsUseCase, loadSharedAccountsUseCase, t]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const toggle = (id: string) => {
     setSelected((prev) => ({ ...prev, [id]: !prev[id] }));
   };
+
+  const handleSave = async () => {
+    setSaving(true);
+    setServerError('');
+    try {
+      const bankAccountIds = Object.entries(selected)
+        .filter(([, isSelected]) => isSelected)
+        .map(([id]) => id);
+      await setSharedAccountsUseCase.execute({ bankAccountIds });
+    } catch {
+      setServerError(t`Failed to save shared accounts`);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-full p-8">
+        <Icon name="hourglass_empty" className="text-4xl text-outline animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="flex items-center justify-center min-h-full p-8">
@@ -58,14 +101,27 @@ export function SelectSharedAccountsPage() {
           </Trans>
         </p>
 
+        {serverError && (
+          <div className="mb-6 p-4 bg-error/10 rounded-xl text-error text-sm font-medium">
+            {serverError}
+          </div>
+        )}
+
         <div className="space-y-3 text-left">
           {accounts.map((account) => (
             <Card key={account.id} variant="default" padding="md">
               <div className="flex items-center space-x-4">
-                <IconBox icon={account.icon} size="md" shape="circle" tone="surface" />
+                <IconBox
+                  icon={accountTypeIcons[account.accountType] ?? 'account_balance'}
+                  size="md"
+                  shape="circle"
+                  tone="surface"
+                />
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-sm text-primary">{account.name}</p>
-                  <p className="text-xs text-on-surface-variant">{account.detail}</p>
+                  <p className="font-bold text-sm text-primary">{account.accountName}</p>
+                  <p className="text-xs text-on-surface-variant">
+                    {account.accountType} &bull; {account.currencyCode}
+                  </p>
                 </div>
                 <ToggleSwitch
                   checked={selected[account.id] ?? false}
@@ -74,6 +130,11 @@ export function SelectSharedAccountsPage() {
               </div>
             </Card>
           ))}
+          {accounts.length === 0 && (
+            <p className="text-sm text-on-surface-variant text-center py-8">
+              <Trans>No bank accounts found. Add accounts first to share them.</Trans>
+            </p>
+          )}
         </div>
 
         <InfoBanner
@@ -99,14 +160,19 @@ export function SelectSharedAccountsPage() {
             </span>
           </Link>
           <ProgressDots current={2} total={3} />
-          <Link to="/partner-setup/contribution-rules">
-            <Button type="button" variant="secondary" size="md" className="space-x-2">
-              <span>
-                <Trans>Next</Trans>
-              </span>
-              <Icon name="arrow_forward" className="text-base" />
+          <div className="flex space-x-3">
+            <Button type="button" variant="ghost" size="md" onClick={handleSave} disabled={saving}>
+              {saving ? <Trans>Saving...</Trans> : <Trans>Save</Trans>}
             </Button>
-          </Link>
+            <Link to="/partner-setup/contribution-rules">
+              <Button type="button" variant="secondary" size="md" className="space-x-2">
+                <span>
+                  <Trans>Next</Trans>
+                </span>
+                <Icon name="arrow_forward" className="text-base" />
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

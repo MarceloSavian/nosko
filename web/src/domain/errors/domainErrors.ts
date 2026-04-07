@@ -13,6 +13,11 @@ import {
   BudgetPlanNotFoundError,
 } from './budget';
 import { InvalidResetCodeError, ResetCodeExpiredError } from './password-reset';
+import {
+  InvitationNotFoundError,
+  PartnershipAlreadyExistsError,
+  PartnershipNotFoundError,
+} from './partnership';
 import { ProfileNotFoundError } from './profile';
 import { TransactionNotFoundError } from './transaction';
 
@@ -29,6 +34,9 @@ export const domainErrors: Record<string, ErrorConstructor> = {
   InvalidCredentialsError,
   InvalidResetCodeError,
   InvalidVerificationCodeError,
+  InvitationNotFoundError,
+  PartnershipAlreadyExistsError,
+  PartnershipNotFoundError,
   ProfileNotFoundError,
   ResetCodeExpiredError,
   TransactionNotFoundError,
