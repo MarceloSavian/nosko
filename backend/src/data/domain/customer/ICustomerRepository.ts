@@ -19,4 +19,6 @@ export interface ICustomerRepository {
   updatePassword(id: string, passwordHash: string): Promise<void>;
   updateProfile(id: string, input: UpdateProfileInput): Promise<CustomerSchema>;
   delete(id: string): Promise<void>;
+  findAllPaginated(limit: number, offset: number): Promise<CustomerSchema[]>;
+  count(): Promise<number>;
 }
