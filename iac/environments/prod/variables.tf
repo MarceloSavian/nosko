@@ -27,6 +27,11 @@ variable "api_domain" {
   default = "api.nosko.app"
 }
 
+variable "admin_domain" {
+  type    = string
+  default = "admin.nosko.app"
+}
+
 variable "database_url" {
   type      = string
   sensitive = true
