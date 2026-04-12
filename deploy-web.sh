@@ -7,7 +7,7 @@ if [[ -z "$ENV" || ! "$ENV" =~ ^(test|prod)$ ]]; then
   exit 1
 fi
 
-VAULT_PROFILE="nosko-${ENV}"
+VAULT_PROFILE="noskomgmt"
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
 
 cd "${REPO_ROOT}/web"
