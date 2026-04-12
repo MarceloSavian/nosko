@@ -58,7 +58,7 @@ locals {
 
 locals {
   caching_disabled_policy_id          = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad"
-  all_viewer_origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3"
+  all_viewer_except_host_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac"
 }
 
 resource "aws_cloudfront_distribution" "site" {
@@ -104,7 +104,7 @@ resource "aws_cloudfront_distribution" "site" {
     compress               = true
 
     cache_policy_id          = local.caching_disabled_policy_id
-    origin_request_policy_id = local.all_viewer_origin_request_policy_id
+    origin_request_policy_id = local.all_viewer_except_host_policy_id
 
     function_association {
       event_type   = "viewer-request"
