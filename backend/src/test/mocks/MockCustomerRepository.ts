@@ -40,6 +40,10 @@ class MockCustomerRepository implements ICustomerRepository {
     }),
   );
   delete = mock.fn(async (_id: string): Promise<void> => {});
+  findAllPaginated = mock.fn(
+    async (_limit: number, _offset: number): Promise<CustomerSchema[]> => [],
+  );
+  count = mock.fn(async (): Promise<number> => 0);
 }
 
 export const mockCustomerRepository = new MockCustomerRepository();

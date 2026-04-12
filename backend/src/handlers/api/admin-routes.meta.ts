@@ -1,8 +1,22 @@
 import { z } from 'zod/v4';
-import { adminSchema, createAdminInputSchema, adminLoginInputSchema, adminRequestPasswordResetInputSchema, adminResetPasswordInputSchema } from '../../domain/models/admin/Admin.js';
-import { budgetCategorySchema, createBudgetCategoryInputSchema, updateBudgetCategoryInputSchema } from '../../domain/models/budget/BudgetCategory.js';
+import {
+  adminLoginInputSchema,
+  adminRequestPasswordResetInputSchema,
+  adminResetPasswordInputSchema,
+  adminSchema,
+  createAdminInputSchema,
+} from '../../domain/models/admin/Admin.js';
+import {
+  budgetCategorySchema,
+  createBudgetCategoryInputSchema,
+  updateBudgetCategoryInputSchema,
+} from '../../domain/models/budget/BudgetCategory.js';
 import { customerSchema } from '../../domain/models/customer/Customer.js';
-import { createInstitutionInputSchema, institutionSchema, updateInstitutionInputSchema } from '../../domain/models/institution/Institution.js';
+import {
+  createInstitutionInputSchema,
+  institutionSchema,
+  updateInstitutionInputSchema,
+} from '../../domain/models/institution/Institution.js';
 import type { RouteMeta } from '../../openapi/route-descriptor.js';
 
 export const adminRouteMetas: RouteMeta[] = [
@@ -25,7 +39,10 @@ export const adminRouteMetas: RouteMeta[] = [
     auth: false,
     request: { body: adminRequestPasswordResetInputSchema },
     responses: {
-      200: { description: 'Reset code sent if email exists', schema: z.object({ message: z.string() }) },
+      200: {
+        description: 'Reset code sent if email exists',
+        schema: z.object({ message: z.string() }),
+      },
     },
   },
   {

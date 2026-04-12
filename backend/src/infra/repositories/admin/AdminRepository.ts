@@ -31,10 +31,9 @@ export class AdminRepository implements IAdminRepository {
   }
 
   async findById(id: string): Promise<AdminSchema | null> {
-    const result = await this.pool.query<AdminRow>(
-      `SELECT ${COLUMNS} FROM admins WHERE id = $1`,
-      [id],
-    );
+    const result = await this.pool.query<AdminRow>(`SELECT ${COLUMNS} FROM admins WHERE id = $1`, [
+      id,
+    ]);
     const row = result.rows[0];
     return row ? toSchema(row) : null;
   }

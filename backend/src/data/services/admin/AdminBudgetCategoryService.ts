@@ -18,7 +18,10 @@ export class AdminBudgetCategoryService implements IAdminBudgetCategoryService {
     return await this.budgetCategoryRepository.insert({ ...input, isSystem: true });
   }
 
-  async updateCategory(id: string, input: UpdateBudgetCategoryInput): Promise<BudgetCategorySchema> {
+  async updateCategory(
+    id: string,
+    input: UpdateBudgetCategoryInput,
+  ): Promise<BudgetCategorySchema> {
     const category = await this.budgetCategoryRepository.findById(id);
     if (!category) throw new BudgetCategoryNotFoundError();
     return await this.budgetCategoryRepository.update(id, input);

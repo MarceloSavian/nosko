@@ -5,7 +5,12 @@ import type { AdminTokenType } from '../../../domain/models/admin/Admin.js';
 export class AdminTokenRepository implements IAdminTokenRepository {
   constructor(private readonly pool: Pool) {}
 
-  async insert(adminId: string, code: string, type: AdminTokenType, expiresAt: Date): Promise<void> {
+  async insert(
+    adminId: string,
+    code: string,
+    type: AdminTokenType,
+    expiresAt: Date,
+  ): Promise<void> {
     await this.pool.query(
       'INSERT INTO admin_tokens (admin_id, code, type, expires_at) VALUES ($1, $2, $3, $4)',
       [adminId, code, type, expiresAt],

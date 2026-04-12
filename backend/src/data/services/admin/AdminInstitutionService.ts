@@ -1,10 +1,10 @@
-import { BaseError } from '../../../shared/error.js';
 import type {
   CreateInstitutionInput,
   InstitutionSchema,
   UpdateInstitutionInput,
 } from '../../../domain/models/institution/Institution.js';
 import type { IAdminInstitutionService } from '../../../domain/usecases/admin/IAdminInstitutionService.js';
+import { BaseError } from '../../../shared/error.js';
 import type { IInstitutionRepository } from '../../domain/institution/IInstitutionRepository.js';
 
 class InstitutionNotFoundError extends BaseError {

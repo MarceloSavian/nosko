@@ -53,7 +53,12 @@ export class AdminAuthService implements IAdminAuthService {
 
     const code = String(randomInt(0, 1000000)).padStart(6, '0');
     const expiresAt = new Date(Date.now() + RESET_CODE_EXPIRY_MINUTES * 60 * 1000);
-    await this.adminTokenRepository.insert(admin.id, code, AdminTokenType.PASSWORD_RESET, expiresAt);
+    await this.adminTokenRepository.insert(
+      admin.id,
+      code,
+      AdminTokenType.PASSWORD_RESET,
+      expiresAt,
+    );
 
     await this.emailService.send(
       input.email,

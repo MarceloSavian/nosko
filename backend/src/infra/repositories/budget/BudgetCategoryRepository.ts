@@ -45,7 +45,9 @@ export class BudgetCategoryRepository implements IBudgetCategoryRepository {
     return row ? toSchema(row) : null;
   }
 
-  async insert(input: CreateBudgetCategoryInput & { isSystem?: boolean }): Promise<BudgetCategorySchema> {
+  async insert(
+    input: CreateBudgetCategoryInput & { isSystem?: boolean },
+  ): Promise<BudgetCategorySchema> {
     const result = await this.pool.query<CategoryRow>(
       `INSERT INTO budget_categories (name, icon, is_system) VALUES ($1, $2, $3) RETURNING ${COLUMNS}`,
       [input.name, input.icon ?? null, input.isSystem ?? false],

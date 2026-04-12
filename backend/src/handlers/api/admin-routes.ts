@@ -6,8 +6,14 @@ import {
   adminResetPasswordInputSchema,
   createAdminInputSchema,
 } from '../../domain/models/admin/Admin.js';
-import { createBudgetCategoryInputSchema, updateBudgetCategoryInputSchema } from '../../domain/models/budget/BudgetCategory.js';
-import { createInstitutionInputSchema, updateInstitutionInputSchema } from '../../domain/models/institution/Institution.js';
+import {
+  createBudgetCategoryInputSchema,
+  updateBudgetCategoryInputSchema,
+} from '../../domain/models/budget/BudgetCategory.js';
+import {
+  createInstitutionInputSchema,
+  updateInstitutionInputSchema,
+} from '../../domain/models/institution/Institution.js';
 import type { IAdminAuthService } from '../../domain/usecases/admin/IAdminAuthService.js';
 import type { IAdminBudgetCategoryService } from '../../domain/usecases/admin/IAdminBudgetCategoryService.js';
 import type { IAdminCustomerService } from '../../domain/usecases/admin/IAdminCustomerService.js';
@@ -276,7 +282,10 @@ export function makeAdminHandler(
 
   const routes: ProxyRoute = {
     'POST /v1/admin/login': withApiKey(apiKey, makeAdminLoginRoute(authService)),
-    'POST /v1/admin/request-password-reset': withApiKey(apiKey, makeAdminRequestPasswordResetRoute(authService)),
+    'POST /v1/admin/request-password-reset': withApiKey(
+      apiKey,
+      makeAdminRequestPasswordResetRoute(authService),
+    ),
     'POST /v1/admin/reset-password': withApiKey(apiKey, makeAdminResetPasswordRoute(authService)),
 
     'GET /v1/admin/customers': auth(makeListCustomersRoute(customerService)),
