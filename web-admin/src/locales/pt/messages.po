@@ -1,0 +1,250 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2026-04-12 19:54+0200\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: pt\n"
+
+#: src/presentation/pages/admins/AdminsPage.tsx:59
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:92
+#: src/presentation/pages/institutions/InstitutionsPage.tsx:94
+msgid "Add"
+msgstr ""
+
+#: src/presentation/pages/admins/AdminsPage.tsx:56
+msgid "Admins"
+msgstr ""
+
+#: src/presentation/pages/forgot-password/ForgotPasswordPage.tsx:82
+#: src/presentation/pages/reset-password/ResetPasswordPage.tsx:108
+msgid "Back to login"
+msgstr ""
+
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:89
+msgid "Budget Categories"
+msgstr ""
+
+#: src/presentation/pages/admins/AdminsPage.tsx:98
+#: src/presentation/pages/admins/AdminsPage.tsx:137
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:120
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:163
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:195
+#: src/presentation/pages/customers/CustomersPage.tsx:96
+#: src/presentation/pages/institutions/InstitutionsPage.tsx:128
+#: src/presentation/pages/institutions/InstitutionsPage.tsx:177
+#: src/presentation/pages/institutions/InstitutionsPage.tsx:205
+msgid "Cancel"
+msgstr ""
+
+#: src/presentation/pages/forgot-password/ForgotPasswordPage.tsx:42
+msgid "Check your email"
+msgstr ""
+
+#: src/presentation/pages/admins/AdminsPage.tsx:134
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:192
+#: src/presentation/pages/customers/CustomersPage.tsx:93
+#: src/presentation/pages/institutions/InstitutionsPage.tsx:202
+msgid "Confirm"
+msgstr ""
+
+#: src/presentation/pages/institutions/InstitutionsPage.tsx:144
+msgid "Country"
+msgstr ""
+
+#: src/presentation/pages/institutions/InstitutionsPage.tsx:109
+msgid "Country code"
+msgstr ""
+
+#: src/presentation/pages/admins/AdminsPage.tsx:87
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:109
+#: src/presentation/pages/institutions/InstitutionsPage.tsx:117
+msgid "Create"
+msgstr ""
+
+#: src/presentation/pages/admins/AdminsPage.tsx:115
+#: src/presentation/pages/customers/CustomersPage.tsx:66
+msgid "Created"
+msgstr ""
+
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:178
+msgid "Custom"
+msgstr ""
+
+#: src/presentation/pages/customers/CustomersPage.tsx:46
+msgid "Customers"
+msgstr ""
+
+#: src/presentation/pages/admins/AdminsPage.tsx:69
+#: src/presentation/pages/admins/AdminsPage.tsx:113
+#: src/presentation/pages/customers/CustomersPage.tsx:62
+#: src/presentation/pages/forgot-password/ForgotPasswordPage.tsx:69
+#: src/presentation/pages/login/LoginPage.tsx:72
+#: src/presentation/pages/reset-password/ResetPasswordPage.tsx:79
+msgid "Email"
+msgstr ""
+
+#: src/presentation/pages/forgot-password/ForgotPasswordPage.tsx:48
+msgid "Enter reset code"
+msgstr ""
+
+#: src/presentation/pages/forgot-password/ForgotPasswordPage.tsx:63
+msgid "Enter your email to receive a reset code"
+msgstr ""
+
+#: src/presentation/pages/forgot-password/ForgotPasswordPage.tsx:60
+msgid "Forgot password"
+msgstr ""
+
+#: src/presentation/pages/login/LoginPage.tsx:102
+msgid "Forgot password?"
+msgstr ""
+
+#: src/presentation/pages/reset-password/ResetPasswordPage.tsx:55
+msgid "Go to login"
+msgstr ""
+
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:106
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:136
+msgid "Icon"
+msgstr ""
+
+#: src/presentation/pages/forgot-password/ForgotPasswordPage.tsx:45
+msgid "If the email exists, a reset code was sent."
+msgstr ""
+
+#: src/presentation/pages/institutions/InstitutionsPage.tsx:91
+msgid "Institutions"
+msgstr ""
+
+#: src/presentation/pages/login/LoginPage.tsx:39
+msgid "Invalid email or password"
+msgstr ""
+
+#: src/presentation/pages/reset-password/ResetPasswordPage.tsx:37
+msgid "Invalid reset code"
+msgstr ""
+
+#: src/presentation/pages/customers/CustomersPage.tsx:64
+msgid "Language"
+msgstr ""
+
+#: src/presentation/pages/admins/AdminsPage.tsx:106
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:128
+#: src/presentation/pages/customers/CustomersPage.tsx:55
+#: src/presentation/pages/institutions/InstitutionsPage.tsx:136
+msgid "Loading..."
+msgstr ""
+
+#: src/presentation/pages/institutions/InstitutionsPage.tsx:114
+#: src/presentation/pages/institutions/InstitutionsPage.tsx:145
+msgid "Logo URL"
+msgstr ""
+
+#: src/presentation/components/AdminLayout.tsx:79
+msgid "Logout"
+msgstr ""
+
+#: src/presentation/pages/admins/AdminsPage.tsx:81
+#: src/presentation/pages/admins/AdminsPage.tsx:114
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:102
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:135
+#: src/presentation/pages/customers/CustomersPage.tsx:63
+#: src/presentation/pages/institutions/InstitutionsPage.tsx:104
+#: src/presentation/pages/institutions/InstitutionsPage.tsx:143
+msgid "Name"
+msgstr ""
+
+#: src/presentation/pages/reset-password/ResetPasswordPage.tsx:95
+msgid "New password"
+msgstr ""
+
+#: src/presentation/pages/customers/CustomersPage.tsx:134
+msgid "Next"
+msgstr ""
+
+#: src/presentation/components/AdminLayout.tsx:35
+#: src/presentation/pages/login/LoginPage.tsx:57
+msgid "Nosko Admin"
+msgstr ""
+
+#: src/presentation/pages/admins/AdminsPage.tsx:75
+#: src/presentation/pages/login/LoginPage.tsx:80
+msgid "Password"
+msgstr ""
+
+#: src/presentation/pages/login/LoginPage.tsx:41
+msgid "Password not set. Use forgot password to set your password."
+msgstr ""
+
+#: src/presentation/pages/reset-password/ResetPasswordPage.tsx:52
+msgid "Password reset"
+msgstr ""
+
+#: src/presentation/pages/customers/CustomersPage.tsx:123
+msgid "Previous"
+msgstr ""
+
+#: src/presentation/pages/reset-password/ResetPasswordPage.tsx:87
+msgid "Reset code"
+msgstr ""
+
+#: src/presentation/pages/reset-password/ResetPasswordPage.tsx:39
+msgid "Reset code expired"
+msgstr ""
+
+#: src/presentation/pages/reset-password/ResetPasswordPage.tsx:67
+#: src/presentation/pages/reset-password/ResetPasswordPage.tsx:103
+msgid "Reset password"
+msgstr ""
+
+#: src/presentation/pages/reset-password/ResetPasswordPage.tsx:103
+msgid "Resetting..."
+msgstr ""
+
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:160
+#: src/presentation/pages/institutions/InstitutionsPage.tsx:174
+msgid "Save"
+msgstr ""
+
+#: src/presentation/pages/forgot-password/ForgotPasswordPage.tsx:77
+msgid "Send reset code"
+msgstr ""
+
+#: src/presentation/pages/forgot-password/ForgotPasswordPage.tsx:77
+msgid "Sending..."
+msgstr ""
+
+#: src/presentation/pages/login/LoginPage.tsx:97
+msgid "Sign in"
+msgstr ""
+
+#: src/presentation/pages/login/LoginPage.tsx:60
+msgid "Sign in to the admin panel"
+msgstr ""
+
+#: src/presentation/pages/login/LoginPage.tsx:97
+msgid "Signing in..."
+msgstr ""
+
+#: src/presentation/pages/login/LoginPage.tsx:43
+#: src/presentation/pages/reset-password/ResetPasswordPage.tsx:41
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:178
+msgid "System"
+msgstr ""
+
+#: src/presentation/pages/customers/CustomersPage.tsx:49
+msgid "total"
+msgstr ""
+
+#: src/presentation/pages/budget-categories/BudgetCategoriesPage.tsx:137
+msgid "Type"
+msgstr ""
+
+#: src/presentation/pages/customers/CustomersPage.tsx:65
+msgid "Verified"
+msgstr ""

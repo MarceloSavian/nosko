@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme {
+  --font-headline: "Manrope", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-label: "Manrope", sans-serif;
+
+  --color-primary: #083a4f;
+  --color-primary-container: #0c4a64;
+  --color-primary-fixed: #c3e8ff;
+  --color-primary-fixed-dim: #a3cce6;
+  --color-on-primary: #e5e1dd;
+  --color-on-primary-fixed: #001e2c;
+  --color-on-primary-fixed-variant: #204b61;
+  --color-on-primary-container: #c0d5d6;
+  --color-inverse-primary: #a3cce6;
+
+  --color-secondary: #a58d66;
+  --color-secondary-container: #f5e6cc;
+  --color-secondary-fixed: #fbdfb2;
+  --color-secondary-fixed-dim: #dec398;
+  --color-on-secondary: #ffffff;
+  --color-on-secondary-fixed: #271900;
+  --color-on-secondary-fixed-variant: #564423;
+  --color-on-secondary-container: #564423;
+
+  --color-tertiary: #407e8c;
+  --color-tertiary-container: #c0d5d6;
+  --color-tertiary-fixed: #afecfc;
+  --color-tertiary-fixed-dim: #93d0df;
+  --color-on-tertiary: #ffffff;
+  --color-on-tertiary-fixed: #001f25;
+  --color-on-tertiary-fixed-variant: #004e5b;
+  --color-on-tertiary-container: #00252c;
+
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error: #ffffff;
+  --color-on-error-container: #93000a;
+
+  --color-surface: #e5e1dd;
+  --color-surface-dim: #d8d4d0;
+  --color-surface-bright: #fdf9f4;
+  --color-surface-variant: #e6e2de;
+  --color-surface-tint: #083a4f;
+  --color-surface-container: #ffffff;
+  --color-surface-container-low: #ffffff;
+  --color-surface-container-high: #f5f1ed;
+  --color-surface-container-highest: #ebe7e3;
+  --color-surface-container-lowest: #ffffff;
+
+  --color-background: #e5e1dd;
+  --color-on-background: #083a4f;
+  --color-on-surface: #081b24;
+  --color-on-surface-variant: #41484c;
+  --color-outline: #72787d;
+  --color-outline-variant: #c0d5d6;
+  --color-inverse-surface: #31302e;
+  --color-inverse-on-surface: #f4f0ec;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-body);
+    color: var(--color-on-background);
+    background-color: var(--color-background);
+  }
+}
