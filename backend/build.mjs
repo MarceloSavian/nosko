@@ -13,6 +13,7 @@ const handlers = [
   'dashboard-v1',
   'docs-v1',
   'migration-v1',
+  'admin-v1',
 ];
 
 const outDir = '../iac/environments/prod/artifacts';

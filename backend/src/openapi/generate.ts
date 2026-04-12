@@ -1,6 +1,7 @@
 import { writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { accountRouteMetas } from '../handlers/api/account-routes.meta.js';
+import { adminRouteMetas } from '../handlers/api/admin-routes.meta.js';
 import { budgetRouteMetas } from '../handlers/api/budget-routes.meta.js';
 import { customerRouteMetas } from '../handlers/api/customer-routes.meta.js';
 import { dashboardRouteMetas } from '../handlers/api/dashboard-routes.meta.js';
@@ -17,6 +18,12 @@ registry.registerComponent('securitySchemes', 'bearerAuth', {
   bearerFormat: 'JWT',
 });
 
+registry.registerComponent('securitySchemes', 'apiKeyAuth', {
+  type: 'apiKey',
+  in: 'header',
+  name: 'x-api-key',
+});
+
 registerRouteMetas([
   ...customerRouteMetas,
   ...accountRouteMetas,
@@ -26,6 +33,7 @@ registerRouteMetas([
   ...transactionRouteMetas,
   ...budgetRouteMetas,
   ...dashboardRouteMetas,
+  ...adminRouteMetas,
 ]);
 
 const doc = generateDocument();
