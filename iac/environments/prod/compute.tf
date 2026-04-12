@@ -29,6 +29,22 @@ locals {
     module.secrets.secret_arns["DATABASE_URL"],
   ]
 
+  admin_env = {
+    DATABASE_URL     = var.database_url
+    ADMIN_API_KEY    = var.admin_api_key
+    ADMIN_JWT_SECRET = var.admin_jwt_secret
+    RESEND_API_KEY   = var.resend_api_key
+    EMAIL_FROM       = var.email_from
+  }
+
+  admin_secret_arns = [
+    module.secrets.secret_arns["DATABASE_URL"],
+    module.secrets.secret_arns["ADMIN_API_KEY"],
+    module.secrets.secret_arns["ADMIN_JWT_SECRET"],
+    module.secrets.secret_arns["RESEND_API_KEY"],
+    module.secrets.secret_arns["EMAIL_FROM"],
+  ]
+
   handlers = {
     customer-v1    = { env_vars = local.email_env, secret_arns = local.email_secret_arns, concurrency = -1 }
     profile-v1     = { env_vars = local.common_env, secret_arns = local.common_secret_arns, concurrency = -1 }
@@ -40,6 +56,7 @@ locals {
     dashboard-v1   = { env_vars = local.common_env, secret_arns = local.common_secret_arns, concurrency = -1 }
     docs-v1        = { env_vars = {}, secret_arns = [], concurrency = -1 }
     migration-v1   = { env_vars = local.db_env, secret_arns = local.db_secret_arns, concurrency = -1 }
+    admin-v1       = { env_vars = local.admin_env, secret_arns = local.admin_secret_arns, concurrency = -1 }
   }
 }
 

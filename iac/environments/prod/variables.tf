@@ -50,3 +50,13 @@ variable "email_from" {
 variable "alarm_email" {
   type = string
 }
+
+variable "admin_api_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "admin_jwt_secret" {
+  type      = string
+  sensitive = true
+}

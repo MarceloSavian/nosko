@@ -67,6 +67,25 @@ locals {
     # docs-v1
     "GET /v1/docs"              = "docs-v1"
     "GET /v1/docs/openapi.json" = "docs-v1"
+
+    # admin-v1
+    "POST /v1/admin/login"                       = "admin-v1"
+    "POST /v1/admin/request-password-reset"      = "admin-v1"
+    "POST /v1/admin/reset-password"              = "admin-v1"
+    "GET /v1/admin/customers"                    = "admin-v1"
+    "GET /v1/admin/customers/{id}"               = "admin-v1"
+    "DELETE /v1/admin/customers/{id}"            = "admin-v1"
+    "GET /v1/admin/institutions"                 = "admin-v1"
+    "POST /v1/admin/institutions"                = "admin-v1"
+    "PUT /v1/admin/institutions/{id}"            = "admin-v1"
+    "DELETE /v1/admin/institutions/{id}"         = "admin-v1"
+    "GET /v1/admin/budget-categories"            = "admin-v1"
+    "POST /v1/admin/budget-categories"           = "admin-v1"
+    "PUT /v1/admin/budget-categories/{id}"       = "admin-v1"
+    "DELETE /v1/admin/budget-categories/{id}"    = "admin-v1"
+    "GET /v1/admin/admins"                       = "admin-v1"
+    "POST /v1/admin/admins"                      = "admin-v1"
+    "DELETE /v1/admin/admins/{id}"               = "admin-v1"
   }
 
 }
