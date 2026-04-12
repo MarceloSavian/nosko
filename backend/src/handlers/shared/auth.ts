@@ -2,15 +2,15 @@ import type { APIGatewayProxyEventV2, APIGatewayProxyResult } from 'aws-lambda';
 import type { IJwtService } from '../../data/domain/auth/IJwtService.js';
 import { InvalidTokenError, MissingTokenError } from '../../domain/errors/auth.js';
 import type { AuthenticatedRoute } from '../domain/proxy.js';
+import { CUSTOMER_COOKIE_NAME, extractTokenFromCookies } from './cookie.js';
 import { logErrorAndFormat } from './error.js';
 
 export function withAuth(jwtService: IJwtService, handler: AuthenticatedRoute) {
   return async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResult> => {
     try {
-      const authHeader = event.headers.authorization;
-      if (!authHeader?.startsWith('Bearer ')) throw new MissingTokenError();
+      const token = extractTokenFromCookies(event.cookies, CUSTOMER_COOKIE_NAME);
+      if (!token) throw new MissingTokenError();
 
-      const token = authHeader.slice(7);
       let customerId: string;
       try {
         const payload = await jwtService.verify(token);

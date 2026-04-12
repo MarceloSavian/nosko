@@ -1,16 +1,17 @@
 import type { APIGatewayProxyResult } from 'aws-lambda';
 
-const RESPONSE_HEADERS = {
+const RESPONSE_HEADERS: Record<string, string> = {
   'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
 };
 
-export function formatResponse(statusCode: number, data: object): APIGatewayProxyResult {
+export function formatResponse(
+  statusCode: number,
+  data: object,
+  extraHeaders?: Record<string, string>,
+): APIGatewayProxyResult {
   return {
     statusCode,
-    headers: RESPONSE_HEADERS,
+    headers: { ...RESPONSE_HEADERS, ...extraHeaders },
     body: JSON.stringify(data),
   };
 }

@@ -94,7 +94,18 @@ export class CustomerService implements ICustomerService {
     if (!customer.verifiedAt) throw new EmailNotVerifiedError();
 
     const accessToken = await this.jwtService.sign({ sub: customer.id, email: customer.email });
-    return { accessToken };
+    return {
+      accessToken,
+      profile: {
+        id: customer.id,
+        email: customer.email,
+        name: customer.name,
+        language: customer.language,
+        avatarUrl: customer.avatarUrl,
+        verifiedAt: customer.verifiedAt,
+        createdAt: customer.createdAt,
+      },
+    };
   }
 
   async resendVerification(input: ResendVerificationInput): Promise<void> {

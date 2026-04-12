@@ -22,15 +22,40 @@ import type { IAdminManagementService } from '../../domain/usecases/admin/IAdmin
 import type { ProxyRoute } from '../domain/proxy.js';
 import { withAdminAuth } from '../shared/admin-auth.js';
 import { withApiKey } from '../shared/api-key.js';
+import { ADMIN_COOKIE_NAME, clearAuthCookie, makeAuthCookie } from '../shared/cookie.js';
 import { logErrorAndFormat } from '../shared/error.js';
 import { formatResponse } from '../shared/response.js';
 
-function makeAdminLoginRoute(service: IAdminAuthService) {
+function makeAdminLoginRoute(service: IAdminAuthService, cookieDomain: string) {
   return async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResult> => {
     try {
       const body = JSON.parse(event.body ?? '{}');
       const input = adminLoginInputSchema.parse(body);
-      return formatResponse(200, await service.login(input));
+      const { accessToken, profile } = await service.login(input);
+      return formatResponse(200, profile, {
+        'Set-Cookie': makeAuthCookie(accessToken, ADMIN_COOKIE_NAME, cookieDomain),
+      });
+    } catch (error) {
+      return logErrorAndFormat(error);
+    }
+  };
+}
+
+function makeAdminLogoutRoute(cookieDomain: string) {
+  return async (_event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResult> => {
+    return formatResponse(200, { message: 'Logged out' }, {
+      'Set-Cookie': clearAuthCookie(ADMIN_COOKIE_NAME, cookieDomain),
+    });
+  };
+}
+
+function makeAdminMeRoute(service: IAdminManagementService) {
+  return async (
+    _event: APIGatewayProxyEventV2,
+    adminId: string,
+  ): Promise<APIGatewayProxyResult> => {
+    try {
+      return formatResponse(200, await service.getAdmin(adminId));
     } catch (error) {
       return logErrorAndFormat(error);
     }
@@ -271,6 +296,7 @@ function makeDeleteAdminRoute(service: IAdminManagementService) {
 export function makeAdminHandler(
   apiKey: string,
   jwtService: IJwtService,
+  cookieDomain: string,
   authService: IAdminAuthService,
   customerService: IAdminCustomerService,
   institutionService: IAdminInstitutionService,
@@ -281,12 +307,15 @@ export function makeAdminHandler(
     withAdminAuth(apiKey, jwtService, handler);
 
   const routes: ProxyRoute = {
-    'POST /v1/admin/login': withApiKey(apiKey, makeAdminLoginRoute(authService)),
+    'POST /v1/admin/login': withApiKey(apiKey, makeAdminLoginRoute(authService, cookieDomain)),
+    'POST /v1/admin/logout': withApiKey(apiKey, makeAdminLogoutRoute(cookieDomain)),
     'POST /v1/admin/request-password-reset': withApiKey(
       apiKey,
       makeAdminRequestPasswordResetRoute(authService),
     ),
     'POST /v1/admin/reset-password': withApiKey(apiKey, makeAdminResetPasswordRoute(authService)),
+
+    'GET /v1/admin/me': auth(makeAdminMeRoute(managementService)),
 
     'GET /v1/admin/customers': auth(makeListCustomersRoute(customerService)),
     'GET /v1/admin/customers/{id}': auth(makeGetCustomerRoute(customerService)),

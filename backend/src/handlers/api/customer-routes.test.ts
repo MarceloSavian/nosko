@@ -16,9 +16,11 @@ import {
 } from './customer-routes.js';
 
 describe('customer-routes', () => {
+  const COOKIE_DOMAIN = 'nosko.app';
+
   const makeSut = () => {
     const signup = makeSignupRoute(mockCustomerService);
-    const login = makeLoginRoute(mockCustomerService);
+    const login = makeLoginRoute(mockCustomerService, COOKIE_DOMAIN);
     const verifyEmail = makeVerifyEmailRoute(mockCustomerService);
     const resendVerification = makeResendVerificationRoute(mockCustomerService);
     const requestPasswordReset = makeRequestPasswordResetRoute(mockCustomerService);
@@ -136,10 +138,10 @@ describe('customer-routes', () => {
   });
 
   describe('makeLoginRoute()', () => {
-    it('should return 200 with access token on success', async () => {
+    it('should return 200 with profile and Set-Cookie header on success', async () => {
       const { login } = makeSut();
       mock.method(mockCustomerService, 'login', () =>
-        Promise.resolve({ accessToken: 'test-token' }),
+        Promise.resolve({ accessToken: 'test-token', profile: customer }),
       );
 
       const result = await login(
@@ -155,7 +157,12 @@ describe('customer-routes', () => {
       );
 
       assert.equal(result.statusCode, 200);
-      assert.deepEqual(JSON.parse(result.body), { accessToken: 'test-token' });
+      assert.deepEqual(JSON.parse(result.body), customer);
+      const cookie = result.headers?.['Set-Cookie'] as string;
+      assert.ok(cookie.includes('nosko_session=test-token'));
+      assert.ok(cookie.includes('HttpOnly'));
+      assert.ok(cookie.includes('Secure'));
+      assert.ok(cookie.includes('SameSite=Lax'));
     });
 
     it('should return 401 when service throws InvalidCredentialsError', async () => {
@@ -346,7 +353,7 @@ describe('customer-routes', () => {
     it('should route POST /signup correctly', async () => {
       mock.method(mockCustomerService, 'signup', () => Promise.resolve(customer));
 
-      const handler = makeCustomerHandler(mockCustomerService);
+      const handler = makeCustomerHandler(mockCustomerService, COOKIE_DOMAIN);
       const result = await handler(makeEvent({ routeKey: 'POST /v1/signup' }));
 
       assert.equal(result.statusCode, 201);
@@ -354,10 +361,10 @@ describe('customer-routes', () => {
 
     it('should route POST /v1/login correctly', async () => {
       mock.method(mockCustomerService, 'login', () =>
-        Promise.resolve({ accessToken: 'test-token' }),
+        Promise.resolve({ accessToken: 'test-token', profile: customer }),
       );
 
-      const handler = makeCustomerHandler(mockCustomerService);
+      const handler = makeCustomerHandler(mockCustomerService, COOKIE_DOMAIN);
       const result = await handler(
         makeEvent({
           routeKey: 'POST /v1/login',
@@ -376,7 +383,7 @@ describe('customer-routes', () => {
     it('should route POST /v1/verify-email correctly', async () => {
       mock.method(mockCustomerService, 'verifyEmail', () => Promise.resolve(verifiedCustomer));
 
-      const handler = makeCustomerHandler(mockCustomerService);
+      const handler = makeCustomerHandler(mockCustomerService, COOKIE_DOMAIN);
       const result = await handler(
         makeEvent({
           routeKey: 'POST /v1/verify-email',
@@ -388,7 +395,7 @@ describe('customer-routes', () => {
     });
 
     it('should return 404 for unknown routes', async () => {
-      const handler = makeCustomerHandler(mockCustomerService);
+      const handler = makeCustomerHandler(mockCustomerService, COOKIE_DOMAIN);
       const result = await handler(makeEvent({ routeKey: 'DELETE /unknown' }));
 
       assert.equal(result.statusCode, 404);

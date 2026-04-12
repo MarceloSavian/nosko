@@ -270,7 +270,8 @@ describe('CustomerService', () => {
 
       const result = await sut.login({ email: 'test@test.com', password: 'password123' });
 
-      assert.deepEqual(result, { accessToken: 'test-token' });
+      assert.equal(result.accessToken, 'test-token');
+      assert.deepEqual(result.profile, verifiedCustomer);
     });
   });
 

@@ -15,7 +15,8 @@ describe('dashboard-routes', () => {
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
     ({
       routeKey: 'GET /v1/dashboard',
-      headers: { authorization: 'Bearer valid-token' },
+      headers: {},
+      cookies: ['nosko_session=valid-token'],
       queryStringParameters: { yearMonth: '2024-09' },
       ...overrides,
     }) as unknown as APIGatewayProxyEventV2;
@@ -42,7 +43,7 @@ describe('dashboard-routes', () => {
     it('should return 401 without a token', async () => {
       const handler = makeDashboardHandler(mockDashboardService, mockJwtService);
 
-      const result = await handler(makeEvent({ headers: {} }));
+      const result = await handler(makeEvent({ cookies: undefined }));
 
       assert.equal(result.statusCode, 401);
     });

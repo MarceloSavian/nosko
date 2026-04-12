@@ -57,7 +57,10 @@ export const updateProfileInputSchema = z.object({
 
 export type UpdateProfileInput = z.infer<typeof updateProfileInputSchema>;
 
-export type LoginResult = { accessToken: string };
+export type LoginResult = {
+  accessToken: string;
+  profile: CustomerSchema;
+};
 
 export const resendVerificationInputSchema = z.object({
   email: z.email('Invalid email'),

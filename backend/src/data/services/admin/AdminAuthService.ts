@@ -42,7 +42,15 @@ export class AdminAuthService implements IAdminAuthService {
     if (!passwordMatch) throw new AdminInvalidCredentialsError();
 
     const accessToken = await this.jwtService.sign({ sub: admin.id, email: admin.email });
-    return { accessToken };
+    return {
+      accessToken,
+      profile: {
+        id: admin.id,
+        email: admin.email,
+        name: admin.name,
+        createdAt: admin.createdAt,
+      },
+    };
   }
 
   async requestPasswordReset(input: AdminRequestPasswordResetInput): Promise<void> {

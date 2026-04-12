@@ -41,7 +41,8 @@ describe('budget-routes', () => {
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
     ({
       routeKey: 'GET /v1/budget-categories',
-      headers: { authorization: 'Bearer valid-token' },
+      headers: {},
+      cookies: ['nosko_session=valid-token'],
       pathParameters: {},
       queryStringParameters: {},
       ...overrides,
@@ -498,7 +499,7 @@ describe('budget-routes', () => {
         mockJwtService,
       );
 
-      const result = await handler(makeEvent({ headers: {} }));
+      const result = await handler(makeEvent({ cookies: undefined }));
 
       assert.equal(result.statusCode, 401);
     });
@@ -529,7 +530,8 @@ describe('budget-routes', () => {
       const result = await handler(
         makeEvent({
           routeKey: 'GET /v1/budget-categories',
-          headers: { authorization: 'Bearer t' },
+          headers: {},
+          cookies: ['nosko_session=t'],
         }),
       );
 

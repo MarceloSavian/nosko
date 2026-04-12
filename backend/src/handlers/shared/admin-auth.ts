@@ -2,6 +2,7 @@ import type { APIGatewayProxyEventV2, APIGatewayProxyResult } from 'aws-lambda';
 import type { IJwtService } from '../../data/domain/auth/IJwtService.js';
 import { InvalidApiKeyError, MissingApiKeyError } from '../../domain/errors/admin.js';
 import { InvalidTokenError, MissingTokenError } from '../../domain/errors/auth.js';
+import { ADMIN_COOKIE_NAME, extractTokenFromCookies } from './cookie.js';
 import { logErrorAndFormat } from './error.js';
 
 export type AdminAuthenticatedRoute = (
@@ -20,10 +21,9 @@ export function withAdminAuth(
       if (!key) throw new MissingApiKeyError();
       if (key !== apiKey) throw new InvalidApiKeyError();
 
-      const authHeader = event.headers.authorization;
-      if (!authHeader?.startsWith('Bearer ')) throw new MissingTokenError();
+      const token = extractTokenFromCookies(event.cookies, ADMIN_COOKIE_NAME);
+      if (!token) throw new MissingTokenError();
 
-      const token = authHeader.slice(7);
       let adminId: string;
       try {
         const payload = await jwtService.verify(token);

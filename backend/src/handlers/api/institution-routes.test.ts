@@ -15,7 +15,8 @@ describe('institution-routes', () => {
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
     ({
       routeKey: 'GET /v1/institutions',
-      headers: { authorization: 'Bearer valid-token' },
+      headers: {},
+      cookies: ['nosko_session=valid-token'],
       ...overrides,
     }) as unknown as APIGatewayProxyEventV2;
 
@@ -36,7 +37,7 @@ describe('institution-routes', () => {
     it('should return 401 without a token', async () => {
       const handler = makeInstitutionHandler(mockInstitutionService, mockJwtService);
 
-      const result = await handler(makeEvent({ headers: {} }));
+      const result = await handler(makeEvent({ cookies: undefined }));
 
       assert.equal(result.statusCode, 401);
     });

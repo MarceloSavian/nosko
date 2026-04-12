@@ -38,7 +38,10 @@ export const adminResetPasswordInputSchema = z.object({
 
 export type AdminResetPasswordInput = z.infer<typeof adminResetPasswordInputSchema>;
 
-export type AdminLoginResult = { accessToken: string };
+export type AdminLoginResult = {
+  accessToken: string;
+  profile: AdminSchema;
+};
 
 export const AdminTokenType = {
   PASSWORD_RESET: 'PASSWORD_RESET',

@@ -26,7 +26,8 @@ describe('account-routes', () => {
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
     ({
       routeKey: 'GET /v1/accounts',
-      headers: { authorization: 'Bearer valid-token' },
+      headers: {},
+      cookies: ['nosko_session=valid-token'],
       pathParameters: {},
       ...overrides,
     }) as unknown as APIGatewayProxyEventV2;
@@ -214,7 +215,7 @@ describe('account-routes', () => {
         mockJwtService,
       );
 
-      const result = await handler(makeEvent({ headers: {} }));
+      const result = await handler(makeEvent({ cookies: undefined }));
 
       assert.equal(result.statusCode, 401);
     });

@@ -21,7 +21,8 @@ describe('transaction-routes', () => {
   const makeEvent = (overrides: Partial<APIGatewayProxyEventV2> = {}): APIGatewayProxyEventV2 =>
     ({
       routeKey: 'GET /v1/transactions',
-      headers: { authorization: 'Bearer valid-token' },
+      headers: {},
+      cookies: ['nosko_session=valid-token'],
       pathParameters: {},
       queryStringParameters: {},
       ...overrides,
@@ -101,7 +102,7 @@ describe('transaction-routes', () => {
     it('should return 401 without a token', async () => {
       const handler = makeTransactionHandler(mockTransactionService, mockJwtService);
 
-      const result = await handler(makeEvent({ headers: {} }));
+      const result = await handler(makeEvent({ cookies: undefined }));
 
       assert.equal(result.statusCode, 401);
     });

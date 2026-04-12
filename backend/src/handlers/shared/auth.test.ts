@@ -17,13 +17,14 @@ describe('withAuth', () => {
     mockHandler.mock.resetCalls();
   });
 
-  const makeEvent = (authHeader?: string): APIGatewayProxyEventV2 =>
+  const makeEvent = (cookies?: string[]): APIGatewayProxyEventV2 =>
     ({
-      headers: authHeader ? { authorization: authHeader } : {},
+      headers: {},
+      cookies,
     }) as unknown as APIGatewayProxyEventV2;
 
   describe('withAuth()', () => {
-    it('should return 401 when no Authorization header is present', async () => {
+    it('should return 401 when no cookies are present', async () => {
       const wrapped = withAuth(mockJwtService, mockHandler);
 
       const result = await wrapped(makeEvent());
@@ -32,10 +33,10 @@ describe('withAuth', () => {
       assert.deepEqual(JSON.parse(result.body), { message: 'Missing authorization token' });
     });
 
-    it('should return 401 when Authorization header does not start with Bearer', async () => {
+    it('should return 401 when session cookie is missing', async () => {
       const wrapped = withAuth(mockJwtService, mockHandler);
 
-      const result = await wrapped(makeEvent('Basic abc'));
+      const result = await wrapped(makeEvent(['other_cookie=abc']));
 
       assert.equal(result.statusCode, 401);
     });
@@ -46,7 +47,7 @@ describe('withAuth', () => {
       });
       const wrapped = withAuth(mockJwtService, mockHandler);
 
-      const result = await wrapped(makeEvent('Bearer invalid-token'));
+      const result = await wrapped(makeEvent(['nosko_session=invalid-token']));
 
       assert.equal(result.statusCode, 401);
       assert.deepEqual(JSON.parse(result.body), { message: 'Invalid or expired token' });
@@ -62,7 +63,7 @@ describe('withAuth', () => {
         body: JSON.stringify({ ok: true }),
       }));
       const wrapped = withAuth(mockJwtService, mockHandler);
-      const event = makeEvent('Bearer valid-token');
+      const event = makeEvent(['nosko_session=valid-token']);
 
       await wrapped(event);
 
@@ -80,7 +81,7 @@ describe('withAuth', () => {
       mockHandler.mock.mockImplementationOnce(async () => expected);
       const wrapped = withAuth(mockJwtService, mockHandler);
 
-      const result = await wrapped(makeEvent('Bearer valid-token'));
+      const result = await wrapped(makeEvent(['nosko_session=valid-token']));
 
       assert.deepEqual(result, expected);
     });

@@ -9,6 +9,7 @@ import {
 } from '../../domain/models/customer/Customer.js';
 import type { ICustomerService } from '../../domain/usecases/customer/ICustomerService.js';
 import type { ProxyRoute } from '../domain/proxy.js';
+import { CUSTOMER_COOKIE_NAME, clearAuthCookie, makeAuthCookie } from '../shared/cookie.js';
 import { logErrorAndFormat } from '../shared/error.js';
 import { formatResponse } from '../shared/response.js';
 
@@ -24,12 +25,15 @@ export function makeSignupRoute(service: ICustomerService) {
   };
 }
 
-export function makeLoginRoute(service: ICustomerService) {
+export function makeLoginRoute(service: ICustomerService, cookieDomain: string) {
   return async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResult> => {
     try {
       const body = JSON.parse(event.body ?? '{}');
       const input = loginInputSchema.parse(body);
-      return formatResponse(200, await service.login(input));
+      const { accessToken, profile } = await service.login(input);
+      return formatResponse(200, profile, {
+        'Set-Cookie': makeAuthCookie(accessToken, CUSTOMER_COOKIE_NAME, cookieDomain),
+      });
     } catch (error) {
       return logErrorAndFormat(error);
     }
@@ -97,14 +101,23 @@ export function makeResetPasswordRoute(service: ICustomerService) {
   };
 }
 
-export function makeCustomerHandler(service: ICustomerService) {
+export function makeLogoutRoute(cookieDomain: string) {
+  return async (_event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResult> => {
+    return formatResponse(200, { message: 'Logged out' }, {
+      'Set-Cookie': clearAuthCookie(CUSTOMER_COOKIE_NAME, cookieDomain),
+    });
+  };
+}
+
+export function makeCustomerHandler(service: ICustomerService, cookieDomain: string) {
   const routes: ProxyRoute = {
     'POST /v1/signup': makeSignupRoute(service),
-    'POST /v1/login': makeLoginRoute(service),
+    'POST /v1/login': makeLoginRoute(service, cookieDomain),
     'POST /v1/verify-email': makeVerifyEmailRoute(service),
     'POST /v1/resend-verification': makeResendVerificationRoute(service),
     'POST /v1/request-password-reset': makeRequestPasswordResetRoute(service),
     'POST /v1/reset-password': makeResetPasswordRoute(service),
+    'POST /v1/logout': makeLogoutRoute(cookieDomain),
   };
   return (event: APIGatewayProxyEventV2) => routeHandler(routes, event);
 }

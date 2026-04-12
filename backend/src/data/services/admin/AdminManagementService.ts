@@ -10,6 +10,12 @@ export class AdminManagementService implements IAdminManagementService {
     private readonly hasher: IHasher,
   ) {}
 
+  async getAdmin(id: string): Promise<AdminSchema> {
+    const admin = await this.adminRepository.findById(id);
+    if (!admin) throw new AdminNotFoundError();
+    return admin;
+  }
+
   async listAdmins(): Promise<AdminSchema[]> {
     return await this.adminRepository.findAll();
   }
