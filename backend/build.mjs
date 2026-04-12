@@ -16,7 +16,14 @@ const handlers = [
   'admin-v1',
 ];
 
-const outDir = '../iac/environments/prod/artifacts';
+const env = process.argv[2] || 'prod';
+const validEnvs = ['test', 'prod'];
+if (!validEnvs.includes(env)) {
+  console.error(`Invalid environment: ${env}. Must be one of: ${validEnvs.join(', ')}`);
+  process.exit(1);
+}
+
+const outDir = `../iac/environments/${env}/artifacts`;
 
 rmSync(outDir, { recursive: true, force: true });
 mkdirSync(outDir, { recursive: true });
