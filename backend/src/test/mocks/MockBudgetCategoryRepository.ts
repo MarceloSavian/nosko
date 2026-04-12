@@ -18,7 +18,9 @@ class MockBudgetCategoryRepository implements IBudgetCategoryRepository {
   findAll = mock.fn(async (): Promise<BudgetCategorySchema[]> => []);
   findById = mock.fn(async (_id: string): Promise<BudgetCategorySchema | null> => null);
   insert = mock.fn(
-    async (_input: CreateBudgetCategoryInput): Promise<BudgetCategorySchema> => ({
+    async (
+      _input: CreateBudgetCategoryInput & { isSystem?: boolean },
+    ): Promise<BudgetCategorySchema> => ({
       ...defaultCategory,
     }),
   );

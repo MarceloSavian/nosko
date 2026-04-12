@@ -139,4 +139,17 @@ export class CustomerRepository implements ICustomerRepository {
   async delete(id: string): Promise<void> {
     await this.pool.query('DELETE FROM customers WHERE id = $1', [id]);
   }
+
+  async findAllPaginated(limit: number, offset: number): Promise<CustomerSchema[]> {
+    const result = await this.pool.query<CustomerRow>(
+      `SELECT ${CUSTOMER_COLUMNS} FROM customers ORDER BY created_at DESC LIMIT $1 OFFSET $2`,
+      [limit, offset],
+    );
+    return result.rows.map(toSchema);
+  }
+
+  async count(): Promise<number> {
+    const result = await this.pool.query<{ count: string }>('SELECT COUNT(*) FROM customers');
+    return Number(result.rows[0]?.count ?? 0);
+  }
 }

@@ -27,6 +27,11 @@ variable "api_domain" {
   default = "api.nosko.app"
 }
 
+variable "admin_domain" {
+  type    = string
+  default = "admin.nosko.app"
+}
+
 variable "database_url" {
   type      = string
   sensitive = true
@@ -49,4 +54,14 @@ variable "email_from" {
 
 variable "alarm_email" {
   type = string
+}
+
+variable "admin_api_key" {
+  type      = string
+  sensitive = true
+}
+
+variable "admin_jwt_secret" {
+  type      = string
+  sensitive = true
 }
