@@ -1,0 +1,23 @@
+{
+  "name": "@finance/backend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "jest",
+    "build": "echo \"@finance/backend bundling is set up at U1 (infra); no build yet\""
+  },
+  "dependencies": {
+    "@finance/contracts": "workspace:*",
+    "effect": "3.22.1"
+  },
+  "devDependencies": {
+    "@jest/globals": "30.5.0",
+    "@swc/core": "1.16.1",
+    "@swc/jest": "0.2.39",
+    "@types/node": "26.4.0",
+    "jest": "30.5.0",
+    "typescript": "7.0.2"
+  }
+}
