@@ -3,8 +3,25 @@
 - **Project:** finance-app
 - **Task size:** Large (confirmed — Q1=A)
 - **Phase:** CONSTRUCTION
-- **Current stage:** Phase 1 / **U0 complete and verified**. Plan approved. Region defaulted to
-  `eu-west-1` (changeable at U1). Node 24. Not yet committed to git.
+- **Current stage:** Phase 1 / **U0 + U1 committed; U1 applied** to the nosko-test account. The
+  HTTP API, both Lambdas (placeholder handler), IAM, SSM, uploads bucket, and S3+CloudFront are
+  live on default endpoints (real BFF replaces the placeholder at U4). Region `eu-west-1`, Node
+  24 local, Lambda `nodejs22.x`.
+- **U1 delivered (no apply):** reusable capability modules (`compute/aws-lambda` with an extra
+  IAM-policy hook, `api-routing/aws-apigw-v2`, `secrets/aws-ssm`, `static-site/aws-s3-cloudfront`
+  domain-optional, `storage/aws-s3-private`) + an `environments/test` root wiring a single **BFF
+  Lambda** (`bff-v1`) behind an HTTP API ($default route), a `migration-v1` Lambda, SSM secrets
+  (`DATABASE_URL`/`JWT_SECRET`), a private uploads bucket, and an S3+CloudFront SPA (default
+  domain). Neon connection supplied via `database_url`. `iac/README.md` + `iac/CONVENTIONS.md`
+  written. Verified with `terraform fmt` + `terraform init -backend=false` + `terraform validate`.
+- **U1 targets the nosko-test account (`936834757679`):** deploys directly via
+  `aws-vault exec nosko-test` (no provider `assume_role`). Remote state in the
+  `finance-app-tfstate-936834757679` S3 bucket in that account (S3-native locking;
+  `iac/scripts/bootstrap-state.sh` creates it). `us_east_1` provider ready for a future domain.
+- **`nosko.app` domain deferred:** its Route53 zone is in the management account, so a custom
+  domain needs management-account creds; the baseline runs on default CloudFront / API-GW URLs.
+- **U1 apply is gated:** needs Marcelo's go-ahead, the state bucket bootstrapped, built Lambda
+  artifacts (wired at U4), and real `terraform.tfvars` (`database_url`, `jwt_secret`).
 - **U0 delivered:** pnpm monorepo (`backend`, `web`, `packages/contracts`, `iac`) with the pinned
   toolchain — **TypeScript 7 `7.0.2` (`tsc`)**, **SWC** (emit + `@swc/jest`), **Effect `3.22.1`**,
   Biome, **Jest with a 100% coverage gate**, and a **no-try/catch guard**. Walking-skeleton
@@ -19,9 +36,9 @@
   UI; automatic + manual **fixed-bill identification** (recurring_rules); **configuration-first**
   settings surface; **exhaustive error handling** (NFR-ERR); the repo agreements map; and the
   toolchain — **TypeScript 7 (`tsc`)**, **SWC** (emit + `@swc/jest`), **100% coverage**.
-- **Next step:** U1 — Terraform infra baseline for the `test` environment (Lambda, API GW, S3
-  static + uploads, SSM, Neon wiring). Confirm the Lambda Node runtime (24 vs 22) and AWS region
-  at the start of U1.
+- **Next step:** U2 — data foundation: Neon schema migrations (identity/household/budgeting +
+  household_settings/categories/recurring_rules), the `@effect/sql-pg` `SqlClient` layer, and
+  base repositories with an integration-test harness. (U1 `apply` remains gated on Marcelo.)
 
 ## Locked decisions (from requirements-questions.md + chat)
 

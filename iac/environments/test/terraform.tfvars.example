@@ -1,0 +1,22 @@
+# Copy to terraform.tfvars (gitignored) and fill in real values.
+# Run terraform with: aws-vault exec nosko-test -- terraform <cmd>
+
+# Neon pooled connection string (Settings -> Connection -> Pooled connection).
+database_url = "postgresql://USER:PASSWORD@ep-xxxx-pooler.eu-west-1.aws.neon.tech/finance?sslmode=require"
+
+# Long random string for signing session/access tokens.
+jwt_secret = "REPLACE_WITH_A_LONG_RANDOM_SECRET"
+
+# Verified SES sender for verification / MFA / invite emails.
+# email_from = "noreply@your-domain"
+
+# Optional custom domains (leave unset to use the default CloudFront / API Gateway endpoints).
+# web_domain = "app.example.com"
+# api_domain = "api.example.com"
+
+# Cost controls. Set budget_email to enable the monthly budget alert (strongly recommended).
+budget_email = "you@example.com"
+# monthly_budget_usd       = "5"
+# throttling_rate_limit    = 5    # requests/second (steady)
+# throttling_burst_limit   = 10
+# bff_reserved_concurrency = 5    # max concurrent BFF Lambdas
