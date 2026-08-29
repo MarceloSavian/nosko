@@ -46,8 +46,9 @@ us-east-1 ACM cert for CloudFront) to attach them later.
 Designed so a compromised app can't run up a bill:
 - **API Gateway throttling** — `throttling_rate_limit` (default 5 req/s) + `throttling_burst_limit`
   (default 10). Bounds the request rate hard.
-- **Lambda reserved concurrency** — the BFF is capped at `bff_reserved_concurrency` (default 5)
-  concurrent executions; migration at 1. Bounds runaway compute.
+- **Account concurrency limit** — the nosko-test account caps total concurrent Lambdas at **10**
+  (AWS default), a natural parallelism ceiling across everything. `bff_reserved_concurrency`
+  (default -1 = unreserved) can reserve a per-function slice once that account limit is raised.
 - **AWS Budget** — set `budget_email` to get emailed at 50% (forecast) / 80% / 100% of
   `monthly_budget_usd` (default $5). Budgets are free and are the fast anomaly alarm.
 

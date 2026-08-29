@@ -64,9 +64,11 @@ variable "throttling_burst_limit" {
 }
 
 variable "bff_reserved_concurrency" {
-  description = "Max concurrent BFF Lambda executions (hard cap on runaway compute cost)"
+  # -1 = unreserved. The nosko-test account's total concurrency limit is 10, which already caps
+  # every Lambda account-wide; reserving any slice is disallowed until that limit is raised.
+  description = "Reserved concurrency for the BFF Lambda (-1 = unreserved / use the account pool)"
   type        = number
-  default     = 5
+  default     = -1
 }
 
 variable "monthly_budget_usd" {

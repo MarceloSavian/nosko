@@ -54,7 +54,7 @@ module "compute" {
       runtime                        = var.lambda_runtime
       source_path                    = "${local.artifacts_dir}/migration-v1.zip"
       timeout                        = 60
-      reserved_concurrent_executions = 1
+      reserved_concurrent_executions = -1
       env_vars                       = local.db_env
       secret_arns                    = local.db_secret_arns
     }
