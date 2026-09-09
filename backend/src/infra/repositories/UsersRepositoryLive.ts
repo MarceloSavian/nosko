@@ -10,6 +10,12 @@ export const UsersRepositoryLive = Layer.effect(
     const sql = yield* SqlClient.SqlClient
     const decodeUser = decodeRow(User)
     const decodeCredentials = decodeRow(UserCredentials)
+    const decodeOption =
+      <A>(decode: (row: unknown) => Effect.Effect<A, never>) =>
+      (rows: ReadonlyArray<unknown>) =>
+        rows.length === 0
+          ? Effect.succeed(Option.none())
+          : decode(rows[0]).pipe(Effect.map(Option.some))
 
     return {
       create: (input) =>
@@ -21,19 +27,15 @@ export const UsersRepositoryLive = Layer.effect(
         })} RETURNING *`.pipe(Effect.flatMap((rows) => decodeUser(rows[0]))),
       findById: (id) =>
         sql`SELECT * FROM ${sql("users")} WHERE id = ${id}`.pipe(
-          Effect.flatMap((rows) =>
-            rows.length === 0
-              ? Effect.succeed(Option.none())
-              : decodeUser(rows[0]).pipe(Effect.map(Option.some)),
-          ),
+          Effect.flatMap(decodeOption(decodeUser)),
         ),
       findCredentialsByEmail: (email) =>
         sql`SELECT * FROM ${sql("users")} WHERE email = ${email}`.pipe(
-          Effect.flatMap((rows) =>
-            rows.length === 0
-              ? Effect.succeed(Option.none())
-              : decodeCredentials(rows[0]).pipe(Effect.map(Option.some)),
-          ),
+          Effect.flatMap(decodeOption(decodeCredentials)),
+        ),
+      findCredentialsById: (id) =>
+        sql`SELECT * FROM ${sql("users")} WHERE id = ${id}`.pipe(
+          Effect.flatMap(decodeOption(decodeCredentials)),
         ),
       setEmailVerified: (id) =>
         sql`UPDATE ${sql("users")} SET ${sql.update({

@@ -10,6 +10,9 @@ export class UsersRepository extends Context.Tag("UsersRepository")<
     readonly findCredentialsByEmail: (
       email: string,
     ) => Effect.Effect<Option.Option<UserCredentials>, SqlError>
+    readonly findCredentialsById: (
+      id: string,
+    ) => Effect.Effect<Option.Option<UserCredentials>, SqlError>
     readonly setEmailVerified: (id: string) => Effect.Effect<void, SqlError>
     readonly setPasswordHash: (id: string, passwordHash: string) => Effect.Effect<void, SqlError>
     readonly setMfa: (

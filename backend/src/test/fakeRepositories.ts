@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto"
-import { Effect, Layer, Option } from "effect"
+import { DateTime, Effect, Layer, Option } from "effect"
 import { AuthTokensRepository } from "../data/protocols/AuthTokensRepository"
 import { HouseholdInvitationsRepository } from "../data/protocols/HouseholdInvitationsRepository"
 import { HouseholdsRepository } from "../data/protocols/HouseholdsRepository"
@@ -11,6 +11,10 @@ import type { HouseholdInvitation } from "../domain/models/HouseholdInvitation"
 import type { User, UserCredentials } from "../domain/models/User"
 import type { UserSession } from "../domain/models/UserSession"
 
+const now = () => DateTime.unsafeFromDate(new Date())
+const asUtc = (date: Date) => DateTime.unsafeFromDate(date)
+const isFuture = (dateTime: DateTime.Utc) => DateTime.toEpochMillis(dateTime) > Date.now()
+
 export const makeFakeUsersRepository = (seed: ReadonlyArray<UserCredentials> = []) => {
   const users = new Map<string, UserCredentials>(seed.map((u) => [u.id, u]))
 
@@ -21,8 +25,8 @@ export const makeFakeUsersRepository = (seed: ReadonlyArray<UserCredentials> = [
     preferredLocale: "pt-BR",
     emailVerified: u.emailVerified,
     mfaEnabled: u.mfaEnabled,
-    createdAt: new Date() as never,
-    updatedAt: new Date() as never,
+    createdAt: now(),
+    updatedAt: now(),
   })
 
   const layer = Layer.succeed(UsersRepository, {
@@ -42,6 +46,7 @@ export const makeFakeUsersRepository = (seed: ReadonlyArray<UserCredentials> = [
     findById: (id) => Effect.succeed(Option.fromNullable(users.get(id)).pipe(Option.map(toUser))),
     findCredentialsByEmail: (email) =>
       Effect.succeed(Option.fromNullable([...users.values()].find((u) => u.email === email))),
+    findCredentialsById: (id) => Effect.succeed(Option.fromNullable(users.get(id))),
     setEmailVerified: (id) =>
       Effect.sync(() => {
         const u = users.get(id)
@@ -73,9 +78,9 @@ export const makeFakeAuthTokensRepository = () => {
         userId: input.userId,
         type: input.type,
         tokenHash: input.tokenHash,
-        expiresAt: input.expiresAt as never,
+        expiresAt: asUtc(input.expiresAt),
         consumedAt: null,
-        createdAt: new Date() as never,
+        createdAt: now(),
       }
       tokens.set(id, record)
       return Effect.succeed(record)
@@ -89,14 +94,14 @@ export const makeFakeAuthTokensRepository = () => {
               t.type === type &&
               t.tokenHash === tokenHash &&
               t.consumedAt === null &&
-              (t.expiresAt as unknown as Date).getTime() > Date.now(),
+              isFuture(t.expiresAt),
           ),
         ),
       ),
     consume: (id) =>
       Effect.sync(() => {
         const t = tokens.get(id)
-        if (t) tokens.set(id, { ...t, consumedAt: new Date() as never })
+        if (t) tokens.set(id, { ...t, consumedAt: now() })
       }),
   })
 
@@ -114,10 +119,10 @@ export const makeFakeUserSessionsRepository = () => {
         userId: input.userId,
         refreshTokenHash: input.refreshTokenHash,
         deviceLabel: input.deviceLabel,
-        mfaTrustedUntil: input.mfaTrustedUntil as never,
-        expiresAt: input.expiresAt as never,
+        mfaTrustedUntil: input.mfaTrustedUntil ? asUtc(input.mfaTrustedUntil) : null,
+        expiresAt: asUtc(input.expiresAt),
         revokedAt: null,
-        createdAt: new Date() as never,
+        createdAt: now(),
       }
       sessions.set(id, record)
       return Effect.succeed(record)
@@ -131,7 +136,7 @@ export const makeFakeUserSessionsRepository = () => {
               s.userId === userId &&
               s.refreshTokenHash === refreshTokenHash &&
               s.revokedAt === null &&
-              (s.expiresAt as unknown as Date).getTime() > Date.now(),
+              isFuture(s.expiresAt),
           ),
         ),
       ),
@@ -140,13 +145,13 @@ export const makeFakeUserSessionsRepository = () => {
     revoke: (id) =>
       Effect.sync(() => {
         const s = sessions.get(id)
-        if (s) sessions.set(id, { ...s, revokedAt: new Date() as never })
+        if (s) sessions.set(id, { ...s, revokedAt: now() })
       }),
     revokeAllForUser: (userId) =>
       Effect.sync(() => {
         for (const [id, s] of sessions) {
           if (s.userId === userId && s.revokedAt === null) {
-            sessions.set(id, { ...s, revokedAt: new Date() as never })
+            sessions.set(id, { ...s, revokedAt: now() })
           }
         }
       }),
@@ -169,8 +174,8 @@ export const makeFakeHouseholdsRepository = (
         name: input.name,
         baseCurrency: input.baseCurrency,
         createdBy: input.createdBy,
-        createdAt: new Date() as never,
-        updatedAt: new Date() as never,
+        createdAt: now(),
+        updatedAt: now(),
       }
       households.set(id, record)
       return Effect.succeed(record)
@@ -186,7 +191,7 @@ export const makeFakeHouseholdsRepository = (
         userId: input.userId,
         role: input.role,
         displayName: input.displayName,
-        joinedAt: new Date() as never,
+        joinedAt: now(),
       }
       members.push(record)
       return Effect.succeed(record)
@@ -209,9 +214,9 @@ export const makeFakeHouseholdInvitationsRepository = () => {
         tokenHash: input.tokenHash,
         invitedBy: input.invitedBy,
         status: "pending" as const,
-        expiresAt: input.expiresAt as never,
+        expiresAt: asUtc(input.expiresAt),
         acceptedBy: null,
-        createdAt: new Date() as never,
+        createdAt: now(),
       }
       invitations.set(id, record)
       return Effect.succeed(record)
@@ -224,7 +229,7 @@ export const makeFakeHouseholdInvitationsRepository = () => {
               i.householdId === householdId &&
               i.tokenHash === tokenHash &&
               i.status === "pending" &&
-              (i.expiresAt as unknown as Date).getTime() > Date.now(),
+              isFuture(i.expiresAt),
           ),
         ),
       ),

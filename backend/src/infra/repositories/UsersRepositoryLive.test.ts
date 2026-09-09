@@ -102,6 +102,23 @@ describe("UsersRepositoryLive", () => {
     expect(queries[0]?.params).toEqual([userRow.email])
   })
 
+  it("finds credentials by id, keeping the password hash", async () => {
+    const { layer, queries } = makeTestSqlClient(() => [userRow])
+
+    const decoded = await Effect.runPromise(
+      Effect.gen(function* () {
+        const repo = yield* UsersRepository
+        return yield* repo.findCredentialsById(userRow.id)
+      }).pipe(Effect.provide(UsersRepositoryLive), Effect.provide(layer)),
+    )
+
+    expect(Option.isSome(decoded)).toBe(true)
+    if (Option.isSome(decoded)) {
+      expect(decoded.value.passwordHash).toBe(userRow.password_hash)
+    }
+    expect(queries[0]?.sql).toBe('SELECT * FROM "users" WHERE id = $1')
+  })
+
   it("returns none when no user matches the email", async () => {
     const { layer } = makeTestSqlClient(() => [])
 
