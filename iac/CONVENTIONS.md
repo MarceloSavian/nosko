@@ -36,6 +36,13 @@ Durable Terraform rules for nosko. Uses the nosko module patterns and the nosko 
 - Secrets live in **SSM SecureString**; real values go in `terraform.tfvars` (**gitignored,
   never committed**) and are surfaced to Lambda via env + `ssm:GetParameter` (least privilege).
 - Never commit `*.tfvars` or state. Commit `.terraform.lock.hcl`.
+- **Two Postgres connections, never conflated:** `database_url` (admin/owner, `migration-v1`
+  only) and `app_database_url` (`app_role`, `bff-v1` only). Neon's console/CLI-created role
+  inherits `neon_superuser`, which carries **BYPASSRLS** — RLS is silently skipped for it
+  regardless of `FORCE ROW LEVEL SECURITY`. `app_role` is created by SQL inside the migrations
+  (not via Neon's console/CLI), which is the only way to get a role outside `neon_superuser`, and
+  is granted table-level privileges only. If a new secret ever looks like "the database
+  connection", check which of the two it actually is before wiring it to a Lambda.
 
 ## Build & deploy
 

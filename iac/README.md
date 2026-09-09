@@ -32,11 +32,19 @@ environments/
 
 - One **BFF Lambda** (`bff-v1`, `nodejs22.x`) behind an **HTTP API** ($default route → BFF; the
   Effect app routes `/api/rpc` and `/api/http/*` internally).
-- A **migration** Lambda (`migration-v1`), invoked directly (not via the API).
-- **SSM** SecureString secrets (`DATABASE_URL`, `JWT_SECRET`), read by the BFF at runtime.
+- A **migration** Lambda (`migration-v1`), invoked directly (not via the API). It runs DDL as the
+  Neon admin/owner role and provisions `app_role` (see below).
+- **SSM** SecureString secrets (`DATABASE_URL`, `APP_DATABASE_URL`, `APP_DB_PASSWORD`,
+  `JWT_SECRET`); the actual values reach each Lambda as plain environment variables set by
+  Terraform, matching the source variables below.
 - A private **uploads** S3 bucket; the BFF role can read/write it and send email via SES.
 - **S3 + CloudFront** static site for the SPA (default CloudFront domain unless `web_domain` set).
-- Neon Postgres is external; its pooled connection string is supplied via `database_url`.
+- Neon Postgres is external, with **two connections**:
+  - `database_url` (admin/owner) — used only by `migration-v1` to run DDL and to set `app_role`'s
+    password. Neon's console/CLI-created role inherits `neon_superuser`, which has **BYPASSRLS**.
+  - `app_database_url` (app_role) — used by `bff-v1` for every runtime query. `app_role` is
+    created by SQL in the migrations (`NOSUPERUSER NOBYPASSRLS`, table-level grants only), so
+    Row-Level Security actually applies to it. **The BFF must never use `database_url`.**
 
 Custom domains are **off by default** (default endpoints). Set `web_domain`/`api_domain` (+ a
 us-east-1 ACM cert for CloudFront) to attach them later.
@@ -65,6 +73,16 @@ cp terraform.tfvars.example terraform.tfvars   # fill in secrets (gitignored)
 # validate without touching a backend/state (no creds needed)
 terraform init -backend=false && terraform validate
 ```
+
+First deploy needs two passes because `app_role`'s password only exists after the migration runs:
+1. Set `database_url` + `app_db_password` (a fresh random value) in `terraform.tfvars`; set
+   `app_database_url` to the same host/db with `app_role` and that same password. `apply`, then
+   invoke `migration-v1` once (creates `app_role` and sets its password to `app_db_password`).
+2. From then on, `app_database_url` is correct and `bff-v1` can query normally. The migrator
+   tracks migrations by id and never reruns one, so rotating the password later means changing
+   `app_db_password`, adding a new migration file that repeats the `ALTER ROLE app_role WITH
+   PASSWORD` step from `0002_app_role.ts` under a fresh id, running `migration-v1`, and updating
+   `app_database_url` to match before the next `apply`.
 
 Real commands use the aws-vault `nosko-test` profile (run the bootstrap once, from the repo root):
 

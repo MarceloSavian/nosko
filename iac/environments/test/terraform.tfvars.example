@@ -1,8 +1,20 @@
 # Copy to terraform.tfvars (gitignored) and fill in real values.
 # Run terraform with: aws-vault exec nosko-test -- terraform <cmd>
 
-# Neon pooled connection string (Settings -> Connection -> Pooled connection).
+# Neon pooled connection string for the ADMIN/owner role (Settings -> Connection -> Pooled
+# connection). Used only by migration-v1 to run DDL and provision app_role. This role inherits
+# neon_superuser (BYPASSRLS) — never point the BFF at it.
 database_url = "postgresql://USER:PASSWORD@ep-xxxx-pooler.eu-west-1.aws.neon.tech/finance?sslmode=require"
+
+# A password for app_role, the restricted runtime role. Generate once with:
+#   openssl rand -base64 32
+# migration-v1 sets it via ALTER ROLE on first run; app_database_url below must use the same value.
+app_db_password = "REPLACE_WITH_A_LONG_RANDOM_PASSWORD"
+
+# Same host/database as database_url, but as app_role with the password above. Run the migration
+# once with database_url + app_db_password set, then fill this in and re-apply so the BFF picks
+# it up.
+app_database_url = "postgresql://app_role:REPLACE_WITH_A_LONG_RANDOM_PASSWORD@ep-xxxx-pooler.eu-west-1.aws.neon.tech/finance?sslmode=require"
 
 # Long random string for signing session/access tokens.
 jwt_secret = "REPLACE_WITH_A_LONG_RANDOM_SECRET"

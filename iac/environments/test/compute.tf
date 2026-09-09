@@ -5,17 +5,26 @@ locals {
     APP_ENV        = var.environment
     UPLOADS_BUCKET = module.uploads.bucket_name
     EMAIL_FROM     = var.email_from
-    DATABASE_URL   = var.database_url
-    JWT_SECRET     = var.jwt_secret
+    # app_role only — never the admin database_url (it would bypass RLS via neon_superuser).
+    DATABASE_URL = var.app_database_url
+    JWT_SECRET   = var.jwt_secret
   }
 
   bff_secret_arns = [
-    module.secrets.secret_arns["DATABASE_URL"],
+    module.secrets.secret_arns["APP_DATABASE_URL"],
     module.secrets.secret_arns["JWT_SECRET"],
   ]
 
-  db_env         = { DATABASE_URL = var.database_url }
-  db_secret_arns = [module.secrets.secret_arns["DATABASE_URL"]]
+  # migration-v1 runs DDL and provisions app_role, so it needs the admin connection plus the
+  # password to set on app_role.
+  db_env = {
+    DATABASE_URL    = var.database_url
+    APP_DB_PASSWORD = var.app_db_password
+  }
+  db_secret_arns = [
+    module.secrets.secret_arns["DATABASE_URL"],
+    module.secrets.secret_arns["APP_DB_PASSWORD"],
+  ]
 }
 
 data "aws_iam_policy_document" "bff" {

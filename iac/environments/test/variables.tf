@@ -20,7 +20,32 @@ variable "lambda_runtime" {
 }
 
 variable "database_url" {
-  description = "Neon PostgreSQL pooled connection string"
+  description = <<-EOT
+    Neon PostgreSQL pooled connection string for the ADMIN (table-owner) role — used only by
+    migration-v1 to run DDL and to provision app_role. The BFF never uses this connection.
+  EOT
+  type        = string
+  sensitive   = true
+}
+
+variable "app_database_url" {
+  description = <<-EOT
+    Neon PostgreSQL pooled connection string for app_role — the restricted, non-superuser,
+    NOBYPASSRLS role that migration-v1 provisions. Used by bff-v1 for all runtime queries so
+    Row-Level Security is actually enforced (Neon's default/console role inherits neon_superuser,
+    which has BYPASSRLS, so it must never be used at runtime). Same host/database as
+    database_url, different user/password.
+  EOT
+  type        = string
+  sensitive   = true
+}
+
+variable "app_db_password" {
+  description = <<-EOT
+    Password migration-v1 sets on app_role via ALTER ROLE. Must match the password encoded in
+    app_database_url. Rotate by changing this value and re-applying, then updating
+    app_database_url to match.
+  EOT
   type        = string
   sensitive   = true
 }
