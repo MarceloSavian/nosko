@@ -1,4 +1,6 @@
-export type Locale = "en" | "pt-BR"
+import type { Locale } from "../../domain/models/Locale"
+
+export type { Locale }
 
 export interface RenderedEmail {
   readonly subject: string

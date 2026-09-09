@@ -1,10 +1,11 @@
 import { Schema } from "effect"
+import { Locale } from "./Locale"
 
 export const User = Schema.Struct({
   id: Schema.UUID,
   email: Schema.String,
   name: Schema.String,
-  preferredLocale: Schema.String,
+  preferredLocale: Locale,
   emailVerified: Schema.Boolean,
   mfaEnabled: Schema.Boolean,
   createdAt: Schema.DateTimeUtcFromDate,
@@ -16,7 +17,7 @@ export const NewUser = Schema.Struct({
   email: Schema.String,
   passwordHash: Schema.String,
   name: Schema.String,
-  preferredLocale: Schema.String,
+  preferredLocale: Locale,
 })
 export type NewUser = typeof NewUser.Type
 
