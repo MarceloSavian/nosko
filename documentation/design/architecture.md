@@ -361,10 +361,15 @@ small local `it.effect`-style helper stands in for `@effect/vitest`, which is Vi
 
 ## 15. Technology + versions
 
-Backend: `effect`, `@effect/platform`, `@effect/platform-node`, `@effect/rpc`, `@effect/sql`,
-`@effect/sql-pg`, `@effect-aws/lambda`; **TypeScript 7** (GA; native compiler shipped as `tsc`)
-for type-checking; **SWC** (`@swc/core`) for transpile/emit; **Jest + `@swc/jest`** for tests;
-Node 24 locally (Lambda runtime pinned at U1). Frontend: `effect`, `@effect/rpc` client, React
+Backend: `effect`, `@effect/platform`, `@effect/platform-node`, `@effect/experimental`,
+`@effect/rpc`, `@effect/sql`, `@effect/sql-pg`, `@effect-aws/lambda`, `pg`; `hash-wasm` (argon2id
+password hashing — WASM, so no platform-specific native binary to bundle for Lambda, unlike
+`@node-rs/argon2`), `otpauth` (TOTP), `jose` (JWT; ships ESM-only, needs a
+`transformIgnorePatterns` entry for Jest — see `backend/CONVENTIONS.md`), `@aws-sdk/client-sesv2`
+(mailer); `@electric-sql/pglite` (dev, embedded-Postgres migration/RLS check); **TypeScript 7**
+(GA; native compiler shipped as `tsc`) for type-checking; **SWC** (`@swc/core`) for
+transpile/emit; **Jest + `@swc/jest`** for tests; Node 24 locally (Lambda runtime pinned at U1).
+Frontend: `effect`, `@effect/rpc` client, React
 19, Vite (`@vitejs/plugin-react-swc`), Tailwind 4, typed i18n; Jest + `@swc/jest` +
 `@testing-library/react` + `jsdom`. DB: Neon (pooled endpoint for Lambda). IaC: Terraform. Effect
 pinned to one unified version line (v3 stable `3.22.x` at U0; v4-beta not used); exact versions

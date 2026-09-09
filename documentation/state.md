@@ -96,9 +96,40 @@
   `app_role` provisioned and its password set, then fill in `app_database_url` and re-apply).
   Also fixed: a custom GUC reverts to `''` (not `NULL`) on `RESET`, and `''::uuid` raises instead
   of denying — every policy now guards with `nullif(current_setting(...), '')` before the cast.
-- **Next step:** **U3** — Auth & Household: signup/verify/login/MFA (remember device)/sessions;
-  the `auth_tokens`/`user_sessions`/`household_invitations` repositories deferred from U2;
-  create/invite/accept (max 2 members, already enforced by a DB trigger); SES mailer.
+- **U3 delivered (2026-09-09):** the `auth_tokens`/`user_sessions`/`household_invitations`
+  repositories deferred from U2, plus `HouseholdsRepository.update`/`listMembers`/`removeMember`
+  (the last two named in `user-stories.md` Epic 2 but never built). Auth primitives
+  (`backend/src/infra/auth/`): `PasswordHasher` (argon2id via `hash-wasm` — WASM, so no
+  platform-specific native binary to bundle for Lambda, unlike `@node-rs/argon2`); `TotpService`
+  (`otpauth`, MFA enrollment + verification); `OpaqueTokens` (sha256 of a random token for
+  links, or a 6-digit code for things a user types back in); `AccessTokens` (short-lived JWT via
+  `jose`, which is ESM-only — `backend/jest.config.mjs` now transforms `.js` too and stops
+  ignoring it under `node_modules`). Mailer (`infra/mailer/`): `Mailer` port +
+  `SesMailerLive` (`@aws-sdk/client-sesv2`) + bilingual pt-BR/en templates for the four
+  transactional emails (verify, reset, MFA OTP, invitation).
+  Use-cases (`data/usecases/`): `SignUp` (signUp/verifyEmail/resendVerification), `Mfa`
+  (mfaEnroll/mfaConfirmEnroll/mfaDisable/mfaChallenge), `Login` (login/mfaVerify — MFA accepts
+  either a TOTP code or a valid emailed OTP; "remember this device" is modeled as the issued
+  session's own refresh token carrying `mfaTrustedUntil`, checked at the next login rather than
+  as a separate device-cookie mechanism), `Sessions` (issueSession/refreshSession/logout/
+  revokeSession — ownership-checked/listSessions/revokeAllSessions), `PasswordReset`
+  (requestPasswordReset never reveals whether an email is registered/resetPassword), and
+  `HouseholdInvitations` (inviteMember rejects once the household has two members/
+  acceptInvitation requires the accepting email to match the invitation/revokeInvitation).
+  Introduced a shared `Locale` schema (`domain/models/Locale.ts`) and tightened
+  `User.preferredLocale` to it. Extended `UserCredentials` (the one projection that keeps
+  sensitive columns) with `preferredLocale`, `findCredentialsById`, since MFA/reset use-cases
+  need the stored secret and locale that the public `User` never exposes.
+  A real bug surfaced and was fixed along the way: the shared test fakes
+  (`backend/src/test/fakeRepositories.ts`) stored plain `Date` objects where the real
+  Schema-decoded ports return `DateTime.Utc`, so the `mfaTrustedUntil` comparison silently
+  always failed — fixed by building fake dates via `DateTime.unsafeFromDate`. 159 tests, 100%
+  coverage; `pnpm verify` green. Not yet wired to any transport (RPC/HttpApi is U4) and not
+  exercised against a live database (still no Neon target this session).
+- **Next step:** **U4** — BFF skeleton: `RpcServer` (+ minimal `HttpApi`) in one layered Lambda,
+  `packages/contracts`, typed client, OpenAPI, auth middleware wiring `RequestScope` from the
+  verified access token, top-level error boundary, and the build script producing
+  `iac/environments/test/artifacts/bff-v1.zip` that replaces U1's placeholder.
 
 ## Locked decisions (from requirements-questions.md + chat)
 

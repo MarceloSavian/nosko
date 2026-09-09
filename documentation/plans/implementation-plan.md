@@ -13,6 +13,9 @@ Phased execution of `design/units-of-work.md` (U0–U15), aligned to the generat
   `pnpm verify:migrations`); **not yet applied** — no live Neon database targeted. Terraform gained
   a second connection string (`app_database_url`) that needs a two-pass first deploy; see
   `iac/README.md`.
+- **U3** ✅ delivered (auth primitives, mailer, all auth/household use-cases, the repositories
+  U2 deferred). Not yet wired to any transport (that's U4) and, like U2, not exercised against a
+  live database.
 - Everything else: pending.
 
 ## Phase 1 — Foundation + core budget loop (U2–U10)
@@ -30,8 +33,14 @@ Key tasks
    (pglite-backed privacy/RLS checks — Jest's VM sandbox blocks pglite's dynamic import, so this
    runs as a plain script, not under `pnpm test`). `category_caps` deferred to U6 (FKs `cycles`);
    `auth_tokens`/`user_sessions`/`household_invitations` repositories deferred to U3.
-2. U3: auth (signup/verify/login/MFA + remember device/sessions) + household create/invite/accept
-   (max 2 members) + account visibility; SES mailer (localised), sender verified.
+2. U3 ✅: auth primitives (`infra/auth`: argon2id password hashing via `hash-wasm`, TOTP via
+   `otpauth`, opaque tokens, JWT access tokens via `jose`) and mailer (`infra/mailer`: SES
+   adapter + bilingual templates); the `auth_tokens`/`user_sessions`/`household_invitations`
+   repositories deferred from U2, plus `HouseholdsRepository.update`/`listMembers`/`removeMember`;
+   use-cases for signup/verify/resend, login + MFA enroll/verify (remember device via the
+   session's own refresh token), refresh/logout/sessions, password reset, and household
+   invite/accept/revoke (max 2 members, DB-enforced). Sender verification in SES itself is a
+   manual AWS console step, not code.
 3. U4: BFF — `RpcServer` (+ minimal `HttpApi`) in one layered Lambda; `packages/contracts`; typed
    client; OpenAPI; auth middleware with **household + owner scoping**; top-level error boundary;
    build script producing `iac/environments/test/artifacts/bff-v1.zip`.
@@ -113,6 +122,7 @@ review passed; `prod` deployed; checks clean.
 
 ## Immediate next step
 
-Resume at **U3** (Auth & Household). Applying U2's Terraform changes to nosko-test (the two-pass
+Resume at **U4** (BFF skeleton). Applying U2's Terraform changes to nosko-test (the two-pass
 `app_role` deploy in `iac/README.md`) can happen whenever Marcelo wants a live Neon database;
-U3's code does not require it to keep being written and unit-tested.
+neither U3's code nor U4's needs it to keep being written and unit-tested, though U4's real
+Lambda artifact is what U1's placeholder is waiting to be replaced by.

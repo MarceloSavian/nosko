@@ -2,8 +2,10 @@
 
 The Effect BFF and DDD core (domain / data / infra / presentation) — a single layered deployable
 (architecture §2, §3). U2: data + isolation foundation (Neon migrations with mandatory RLS, the
-`SqlClient` layer, and a first repository slice: users, households, accounts, categories). The
-RPC/HttpApi surface arrives at U4.
+`SqlClient` layer, and a first repository slice: users, households, accounts, categories). U3:
+auth primitives, mailer, and every auth/household use-case (signup, login, MFA, sessions,
+password reset, invitations). Neither unit is wired to a transport yet — the RPC/HttpApi surface
+arrives at U4.
 
 ## Layout
 
@@ -11,11 +13,13 @@ RPC/HttpApi surface arrives at U4.
 migrations/   SQL migrations (Effect programs run by the @effect/sql migrator)
 src/
   domain/     models (Schema), usecases (ports), services (pure engines), errors (tagged)
-  data/       protocols (repository ports)
-  infra/      config (DatabaseConfig), db (RequestScope, Migrations), repositories (@effect/sql-pg)
+  data/       protocols (repository/service port tags), usecases (implementations orchestrating them)
+  infra/      config (DatabaseConfig), db (RequestScope, Migrations), repositories (@effect/sql-pg),
+              auth (password hashing, TOTP, opaque tokens, JWT), mailer (SES + templates)
   presentation/  rpc (per-section groups), http (HttpApi groups) — arrives at U4
   main/       layer wiring + Lambda entry + runnable scripts (excluded from unit coverage)
-  test/       shared test-only helpers (excluded from unit coverage)
+  test/       shared test-only helpers: fake repositories, fake mailer, SqlClient testkit
+              (excluded from unit coverage)
 ```
 
 ## Scripts

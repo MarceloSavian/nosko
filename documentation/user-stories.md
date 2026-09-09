@@ -31,9 +31,11 @@ Stories
 - As a user, I can **log out** and see/revoke **active sessions**.
 
 Actions: `auth.signUp`, `auth.verifyEmail`, `auth.resendVerification`, `auth.login`,
-`auth.mfaChallenge`, `auth.mfaVerify` (with `rememberDevice`), `auth.refresh`, `auth.logout`,
-`auth.requestPasswordReset`, `auth.resetPassword` (with `revokeOtherSessions`),
-`auth.listSessions`, `auth.revokeSession`, `auth.revokeAllSessions`.
+`auth.mfaEnroll`, `auth.mfaConfirmEnroll`, `auth.mfaDisable` (the enroll/confirm/disable trio
+implements `security.update2fa` from Epic 14), `auth.mfaChallenge`, `auth.mfaVerify` (with
+`rememberDevice`), `auth.refresh`, `auth.logout`, `auth.requestPasswordReset`,
+`auth.resetPassword` (with `revokeOtherSessions`), `auth.listSessions`, `auth.revokeSession`,
+`auth.revokeAllSessions`.
 
 ## Epic 2 — Household & membership
 Screens: crie_sua_casa_convite, voc_foi_convidada.
