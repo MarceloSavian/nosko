@@ -1,4 +1,4 @@
-# Implementation Plan — finance-app
+# Implementation Plan — nosko
 
 Phased execution of the units in `design/units-of-work.md`. **This plan is the approval gate: no
 application code is written until it is approved.** Each phase has a definition of done and the

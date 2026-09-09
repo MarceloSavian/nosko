@@ -3,11 +3,11 @@ export type Locale = (typeof locales)[number]
 
 export const dictionaries = {
   en: {
-    appTitle: "finance-app",
+    appTitle: "nosko",
     overview: "Overview",
   },
   "pt-BR": {
-    appTitle: "finance-app",
+    appTitle: "nosko",
     overview: "Visão geral",
   },
 } as const

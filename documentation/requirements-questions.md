@@ -1,4 +1,4 @@
-# Requirements Questions — finance-app
+# Requirements Questions — nosko
 
 Answer each question by filling the letter after `[Answer]:`. Pick "Other" (last option) and
 write free text if none fit. Each option lists a recommendation where I have one; you can often
@@ -23,10 +23,10 @@ C) Other (describe after [Answer]:)
 [Answer]: A
 
 ## Question 2 — Project name
-`finance-app` is a placeholder folder name. What should the app / repo be called? (I'll rename
+`nosko` is a placeholder folder name. What should the app / repo be called? (I'll rename
 the folder and repo to match.)
 
-A) Keep `finance-app`
+A) Keep `nosko`
 
 B) Reuse a name you like — write it after [Answer]: (e.g. a fresh brand)
 

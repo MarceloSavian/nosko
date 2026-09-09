@@ -1,4 +1,4 @@
-import type { Money } from "@finance/contracts"
+import type { Money } from "@nosko/contracts"
 import { Effect } from "effect"
 import { CurrencyMismatch } from "../errors/CurrencyMismatch"
 

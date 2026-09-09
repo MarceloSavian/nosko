@@ -1,4 +1,4 @@
-# Units of Work — finance-app
+# Units of Work — nosko
 
 Dependency-ordered decomposition of the requirements. Each unit is independently reviewable and
 maps to one or more phases from `requirements.md`. "Depends on" is the hard build order.

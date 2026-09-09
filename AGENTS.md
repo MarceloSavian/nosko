@@ -1,4 +1,4 @@
-# finance-app — Agent Instructions
+# nosko — Agent Instructions
 
 Personal project. No ticket workflow, no work worktree rules.
 
@@ -6,7 +6,7 @@ Personal project. No ticket workflow, no work worktree rules.
 
 A private, two-user household finance manager on AWS. It reimplements the functionality of
 `~/Documents/money-evaluation` (couple budgeting cycles, evaluations, savings projections) as a
-real web application. It borrows architecture patterns — not code — from `../nosko`.
+real web application. It borrows architecture patterns — not code — from `../nosko-legacy`.
 
 Read [`documentation/`](./documentation/) before changing anything. The project is being built
 with the Development Lifecycle (DLC); requirements, design, and state live there.

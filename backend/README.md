@@ -1,4 +1,4 @@
-# @finance/backend
+# @nosko/backend
 
 The Effect BFF and DDD core (domain / data / infra / presentation) — a single layered deployable
 (architecture §2, §3). Currently U0: toolchain + a proven Effect sample. Hosting/bundling arrives

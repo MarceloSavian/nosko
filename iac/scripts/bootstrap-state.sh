@@ -4,7 +4,7 @@
 #   aws-vault exec nosko-test -- iac/scripts/bootstrap-state.sh
 set -euo pipefail
 
-BUCKET="finance-app-tfstate-936834757679"
+BUCKET="nosko-tfstate-936834757679"
 REGION="eu-west-1"
 
 if aws s3api head-bucket --bucket "$BUCKET" 2>/dev/null; then

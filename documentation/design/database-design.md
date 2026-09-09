@@ -1,4 +1,4 @@
-# Database Design — finance-app (PostgreSQL / Neon)
+# Database Design — nosko (PostgreSQL / Neon)
 
 Relational model for `requirements.md`, accessed via `@effect/sql-pg` and evolved with SQL
 migrations. **All identifiers are English** (see architecture §4 vocabulary). Derived cycle

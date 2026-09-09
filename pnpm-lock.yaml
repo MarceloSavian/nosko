@@ -17,7 +17,7 @@ importers:
 
   backend:
     dependencies:
-      '@finance/contracts':
+      '@nosko/contracts':
         specifier: workspace:*
         version: link:../packages/contracts
       effect:
@@ -67,7 +67,7 @@ importers:
 
   web:
     dependencies:
-      '@finance/contracts':
+      '@nosko/contracts':
         specifier: workspace:*
         version: link:../packages/contracts
       effect:

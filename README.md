@@ -1,4 +1,4 @@
-# finance-app
+# nosko
 
 A private household finance manager for two people (Marcelo + Gabriele), hosted on AWS.
 
@@ -18,5 +18,5 @@ locked first.
 
 ## Working name
 
-`finance-app` is a placeholder. The final name is an open question in
+`nosko` is a placeholder. The final name is an open question in
 [`documentation/requirements-questions.md`](./documentation/requirements-questions.md).

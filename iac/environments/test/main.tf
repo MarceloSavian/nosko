@@ -9,8 +9,8 @@ terraform {
   # State bucket in the nosko-test account (create once via scripts/bootstrap-state.sh).
   # S3-native locking (use_lockfile) — no DynamoDB table required.
   backend "s3" {
-    bucket       = "finance-app-tfstate-936834757679"
-    key          = "finance-app/test/terraform.tfstate"
+    bucket       = "nosko-tfstate-936834757679"
+    key          = "nosko/test/terraform.tfstate"
     region       = "eu-west-1"
     encrypt      = true
     use_lockfile = true

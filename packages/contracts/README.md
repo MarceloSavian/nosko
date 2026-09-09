@@ -1,7 +1,7 @@
-# @finance/contracts
+# @nosko/contracts
 
 Shared **Effect `Schema`** definitions and (later) `@effect/rpc` request/response contracts.
-Imported by both `@finance/backend` and `@finance/web` so client and server share exact types —
+Imported by both `@nosko/backend` and `@nosko/web` so client and server share exact types —
 no duplication, end-to-end type safety.
 
 Source-only package (consumed via TypeScript source across the workspace); it has no build step.

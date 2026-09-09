@@ -1,4 +1,4 @@
-# Architecture — finance-app
+# Architecture — nosko
 
 Implements `requirements.md` under the locked mandates: **Effect end-to-end (no try/catch,
 exhaustive error handling)**, **nosko DDD/Clean Architecture**, a **single layered BFF Lambda**
@@ -256,7 +256,7 @@ in SSM/Secrets Manager, never in code.
 ## 13. Repository layout (monorepo)
 
 ```
-finance-app/
+nosko/
   backend/     Effect BFF + domain/data/infra (single deployable)  + CONVENTIONS.md
   web/         React + Vite + Tailwind + Effect client + locales/   + CONVENTIONS.md
   iac/         Terraform (modules + environments)                   + CONVENTIONS.md

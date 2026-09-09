@@ -1,6 +1,6 @@
 # Backend Conventions (agreements)
 
-Durable rules for `@finance/backend`. Extracted from `documentation/design/architecture.md`.
+Durable rules for `@nosko/backend`. Extracted from `documentation/design/architecture.md`.
 
 ## Effect
 

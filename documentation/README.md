@@ -1,6 +1,6 @@
-# finance-app — Feature Documentation
+# nosko — Feature Documentation
 
-Development Lifecycle (DLC) workspace for building the finance-app: a private, two-user
+Development Lifecycle (DLC) workspace for building the nosko: a private, two-user
 household finance manager on AWS that reimplements the functionality of `money-evaluation`
 using the architecture lessons of `nosko`.
 
@@ -46,4 +46,4 @@ Tasks are defined after the architecture and units of work are agreed. Expected 
 ## Reference projects (read-only, not modified)
 
 - `~/Documents/money-evaluation` — functional source of truth.
-- `~/Documents/projects/personal/nosko` — architecture reference.
+- `~/Documents/projects/personal/nosko-legacy` — architecture reference.

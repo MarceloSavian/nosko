@@ -1,5 +1,5 @@
-import { money } from "@finance/contracts"
 import { describe, expect, it } from "@jest/globals"
+import { money } from "@nosko/contracts"
 import { Effect } from "effect"
 import { CurrencyMismatch } from "../errors/CurrencyMismatch"
 import { addMoney } from "./money"

@@ -3,5 +3,5 @@
 export const handler = async () => ({
   statusCode: 200,
   headers: { "content-type": "application/json" },
-  body: JSON.stringify({ status: "ok", service: "finance-app", placeholder: true }),
+  body: JSON.stringify({ status: "ok", service: "nosko", placeholder: true }),
 })

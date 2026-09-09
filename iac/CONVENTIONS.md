@@ -1,14 +1,14 @@
 # IaC Conventions (agreements)
 
-Durable Terraform rules for finance-app. Uses the nosko module patterns and the nosko AWS org.
+Durable Terraform rules for nosko. Uses the nosko module patterns and the nosko AWS org.
 
 ## AWS account & state
 
 - Terraform deploys **directly into the nosko-test account** via `aws-vault exec nosko-test`
   (which already assumes `OrganizationAccountAccessRole`) — **no provider-level assume_role**.
 - A `us_east_1` aliased provider exists for CloudFront ACM when a custom domain is added.
-- State: `finance-app-tfstate-<account-id>` S3 bucket in that account, key
-  `finance-app/{env}/terraform.tfstate`, **S3-native locking** (`use_lockfile`), no DynamoDB.
+- State: `nosko-tfstate-<account-id>` S3 bucket in that account, key
+  `nosko/{env}/terraform.tfstate`, **S3-native locking** (`use_lockfile`), no DynamoDB.
   Bootstrap the bucket once with `scripts/bootstrap-state.sh`.
 - The `nosko.app` custom domain needs management-account creds for the Route53 zone — added later.
 - **Personal org only** — never the PostNL work accounts.

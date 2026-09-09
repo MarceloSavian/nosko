@@ -1,13 +1,13 @@
 # iac — Terraform infrastructure
 
-Serverless AWS baseline for finance-app, region **eu-west-1**. Capability modules (reused from
+Serverless AWS baseline for nosko, region **eu-west-1**. Capability modules (reused from
 the nosko pattern) wired per environment.
 
 ## AWS account (nosko-test)
 
 Terraform deploys **directly into the nosko-test account** (`936834757679`) — `aws-vault exec
 nosko-test` already assumes `OrganizationAccountAccessRole`, so there is **no provider-level
-assume_role**. Remote state lives in the `finance-app-tfstate-936834757679` S3 bucket **in that
+assume_role**. Remote state lives in the `nosko-tfstate-936834757679` S3 bucket **in that
 account** (create once via `scripts/bootstrap-state.sh`), with S3-native locking. This is a
 **personal** org — never the PostNL work accounts.
 
@@ -81,7 +81,7 @@ only uploads them; it does not build.
 
 ## State
 
-Remote state in the `finance-app-tfstate-936834757679` S3 bucket in the nosko-test account
-(key `finance-app/test/terraform.tfstate`, eu-west-1, **S3-native locking** — no DynamoDB).
+Remote state in the `nosko-tfstate-936834757679` S3 bucket in the nosko-test account
+(key `nosko/test/terraform.tfstate`, eu-west-1, **S3-native locking** — no DynamoDB).
 Create the bucket once with `scripts/bootstrap-state.sh`, then `terraform init`. Validation still
 uses `terraform init -backend=false` (no state/creds).

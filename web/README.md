@@ -1,4 +1,4 @@
-# @finance/web
+# @nosko/web
 
 The rebuilt React + Effect dashboard (bilingual en/pt). U0 ships the app shell, the i18n
 baseline, and the toolchain; pages (Overview, Cycles, …) arrive from U6/U7 wired to the BFF.

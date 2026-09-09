@@ -1,4 +1,4 @@
-# Requirements — finance-app
+# Requirements — nosko
 
 Derived from `reverse-engineering.md` (functional scope from money-evaluation) plus the locked
 answers in `state.md`. IDs are referenced by the design and the implementation plan.

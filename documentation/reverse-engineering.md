@@ -7,7 +7,7 @@ Both source projects are read-only references; no code is carried over.
 Sources analysed:
 - `~/Documents/money-evaluation` — the working analysis project. Source of **all functional
   requirements**.
-- `~/Documents/projects/personal/nosko` — the earlier, abandoned attempt at this same idea.
+- `~/Documents/projects/personal/nosko-legacy` — the earlier, abandoned attempt at this same idea.
   Source of **architecture patterns and lessons**.
 
 ---

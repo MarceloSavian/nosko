@@ -5,7 +5,7 @@ variable "aws_region" {
 
 variable "project" {
   type    = string
-  default = "finance-app"
+  default = "nosko"
 }
 
 variable "environment" {

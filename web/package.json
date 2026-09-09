@@ -1,5 +1,5 @@
 {
-  "name": "@finance/web",
+  "name": "@nosko/web",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@finance/contracts": "workspace:*",
+    "@nosko/contracts": "workspace:*",
     "effect": "3.22.1",
     "react": "19.2.8",
     "react-dom": "19.2.8"

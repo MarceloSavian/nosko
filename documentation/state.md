@@ -1,6 +1,6 @@
 # Lifecycle State
 
-- **Project:** finance-app
+- **Project:** nosko
 - **Task size:** Large (confirmed — Q1=A)
 - **Phase:** CONSTRUCTION
 - **Current stage:** Phase 1 / **U0 + U1 committed; U1 applied** to the nosko-test account. The
@@ -16,7 +16,7 @@
   written. Verified with `terraform fmt` + `terraform init -backend=false` + `terraform validate`.
 - **U1 targets the nosko-test account (`936834757679`):** deploys directly via
   `aws-vault exec nosko-test` (no provider `assume_role`). Remote state in the
-  `finance-app-tfstate-936834757679` S3 bucket in that account (S3-native locking;
+  `nosko-tfstate-936834757679` S3 bucket in that account (S3-native locking;
   `iac/scripts/bootstrap-state.sh` creates it). `us_east_1` provider ready for a future domain.
 - **`nosko.app` domain deferred:** its Route53 zone is in the management account, so a custom
   domain needs management-account creds; the baseline runs on default CloudFront / API-GW URLs.
@@ -25,7 +25,7 @@
 - **U0 delivered:** pnpm monorepo (`backend`, `web`, `packages/contracts`, `iac`) with the pinned
   toolchain — **TypeScript 7 `7.0.2` (`tsc`)**, **SWC** (emit + `@swc/jest`), **Effect `3.22.1`**,
   Biome, **Jest with a 100% coverage gate**, and a **no-try/catch guard**. Walking-skeleton
-  samples prove the stack: `@finance/contracts` (Effect `Schema` `Money`), backend Effect service
+  samples prove the stack: `@nosko/contracts` (Effect `Schema` `Money`), backend Effect service
   with a tagged error + Effect error channel, web React app with the **en/pt i18n** baseline.
   Conventions stubs + `glossary.md` written.
 - **Verification (green):** `pnpm check` (Biome + no-try/catch guard), `pnpm -r typecheck`
@@ -43,7 +43,7 @@
 ## Locked decisions (from requirements-questions.md + chat)
 
 - **Lifecycle:** Large / full inception. (Q1)
-- **Name:** `finance-app`. (Q2)
+- **Name:** `nosko`. (Q2)
 - **Delivery:** phased — core cycle/budget loop + fixed bills first, then evaluations, savings,
   resumo. (Q3)
 - **Ingestion:** file upload + per-bank parsers (ING/Revolut/Amex/Nubank/C6), dedupe + confirm,

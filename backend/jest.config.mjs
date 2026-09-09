@@ -4,7 +4,7 @@ export default {
     "^.+\\.tsx?$": ["@swc/jest"],
   },
   moduleNameMapper: {
-    "^@finance/contracts$": "<rootDir>/../packages/contracts/src/index.ts",
+    "^@nosko/contracts$": "<rootDir>/../packages/contracts/src/index.ts",
   },
   coverageProvider: "v8",
   collectCoverage: true,
