@@ -326,14 +326,16 @@ JavaScript. The web client does not store or attach a token; it only ever calls 
 - **Refresh token** (opaque, 30 day TTL): set the same way as `nosko_rt`, but scoped to
   `path=/api/http/auth` — the only endpoints that ever need to read it (`refresh`, `logout`,
   `revokeSession`). Narrower path means it is never sent alongside ordinary RPC calls.
-- **Why session-mutating auth endpoints (`login`, `mfaVerify`, `refresh`, `logout`,
-  `revokeSession`) live in the `auth` `HttpApi` group, not `@effect/rpc`:** `@effect/platform`
-  ships a matching primitive, `HttpApiSecurity.apiKey({ in: "cookie" })` +
-  `HttpApiBuilder.securitySetCookie`, purpose-built for reading/writing an httpOnly session
-  cookie from a typed handler. Every other use-case in `auth` (signup, verify, resend,
-  passwordReset) and all of `household` stay on `@effect/rpc` as usual, authenticated by reading
-  the same `nosko_at` cookie in `RpcMiddleware` (which only needs read access to `headers`).
-  Logout/revoke clear a cookie by setting `Max-Age=0`.
+- **Why the 4 cookie-writing auth endpoints (`login`, `mfaVerify`, `refresh`, `logout`) live in
+  the `auth` `HttpApi` group, not `@effect/rpc`:** `@effect/platform` ships a matching primitive,
+  `HttpApiSecurity.apiKey({ in: "cookie" })` + `HttpApiBuilder.securitySetCookie`, purpose-built
+  for reading/writing an httpOnly session cookie from a typed handler. `login`/`mfaVerify`/
+  `refresh` set `nosko_at` (+ `nosko_rt` for `login`/`mfaVerify`); `logout` clears both
+  (`Max-Age=0`). Every other use-case in `auth` (signup, verify, resend, passwordReset,
+  listSessions, revokeSession, revokeAllSessions) and all of `household` stay on `@effect/rpc` as
+  usual — they only ever *read* the session, which `RpcMiddleware` does from the `Cookie` header
+  it already receives. Revoking a session (including the caller's own current one) still works
+  without touching the cookie: the next request simply fails auth once the session row is gone.
 - **CSRF:** same-origin only (CloudFront proxies `/api/*` to the same distribution as the SPA, so
   there is no cross-origin case to support) plus `SameSite=Strict` means the cookie is never sent
   on a cross-site request, and every mutating call is JSON (`Content-Type: application/json`),
