@@ -19,3 +19,13 @@ export const NewUser = Schema.Struct({
   preferredLocale: Schema.String,
 })
 export type NewUser = typeof NewUser.Type
+
+export const UserCredentials = Schema.Struct({
+  id: Schema.UUID,
+  email: Schema.String,
+  passwordHash: Schema.String,
+  emailVerified: Schema.Boolean,
+  mfaEnabled: Schema.Boolean,
+  mfaSecret: Schema.NullOr(Schema.String),
+})
+export type UserCredentials = typeof UserCredentials.Type

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "@jest/globals"
 import { DateTime, Effect, Schema } from "effect"
-import { NewUser, User } from "./User"
+import { NewUser, User, UserCredentials } from "./User"
 
 describe("User", () => {
   it("decodes a database row, stripping sensitive columns", async () => {
@@ -53,5 +53,22 @@ describe("NewUser", () => {
       }),
     )
     expect(decoded.email).toBe("gabriele@example.com")
+  })
+})
+
+describe("UserCredentials", () => {
+  it("decodes the auth-only projection, keeping the password hash", async () => {
+    const decoded = await Effect.runPromise(
+      Schema.decodeUnknown(UserCredentials)({
+        id: "8c9e6679-7425-40de-944b-e07fc1f90ae7",
+        email: "marcelo@example.com",
+        passwordHash: "argon2id$...",
+        emailVerified: true,
+        mfaEnabled: true,
+        mfaSecret: "base32secret",
+      }),
+    )
+    expect(decoded.passwordHash).toBe("argon2id$...")
+    expect(decoded.mfaSecret).toBe("base32secret")
   })
 })
