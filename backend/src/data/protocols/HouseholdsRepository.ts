@@ -12,6 +12,10 @@ export class HouseholdsRepository extends Context.Tag("HouseholdsRepository")<
   {
     readonly create: (input: NewHousehold) => Effect.Effect<Household, SqlError>
     readonly findById: (id: string) => Effect.Effect<Option.Option<Household>, SqlError>
+    readonly update: (
+      id: string,
+      input: { readonly name: string; readonly baseCurrency: string },
+    ) => Effect.Effect<Household, SqlError>
     readonly addMember: (input: {
       readonly householdId: string
       readonly userId: string

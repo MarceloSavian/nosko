@@ -66,6 +66,25 @@ describe("HouseholdsRepositoryLive", () => {
     expect(queries[0]?.sql).toBe('SELECT * FROM "households" WHERE id = $1')
   })
 
+  it("updates a household's name and base currency", async () => {
+    const { layer, queries } = makeTestSqlClient(() => [
+      { ...householdRow, name: "Casa Nova", base_currency: "BRL" },
+    ])
+
+    const decoded = await Effect.runPromise(
+      Effect.gen(function* () {
+        const repo = yield* HouseholdsRepository
+        return yield* repo.update(householdRow.id, { name: "Casa Nova", baseCurrency: "BRL" })
+      }).pipe(Effect.provide(HouseholdsRepositoryLive), Effect.provide(layer)),
+    )
+
+    expect(decoded.name).toBe("Casa Nova")
+    expect(queries[0]?.sql).toBe(
+      'UPDATE "households" SET "name" = $1, "base_currency" = $2, "updated_at" = $3 WHERE id = $4 RETURNING *',
+    )
+    expect(queries[0]?.params?.[3]).toBe(householdRow.id)
+  })
+
   it("returns none when no household matches the id", async () => {
     const { layer } = makeTestSqlClient(() => [])
 

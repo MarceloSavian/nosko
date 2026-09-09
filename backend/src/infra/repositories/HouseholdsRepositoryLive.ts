@@ -43,6 +43,12 @@ export const HouseholdsRepositoryLive = Layer.effect(
               : decodeHousehold(rows[0]).pipe(Effect.map(Option.some)),
           ),
         ),
+      update: (id, input) =>
+        sql`UPDATE ${sql("households")} SET ${sql.update({
+          name: input.name,
+          baseCurrency: input.baseCurrency,
+          updatedAt: new Date(),
+        })} WHERE id = ${id} RETURNING *`.pipe(Effect.flatMap((rows) => decodeHousehold(rows[0]))),
       addMember: (input) =>
         sql`INSERT INTO ${sql("householdMembers")} ${sql.insert({
           householdId: input.householdId,

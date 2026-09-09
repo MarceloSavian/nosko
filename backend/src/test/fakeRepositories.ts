@@ -182,6 +182,13 @@ export const makeFakeHouseholdsRepository = (
       return Effect.succeed(record)
     },
     findById: (id) => Effect.succeed(Option.fromNullable(households.get(id))),
+    update: (id, input) => {
+      const existing = households.get(id)
+      if (!existing) return Effect.die(new Error(`household ${id} not found`))
+      const updated = { ...existing, name: input.name, baseCurrency: input.baseCurrency }
+      households.set(id, updated)
+      return Effect.succeed(updated)
+    },
     addMember: (input) => {
       const existing = members.filter((m) => m.householdId === input.householdId)
       if (existing.length >= 2) {
