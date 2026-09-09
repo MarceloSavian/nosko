@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-tertiary-fixed-variant":"#92002a","on-primary":"#ffffff","on-primary-fixed":"#002114","surface-container-highest":"#dae2fd","primary":"#006948","primary-container":"#00855d","tertiary-container":"#dc2c4f","surface-variant":"#dae2fd","surface":"#faf8ff","inverse-primary":"#68dba9","surface-container":"#eaedff","on-primary-fixed-variant":"#005137","surface-container-lowest":"#ffffff","surface-container-low":"#f2f3ff","on-error-container":"#93000a","tertiary":"#b90538","on-tertiary-container":"#fffbff","on-secondary-container":"#fffbff","on-surface-variant":"#3d4a42","on-primary-container":"#f5fff7","tertiary-fixed":"#ffdadb","primary-fixed":"#85f8c4","on-secondary-fixed":"#0f0069","on-surface":"#131b2e","secondary-fixed":"#e2dfff","surface-tint":"#006c4a","on-background":"#131b2e","on-tertiary":"#ffffff","on-secondary-fixed-variant":"#3323cc","error":"#ba1a1a","inverse-on-surface":"#eef0ff","on-tertiary-fixed":"#40000d","secondary-fixed-dim":"#c3c0ff","surface-dim":"#d2d9f4","surface-container-high":"#e2e7ff","outline":"#6d7a72","surface-bright":"#faf8ff","on-secondary":"#ffffff","inverse-surface":"#283044","background":"#faf8ff","error-container":"#ffdad6","on-error":"#ffffff","secondary-container":"#645efb","tertiary-fixed-dim":"#ffb2b7","secondary":"#4b41e1","primary-fixed-dim":"#68dba9","outline-variant":"#bccac0"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"gutter-lg":"1.5rem","gutter-2xl":"3rem","gutter-xl":"2rem","margin-desktop":"2.5rem","gutter-sm":"0.5rem","gutter-md":"1rem","gutter-xs":"0.25rem","margin-mobile":"1rem","margin-tablet":"1.5rem"},"fontFamily":{"headline-sm":["Inter"],"tabular-amount":["Inter"],"headline-xl-mobile":["Inter"],"headline-xl":["Inter"],"body-md":["Inter"],"body-lg":["Inter"],"metric-display":["Inter"],"label-md":["Inter"],"label-sm":["Inter"],"metric-display-mobile":["Inter"],"headline-lg":["Inter"]},"fontSize":{"headline-sm":["1.125rem",{"lineHeight":"1.5rem","letterSpacing":"-0.01em","fontWeight":"600"}],"tabular-amount":["0.875rem",{"lineHeight":"1.25rem","fontWeight":"500"}],"headline-xl-mobile":["1.75rem",{"lineHeight":"2.25rem","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-xl":["2.25rem",{"lineHeight":"2.75rem","letterSpacing":"-0.025em","fontWeight":"700"}],"body-md":["0.875rem",{"lineHeight":"1.25rem","fontWeight":"400"}],"body-lg":["1rem",{"lineHeight":"1.5rem","fontWeight":"400"}],"metric-display":["2rem",{"lineHeight":"2.25rem","letterSpacing":"-0.03em","fontWeight":"600"}],"label-md":["0.875rem",{"lineHeight":"1.25rem","fontWeight":"500"}],"label-sm":["0.75rem",{"lineHeight":"1rem","letterSpacing":"0.025em","fontWeight":"600"}],"metric-display-mobile":["1.5rem",{"lineHeight":"1.75rem","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-lg":["1.5rem",{"lineHeight":"2rem","letterSpacing":"-0.02em","fontWeight":"600"}]}}}}</script></head><body class="bg-surface text-on-surface"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/90 backdrop-blur-xl border-b border-surface-container-highest/60"><div class="h-16 w-full px-margin-mobile md:px-margin-tablet lg:px-margin-desktop flex items-center justify-between"><div class="flex items-center gap-gutter-lg"><div class="flex items-center gap-gutter-sm"><img alt="Brand logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U6k6ArXjG8j2ORv0amT-fGqEcrqlZcT6ym49eT7zBKMP980HxJNN40cxgR016dhhxt4TSv0WzqfYLe4UCTXG1nLiw-spi-4YaISo_dsGWZmSxSMY00-dXx-EkH2uc2FwdHXKldm_Q8gjq61wa4R4NPvXKFx2m9PUbnLHcBvz5oyjd6ZVEXjGiZGWnsWdcBxdGzIr_z_m9o98cyBThxRoCsF8ZbKdxxWY71xnsNRKQo7Yqo4CWBhjKqNSQ"/><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface">nosko</span></div><div class="hidden md:flex items-center gap-gutter-xs text-on-surface-variant text-label-sm font-label-sm"><span class="text-on-surface">Painel</span><span class="material-symbols-outlined text-[14px]">chevron_right</span><span class="text-primary font-medium">Configurações</span></div></div><div class="flex items-center gap-gutter-sm"><div class="flex items-center bg-surface-container-low p-0.5 rounded-full"><button class="flex items-center gap-gutter-xs px-gutter-sm py-gutter-xs rounded-full bg-surface shadow-sm text-primary font-label-sm text-label-sm transition-all" type="button"><span class="flex -space-x-1.5"><span class="w-4 h-4 rounded-full bg-primary text-on-primary text-[9px] flex items-center justify-center font-bold">C</span><span class="w-4 h-4 rounded-full bg-primary-container text-on-primary-container text-[9px] flex items-center justify-center font-bold">A</span></span><span>Casa</span></button><button class="flex items-center gap-gutter-xs px-gutter-sm py-gutter-xs rounded-full text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all" type="button"><span class="material-symbols-outlined text-[13px] text-secondary">lock</span><span>Pessoal</span></button></div><button aria-label="Alternar tema" class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">light_mode</span></button><div class="flex items-center gap-gutter-xs pl-gutter-xs"><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary font-label-sm text-label-sm font-semibold">NC</div><div class="hidden lg:flex flex-col text-left leading-tight"><span class="font-label-sm text-label-sm text-on-surface">Nosso Lar</span><span class="text-[11px] text-on-surface-variant">Plano Conjunto</span></div></div></div></div></header><div class="flex"><aside class="fixed top-16 left-0 bottom-0 w-64 bg-surface-container-lowest border-r border-surface-container-highest/60 flex flex-col justify-between py-gutter-lg px-gutter-md z-40 hidden md:flex"><div class="space-y-gutter-lg"><div><div class="px-gutter-sm pb-gutter-xs text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider">Finanças</div><nav class="space-y-1" data-active-classes="bg-surface-container-high text-on-surface font-semibold"><a class="flex items-center px-gutter-sm py-gutter-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label-md text-label-md transition-colors" data-path="dashboard" href="#">Visão Geral</a><a class="flex items-center px-gutter-sm py-gutter-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label-md text-label-md transition-colors" data-path="despesas" href="#">Despesas Conjuntas</a><a class="flex items-center px-gutter-sm py-gutter-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label-md text-label-md transition-colors" data-path="orcamentos" href="#">Orçamentos</a><a class="flex items-center px-gutter-sm py-gutter-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label-md text-label-md transition-colors" data-path="pessoal" href="#">Minha Carteira</a></nav></div><div><div class="px-gutter-sm pb-gutter-xs text-[11px] font-semibold text-on-surface-variant uppercase tracking-wider">Sistema</div><nav class="space-y-1" data-active-classes="bg-surface-container-high text-on-surface font-semibold"><a aria-current="page" class="flex items-center px-gutter-sm py-gutter-xs rounded-lg transition-colors bg-surface-container-high text-on-surface font-semibold" data-path="configuracoes" href="#">Configurações</a><a class="flex items-center px-gutter-sm py-gutter-xs rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface font-label-md text-label-md transition-colors" data-path="seguranca" href="#">Privacidade & Chaves</a></nav></div></div><div class="p-gutter-sm rounded-xl bg-surface-container-low flex items-center justify-between"><div class="flex items-center gap-gutter-xs"><span class="material-symbols-outlined text-[16px] text-primary">family_restroom</span><span class="font-label-sm text-label-sm text-on-surface">Modo Casa</span></div><span class="w-2 h-2 rounded-full bg-primary"></span></div></aside><main class="w-full pt-16 md:pl-64 min-h-screen bg-surface relative"><div class="flex flex-col w-full">
+<!-- Toast Floating Notification -->
+<div class="sticky top-20 z-30 w-full px-margin-mobile md:px-margin-tablet lg:px-margin-desktop flex justify-end pointer-events-none mb-gutter-sm">
+<div class="pointer-events-auto inline-flex items-center gap-gutter-xs px-gutter-md py-gutter-xs rounded-full bg-surface-container-lowest shadow-md text-on-surface text-label-sm font-label-sm animate-fade-in transition-all">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="text-primary font-bold">✓</span>
+<span>Alterações salvas automaticamente às 14:32</span>
+</div>
+</div>
+<div class="w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop pb-gutter-2xl">
+<!-- Page Header -->
+<div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-gutter-md pb-gutter-xl">
+<div class="space-y-gutter-xs">
+<div class="flex items-center gap-gutter-xs text-primary font-label-sm text-label-sm uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+<span>Configurações do Casal & Cofre</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface">Configurações & Preferências</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-3xl">
+          Gerencie as configurações da sua Casa, compartilhamento seguro de contas, parâmetros fiscais e privacidade criptográfica.
+        </p>
+</div>
+<div class="flex items-center gap-gutter-sm self-start lg:self-auto shrink-0">
+<button class="px-gutter-md py-gutter-xs rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-label-md font-label-md transition-colors shadow-sm" type="button">
+          Desfazer mudanças
+        </button>
+<button class="flex items-center gap-gutter-xs px-gutter-lg py-gutter-xs rounded-lg bg-primary hover:bg-primary-container text-on-primary text-label-md font-label-md transition-all shadow-md" type="button">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+<span>Salvar alterações</span>
+</button>
+</div>
+</div>
+<!-- Layout Grid: Anchor Sidebar + Content Flow -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-xl items-start">
+<!-- Anchor Navigation (Sticky Desktop) -->
+<nav aria-label="Navegação de configurações" class="hidden lg:block lg:col-span-3 sticky top-24 space-y-gutter-xs p-gutter-sm rounded-xl bg-surface-container-lowest shadow-sm">
+<div class="px-gutter-sm py-gutter-xs text-label-sm font-label-sm text-on-surface-variant uppercase tracking-wider">
+          Índice da Página
+        </div>
+<a class="flex items-center gap-gutter-sm px-gutter-sm py-gutter-xs rounded-lg text-primary bg-surface-container-high font-label-md text-label-md transition-colors" href="#casa">
+<span class="material-symbols-outlined text-[18px]">cottage</span>
+<span>1. Casa (Espaço Lar)</span>
+</a>
+<a class="flex items-center gap-gutter-sm px-gutter-sm py-gutter-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-label-md text-label-md transition-colors" href="#compartilhamento">
+<span class="material-symbols-outlined text-[18px]">sync_alt</span>
+<span>2. Contas & Visibilidade</span>
+</a>
+<a class="flex items-center gap-gutter-sm px-gutter-sm py-gutter-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-label-md text-label-md transition-colors" href="#membros">
+<span class="material-symbols-outlined text-[18px]">group</span>
+<span>3. Membros da Casa</span>
+</a>
+<a class="flex items-center gap-gutter-sm px-gutter-sm py-gutter-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-label-md text-label-md transition-colors" href="#localizacao">
+<span class="material-symbols-outlined text-[18px]">translate</span>
+<span>4. Idioma & Região</span>
+</a>
+<a class="flex items-center gap-gutter-sm px-gutter-sm py-gutter-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-label-md text-label-md transition-colors" href="#categorias">
+<span class="material-symbols-outlined text-[18px]">category</span>
+<span>5. Categorias & Tetos</span>
+</a>
+<a class="flex items-center gap-gutter-sm px-gutter-sm py-gutter-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-label-md text-label-md transition-colors" href="#premissas">
+<span class="material-symbols-outlined text-[18px]">analytics</span>
+<span>6. Parâmetros Fiscais (NL)</span>
+</a>
+<a class="flex items-center gap-gutter-sm px-gutter-sm py-gutter-xs rounded-lg text-secondary hover:text-secondary-container hover:bg-secondary-fixed/40 font-label-md text-label-md transition-colors" href="#privacidade">
+<span class="material-symbols-outlined text-[18px]">verified_user</span>
+<span>7. Privacidade do Cofre</span>
+</a>
+<a class="flex items-center gap-gutter-sm px-gutter-sm py-gutter-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-label-md text-label-md transition-colors" href="#seguranca">
+<span class="material-symbols-outlined text-[18px]">shield</span>
+<span>8. Segurança & 2FA</span>
+</a>
+<a class="flex items-center gap-gutter-sm px-gutter-sm py-gutter-xs rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low font-label-md text-label-md transition-colors" href="#dados">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>9. Exportação & Backup</span>
+</a>
+<div class="mt-gutter-md p-gutter-sm rounded-lg bg-surface-container-low flex flex-col gap-gutter-xs">
+<div class="flex items-center gap-gutter-xs text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">lock</span>
+<span>Criptografia E2EE Ativa</span>
+</div>
+<span class="text-[11px] text-on-surface-variant leading-tight">Chaves privadas geradas via browser. Nenhuma chave transita em texto puro.</span>
+</div>
+</nav>
+<!-- Main Config Panels -->
+<div class="col-span-1 lg:col-span-9 space-y-gutter-xl">
+<!-- SECTION 1: Casa (Household Settings) -->
+<section class="rounded-xl bg-surface-container-lowest p-gutter-lg shadow-sm space-y-gutter-lg scroll-mt-24" id="casa">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-sm pb-gutter-sm bg-surface-container-low/40 -mx-gutter-lg -mt-gutter-lg p-gutter-lg rounded-t-xl">
+<div class="flex items-center gap-gutter-sm">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center text-primary font-headline-sm">
+<span class="material-symbols-outlined text-[24px]">cottage</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">1. Configurações da Casa</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Preferências financeiras e parâmetros contábeis do lar compartilhado.</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-gutter-xs px-gutter-sm py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm self-start sm:self-auto">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+              Espaço Compartilhado
+            </span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter-lg">
+<!-- Nome da Casa -->
+<div class="space-y-gutter-xs">
+<label class="block font-label-sm text-label-sm text-on-surface font-semibold" for="house-name">Nome do Espaço</label>
+<div class="relative flex items-center">
+<input class="w-full px-gutter-md py-gutter-xs rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest focus:shadow-sm" id="house-name" type="text" value="Casa • Marcelo & Gabriele"/>
+<button aria-label="Editar nome" class="absolute right-3 text-on-surface-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+</button>
+</div>
+<p class="font-body-md text-[12px] text-on-surface-variant">Identificador exibido no topo e notificações do casal.</p>
+</div>
+<!-- Moeda Base -->
+<div class="space-y-gutter-xs">
+<label class="block font-label-sm text-label-sm text-on-surface font-semibold">Moeda Base Contábil</label>
+<div class="grid grid-cols-2 gap-gutter-xs bg-surface-container-low p-1 rounded-xl">
+<button class="flex items-center justify-center gap-gutter-xs py-gutter-xs px-gutter-sm rounded-lg bg-surface-container-lowest text-primary font-label-md text-label-md shadow-sm" type="button">
+<span class="font-bold">EUR €</span>
+<span class="text-[11px] text-on-surface-variant">(Principal)</span>
+</button>
+<button class="flex items-center justify-center gap-gutter-xs py-gutter-xs px-gutter-sm rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md" type="button">
+<span>BRL R$</span>
+<span class="text-[11px] text-on-surface-variant">(Secundária)</span>
+</button>
+</div>
+<p class="font-body-md text-[12px] text-on-surface-variant">Todas as despesas são unificadas nessa moeda usando câmbio oficial diário.</p>
+</div>
+<!-- Âncora Contábil -->
+<div class="space-y-gutter-xs">
+<label class="block font-label-sm text-label-sm text-on-surface font-semibold" for="cycle-anchor">Dia de Início do Ciclo (Âncora Mensal)</label>
+<div class="flex items-center gap-gutter-sm">
+<select class="w-full px-gutter-md py-gutter-xs rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="cycle-anchor">
+<option selected="">Dia 23 de cada mês (Dia do Salário)</option>
+<option>Dia 01 de cada mês (Calendário civil)</option>
+<option>Dia 15 de cada mês (Meio de mês)</option>
+<option>Dia 28 de cada mês</option>
+</select>
+</div>
+<p class="font-body-md text-[12px] text-on-surface-variant">Os ciclos contábeis fecham no dia 22 do mês seguinte, sincronizando com os holerites.</p>
+</div>
+<!-- Reserva Padrão de Emergência -->
+<div class="space-y-gutter-xs">
+<label class="block font-label-sm text-label-sm text-on-surface font-semibold" for="reserve-input">Reserva de Emergência da Casa</label>
+<div class="relative flex items-center">
+<span class="absolute left-3 font-tabular-amount text-tabular-amount text-on-surface-variant">€</span>
+<input class="w-full pl-8 pr-gutter-md py-gutter-xs rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="reserve-input" type="text" value="100,00"/>
+<span class="absolute right-3 font-label-sm text-label-sm text-on-surface-variant">/ mês</span>
+</div>
+<p class="font-body-md text-[12px] text-on-surface-variant">Aporte automático sugerido no rateio mensal para o colchão compartilhado.</p>
+</div>
+</div>
+<div class="pt-gutter-sm flex items-center justify-between bg-surface-container-low/50 p-gutter-sm rounded-xl">
+<div class="flex items-center gap-gutter-sm">
+<span class="material-symbols-outlined text-primary text-[20px]">bolt</span>
+<span class="font-label-sm text-label-sm text-on-surface">Sincronização em tempo real & Auto-save</span>
+</div>
+<span class="text-[12px] text-primary font-semibold">Ativado</span>
+</div>
+</section>
+<!-- SECTION 2: Compartilhamento de Contas -->
+<section class="rounded-xl bg-surface-container-lowest p-gutter-lg shadow-sm space-y-gutter-lg scroll-mt-24" id="compartilhamento">
+<div class="space-y-gutter-xs">
+<div class="flex items-center gap-gutter-sm">
+<div class="w-10 h-10 rounded-xl bg-secondary-fixed flex items-center justify-center text-secondary font-headline-sm">
+<span class="material-symbols-outlined text-[24px]">sync_alt</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">2. Compartilhamento de Contas & Visibilidade</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Controle exatamente quais contas alimentam a Casa e quais ficam restritas ao seu cofre Pessoal.</p>
+</div>
+</div>
+</div>
+<!-- Warning Banner -->
+<div class="p-gutter-md rounded-xl bg-surface-container-high flex items-start gap-gutter-sm">
+<span class="material-symbols-outlined text-secondary text-[22px] shrink-0 mt-0.5">info</span>
+<div class="space-y-1">
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">Atenção ao isolamento contábil</span>
+<p class="font-body-md text-[13px] text-on-surface-variant leading-relaxed">
+                Ao alterar uma conta para <strong class="text-secondary font-semibold">"Pessoal"</strong>, todos os novos lançamentos não aparecerão no orçamento compartilhado da Casa e nenhuma despesa passada será reprocessada sem aprovação manual.
+              </p>
+</div>
+</div>
+<!-- Accounts Toggle List -->
+<div class="space-y-gutter-sm">
+<!-- Account 1: ING Betaalrekening -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-gutter-md hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-gutter-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-lowest shadow-sm flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[28px]">account_balance</span>
+</div>
+<div>
+<div class="flex items-center gap-gutter-xs">
+<span class="font-label-md text-label-md text-on-surface font-bold">ING Betaalrekening</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-high text-on-surface-variant">EUR</span>
+</div>
+<div class="flex items-center gap-gutter-sm text-body-md text-[13px] text-on-surface-variant font-tabular-amount">
+<span>NL41 INGB •••• 4821</span>
+<span>•</span>
+<span class="text-on-surface font-medium">Saldo: € 3.842,50</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-gutter-sm">
+<span class="px-gutter-sm py-0.5 rounded-full text-label-sm font-label-sm bg-primary text-on-primary shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">group</span>
+                  Compartilhada (Casa)
+                </span>
+<button aria-label="Alternar visibilidade da conta ING" class="w-12 h-6 rounded-full bg-primary p-0.5 flex items-center justify-end transition-colors" type="button">
+<span class="w-5 h-5 rounded-full bg-surface-container-lowest shadow-sm"></span>
+</button>
+</div>
+</div>
+<!-- Account 2: Nubank Conta Conjunta -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-gutter-md hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-gutter-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-lowest shadow-sm flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[28px]">credit_card</span>
+</div>
+<div>
+<div class="flex items-center gap-gutter-xs">
+<span class="font-label-md text-label-md text-on-surface font-bold">Nubank Conta Conjunta</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-high text-on-surface-variant">BRL</span>
+</div>
+<div class="flex items-center gap-gutter-sm text-body-md text-[13px] text-on-surface-variant font-tabular-amount">
+<span>Agência 0001 •••• 1184</span>
+<span>•</span>
+<span class="text-on-surface font-medium">Saldo: R$ 8.450,00</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-gutter-sm">
+<span class="px-gutter-sm py-0.5 rounded-full text-label-sm font-label-sm bg-primary text-on-primary shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">group</span>
+                  Compartilhada (Casa)
+                </span>
+<button aria-label="Alternar visibilidade da conta Nubank" class="w-12 h-6 rounded-full bg-primary p-0.5 flex items-center justify-end transition-colors" type="button">
+<span class="w-5 h-5 rounded-full bg-surface-container-lowest shadow-sm"></span>
+</button>
+</div>
+</div>
+<!-- Account 3: Millennium Ordenado -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-gutter-md hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-gutter-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-lowest shadow-sm flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[28px]">savings</span>
+</div>
+<div>
+<div class="flex items-center gap-gutter-xs">
+<span class="font-label-md text-label-md text-on-surface font-bold">Millennium Ordenado</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-surface-container-high text-on-surface-variant">EUR</span>
+</div>
+<div class="flex items-center gap-gutter-sm text-body-md text-[13px] text-on-surface-variant font-tabular-amount">
+<span>PT50 BCP •••• 9104</span>
+<span>•</span>
+<span class="text-on-surface font-medium">Saldo: € 1.920,00</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-gutter-sm">
+<span class="px-gutter-sm py-0.5 rounded-full text-label-sm font-label-sm bg-primary text-on-primary shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">group</span>
+                  Compartilhada (Casa)
+                </span>
+<button aria-label="Alternar visibilidade Millennium" class="w-12 h-6 rounded-full bg-primary p-0.5 flex items-center justify-end transition-colors" type="button">
+<span class="w-5 h-5 rounded-full bg-surface-container-lowest shadow-sm"></span>
+</button>
+</div>
+</div>
+<!-- Account 4: Revolut Principal (Private) -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-gutter-md hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-gutter-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-lowest shadow-sm flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-[28px]">lock</span>
+</div>
+<div>
+<div class="flex items-center gap-gutter-xs">
+<span class="font-label-md text-label-md text-on-surface font-bold">Revolut Pessoal</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-secondary-fixed text-on-secondary-fixed">Privada</span>
+</div>
+<div class="flex items-center gap-gutter-sm text-body-md text-[13px] text-on-surface-variant font-tabular-amount">
+<span>LT29 REVO •••• 9042</span>
+<span>•</span>
+<span class="text-on-surface font-medium">Saldo: € 4.120,40</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-gutter-sm">
+<span class="px-gutter-sm py-0.5 rounded-full text-label-sm font-label-sm bg-secondary text-on-secondary shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+                  Pessoal (Só Você Vê)
+                </span>
+<button aria-label="Alternar visibilidade Revolut" class="w-12 h-6 rounded-full bg-secondary p-0.5 flex items-center justify-start transition-colors" type="button">
+<span class="w-5 h-5 rounded-full bg-surface-container-lowest shadow-sm"></span>
+</button>
+</div>
+</div>
+<!-- Account 5: Amex Gold Card (Private) -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-gutter-md hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-gutter-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-lowest shadow-sm flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-[28px]">payments</span>
+</div>
+<div>
+<div class="flex items-center gap-gutter-xs">
+<span class="font-label-md text-label-md text-on-surface font-bold">Amex Gold Flying Blue</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-secondary-fixed text-on-secondary-fixed">Privada</span>
+</div>
+<div class="flex items-center gap-gutter-sm text-body-md text-[13px] text-on-surface-variant font-tabular-amount">
+<span>Cartão Final •••• 4159</span>
+<span>•</span>
+<span class="text-on-surface font-medium">Fatura atual: € 340,12</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-gutter-sm">
+<span class="px-gutter-sm py-0.5 rounded-full text-label-sm font-label-sm bg-secondary text-on-secondary shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+                  Pessoal (Só Você Vê)
+                </span>
+<button aria-label="Alternar visibilidade Amex" class="w-12 h-6 rounded-full bg-secondary p-0.5 flex items-center justify-start transition-colors" type="button">
+<span class="w-5 h-5 rounded-full bg-surface-container-lowest shadow-sm"></span>
+</button>
+</div>
+</div>
+<!-- Account 6: C6 CDB Investimentos (Private) -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex flex-col md:flex-row md:items-center justify-between gap-gutter-md hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-gutter-md">
+<div class="w-12 h-12 rounded-xl bg-surface-container-lowest shadow-sm flex items-center justify-center text-secondary shrink-0">
+<span class="material-symbols-outlined text-[28px]">trending_up</span>
+</div>
+<div>
+<div class="flex items-center gap-gutter-xs">
+<span class="font-label-md text-label-md text-on-surface font-bold">C6 CDB Liquidez Diária</span>
+<span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-secondary-fixed text-on-secondary-fixed">Privada</span>
+</div>
+<div class="flex items-center gap-gutter-sm text-body-md text-[13px] text-on-surface-variant font-tabular-amount">
+<span>Investimento •••• 5521</span>
+<span>•</span>
+<span class="text-on-surface font-medium">Posição: R$ 42.000,00</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-gutter-sm">
+<span class="px-gutter-sm py-0.5 rounded-full text-label-sm font-label-sm bg-secondary text-on-secondary shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+                  Pessoal (Só Você Vê)
+                </span>
+<button aria-label="Alternar visibilidade C6 CDB" class="w-12 h-6 rounded-full bg-secondary p-0.5 flex items-center justify-start transition-colors" type="button">
+<span class="w-5 h-5 rounded-full bg-surface-container-lowest shadow-sm"></span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3: Membros da Casa -->
+<section class="rounded-xl bg-surface-container-lowest p-gutter-lg shadow-sm space-y-gutter-lg scroll-mt-24" id="membros">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-sm">
+<div class="flex items-center gap-gutter-sm">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary font-headline-sm">
+<span class="material-symbols-outlined text-[24px]">group</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">3. Membros da Casa</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Pessoas que coabitam e co-gerenciam os orçamentos.</p>
+</div>
+</div>
+<span class="text-[12px] text-on-surface-variant font-medium">2 de 2 vagas utilizadas</span>
+</div>
+<div class="space-y-gutter-md">
+<!-- Marcelo -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-md">
+<div class="flex items-center gap-gutter-md">
+<img alt="Marcelo" class="w-14 h-14 rounded-full object-cover shadow-sm ring-2 ring-primary/20" src="https://lh3.googleusercontent.com/aida/AEtjO1X_4tCWEF-QK6HQL5zzrz8jnB1TjJIo6x7DF1j0Ueb1iYrrg97Xu0lxfSl_QhUE1QWosi1ZSxm_gjN8YODtOgWdloDcF2WQHfkaXnbNl9Z2-zDwHzeYRk8MjBkDrd7S3dneIBNn9HBZynN9BTJkWoCK3-OkqJ4G9HdToXjpeETBO9GAXlloUVANSLm2RPNOsOP4j83TRd4Dq-onA2enmY4sX1CEQEar5wADItIeuHJ1Ec68Oz3FyOd4dyQ"/>
+<div class="space-y-0.5">
+<div class="flex items-center gap-gutter-xs">
+<span class="font-label-md text-label-md text-on-surface font-bold">Marcelo</span>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-[11px]">Proprietário / Titular</span>
+</div>
+<p class="font-body-md text-[13px] text-on-surface-variant">marcelo@nosko.app</p>
+<p class="font-body-md text-[11px] text-on-surface-variant">Membro desde Julho de 2024</p>
+</div>
+</div>
+<div class="text-right sm:self-center">
+<span class="inline-flex items-center gap-1 text-[12px] text-primary font-semibold">
+<span class="material-symbols-outlined text-[16px]">check_circle</span>
+                  Sessão Atual
+                </span>
+</div>
+</div>
+<!-- Gabriele -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-md">
+<div class="flex items-center gap-gutter-md">
+<div class="w-14 h-14 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-headline-sm text-headline-sm font-bold shrink-0">
+                  G
+                </div>
+<div class="space-y-0.5">
+<div class="flex items-center gap-gutter-xs">
+<span class="font-label-md text-label-md text-on-surface font-bold">Gabriele</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface font-label-sm text-[11px]">Membro da Casa</span>
+</div>
+<p class="font-body-md text-[13px] text-on-surface-variant">gabriele@nosko.app</p>
+<p class="font-body-md text-[11px] text-on-surface-variant">Membro desde Agosto de 2024</p>
+</div>
+</div>
+<div class="flex items-center gap-gutter-xs self-start sm:self-center">
+<button class="px-gutter-sm py-gutter-xs rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-sm text-label-sm shadow-sm transition-colors" type="button">
+                  Editar permissões
+                </button>
+<button class="px-gutter-sm py-gutter-xs rounded-lg text-tertiary hover:bg-tertiary-fixed/30 font-label-sm text-label-sm transition-colors" title="Remover Gabriele do espaço compartilhado" type="button">
+                  Remover
+                </button>
+</div>
+</div>
+</div>
+<div class="pt-gutter-xs">
+<button class="w-full py-gutter-md rounded-xl border-2 border-dashed border-outline-variant hover:border-primary text-on-surface-variant hover:text-primary flex items-center justify-center gap-gutter-xs transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">person_add</span>
+<span class="font-label-md text-label-md font-semibold">+ Convidar novo parceiro ou dependente</span>
+</button>
+<p class="text-[12px] text-center text-on-surface-variant mt-2">O plano <strong class="text-on-surface">Casal Pro</strong> permite até 2 membros com cofres independentes interligados.</p>
+</div>
+</section>
+<!-- SECTION 4: Idioma & Região -->
+<section class="rounded-xl bg-surface-container-lowest p-gutter-lg shadow-sm space-y-gutter-lg scroll-mt-24" id="localizacao">
+<div class="flex items-center gap-gutter-sm">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary font-headline-sm">
+<span class="material-symbols-outlined text-[24px]">translate</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">4. Idioma & Região</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Formatação de números monetários, fusos de atualização e idioma.</p>
+</div>
+</div>
+<div class="space-y-gutter-md">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface font-semibold mb-gutter-xs">Idioma da Interface</label>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter-md">
+<div class="p-gutter-md rounded-xl bg-primary-fixed/20 flex items-center justify-between cursor-pointer">
+<div class="flex items-center gap-gutter-sm">
+<span class="text-2xl">🇧🇷</span>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-bold block">Português (Brasil / Portugal)</span>
+<span class="text-[12px] text-primary font-semibold">Ativo para Marcelo</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-primary text-[20px]">check_circle</span>
+</div>
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex items-center justify-between hover:bg-surface-container transition-colors cursor-pointer">
+<div class="flex items-center gap-gutter-sm">
+<span class="text-2xl">🇬🇧</span>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-bold block">English (US / UK)</span>
+<span class="text-[12px] text-on-surface-variant">Switch language</span>
+</div>
+</div>
+<span class="w-5 h-5 rounded-full bg-surface-container-high"></span>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter-lg pt-gutter-xs">
+<div class="space-y-gutter-xs">
+<label class="block font-label-sm text-label-sm text-on-surface font-semibold" for="number-format">Formato de Data e Moeda</label>
+<select class="w-full px-gutter-md py-gutter-xs rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="number-format">
+<option selected="">DD/MM/AAAA (€ 1.250,00 - Europeu / BR)</option>
+<option>MM/DD/YYYY ($ 1,250.00 - Padrão US)</option>
+<option>AAAA-MM-DD (ISO 8601)</option>
+</select>
+</div>
+<div class="space-y-gutter-xs">
+<label class="block font-label-sm text-label-sm text-on-surface font-semibold" for="timezone">Fuso Horário Padrão</label>
+<select class="w-full px-gutter-md py-gutter-xs rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="timezone">
+<option selected="">Europe/Amsterdam (CET / CEST, UTC+1)</option>
+<option>Europe/Lisbon (WET, UTC+0)</option>
+<option>America/Sao_Paulo (BRT, UTC-3)</option>
+</select>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 5: Categorias da Casa -->
+<section class="rounded-xl bg-surface-container-lowest p-gutter-lg shadow-sm space-y-gutter-lg scroll-mt-24" id="categorias">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-sm">
+<div class="flex items-center gap-gutter-sm">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary font-headline-sm">
+<span class="material-symbols-outlined text-[24px]">category</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">5. Categorias da Casa & Tetos Mensais</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Personalize as categorias de gastos compartilhados e seus limites orçamentários.</p>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter-md">
+<!-- Category 1 -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex flex-col justify-between gap-gutter-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-xs">
+<span class="text-xl">🛒</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">Supermercado</span>
+</div>
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+</div>
+<div class="flex items-baseline justify-between pt-gutter-xs font-tabular-amount">
+<span class="text-[12px] text-on-surface-variant">Teto Mensal:</span>
+<span class="text-label-md font-bold text-on-surface">€ 650,00</span>
+</div>
+<button class="text-left text-[12px] text-primary font-semibold hover:underline" type="button">
+                Editar categoria & sub-tags
+              </button>
+</div>
+<!-- Category 2 -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex flex-col justify-between gap-gutter-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-xs">
+<span class="text-xl">🍸</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">Restaurantes & Lazer</span>
+</div>
+<span class="w-3 h-3 rounded-full bg-amber-500"></span>
+</div>
+<div class="flex items-baseline justify-between pt-gutter-xs font-tabular-amount">
+<span class="text-[12px] text-on-surface-variant">Teto Mensal:</span>
+<span class="text-label-md font-bold text-on-surface">€ 400,00</span>
+</div>
+<button class="text-left text-[12px] text-primary font-semibold hover:underline" type="button">
+                Editar categoria & sub-tags
+              </button>
+</div>
+<!-- Category 3 -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex flex-col justify-between gap-gutter-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-xs">
+<span class="text-xl">💡</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">Moradia & Fixas</span>
+</div>
+<span class="w-3 h-3 rounded-full bg-sky-500"></span>
+</div>
+<div class="flex items-baseline justify-between pt-gutter-xs font-tabular-amount">
+<span class="text-[12px] text-on-surface-variant">Teto Mensal:</span>
+<span class="text-label-md font-bold text-on-surface">€ 2.850,00</span>
+</div>
+<button class="text-left text-[12px] text-primary font-semibold hover:underline" type="button">
+                Editar categoria & sub-tags
+              </button>
+</div>
+<!-- Category 4 -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex flex-col justify-between gap-gutter-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-xs">
+<span class="text-xl">🚗</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">Transporte</span>
+</div>
+<span class="w-3 h-3 rounded-full bg-cyan-500"></span>
+</div>
+<div class="flex items-baseline justify-between pt-gutter-xs font-tabular-amount">
+<span class="text-[12px] text-on-surface-variant">Teto Mensal:</span>
+<span class="text-label-md font-bold text-on-surface">€ 150,00</span>
+</div>
+<button class="text-left text-[12px] text-primary font-semibold hover:underline" type="button">
+                Editar categoria & sub-tags
+              </button>
+</div>
+<!-- Category 5 -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex flex-col justify-between gap-gutter-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-xs">
+<span class="text-xl">💊</span>
+<span class="font-label-md text-label-md text-on-surface font-bold">Saúde & Farmácia</span>
+</div>
+<span class="w-3 h-3 rounded-full bg-rose-500"></span>
+</div>
+<div class="flex items-baseline justify-between pt-gutter-xs font-tabular-amount">
+<span class="text-[12px] text-on-surface-variant">Teto Mensal:</span>
+<span class="text-label-md font-bold text-on-surface">€ 120,00</span>
+</div>
+<button class="text-left text-[12px] text-primary font-semibold hover:underline" type="button">
+                Editar categoria & sub-tags
+              </button>
+</div>
+<!-- Add Category -->
+<button class="p-gutter-md rounded-xl border-2 border-dashed border-outline-variant hover:border-primary flex flex-col items-center justify-center gap-gutter-xs text-on-surface-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-[24px]">add_circle</span>
+<span class="font-label-md text-label-md font-semibold">+ Nova Categoria</span>
+<span class="text-[11px]">Personalize cor e ícone</span>
+</button>
+</div>
+</section>
+<!-- SECTION 6: Premissas de Projeção Financeira (NL Fiscal Rules) -->
+<section class="rounded-xl bg-surface-container-lowest p-gutter-lg shadow-sm space-y-gutter-lg scroll-mt-24" id="premissas">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-sm">
+<div class="flex items-center gap-gutter-sm">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary font-headline-sm">
+<span class="material-symbols-outlined text-[24px]">analytics</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">6. Premissas de Projeção & Regras Fiscais (Holanda)</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Parâmetros utilizados no simulador de aposentadoria e independência do Espaço Pessoal.</p>
+</div>
+</div>
+<button class="px-gutter-sm py-gutter-xs rounded-lg text-primary hover:bg-surface-container-low font-label-sm text-label-sm self-start sm:self-auto transition-colors" type="button">
+              Restaurar padrões holandeses
+            </button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter-lg">
+<div class="space-y-gutter-xs">
+<label class="block font-label-sm text-label-sm text-on-surface font-semibold" for="target-reserve">Meta da Reserva de Liquidez Alvo</label>
+<div class="relative flex items-center">
+<span class="absolute left-3 font-tabular-amount text-tabular-amount text-on-surface-variant">€</span>
+<input class="w-full pl-8 pr-gutter-md py-gutter-xs rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="target-reserve" type="text" value="24.000"/>
+</div>
+<p class="text-[12px] text-on-surface-variant">Equivale a ~8 meses de custo fixo da Casa.</p>
+</div>
+<div class="space-y-gutter-xs">
+<label class="block font-label-sm text-label-sm text-on-surface font-semibold" for="etf-yield">Rendimento Pós-Reserva (ETFs Globais / Ações)</label>
+<div class="relative flex items-center">
+<input class="w-full pl-gutter-md pr-12 py-gutter-xs rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="etf-yield" type="text" value="10,0"/>
+<span class="absolute right-3 font-label-sm text-label-sm text-on-surface-variant">% a.a.</span>
+</div>
+<p class="text-[12px] text-on-surface-variant">Média histórica do MSCI World deflacionada.</p>
+</div>
+<div class="space-y-gutter-xs">
+<label class="block font-label-sm text-label-sm text-on-surface font-semibold" for="box3-limit">Teto de Isenção Individual Box 3 (Países Baixos)</label>
+<div class="relative flex items-center">
+<span class="absolute left-3 font-tabular-amount text-tabular-amount text-on-surface-variant">€</span>
+<input class="w-full pl-8 pr-gutter-md py-gutter-xs rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="box3-limit" type="text" value="57.000"/>
+</div>
+<p class="text-[12px] text-on-surface-variant">Parâmetro Belastingdienst 2025 para patrimônio isento de tributação.</p>
+</div>
+<div class="space-y-gutter-xs">
+<label class="block font-label-sm text-label-sm text-on-surface font-semibold" for="box3-rate">Alíquota Efetiva Presumida Box 3</label>
+<div class="relative flex items-center">
+<input class="w-full pl-gutter-md pr-12 py-gutter-xs rounded-xl bg-surface-container-low text-on-surface font-body-md text-body-md focus:outline-none" id="box3-rate" type="text" value="~2,16"/>
+<span class="absolute right-3 font-label-sm text-label-sm text-on-surface-variant">% s/ excedente</span>
+</div>
+<p class="text-[12px] text-on-surface-variant">Incidência fictícia calculada sobre o patrimônio que ultrapassa a isenção.</p>
+</div>
+</div>
+</section>
+<!-- SECTION 7: Privacidade & Isolamento Criptográfico -->
+<section class="rounded-xl bg-surface-container-lowest p-gutter-lg shadow-md space-y-gutter-lg scroll-mt-24" id="privacidade">
+<div class="flex items-center gap-gutter-sm">
+<div class="w-10 h-10 rounded-xl bg-secondary-fixed flex items-center justify-center text-secondary font-headline-sm">
+<span class="material-symbols-outlined text-[24px]">verified_user</span>
+</div>
+<div>
+<div class="flex items-center gap-gutter-xs">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">7. Garantia de Isolamento Total do Cofre Pessoal</h2>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-label-sm text-[11px] font-bold">Client-side AES-256</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Como o nosko protege seus limites individuais e patrimônio privado.</p>
+</div>
+</div>
+<div class="p-gutter-lg rounded-xl bg-surface-container-low space-y-gutter-sm">
+<div class="flex items-center gap-gutter-xs text-secondary font-label-md text-label-md font-bold">
+<span class="material-symbols-outlined text-[20px]">enhanced_encryption</span>
+<span>Arquitetura Zero-Knowledge para Gastos Individuais</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+              No nosko, suas contas pessoais marcadas como privadas, suas assinaturas individuais e seu histórico patrimonial <strong class="text-on-surface">NUNCA</strong> são compartilhados com Gabriele nem trafegam pelo banco de dados da Casa. As chaves de descriptografia residem exclusivamente no seu navegador local via Web Crypto API.
+            </p>
+</div>
+<div class="pt-gutter-xs flex items-center justify-between p-gutter-md rounded-xl bg-surface-container-low">
+<div class="space-y-0.5">
+<span class="font-label-md text-label-md text-on-surface font-bold">Ocultar saldos na tela ao abrir em locais públicos (Privacy Blur)</span>
+<p class="text-[12px] text-on-surface-variant">Aplica desfoque temporário a todos os dígitos até você pousar o cursor sobre o valor.</p>
+</div>
+<button aria-label="Ativar Privacy Blur" class="w-12 h-6 rounded-full bg-secondary p-0.5 flex items-center justify-end transition-colors" type="button">
+<span class="w-5 h-5 rounded-full bg-surface-container-lowest shadow-sm"></span>
+</button>
+</div>
+</section>
+<!-- SECTION 8: Segurança da Conta -->
+<section class="rounded-xl bg-surface-container-lowest p-gutter-lg shadow-sm space-y-gutter-lg scroll-mt-24" id="seguranca">
+<div class="flex items-center gap-gutter-sm">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary font-headline-sm">
+<span class="material-symbols-outlined text-[24px]">shield</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">8. Segurança da Conta</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Credenciais de acesso, dupla autenticação e dispositivos conectados.</p>
+</div>
+</div>
+<div class="space-y-gutter-md">
+<!-- Senha -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-sm">
+<div>
+<span class="font-label-md text-label-md text-on-surface font-bold block">Senha de Acesso</span>
+<span class="text-[12px] text-on-surface-variant">Última alteração efetuada há 45 dias atrás.</span>
+</div>
+<button class="px-gutter-md py-gutter-xs rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-sm text-label-sm shadow-sm transition-colors self-start sm:self-auto" type="button">
+                Atualizar Senha
+              </button>
+</div>
+<!-- 2FA / MFA -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-sm">
+<div>
+<div class="flex items-center gap-gutter-xs">
+<span class="font-label-md text-label-md text-on-surface font-bold">Autenticação em Duas Etapas (2FA / TOTP)</span>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-[11px] font-semibold">Ativado</span>
+</div>
+<span class="text-[12px] text-on-surface-variant">Protegido via aplicativo autenticador (Google Authenticator / 1Password).</span>
+</div>
+<button class="px-gutter-md py-gutter-xs rounded-lg bg-surface-container-lowest text-on-surface hover:bg-surface-container font-label-sm text-label-sm shadow-sm transition-colors self-start sm:self-auto" type="button">
+                Configurar Chaves
+              </button>
+</div>
+<!-- Sessões Ativas -->
+<div class="space-y-gutter-xs pt-gutter-xs">
+<span class="block font-label-sm text-label-sm text-on-surface font-semibold">Sessões Ativas</span>
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-gutter-sm">
+<span class="material-symbols-outlined text-primary text-[24px]">laptop_mac</span>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-bold block">MacBook Pro — Chrome 128 (Amsterdã, NL)</span>
+<span class="text-[12px] text-primary font-semibold">Esta sessão atual</span>
+</div>
+</div>
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
+</div>
+<div class="p-gutter-md rounded-xl bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-gutter-sm">
+<span class="material-symbols-outlined text-on-surface-variant text-[24px]">smartphone</span>
+<div>
+<span class="font-label-md text-label-md text-on-surface font-bold block">iPhone 15 Pro — App nosko (Amsterdã, NL)</span>
+<span class="text-[12px] text-on-surface-variant">Ativo há 12 minutos</span>
+</div>
+</div>
+<button class="text-[12px] text-tertiary hover:underline font-semibold" type="button">Encerrar</button>
+</div>
+<div class="pt-gutter-xs">
+<button class="text-label-sm font-label-sm text-tertiary hover:underline" type="button">
+                  Encerrar todas as outras sessões ativas
+                </button>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 9: Dados & Exportação (Danger Zone included) -->
+<section class="rounded-xl bg-surface-container-lowest p-gutter-lg shadow-sm space-y-gutter-lg scroll-mt-24" id="dados">
+<div class="flex items-center gap-gutter-sm">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary font-headline-sm">
+<span class="material-symbols-outlined text-[24px]">download</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">9. Portabilidade e Backup dos seus Dados</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Exporte os lançamentos para relatórios contábeis externos ou realize backup integral.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-gutter-md">
+<button class="p-gutter-md rounded-xl bg-surface-container-low hover:bg-surface-container text-left space-y-gutter-xs transition-colors" type="button">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary text-[24px]">data_object</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">arrow_forward</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-bold block">Exportar Pacote Completo (JSON)</span>
+<p class="text-[12px] text-on-surface-variant">Inclui metadados de contas, regras de rateio e histórico desde o início.</p>
+</button>
+<button class="p-gutter-md rounded-xl bg-surface-container-low hover:bg-surface-container text-left space-y-gutter-xs transition-colors" type="button">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary text-[24px]">table_view</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">arrow_forward</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface font-bold block">Extratos Conciliados (CSV / Excel)</span>
+<p class="text-[12px] text-on-surface-variant">Planilha tabular com colunas separadas para Casa e despesas Pessoais.</p>
+</button>
+</div>
+<!-- Danger Zone -->
+<div class="p-gutter-md rounded-xl bg-error-container/40 space-y-gutter-sm mt-gutter-xl">
+<div class="flex items-center gap-gutter-xs text-error font-label-md text-label-md font-bold">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+<span>Zona de Perigo</span>
+</div>
+<p class="text-[12px] text-on-surface-variant leading-relaxed">
+              A exclusão da conta apagará imediatamente seu cofre criptográfico pessoal e dissociará seu perfil da Casa de Gabriele. Essa operação não pode ser revertida.
+            </p>
+<div>
+<button class="px-gutter-md py-gutter-xs rounded-lg bg-tertiary text-on-tertiary hover:bg-tertiary-container font-label-sm text-label-sm shadow-sm transition-colors" type="button">
+                Excluir conta e cofre nosko
+              </button>
+</div>
+</div>
+</section>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

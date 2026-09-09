@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-tertiary-fixed-variant":"#92002a","on-primary":"#ffffff","on-primary-fixed":"#002114","surface-container-highest":"#dae2fd","primary":"#006948","primary-container":"#00855d","tertiary-container":"#dc2c4f","surface-variant":"#dae2fd","surface":"#faf8ff","inverse-primary":"#68dba9","surface-container":"#eaedff","on-primary-fixed-variant":"#005137","surface-container-lowest":"#ffffff","surface-container-low":"#f2f3ff","on-error-container":"#93000a","tertiary":"#b90538","on-tertiary-container":"#fffbff","on-secondary-container":"#fffbff","on-surface-variant":"#3d4a42","on-primary-container":"#f5fff7","tertiary-fixed":"#ffdadb","primary-fixed":"#85f8c4","on-secondary-fixed":"#0f0069","on-surface":"#131b2e","secondary-fixed":"#e2dfff","surface-tint":"#006c4a","on-background":"#131b2e","on-tertiary":"#ffffff","on-secondary-fixed-variant":"#3323cc","error":"#ba1a1a","inverse-on-surface":"#eef0ff","on-tertiary-fixed":"#40000d","secondary-fixed-dim":"#c3c0ff","surface-dim":"#d2d9f4","surface-container-high":"#e2e7ff","outline":"#6d7a72","surface-bright":"#faf8ff","on-secondary":"#ffffff","inverse-surface":"#283044","background":"#faf8ff","error-container":"#ffdad6","on-error":"#ffffff","secondary-container":"#645efb","tertiary-fixed-dim":"#ffb2b7","secondary":"#4b41e1","primary-fixed-dim":"#68dba9","outline-variant":"#bccac0"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"gutter-lg":"1.5rem","gutter-2xl":"3rem","gutter-xl":"2rem","margin-desktop":"2.5rem","gutter-sm":"0.5rem","gutter-md":"1rem","gutter-xs":"0.25rem","margin-mobile":"1rem","margin-tablet":"1.5rem"},"fontFamily":{"headline-sm":["Inter"],"tabular-amount":["Inter"],"headline-xl-mobile":["Inter"],"headline-xl":["Inter"],"body-md":["Inter"],"body-lg":["Inter"],"metric-display":["Inter"],"label-md":["Inter"],"label-sm":["Inter"],"metric-display-mobile":["Inter"],"headline-lg":["Inter"]},"fontSize":{"headline-sm":["1.125rem",{"lineHeight":"1.5rem","letterSpacing":"-0.01em","fontWeight":"600"}],"tabular-amount":["0.875rem",{"lineHeight":"1.25rem","fontWeight":"500"}],"headline-xl-mobile":["1.75rem",{"lineHeight":"2.25rem","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-xl":["2.25rem",{"lineHeight":"2.75rem","letterSpacing":"-0.025em","fontWeight":"700"}],"body-md":["0.875rem",{"lineHeight":"1.25rem","fontWeight":"400"}],"body-lg":["1rem",{"lineHeight":"1.5rem","fontWeight":"400"}],"metric-display":["2rem",{"lineHeight":"2.25rem","letterSpacing":"-0.03em","fontWeight":"600"}],"label-md":["0.875rem",{"lineHeight":"1.25rem","fontWeight":"500"}],"label-sm":["0.75rem",{"lineHeight":"1rem","letterSpacing":"0.025em","fontWeight":"600"}],"metric-display-mobile":["1.5rem",{"lineHeight":"1.75rem","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-lg":["1.5rem",{"lineHeight":"2rem","letterSpacing":"-0.02em","fontWeight":"600"}]}}}}</script></head><body class="bg-surface text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop flex items-center justify-between"><div class="flex items-center gap-gutter-sm"><img alt="Brand logo. - Primary color: #059669
+- Font: inter
+- Mode: light
+- Roundness: rounded-md
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U6k6ArXjG8j2ORv0amT-fGqEcrqlZcT6ym49eT7zBKMP980HxJNN40cxgR016dhhxt4TSv0WzqfYLe4UCTXG1nLiw-spi-4YaISo_dsGWZmSxSMY00-dXx-EkH2uc2FwdHXKldm_Q8gjq61wa4R4NPvXKFx2m9PUbnLHcBvz5oyjd6ZVEXjGiZGWnsWdcBxdGzIr_z_m9o98cyBThxRoCsF8ZbKdxxWY71xnsNRKQo7Yqo4CWBhjKqNSQ"/><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface">nosko</span></div><nav class="hidden md:flex items-center gap-gutter-md" data-active-classes="bg-surface-container-high text-on-surface font-label-md text-label-md rounded-full"><a aria-current="page" class="px-gutter-sm py-gutter-xs transition-colors bg-surface-container-high text-on-surface font-label-md text-label-md rounded-full" data-path="inicio" href="#">Início</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface px-gutter-sm py-gutter-xs transition-colors" data-path="manifesto" href="#">Manifesto</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface px-gutter-sm py-gutter-xs transition-colors" data-path="seguranca" href="#">Segurança</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface px-gutter-sm py-gutter-xs transition-colors" data-path="validar-convite" href="#">Validar Convite</a></nav><div class="flex items-center gap-gutter-sm"><div class="hidden sm:flex items-center gap-gutter-xs bg-surface-container-low px-gutter-sm py-gutter-xs rounded-full"><span class="material-symbols-outlined text-[16px] text-primary">lock</span><span class="font-label-sm text-label-sm text-on-surface-variant">Acesso exclusivo por convite</span></div><button aria-label="Mudar idioma" class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="font-label-sm text-label-sm uppercase">PT</span></button><button aria-label="Alternar tema" class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">light_mode</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 flex-1 bg-gradient-to-b from-surface via-surface-container-low to-surface relative"><div class="flex flex-col w-full">
+<!-- Toast Feedback Notificação (Hidden by default) -->
+<div class="fixed top-20 right-6 z-50 transform transition-all duration-300 translate-y-[-20px] opacity-0 pointer-events-none flex items-center gap-gutter-sm bg-surface-container-lowest shadow-xl rounded-xl px-gutter-md py-gutter-sm border-l-4 border-primary" id="toastNotification">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">check_circle</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Copiado com sucesso!</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Texto formatado pronto para enviar no WhatsApp ✨</span>
+</div>
+</div>
+<div class="w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop py-gutter-lg flex flex-col gap-gutter-xl">
+<!-- Top Sub-Navigation Bar & Space Indicator -->
+<div class="w-full flex flex-col md:flex-row items-start md:items-center justify-between gap-gutter-md pb-gutter-md">
+<!-- Breadcrumb & Space Identity -->
+<div class="flex flex-col gap-gutter-xs">
+<div class="flex items-center gap-gutter-xs font-label-sm text-label-sm text-on-surface-variant">
+<span>Finanças</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px]">cottage</span> Espaço Casa
+          </span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface font-medium">Resumo do Ciclo para WhatsApp</span>
+</div>
+<div class="flex items-center gap-gutter-sm mt-1">
+<div class="flex -space-x-2 overflow-hidden items-center">
+<img alt="Marcelo" class="inline-block h-7 w-7 rounded-full ring-2 ring-surface-container-lowest object-cover" data-alt="Portrait photo of a Brazilian man with a friendly smile, clean minimalist lighting, fintech user profile Marcelo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB4urx29R6PCplTKj2HSfjyh-DE5jbblAp1KZ8JDNy8ebnMABqgS-fy8gSGxwUBrAZANEjZn_m96b3DkCbVTGIFiq0T6W2ZbaejoGxh0UxbnJETl10wV3zh2jOzXoOSy4HIfPMup55f9r7jMtqJBbzo8WXJGK-1OohYCpyVNnuQF9hthv3df9ypbQiGOmwm3UoEqW-Gt6f1PrGIUHh4dECja8BlOJvGZF2XBWqjW_3G1FjZDMubLV28"/>
+<img alt="Gabriele" class="inline-block h-7 w-7 rounded-full ring-2 ring-surface-container-lowest object-cover" data-alt="Portrait photo of a Brazilian woman smiling warmly, clean aesthetic portrait Gabriele" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxO9Ot3W-9IYw1C5gHT8pSFGV30j8DnMgvX0pRZAFrrHwzNQDqMDiV2T4vFcXciONUfYpdsCRzfQbVZo9T3jGJB2hlb3LVTyPcLm1oPUlw5lBvO_i5EpVhxtC3-e_s1VEQG0mBJJG0sppq5zEgo6zLX59MJ8QwtGn53ls8W3MY0TrlOPAwFgOPVDKICljsZTn8FMdrFIURXPu_6-WEAapK1Mjz_yuunItZx1xcfItbO_gUCtcStYed"/>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">Marcelo & Gabriele</span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+            Finanças Compartilhadas
+          </span>
+</div>
+</div>
+<!-- Quick Toggles: Period Badge, Currency & Privacy Pill -->
+<div class="flex items-center flex-wrap gap-gutter-sm self-stretch md:self-auto justify-start md:justify-end">
+<!-- Privacy Badge -->
+<div class="flex items-center gap-gutter-xs px-gutter-sm py-1.5 rounded-full bg-surface-container-lowest shadow-sm text-on-surface-variant" title="Apenas transações comuns da casa são sintetizadas aqui.">
+<span class="material-symbols-outlined text-[15px] text-primary">visibility_lock</span>
+<span class="font-label-sm text-label-sm">Exclusivo Despesas da Casa</span>
+</div>
+<!-- Currency Picker -->
+<div class="flex items-center bg-surface-container rounded-lg p-0.5">
+<button class="px-2.5 py-1 rounded font-label-sm text-label-sm bg-surface-container-lowest text-primary shadow-sm" type="button">EUR (€)</button>
+<button class="px-2.5 py-1 rounded font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface" type="button">BRL (R$)</button>
+</div>
+<!-- Ciclo Status Pill -->
+<div class="flex items-center gap-1.5 bg-surface-container-lowest px-3 py-1.5 rounded-full shadow-sm">
+<span class="material-symbols-outlined text-[16px] text-primary">event_upcoming</span>
+<span class="font-tabular-amount text-tabular-amount text-on-surface font-semibold">23 Ago – 22 Set</span>
+<span class="bg-amber-100 text-amber-800 text-[11px] font-semibold px-2 py-0.5 rounded-full">Faltam 12 dias</span>
+</div>
+</div>
+</div>
+<!-- Main Title & Controls Header -->
+<div class="bg-surface-container-lowest rounded-2xl p-gutter-lg shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-gutter-lg">
+<div class="flex flex-col gap-gutter-xs max-w-2xl">
+<div class="inline-flex items-center gap-2">
+<span class="p-1.5 rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-[20px]">share</span>
+</span>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Resumo do Ciclo Compartilhado</h1>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          Gere e envie um resumo descontraído, sem planilhas ou fricção, para você e Gabriele alinharem o ritmo das contas no WhatsApp antes do fechamento.
+        </p>
+</div>
+<!-- Action Button Group -->
+<div class="flex flex-wrap items-center gap-gutter-sm">
+<button class="flex items-center justify-center gap-gutter-xs bg-primary hover:bg-primary-container text-on-primary px-gutter-lg py-2.5 rounded-xl font-label-md text-label-md transition-colors shadow-sm active:scale-95" id="btnCopyMain" onclick="triggerCopyFlow()" type="button">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+<span>Copiar Resumo</span>
+</button>
+<a class="flex items-center justify-center gap-gutter-xs bg-[#25D366] hover:bg-[#20bd5a] text-white px-gutter-md py-2.5 rounded-xl font-label-md text-label-md transition-colors shadow-sm active:scale-95" href="https://api.whatsapp.com/send?text=Carregando..." id="btnSendWhatsApp" target="_blank">
+<svg class="w-4 h-4 fill-current" viewbox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.711 2.598 2.664-.699c.97.529 1.831.815 2.796.815 3.178 0 5.767-2.587 5.767-5.766.001-3.182-2.587-5.767-5.767-5.767zm0 10.378c-.868 0-1.666-.242-2.378-.7l-.17-.11-1.761.462.471-1.719-.115-.183c-.496-.788-.758-1.583-.758-2.361 0-2.544 2.069-4.613 4.613-4.613 2.543 0 4.612 2.069 4.612 4.613 0 2.544-2.069 4.612-4.612 4.612zm5.772-7.886C16.273 7.135 14.237 6 12.031 6c-4.489 0-8.14 3.651-8.14 8.14 0 1.438.375 2.842 1.088 4.076L4 23.235l5.131-1.346c1.196.652 2.54 1.001 3.9 1.001 4.49 0 8.14-3.651 8.14-8.14 0-2.175-.847-4.218-2.368-5.74z"></path></svg>
+<span>Abrir no WhatsApp</span>
+</a>
+<button class="flex items-center justify-center p-2.5 rounded-xl bg-surface-container-low text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-colors" onclick="triggerToastDownload()" title="Exportar como imagem do card" type="button">
+<span class="material-symbols-outlined text-[20px]">download</span>
+</button>
+</div>
+</div>
+<!-- Filter & Tone Customization Ribbon -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-gutter-sm bg-surface-container-low rounded-xl px-gutter-md py-gutter-sm">
+<div class="flex items-center gap-gutter-sm flex-wrap">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Ciclo Contábil:</span>
+<div class="relative">
+<select class="appearance-none bg-surface-container-lowest font-label-md text-label-md text-on-surface py-1.5 pl-3 pr-8 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer" id="cycleSelector" onchange="updateSummaryTone()">
+<option selected="" value="current">23 Ago – 22 Set 2025 (Atual • 12d restantes)</option>
+<option value="prev1">23 Jul – 22 Ago 2025 (Fechado • € 4.120 total)</option>
+<option value="prev2">23 Jun – 22 Jul 2025 (Fechado • € 3.980 total)</option>
+</select>
+<span class="material-symbols-outlined text-[16px] text-on-surface-variant absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Tone Selector Chips -->
+<div class="flex items-center gap-1 bg-surface-container-lowest p-1 rounded-lg">
+<button class="px-3 py-1 rounded font-label-sm text-label-sm bg-primary text-on-primary transition-all" id="toneCasual" onclick="setTone('casual')" type="button">Com Emojis 💬</button>
+<button class="px-3 py-1 rounded font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-all" id="toneDirect" onclick="setTone('direct')" type="button">Direto & Rápido</button>
+<button class="px-3 py-1 rounded font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-all" id="toneFull" onclick="setTone('full')" type="button">Detalhamento Completo</button>
+</div>
+</div>
+<!-- Content Bento Layout: Left = Phone Realistic Mockup | Right = Analytical Deep Dive & Raw Payload -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter-xl items-start">
+<!-- LEFT / CENTER: Smartphone Preview Mockup (Span 6 cols) -->
+<div class="lg:col-span-6 flex flex-col items-center justify-center">
+<!-- Ambient subtle aura glow -->
+<div class="relative w-full max-w-[420px]">
+<div class="absolute -inset-2 bg-gradient-to-r from-primary/10 via-surface-container-high to-primary/5 rounded-[48px] blur-xl opacity-75"></div>
+<!-- Smartphone Hardware Chassis -->
+<div class="relative w-full bg-[#1e293b] p-[10px] rounded-[44px] shadow-2xl">
+<!-- Glass Inner Bezel -->
+<div class="w-full bg-[#0b141a] rounded-[36px] overflow-hidden flex flex-col min-h-[640px] text-slate-100">
+<!-- Phone Status Bar -->
+<div class="w-full px-6 pt-3 pb-2 flex items-center justify-between text-[11px] font-medium text-slate-400">
+<span>09:41</span>
+<!-- Dynamic Island / Notch Pill -->
+<div class="w-20 h-4 bg-black rounded-full flex items-center justify-end px-2">
+<span class="w-2 h-2 rounded-full bg-primary/80 animate-pulse"></span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[13px]">signal_cellular_alt</span>
+<span class="material-symbols-outlined text-[13px]">wifi</span>
+<span class="material-symbols-outlined text-[14px]">battery_full</span>
+</div>
+</div>
+<!-- Chat Header (WhatsApp Styled) -->
+<div class="px-4 py-2.5 bg-[#1f2c34] flex items-center justify-between shadow-md">
+<div class="flex items-center gap-3">
+<div class="relative">
+<div class="w-9 h-9 rounded-full bg-primary/30 flex items-center justify-center text-primary-fixed font-bold text-xs overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Couple avatar thumbnail Marcelo and Gabriele together smiling outdoor selfie" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQ8tC8qhgTLyPwW_D8ixu1Sny9DmPMX-BYW6V0UvCKC78U8Shb6CNQm3vdc5QV7Cs7NCZuRv8eSLtgw3lMspI6Ed1jbkHaKGOB7XSVRb-gaPSEHff4pAl-amGEr-xD8HDz8N77JJserw3saS6qjgXVKHOhoRD_mY-LpULwi2ByUhUjNr8dE389N_ESDgVgMNimNxJLL980Zc1I5OX01BmRt1xpL2QXAzeT336kP0qUBHZvM5Ii1rTS"/>
+</div>
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-[#25D366] border-2 border-[#1f2c34]"></span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-slate-100 text-sm font-semibold tracking-tight">Casa • Marcelo & Gabi 🏡</span>
+<span class="text-[11px] text-[#25D366]">online agora</span>
+</div>
+</div>
+<div class="flex items-center gap-3 text-slate-400">
+<span class="material-symbols-outlined text-[20px]">videocam</span>
+<span class="material-symbols-outlined text-[19px]">call</span>
+<span class="material-symbols-outlined text-[19px]">more_vert</span>
+</div>
+</div>
+<!-- Chat Message Bubble Canvas -->
+<div class="flex-1 p-3.5 bg-[#0b141a] bg-opacity-95 flex flex-col justify-center relative overflow-hidden">
+<!-- WhatsApp Subtle Doodle Pattern Overlay via SVG -->
+<div class="absolute inset-0 opacity-[0.03] pointer-events-none" style="background-image: radial-gradient(#25D366 1px, transparent 1px); background-size: 16px 16px;"></div>
+<!-- Shared Recap WhatsApp Bubble -->
+<div class="relative z-10 self-end w-full max-w-[360px] bg-[#005c4b] text-[#e9edef] rounded-2xl rounded-tr-xs p-4 shadow-md flex flex-col gap-3">
+<!-- Bubble Header Tag -->
+<div class="flex items-center justify-between border-b border-emerald-600/40 pb-2">
+<div class="flex items-center gap-1.5">
+<span class="text-base">💰</span>
+<span class="font-bold text-sm tracking-tight text-white">Resumo — 23 Ago a 22 Set</span>
+</div>
+<span class="text-[10px] bg-emerald-900/60 text-emerald-200 px-2 py-0.5 rounded-full font-mono">nosko Casa</span>
+</div>
+<!-- Primary Figures Stack -->
+<div class="space-y-1.5 text-xs text-emerald-100/90 font-medium">
+<div class="flex items-center justify-between">
+<span class="flex items-center gap-1"><span>👥</span> Renda do casal:</span>
+<span class="font-mono font-bold text-white text-sm">€ 5.791,56</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="flex items-center gap-1"><span>📌</span> Contas fixas:</span>
+<span class="font-mono text-emerald-200">€ 2.843,97</span>
+</div>
+<span class="text-[10px] text-emerald-300/80 block pl-4 -mt-1">(debitadas automaticamente)</span>
+</div>
+<!-- Focus Box: Variable Outflow Alert & Progress -->
+<div class="bg-[#02493c] p-2.5 rounded-xl flex flex-col gap-2">
+<div class="flex items-center justify-between text-xs">
+<span class="font-semibold text-white flex items-center gap-1">
+<span>💸</span> Variável do Mês:
+                      </span>
+<span class="font-mono text-[11px] font-bold text-amber-300 bg-amber-950/60 px-1.5 py-0.2 rounded">Atenção</span>
+</div>
+<div class="text-[13px] font-mono text-white font-bold flex justify-between">
+<span>€ 1.180,59</span>
+<span class="text-emerald-300 font-normal text-xs">teto: € 886,10</span>
+</div>
+<!-- Progress Bar Component -->
+<div class="w-full bg-emerald-950 rounded-full h-2 overflow-hidden">
+<div class="bg-amber-400 h-full rounded-full w-[133%]" style="width: 100%;"></div>
+</div>
+<!-- Daily Burn Target -->
+<div class="bg-emerald-900/50 rounded-lg px-2 py-1.5 flex items-center justify-between text-[11px] text-emerald-100">
+<span class="flex items-center gap-1"><span>📅</span> Ritmo diário ideal:</span>
+<span class="font-mono font-semibold text-white">≈ € 35,57/dia (12 dias)</span>
+</div>
+</div>
+<!-- Category Distribution Mini Pills -->
+<div class="flex flex-col gap-1.5 pt-0.5">
+<span class="text-[11px] font-semibold text-emerald-200 flex items-center gap-1">
+<span>📊</span> Maiores variáveis:
+                    </span>
+<div class="flex flex-wrap gap-1.5">
+<span class="inline-flex items-center gap-1 bg-[#004739] text-white px-2 py-1 rounded-md text-[11px] font-mono font-medium">
+                        🛒 Mercado <strong class="text-emerald-300">€ 540</strong>
+</span>
+<span class="inline-flex items-center gap-1 bg-[#004739] text-white px-2 py-1 rounded-md text-[11px] font-mono font-medium">
+                        🍹 Lazer <strong class="text-emerald-300">€ 390</strong>
+</span>
+<span class="inline-flex items-center gap-1 bg-[#004739] text-white px-2 py-1 rounded-md text-[11px] font-mono font-medium">
+                        📦 Outros <strong class="text-emerald-300">€ 250,59</strong>
+</span>
+</div>
+</div>
+<!-- 50/50 Split Settlement Highlight -->
+<div class="bg-emerald-950/70 rounded-xl p-2.5 text-xs flex flex-col gap-1 border border-emerald-600/30">
+<div class="font-semibold text-white flex items-center gap-1">
+<span>⚖️</span> Rateio 50/50 do que foi pago:
+                    </div>
+<div class="text-[11px] text-emerald-200 leading-snug">
+                      Marcelo adiantou <strong>€ 620</strong> • Gabriele <strong>€ 560</strong>
+</div>
+<div class="mt-1 pt-1.5 border-t border-emerald-800/60 flex items-center justify-between text-emerald-100 font-medium">
+<span>Acerto sugerido:</span>
+<span class="bg-[#25D366]/20 text-[#25D366] font-mono font-bold px-1.5 py-0.5 rounded text-xs">
+                        Gabriele → Marcelo: € 30,00
+                      </span>
+</div>
+</div>
+<!-- Lighthearted Closer -->
+<div class="text-[11px] italic text-emerald-100/90 pt-1 flex items-center gap-1">
+<span>✨</span> Tudo sob controle! Bora bater a meta da viagem ✈️🏡
+                  </div>
+<!-- Bubble Timestamp and Read Receipts -->
+<div class="flex items-center justify-end gap-1 text-[10px] text-emerald-300/80 -mt-1">
+<span>09:41</span>
+<span class="material-symbols-outlined text-[13px] text-[#53bdeb]" style="font-variation-settings: 'FILL' 1;">done_all</span>
+</div>
+</div>
+<!-- Instant Action Trigger Inside Phone -->
+<div class="mt-3 flex justify-center">
+<button class="inline-flex items-center gap-1.5 bg-[#1f2c34] hover:bg-[#2a3942] text-xs font-medium text-emerald-400 px-3 py-1.5 rounded-full transition-colors shadow" onclick="triggerCopyFlow()" type="button">
+<span class="material-symbols-outlined text-[14px]">content_copy</span>
+<span>Copiar este cartão</span>
+</button>
+</div>
+</div>
+<!-- Phone Bottom Dock Bar -->
+<div class="p-3 bg-[#1f2c34] flex items-center gap-2">
+<div class="flex-1 bg-[#2a3942] rounded-full h-8 px-3 flex items-center text-xs text-slate-400">
+<span>Mensagem para o casal...</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-[#00a884] flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[16px]">send</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p class="mt-4 font-body-md text-body-md text-on-surface-variant text-center flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-primary">verified</span>
+          Pré-visualização ultra fidedigna formatada para o layout do WhatsApp.
+        </p>
+</div>
+<!-- RIGHT: Customizer, Text Raw Terminal, Analytical Cards (Span 6 cols) -->
+<div class="lg:col-span-6 flex flex-col gap-gutter-lg">
+<!-- CARD 1: Raw WhatsApp Formatted Text Engine -->
+<div class="bg-surface-container-lowest rounded-2xl p-gutter-lg shadow-sm flex flex-col gap-gutter-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-xs">
+<span class="material-symbols-outlined text-[20px] text-primary">code</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Texto Pronto para Envio</h2>
+</div>
+<button class="font-label-sm text-label-sm text-primary hover:text-primary-container font-semibold flex items-center gap-1 transition-colors" onclick="triggerCopyFlow()" type="button">
+<span class="material-symbols-outlined text-[16px]">copy_all</span>
+<span>Copiar Texto Puro</span>
+</button>
+</div>
+<!-- Stylized Text Box with Authentic WhatsApp Monospace formatting -->
+<div class="relative bg-surface-container-low rounded-xl p-gutter-md font-mono text-xs text-on-surface leading-relaxed overflow-x-auto select-all">
+<pre class="whitespace-pre-wrap font-mono" id="rawSummaryText">💰 *Resumo Finanças da Casa — 23 Ago a 22 Set*
+
+👥 *Renda do casal:* € 5.791,56
+📌 *Contas fixas:* € 2.843,97 (automático)
+
+💸 *Variável do Mês:*
+Gasto *€ 1.180,59* de € 886,10 previsto
+📅 Ritmo sugerido: *≈ € 35,57/dia* nos próximos 12 dias
+
+📊 *Maiores categorias:*
+• 🛒 Mercado: € 540,00
+• 🍹 Lazer: € 390,00
+• 📦 Outros: € 250,59
+
+⚖️ *Rateio 50/50 dos adiantamentos:*
+• Marcelo colocou: € 620,00
+• Gabriele colocou: € 560,00
+👉 *Acerto sugerido:* Gabriele transfere *€ 30,00* para Marcelo
+
+Tudo sob controle! Bora bater a meta da viagem ✈️🏡</pre>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm pt-1">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[15px] text-primary">chat</span>
+              Formatação com asteriscos (negrito no WhatsApp) inclusa.
+            </span>
+<span>398 caracteres</span>
+</div>
+</div>
+<!-- CARD 2: Breakdown Analítico dos 3 Maiores Variáveis -->
+<div class="bg-surface-container-lowest rounded-2xl p-gutter-lg shadow-sm flex flex-col gap-gutter-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-gutter-xs">
+<span class="material-symbols-outlined text-[20px] text-primary">pie_chart</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Concentração dos Variáveis</h3>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container px-2 py-0.5 rounded-full text-on-surface-variant">Total: € 1.180,59</span>
+</div>
+<!-- Bar Visual Stack -->
+<div class="w-full bg-surface-container rounded-full h-3 flex overflow-hidden">
+<div class="bg-primary h-full" style="width: 45.7%;" title="Mercado: 45.7%"></div>
+<div class="bg-secondary-container h-full" style="width: 33.0%;" title="Lazer: 33.0%"></div>
+<div class="bg-surface-dim h-full" style="width: 21.3%;" title="Outros: 21.3%"></div>
+</div>
+<!-- Breakdown List -->
+<div class="flex flex-col gap-gutter-sm">
+<!-- Row 1: Mercado -->
+<div class="flex items-center justify-between p-gutter-xs rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-gutter-sm">
+<div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">shopping_cart</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Supermercado & Feira</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">45,7% dos variáveis</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-tabular-amount text-tabular-amount font-bold text-on-surface">€ 540,00</span>
+<span class="block font-label-sm text-label-sm text-primary">12 transações</span>
+</div>
+</div>
+<!-- Row 2: Lazer -->
+<div class="flex items-center justify-between p-gutter-xs rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-gutter-sm">
+<div class="w-8 h-8 rounded-lg bg-secondary-container/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[18px]">local_bar</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Restaurantes & Lazer</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">33,0% dos variáveis</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-tabular-amount text-tabular-amount font-bold text-on-surface">€ 390,00</span>
+<span class="block font-label-sm text-label-sm text-secondary">6 transações</span>
+</div>
+</div>
+<!-- Row 3: Outros -->
+<div class="flex items-center justify-between p-gutter-xs rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-gutter-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]">inventory_2</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Farmácia & Outros</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">21,3% dos variáveis</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-tabular-amount text-tabular-amount font-bold text-on-surface">€ 250,59</span>
+<span class="block font-label-sm text-label-sm text-on-surface-variant">5 transações</span>
+</div>
+</div>
+</div>
+</div>
+<!-- CARD 3: Filosofia nosko de Comunicação Tranquila -->
+<div class="bg-gradient-to-br from-primary/5 via-surface-container-low to-surface-container-lowest rounded-2xl p-gutter-lg shadow-sm flex items-start gap-gutter-md">
+<div class="w-10 h-10 rounded-xl bg-primary text-on-primary flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-[20px]">favorite</span>
+</div>
+<div class="flex flex-col gap-1">
+<h4 class="font-headline-sm text-headline-sm text-on-surface text-base">Alinhamento Leve Sem Reuniões Chatas</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">
+              Estudos com casais mostram que 80% das tensões financeiras desaparecem quando ambos têm visibilidade simples e descomplicada a cada quinzena. Compartilhar este resumo mantém a sintonia mútua sem julgamentos.
+            </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function triggerCopyFlow() {
+    const textElement = document.getElementById('rawSummaryText');
+    if (!textElement) return;
+
+    const rawText = textElement.innerText || textElement.textContent;
+    
+    // Copy to clipboard
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(rawText).then(showToast);
+    } else {
+      // Fallback
+      const textArea = document.createElement("textarea");
+      textArea.value = rawText;
+      textArea.style.position = "fixed";
+      textArea.style.left = "-999999px";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        showToast();
+      } catch (err) {
+        console.error('Failed to copy', err);
+      }
+      document.body.removeChild(textArea);
+    }
+  }
+
+  function showToast() {
+    const toast = document.getElementById('toastNotification');
+    if (!toast) return;
+
+    toast.classList.remove('opacity-0', 'translate-y-[-20px]', 'pointer-events-none');
+    toast.classList.add('opacity-100', 'translate-y-0');
+
+    setTimeout(() => {
+      toast.classList.remove('opacity-100', 'translate-y-0');
+      toast.classList.add('opacity-0', 'translate-y-[-20px]', 'pointer-events-none');
+    }, 3200);
+  }
+
+  function triggerToastDownload() {
+    showToast();
+    const toast = document.getElementById('toastNotification');
+    if (toast) {
+      const titleSpan = toast.querySelector('.font-label-md');
+      const descSpan = toast.querySelector('.font-body-md');
+      if (titleSpan) titleSpan.textContent = 'Imagem do Card Gerada!';
+      if (descSpan) descSpan.textContent = 'PNG de alta resolução preparado para download.';
+    }
+  }
+
+  function setTone(tone) {
+    const btnCasual = document.getElementById('toneCasual');
+    const btnDirect = document.getElementById('toneDirect');
+    const btnFull = document.getElementById('toneFull');
+    const rawPre = document.getElementById('rawSummaryText');
+
+    [btnCasual, btnDirect, btnFull].forEach(btn => {
+      if (btn) {
+        btn.className = "px-3 py-1 rounded font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-all";
+      }
+    });
+
+    let newContent = "";
+
+    if (tone === 'casual') {
+      btnCasual.className = "px-3 py-1 rounded font-label-sm text-label-sm bg-primary text-on-primary transition-all";
+      newContent = `💰 *Resumo Finanças da Casa — 23 Ago a 22 Set*
+
+👥 *Renda do casal:* € 5.791,56
+📌 *Contas fixas:* € 2.843,97 (automático)
+
+💸 *Variável do Mês:*
+Gasto *€ 1.180,59* de € 886,10 previsto
+📅 Ritmo sugerido: *≈ € 35,57/dia* nos próximos 12 dias
+
+📊 *Maiores categorias:*
+• 🛒 Mercado: € 540,00
+• 🍹 Lazer: € 390,00
+• 📦 Outros: € 250,59
+
+⚖️ *Rateio 50/50 dos adiantamentos:*
+• Marcelo colocou: € 620,00
+• Gabriele colocou: € 560,00
+👉 *Acerto sugerido:* Gabriele transfere *€ 30,00* para Marcelo
+
+Tudo sob controle! Bora bater a meta da viagem ✈️🏡`;
+    } else if (tone === 'direct') {
+      btnDirect.className = "px-3 py-1 rounded font-label-sm text-label-sm bg-primary text-on-primary transition-all";
+      newContent = `*Fechamento Parcial Casa (23 Ago – 22 Set)*
+• Renda: € 5.791,56 | Fixas: € 2.843,97
+• Variáveis: € 1.180,59 / € 886,10 (Meta diária: € 35,57/dia)
+• Top Gastos: Mercado € 540 | Lazer € 390 | Outros € 250,59
+• Acerto 50/50: Gabriele > Marcelo = € 30,00`;
+    } else if (tone === 'full') {
+      btnFull.className = "px-3 py-1 rounded font-label-sm text-label-sm bg-primary text-on-primary transition-all";
+      newContent = `📊 *BALANÇO GERAL — ESPAÇO CASA*
+Ciclo: 23/08 a 22/09 (Faltam 12 dias)
+
+1. ENTRADAS & FIXOS:
+• Renda Conjunta Declarada: € 5.791,56
+• Custos Fixos (Moradia, Contas, Conexão): € 2.843,97
+
+2. DESPESAS VARIÁVEIS CONSOLIDADAS:
+• Realizado até hoje: € 1.180,59
+• Teto orçado ideal: € 886,10
+• Diferença atual: +€ 294,49 acima do ritmo
+• Consumo diário recomendado até o fechamento: € 35,57/dia
+
+3. DETALHE POR CATEGORIA:
+• Supermercado & Feiras: € 540,00 (45,7%)
+• Bares, Restaurantes & Lazer: € 390,00 (33,0%)
+• Farmácia, Manutenção & Diversos: € 250,59 (21,3%)
+
+4. CONCILIAÇÃO DE CAIXA:
+• Adiantamentos efetuados: Marcelo (€ 620,00) | Gabriele (€ 560,00)
+• Total em adiantamentos compartilhados: € 1.180,00
+• Compensação sugerida: Gabriele pagar € 30,00 para Marcelo via Pix/Revolut.
+
+Gerado via nosko (Privacidade garantida)`;
+    }
+
+    if (rawPre) {
+      rawPre.textContent = newContent;
+    }
+
+    // Update WhatsApp direct URL
+    const btnWhatsApp = document.getElementById('btnSendWhatsApp');
+    if (btnWhatsApp) {
+      btnWhatsApp.href = "https://api.whatsapp.com/send?text=" + encodeURIComponent(newContent);
+    }
+  }
+
+  function updateSummaryTone() {
+    // Re-trigger current active tone to update text
+    setTone('casual');
+  }
+
+  // Initialize initial WhatsApp direct URL on load
+  document.addEventListener('DOMContentLoaded', () => {
+    const rawPre = document.getElementById('rawSummaryText');
+    const btnWhatsApp = document.getElementById('btnSendWhatsApp');
+    if (rawPre && btnWhatsApp) {
+      btnWhatsApp.href = "https://api.whatsapp.com/send?text=" + encodeURIComponent(rawPre.innerText);
+    }
+  });
+</script></main><footer class="w-full bg-surface-container-low/60 py-gutter-lg"><div class="w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop flex flex-col md:flex-row items-center justify-between gap-gutter-md text-center md:text-left"><div class="flex items-center gap-gutter-xs text-on-surface-variant"><span class="material-symbols-outlined text-[16px] text-primary">verified_user</span><span class="font-body-md text-body-md">Criptografia de ponta a ponta & privacidade total</span></div><div class="flex items-center gap-gutter-lg"><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="termos" href="#">Termos</a><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="privacidade" href="#">Privacidade</a><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="contato" href="#">Suporte</a></div></div></footer></body></html>

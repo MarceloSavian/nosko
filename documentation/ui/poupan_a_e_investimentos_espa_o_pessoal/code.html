@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      "colors": {
+        "primary": "#006948",
+        "on-surface-variant": "#3d4a42",
+        "on-error-container": "#93000a",
+        "on-surface": "#131b2e",
+        "secondary-fixed": "#e2dfff",
+        "tertiary": "#b90538",
+        "surface-bright": "#faf8ff",
+        "on-error": "#ffffff",
+        "primary-fixed": "#85f8c4",
+        "error": "#ba1a1a",
+        "on-primary": "#ffffff",
+        "primary-fixed-dim": "#68dba9",
+        "outline-variant": "#bccac0",
+        "on-tertiary-container": "#fffbff",
+        "surface-dim": "#d2d9f4",
+        "background": "#faf8ff",
+        "surface-container-highest": "#dae2fd",
+        "inverse-on-surface": "#eef0ff",
+        "surface-container-high": "#e2e7ff",
+        "on-primary-fixed-variant": "#005137",
+        "on-tertiary": "#ffffff",
+        "tertiary-fixed-dim": "#ffb2b7",
+        "inverse-surface": "#283044",
+        "on-primary-container": "#f5fff7",
+        "secondary-container": "#645efb",
+        "on-secondary": "#ffffff",
+        "secondary": "#4b41e1",
+        "on-secondary-fixed-variant": "#3323cc",
+        "secondary-fixed-dim": "#c3c0ff",
+        "tertiary-fixed": "#ffdadb",
+        "on-tertiary-fixed": "#40000d",
+        "surface-container-low": "#f2f3ff",
+        "inverse-primary": "#68dba9",
+        "on-tertiary-fixed-variant": "#92002a",
+        "on-secondary-fixed": "#0f0069",
+        "surface": "#faf8ff",
+        "surface-tint": "#006c4a",
+        "primary-container": "#00855d",
+        "tertiary-container": "#dc2c4f",
+        "on-primary-fixed": "#002114",
+        "surface-container-lowest": "#ffffff",
+        "surface-container": "#eaedff",
+        "on-background": "#131b2e",
+        "error-container": "#ffdad6",
+        "surface-variant": "#dae2fd",
+        "outline": "#6d7a72",
+        "on-secondary-container": "#fffbff"
+      },
+      "borderRadius": {
+        "DEFAULT": "0.25rem",
+        "lg": "0.5rem",
+        "xl": "0.75rem",
+        "full": "9999px"
+      },
+      "spacing": {
+        "gutter-xs": "0.25rem",
+        "margin-tablet": "1.5rem",
+        "gutter-lg": "1.5rem",
+        "margin-desktop": "2.5rem",
+        "gutter-sm": "0.5rem",
+        "gutter-2xl": "3rem",
+        "gutter-xl": "2rem",
+        "margin-mobile": "1rem",
+        "gutter-md": "1rem"
+      },
+      "fontFamily": {
+        "body-lg": ["Inter"],
+        "label-sm": ["Inter"],
+        "headline-sm": ["Inter"],
+        "tabular-amount": ["Inter"],
+        "headline-xl": ["Inter"],
+        "headline-xl-mobile": ["Inter"],
+        "metric-display": ["Inter"],
+        "body-md": ["Inter"],
+        "headline-lg": ["Inter"],
+        "label-md": ["Inter"],
+        "metric-display-mobile": ["Inter"]
+      },
+      "fontSize": {
+        "body-lg": ["1rem", {"lineHeight": "1.5rem", "fontWeight": "400"}],
+        "label-sm": ["0.75rem", {"lineHeight": "1rem", "letterSpacing": "0.025em", "fontWeight": "600"}],
+        "headline-sm": ["1.125rem", {"lineHeight": "1.5rem", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+        "tabular-amount": ["0.875rem", {"lineHeight": "1.25rem", "fontWeight": "500"}],
+        "headline-xl": ["2.25rem", {"lineHeight": "2.75rem", "letterSpacing": "-0.025em", "fontWeight": "700"}],
+        "headline-xl-mobile": ["1.75rem", {"lineHeight": "2.25rem", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+        "metric-display": ["2rem", {"lineHeight": "2.25rem", "letterSpacing": "-0.03em", "fontWeight": "600"}],
+        "body-md": ["0.875rem", {"lineHeight": "1.25rem", "fontWeight": "400"}],
+        "headline-lg": ["1.5rem", {"lineHeight": "2rem", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+        "label-md": ["0.875rem", {"lineHeight": "1.25rem", "fontWeight": "500"}],
+        "metric-display-mobile": ["1.5rem", {"lineHeight": "1.75rem", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+      }
+    }
+  }
+}</script></head><body class="bg-background font-body-md text-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-lowest z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="h-20 px-gutter-lg flex items-center justify-between"><div class="flex items-center gap-gutter-sm"><img alt="nosko logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U6k6ArXjG8j2ORv0amT-fGqEcrqlZcT6ym49eT7zBKMP980HxJNN40cxgR016dhhxt4TSv0WzqfYLe4UCTXG1nLiw-spi-4YaISo_dsGWZmSxSMY00-dXx-EkH2uc2FwdHXKldm_Q8gjq61wa4R4NPvXKFx2m9PUbnLHcBvz5oyjd6ZVEXjGiZGWnsWdcBxdGzIr_z_m9o98cyBThxRoCsF8ZbKdxxWY71xnsNRKQo7Yqo4CWBhjKqNSQ"/><span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">nosko</span></div><span class="px-gutter-sm py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant font-medium">v2.4</span></div><div class="px-gutter-md mb-gutter-md"><div class="p-gutter-xs bg-surface-container-low rounded-full flex items-center"><button class="flex-1 flex items-center justify-center gap-gutter-xs py-1.5 px-gutter-sm rounded-full bg-surface-container-lowest shadow-[0_1px_4px_rgba(0,0,0,0.06)] text-primary font-label-md text-label-md" type="button"><span class="material-symbols-outlined text-[16px]">group</span><span>Casa</span><div class="flex -space-x-1 ml-0.5"><span class="w-3.5 h-3.5 rounded-full bg-primary-fixed border border-surface-container-lowest inline-block"></span><span class="w-3.5 h-3.5 rounded-full bg-secondary-fixed border border-surface-container-lowest inline-block"></span></div></button><button class="flex-1 flex items-center justify-center gap-gutter-xs py-1.5 px-gutter-sm rounded-full text-on-surface-variant hover:text-on-surface transition-colors font-label-md text-label-md" type="button"><span class="material-symbols-outlined text-[16px]">lock</span><span>Pessoal</span></button></div></div><div class="px-gutter-md mb-gutter-xs flex items-center justify-between"><span class="px-gutter-sm font-label-sm text-label-sm uppercase tracking-wider text-outline">Espaço Casa</span></div><nav class="px-gutter-md flex flex-col gap-0.5" data-active-classes="bg-primary-container text-on-primary-container font-bold rounded-xl"><a class="flex items-center gap-gutter-sm px-gutter-md py-2.5 rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="visao-geral" href="#"><span class="material-symbols-outlined text-[20px]">space_dashboard</span><span>Visão geral</span></a><a class="flex items-center gap-gutter-sm px-gutter-md py-2.5 rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="contas-compartilhadas" href="#"><span class="material-symbols-outlined text-[20px]">account_balance</span><span>Contas compartilhadas</span></a><a class="flex items-center gap-gutter-sm px-gutter-md py-2.5 rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="pagamentos" href="#"><span class="material-symbols-outlined text-[20px]">payments</span><span>Pagamentos</span></a><a class="flex items-center gap-gutter-sm px-gutter-md py-2.5 rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="ciclos" href="#"><span class="material-symbols-outlined text-[20px]">timelapse</span><span>Ciclos</span></a><a class="flex items-center gap-gutter-sm px-gutter-md py-2.5 rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="contas-fixas" href="#"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span>Contas fixas</span></a><a class="flex items-center gap-gutter-sm px-gutter-md py-2.5 rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="metas" href="#"><span class="material-symbols-outlined text-[20px]">flag</span><span>Metas</span></a><a class="flex items-center gap-gutter-sm px-gutter-md py-2.5 rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" data-path="resumo" href="#"><span class="material-symbols-outlined text-[20px]">pie_chart</span><span>Resumo</span></a></nav></div><div class="p-gutter-md flex flex-col gap-0.5 bg-surface-container-lowest"><a class="flex items-center gap-gutter-sm px-gutter-md py-2 rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="importar-extratos" href="#"><span class="material-symbols-outlined text-[20px]">file_upload</span><span>Importar extratos</span></a><a class="flex items-center gap-gutter-sm px-gutter-md py-2 rounded-xl font-label-md text-label-md text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" data-path="configuracoes" href="#"><span class="material-symbols-outlined text-[20px]">settings</span><span>Configurações</span></a><div class="mt-gutter-xs pt-gutter-xs flex items-center justify-between px-gutter-md py-2 rounded-xl bg-surface-container-low"><div class="flex items-center gap-gutter-xs text-on-surface-variant font-label-sm text-label-sm"><span class="material-symbols-outlined text-[18px]">light_mode</span><span>Modo claro</span></div><button aria-label="Mudar tema" class="w-8 h-4 rounded-full bg-surface-container-highest p-0.5 flex items-center" type="button"><div class="w-3 h-3 rounded-full bg-surface-container-lowest shadow-sm"></div></button></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-20 bg-surface-bright/80 backdrop-blur-xl z-40 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-20 w-full px-gutter-xl flex items-center justify-between"><div class="flex items-center gap-gutter-md"><div class="flex items-center gap-gutter-sm px-gutter-md py-2 rounded-full bg-surface-container-lowest shadow-[0_1px_4px_rgba(0,0,0,0.04)]"><span class="material-symbols-outlined text-primary text-[20px]">calendar_today</span><span class="font-label-md text-label-md text-on-surface font-medium">23 Ago – 22 Set</span><span class="px-gutter-sm py-0.5 rounded-full bg-primary-fixed font-label-sm text-label-sm text-on-primary-fixed font-semibold">Faltam 12 dias</span></div><div class="hidden xl:flex items-center gap-1.5 px-gutter-sm py-1 rounded-full bg-secondary-fixed/40 text-secondary font-label-sm text-label-sm"><span class="material-symbols-outlined text-[15px]">visibility</span><span>Ambiente compartilhado</span></div></div><div class="flex items-center gap-gutter-md"><div class="flex items-center bg-surface-container-lowest rounded-full p-1 shadow-[0_1px_4px_rgba(0,0,0,0.04)]"><button class="px-gutter-sm py-0.5 rounded-full bg-surface-container font-label-sm text-label-sm font-semibold text-on-surface" type="button">PT</button><button class="px-gutter-sm py-0.5 rounded-full font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" type="button">EN</button></div><div class="flex items-center gap-1 px-gutter-md py-1.5 rounded-full bg-surface-container-lowest shadow-[0_1px_4px_rgba(0,0,0,0.04)] font-label-sm text-label-sm font-semibold text-on-surface cursor-pointer"><span>EUR €</span><span class="material-symbols-outlined text-[16px] text-on-surface-variant">expand_more</span></div><div class="flex items-center gap-gutter-sm pl-gutter-sm"><div class="flex items-center -space-x-2"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-surface-container-lowest" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCns8ETtoatmCcqQUXcptvxbZ3ia4WoGC2cN8iEXn-_pgvUyZWKw0_aNkO_D9dJjWPeb5yF-Q4DJ9D9zzS337c8ur0SaspvBOrZbqJ3oQ30NycJ_nTe7rqEUfawvi8OEjuKGhurv8nCHKhdNJA-1n2OcXalsyvTCTTH0JCLSNa1oxiBvEyKzMo9CX6X9oi6dryoBVT9VyoOaqqYYPtv5OEpyeUwisUrMM7k9ZJlj8u8wym9JpxklVJg"/><div class="w-8 h-8 rounded-full bg-secondary-fixed text-secondary flex items-center justify-center font-label-sm text-label-sm font-bold ring-2 ring-surface-container-lowest">AL</div></div><div class="hidden md:flex flex-col"><span class="font-label-md text-label-md text-on-surface font-semibold leading-tight">Sofia & André</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Casa Central</span></div></div></div></div></header><main class="w-full pt-20 bg-background min-h-screen"><div class="flex flex-col w-full">
+<div class="px-gutter-md md:px-margin-desktop py-gutter-lg flex flex-col gap-gutter-xl">
+<!-- Top Privacy Header & Subheader -->
+<header class="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-gutter-lg">
+<div class="flex flex-col gap-gutter-xs max-w-3xl">
+<div class="flex flex-wrap items-center gap-gutter-sm">
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-secondary-fixed text-on-secondary-fixed-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">shield</span>
+            Espaço Pessoal • Patrimônio Segregado
+          </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[13px] text-secondary">vpn_key</span>
+            Isolamento E2E Encriptado
+          </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-fixed-dim/50 text-secondary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">visibility_off</span>
+            Só você vê isto · Privado de Gabriele
+          </span>
+</div>
+<div class="flex items-center gap-3 mt-1">
+<h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Poupança & Investimentos Pessoais</h1>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          Gestão do patrimônio individual, reservas com liquidez em EUR, custódia internacional em ações e títulos de renda fixa brasileira protegidos no seu cofre local.
+        </p>
+</div>
+<!-- Header Action Controls -->
+<div class="flex flex-wrap items-center gap-gutter-sm w-full xl:w-auto justify-start xl:justify-end">
+<button class="inline-flex items-center gap-1.5 px-gutter-md py-2 rounded-xl bg-surface-container-lowest shadow-sm text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px] text-secondary">trending_up</span>
+<span>Simular Projeções ↗</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-gutter-md py-2 rounded-xl bg-surface-container-lowest shadow-sm text-on-surface-variant font-label-md text-label-md hover:text-on-surface hover:bg-surface-container transition-colors" id="discretion-btn" type="button">
+<span class="material-symbols-outlined text-[18px]" id="discretion-icon">visibility</span>
+<span id="discretion-label">Ocultar valores</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-gutter-md py-2 rounded-xl bg-secondary text-on-secondary font-label-md text-label-md shadow-md hover:bg-on-secondary-fixed-variant transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Novo Aporte</span>
+</button>
+</div>
+</header>
+<!-- 4 KPI Stat Tiles Row -->
+<section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-gutter-md">
+<!-- Tile 1: Reserva EUR -->
+<div class="bg-surface-container-lowest rounded-2xl p-gutter-lg shadow-sm flex flex-col justify-between gap-gutter-md relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-secondary-fixed/30 pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Reserva EUR</span>
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-secondary-fixed text-secondary">
+<span class="material-symbols-outlined text-[18px]">savings</span>
+</span>
+</div>
+<div>
+<div class="font-metric-display text-metric-display text-on-surface tabular-nums font-semibold tracking-tight privacy-value">
+            € 3.604,68
+          </div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5">Conta Poupança Revolut Vault · 3,45% a.a.</p>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">arrow_upward</span>
+            +€ 12,40
+          </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">juros este mês</span>
+</div>
+</div>
+<!-- Tile 2: Corretora (Ações & ETFs) -->
+<div class="bg-surface-container-lowest rounded-2xl p-gutter-lg shadow-sm flex flex-col justify-between gap-gutter-md relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-primary-fixed/20 pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Corretora (Ações)</span>
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-surface-container text-primary">
+<span class="material-symbols-outlined text-[18px]">candlestick_chart</span>
+</span>
+</div>
+<div>
+<div class="font-metric-display text-metric-display text-on-surface tabular-nums font-semibold tracking-tight privacy-value">
+            € 2.123,01
+          </div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5">5 posições ativas · Degiro / IBKR</p>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[13px]">trending_up</span>
+            +14,8%
+          </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">rentabilidade total</span>
+</div>
+</div>
+<!-- Tile 3: CDB (Brasil) -->
+<div class="bg-surface-container-lowest rounded-2xl p-gutter-lg shadow-sm flex flex-col justify-between gap-gutter-md relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-secondary-fixed-dim/20 pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">CDB (Brasil)</span>
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-secondary-fixed text-secondary">
+<span class="material-symbols-outlined text-[18px]">account_balance_wallet</span>
+</span>
+</div>
+<div>
+<div class="font-metric-display text-metric-display text-on-surface tabular-nums font-semibold tracking-tight privacy-value">
+            R$ 3.325,79
+          </div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5">~ € 545,21 (câmbio 6,10)</p>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-secondary-fixed text-secondary font-label-sm text-label-sm font-semibold">
+            104% CDI
+          </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Liquidez D+0</span>
+</div>
+</div>
+<!-- Tile 4: Patrimônio Total Investido -->
+<div class="bg-surface-container-lowest rounded-2xl p-gutter-lg shadow-sm flex flex-col justify-between gap-gutter-md relative overflow-hidden">
+<div class="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-primary-container/10 pointer-events-none"></div>
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Total Investido</span>
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-primary text-on-primary">
+<span class="material-symbols-outlined text-[18px]">account_balance</span>
+</span>
+</div>
+<div>
+<div class="font-metric-display text-metric-display text-on-surface tabular-nums font-bold tracking-tight privacy-value">
+            € 6.272,90
+          </div>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5">EUR 5.727,69 + BRL conv.</p>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-semibold">
+            +€ 385,40
+          </span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">no ciclo atual</span>
+</div>
+</div>
+</section>
+<!-- Main Content Detailed Cards Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-gutter-lg">
+<!-- Card A: Reserva EUR & Renda Fixa Líquida (Full width / 12 cols) -->
+<div class="xl:col-span-12 bg-surface-container-lowest rounded-2xl p-gutter-lg md:p-gutter-xl shadow-sm flex flex-col gap-gutter-lg">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-gutter-md">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-secondary-fixed flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-[26px]">lock_clock</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Reserva em EUR & Renda Fixa Líquida</h2>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-semibold">3,45% a.a. APY</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Revolut Vault Seguro • Cofre Pessoal com Liquidez Instantânea</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Saldo Acumulado</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold tabular-nums privacy-value">€ 3.604,68</span>
+</div>
+<button class="inline-flex items-center gap-1 px-gutter-md py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-secondary font-label-md text-label-md transition-colors" type="button">
+<span>Projetar Juros Compostos ↗</span>
+</button>
+</div>
+</div>
+<!-- Summary Metric Ribbon -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-gutter-md p-gutter-md rounded-xl bg-surface-container-low">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Saldo Atual</span>
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold tabular-nums privacy-value">€ 3.604,68</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Rendimento Médio Mensal</span>
+<span class="font-headline-sm text-headline-sm text-primary font-semibold tabular-nums privacy-value">~€ 10,35 / mês</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Cobertura Pessoal Segura</span>
+<span class="font-headline-sm text-headline-sm text-secondary font-semibold tabular-nums">4,8 meses de gastos</span>
+</div>
+</div>
+<!-- Monthly Rollup Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="pb-3 px-3">Mês</th>
+<th class="pb-3 px-3 text-right">Aportes (+)</th>
+<th class="pb-3 px-3 text-right">Retiradas (-)</th>
+<th class="pb-3 px-3 text-right">Juros Creditados (+)</th>
+<th class="pb-3 px-3 text-right">Saldo Final</th>
+<th class="pb-3 px-3 text-right">Delta Líquido</th>
+</tr>
+</thead>
+<tbody class="divide-y-0 font-body-md text-body-md text-on-surface">
+<tr class="bg-surface-container/40 hover:bg-surface-container rounded-xl transition-colors">
+<td class="py-3 px-3 font-semibold flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary inline-block"></span>
+                  Set 2025 <span class="font-label-sm text-label-sm text-primary">(Corrente)</span>
+</td>
+<td class="py-3 px-3 text-right tabular-nums text-primary font-medium privacy-value">+€ 250,00</td>
+<td class="py-3 px-3 text-right tabular-nums text-on-surface-variant privacy-value">€ 0,00</td>
+<td class="py-3 px-3 text-right tabular-nums text-primary font-medium privacy-value">+€ 10,48</td>
+<td class="py-3 px-3 text-right tabular-nums font-semibold privacy-value">€ 3.604,68</td>
+<td class="py-3 px-3 text-right tabular-nums text-primary font-bold privacy-value">+€ 260,48</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-3">Ago 2025</td>
+<td class="py-3 px-3 text-right tabular-nums text-primary privacy-value">+€ 200,00</td>
+<td class="py-3 px-3 text-right tabular-nums text-on-surface-variant privacy-value">€ 0,00</td>
+<td class="py-3 px-3 text-right tabular-nums text-primary privacy-value">+€ 9,72</td>
+<td class="py-3 px-3 text-right tabular-nums font-medium privacy-value">€ 3.344,20</td>
+<td class="py-3 px-3 text-right tabular-nums text-primary font-semibold privacy-value">+€ 209,72</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-3">Jul 2025</td>
+<td class="py-3 px-3 text-right tabular-nums text-primary privacy-value">+€ 300,00</td>
+<td class="py-3 px-3 text-right tabular-nums text-tertiary privacy-value">-€ 150,00</td>
+<td class="py-3 px-3 text-right tabular-nums text-primary privacy-value">+€ 9,15</td>
+<td class="py-3 px-3 text-right tabular-nums font-medium privacy-value">€ 3.134,48</td>
+<td class="py-3 px-3 text-right tabular-nums text-primary font-semibold privacy-value">+€ 159,15</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-3">Jun 2025</td>
+<td class="py-3 px-3 text-right tabular-nums text-primary privacy-value">+€ 200,00</td>
+<td class="py-3 px-3 text-right tabular-nums text-on-surface-variant privacy-value">€ 0,00</td>
+<td class="py-3 px-3 text-right tabular-nums text-primary privacy-value">+€ 8,60</td>
+<td class="py-3 px-3 text-right tabular-nums font-medium privacy-value">€ 2.975,33</td>
+<td class="py-3 px-3 text-right tabular-nums text-primary font-semibold privacy-value">+€ 208,60</td>
+</tr>
+<tr class="hover:bg-surface-container-low transition-colors">
+<td class="py-3 px-3">Mai 2025</td>
+<td class="py-3 px-3 text-right tabular-nums text-primary privacy-value">+€ 250,00</td>
+<td class="py-3 px-3 text-right tabular-nums text-on-surface-variant privacy-value">€ 0,00</td>
+<td class="py-3 px-3 text-right tabular-nums text-primary privacy-value">+€ 8,05</td>
+<td class="py-3 px-3 text-right tabular-nums font-medium privacy-value">€ 2.766,73</td>
+<td class="py-3 px-3 text-right tabular-nums text-primary font-semibold privacy-value">+€ 258,05</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Card B: Carteira da Corretora — Posições Individuais (7 cols) -->
+<div class="xl:col-span-7 bg-surface-container-lowest rounded-2xl p-gutter-lg md:p-gutter-xl shadow-sm flex flex-col justify-between gap-gutter-lg">
+<div class="flex flex-col gap-gutter-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-gutter-sm">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-primary-fixed flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[26px]">monitoring</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Carteira da Corretora</h2>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-secondary font-label-sm text-label-sm font-semibold">Custódia Privada</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Degiro & Interactive Brokers · Títulos Segregados</p>
+</div>
+</div>
+<div class="text-left sm:text-right">
+<span class="font-headline-sm text-headline-sm text-on-surface font-semibold tabular-nums privacy-value">€ 2.123,01</span>
+<span class="font-label-sm text-label-sm text-primary block">+14,8% retorno acumulado</span>
+</div>
+</div>
+<!-- Position Items List -->
+<div class="flex flex-col gap-gutter-xs">
+<!-- 1. NVIDIA -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex items-center justify-between gap-gutter-sm">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center font-label-md text-label-md font-bold text-on-surface shadow-xs">
+                  NVDA
+                </div>
+<div class="min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md font-semibold text-on-surface truncate">NVIDIA Corporation</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Nasdaq</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">4 ações · Preço médio $ 112,40</span>
+</div>
+</div>
+<div class="flex items-center gap-3 text-right">
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface tabular-nums block privacy-value">€ 580,40</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant tabular-nums">$ 145,10 hoje</span>
+</div>
+<span class="px-2 py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-bold">+38,4%</span>
+</div>
+</div>
+<!-- 2. Datadog -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex items-center justify-between gap-gutter-sm">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center font-label-md text-label-md font-bold text-on-surface shadow-xs">
+                  DDOG
+                </div>
+<div class="min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md font-semibold text-on-surface truncate">Datadog Inc.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Nasdaq</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">5 ações · Preço médio $ 108,15</span>
+</div>
+</div>
+<div class="flex items-center gap-3 text-right">
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface tabular-nums block privacy-value">€ 495,12</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant tabular-nums">$ 121,35 hoje</span>
+</div>
+<span class="px-2 py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-bold">+12,2%</span>
+</div>
+</div>
+<!-- 3. Nu Holdings -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex items-center justify-between gap-gutter-sm">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center font-label-md text-label-md font-bold text-on-surface shadow-xs">
+                  NU
+                </div>
+<div class="min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md font-semibold text-on-surface truncate">Nu Holdings Ltd.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">NYSE</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">35 ações · Preço médio $ 11,20</span>
+</div>
+</div>
+<div class="flex items-center gap-3 text-right">
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface tabular-nums block privacy-value">€ 418,25</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant tabular-nums">$ 13,73 hoje</span>
+</div>
+<span class="px-2 py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-bold">+22,6%</span>
+</div>
+</div>
+<!-- 4. Adyen -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex items-center justify-between gap-gutter-sm">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center font-label-md text-label-md font-bold text-on-surface shadow-xs">
+                  ADYEN
+                </div>
+<div class="min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md font-semibold text-on-surface truncate">Adyen N.V.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Euronext</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">0,3 ações · Preço médio € 1.280,00</span>
+</div>
+</div>
+<div class="flex items-center gap-3 text-right">
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface tabular-nums block privacy-value">€ 384,10</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant tabular-nums">€ 1.240,00 hoje</span>
+</div>
+<span class="px-2 py-1 rounded-full bg-error-container text-on-error-container font-label-sm text-label-sm font-bold">-3,1%</span>
+</div>
+</div>
+<!-- 5. MongoDB -->
+<div class="p-gutter-md rounded-xl bg-surface-container-low hover:bg-surface-container transition-colors flex items-center justify-between gap-gutter-sm">
+<div class="flex items-center gap-3 min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface-container-lowest flex items-center justify-center font-label-md text-label-md font-bold text-on-surface shadow-xs">
+                  MDB
+                </div>
+<div class="min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-label-md text-label-md font-semibold text-on-surface truncate">MongoDB Inc.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Nasdaq</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant block">1 ação · Preço médio $ 265,00</span>
+</div>
+</div>
+<div class="flex items-center gap-3 text-right">
+<div>
+<span class="font-label-md text-label-md font-bold text-on-surface tabular-nums block privacy-value">€ 245,14</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant tabular-nums">$ 282,25 hoje</span>
+</div>
+<span class="px-2 py-1 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-bold">+6,5%</span>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-gutter-sm flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span>Sincronização API Degiro: há 14 minutos</span>
+</div>
+<button class="text-secondary hover:underline font-label-sm text-label-sm font-semibold" type="button">
+            Ver Gráfico de Alocação ↗
+          </button>
+</div>
+</div>
+<!-- Card C: CDB Pós-Fixado Brasil — Nubank / C6 (5 cols) -->
+<div class="xl:col-span-5 bg-surface-container-lowest rounded-2xl p-gutter-lg md:p-gutter-xl shadow-sm flex flex-col justify-between gap-gutter-md">
+<div class="flex flex-col gap-gutter-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-surface-container flex items-center justify-center text-on-surface font-bold">
+<span class="material-symbols-outlined text-secondary text-[26px]">flag</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">CDB Brasil Pós-Fixado</h2>
+<span class="px-2 py-0.5 rounded-full bg-secondary-fixed text-secondary font-label-sm text-label-sm font-semibold">104% CDI</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">Nubank & C6 Bank • Coberto pelo FGC</p>
+</div>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-surface-container font-label-sm text-label-sm text-on-surface-variant font-semibold">Renda Fixa BR</span>
+</div>
+<!-- Highlight Liquid Amount Banner -->
+<div class="p-gutter-md rounded-xl bg-surface-container-high/60 flex flex-col gap-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Saldo Líquido de Impostos (Net-of-tax)</span>
+<div class="flex items-baseline justify-between">
+<span class="font-metric-display text-metric-display text-on-surface font-bold tabular-nums privacy-value">R$ 3.325,79</span>
+<span class="font-headline-sm text-headline-sm text-secondary font-semibold tabular-nums privacy-value">~ € 545,21</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Câmbio de referência PTAX 6,10 EUR/BRL</span>
+</div>
+<!-- Data Breakdown Grid -->
+<div class="grid grid-cols-2 gap-gutter-sm">
+<div class="p-gutter-sm rounded-lg bg-surface-container-low">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Aporte Inicial</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface tabular-nums privacy-value">R$ 3.000,00</span>
+</div>
+<div class="p-gutter-sm rounded-lg bg-surface-container-low">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Saldo Bruto Atual</span>
+<span class="font-label-md text-label-md font-semibold text-primary tabular-nums privacy-value">R$ 3.385,40 (+R$ 385,40)</span>
+</div>
+<div class="p-gutter-sm rounded-lg bg-surface-container-low">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">IR Provisório (17,5%)</span>
+<span class="font-label-md text-label-md font-semibold text-tertiary tabular-nums privacy-value">-R$ 59,61</span>
+</div>
+<div class="p-gutter-sm rounded-lg bg-surface-container-low">
+<span class="font-label-sm text-label-sm text-on-surface-variant block">Regime Tributário</span>
+<span class="font-label-md text-label-md font-semibold text-on-surface">Regressivo 15% em 2026</span>
+</div>
+</div>
+<!-- Contract Terms -->
+<div class="p-gutter-md rounded-xl bg-surface-container-lowest flex flex-col gap-1 text-on-surface-variant font-label-sm text-label-sm">
+<div class="flex items-center justify-between">
+<span>Vencimento do Título:</span>
+<span class="font-semibold text-on-surface">15 de Outubro de 2026</span>
+</div>
+<div class="flex items-center justify-between">
+<span>Liquidez:</span>
+<span class="font-semibold text-primary">Diária com resgate automático</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-gutter-sm pt-2">
+<button class="flex-1 py-2 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors text-center" type="button">
+            Simular Resgate Líquido ↗
+          </button>
+<button class="flex-1 py-2 px-3 rounded-xl bg-secondary-fixed hover:bg-secondary-fixed-dim text-on-secondary-fixed font-label-md text-label-md transition-colors text-center font-semibold" type="button">
+            Projetar até Vencimento ↗
+          </button>
+</div>
+</div>
+</div>
+<!-- Bottom Projection Callout & Privacy Guarantee Section -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-gutter-lg items-stretch">
+<!-- Callout Banner: Projeções Patrimoniais & Metas Individuais -->
+<div class="xl:col-span-8 p-gutter-lg md:p-gutter-xl rounded-2xl bg-gradient-to-r from-secondary-container to-secondary text-on-secondary shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-gutter-lg">
+<div class="flex flex-col gap-gutter-xs max-w-xl">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[24px]">rocket_launch</span>
+<h3 class="font-headline-lg text-headline-lg font-bold">Projeções Patrimoniais & Metas Individuais</h3>
+</div>
+<p class="font-body-md text-body-md text-secondary-fixed-dim leading-relaxed">
+            Explore cenários de aportes mensais, cálculo de independência financeira e aposentadoria antecipada sem afetar a reserva conjunta do casal.
+          </p>
+</div>
+<button class="whitespace-nowrap px-gutter-lg py-3 rounded-xl bg-surface-container-lowest text-secondary font-label-md text-label-md font-bold shadow-sm hover:bg-surface-bright transition-all" type="button">
+          Abrir Simulador de Projeções →
+        </button>
+</div>
+<!-- Privacy Assurance Card -->
+<div class="xl:col-span-4 p-gutter-lg rounded-2xl bg-surface-container-low flex flex-col justify-between gap-gutter-sm">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined text-[20px]">verified_user</span>
+<span class="font-label-md text-label-md font-bold">Garantia de Sigilo do Cofre nosko</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+          As informações de poupança, custódia e saldos bancários desta tela são estritamente individuais e nunca integradas aos relatórios do Espaço Casa.
+        </p>
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">lock</span>
+<span>Chave criptográfica vinculada apenas à sua sessão</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  // Quick Privacy Toggle micro-interaction
+  (function() {
+    const discretionBtn = document.getElementById('discretion-btn');
+    const discretionIcon = document.getElementById('discretion-icon');
+    const discretionLabel = document.getElementById('discretion-label');
+    const values = document.querySelectorAll('.privacy-value');
+    let isHidden = false;
+
+    if (discretionBtn) {
+      discretionBtn.addEventListener('click', () => {
+        isHidden = !isHidden;
+        values.forEach(el => {
+          if (!el.dataset.original) {
+            el.dataset.original = el.textContent.trim();
+          }
+          if (isHidden) {
+            el.textContent = '••••••••';
+          } else {
+            el.textContent = el.dataset.original;
+          }
+        });
+
+        if (isHidden) {
+          discretionIcon.textContent = 'visibility_off';
+          discretionLabel.textContent = 'Revelar valores';
+        } else {
+          discretionIcon.textContent = 'visibility';
+          discretionLabel.textContent = 'Ocultar valores';
+        }
+      });
+    }
+  })();
+</script></main></div></body></html>

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-tertiary-fixed-variant":"#92002a","on-primary":"#ffffff","on-primary-fixed":"#002114","surface-container-highest":"#dae2fd","primary":"#006948","primary-container":"#00855d","tertiary-container":"#dc2c4f","surface-variant":"#dae2fd","surface":"#faf8ff","inverse-primary":"#68dba9","surface-container":"#eaedff","on-primary-fixed-variant":"#005137","surface-container-lowest":"#ffffff","surface-container-low":"#f2f3ff","on-error-container":"#93000a","tertiary":"#b90538","on-tertiary-container":"#fffbff","on-secondary-container":"#fffbff","on-surface-variant":"#3d4a42","on-primary-container":"#f5fff7","tertiary-fixed":"#ffdadb","primary-fixed":"#85f8c4","on-secondary-fixed":"#0f0069","on-surface":"#131b2e","secondary-fixed":"#e2dfff","surface-tint":"#006c4a","on-background":"#131b2e","on-tertiary":"#ffffff","on-secondary-fixed-variant":"#3323cc","error":"#ba1a1a","inverse-on-surface":"#eef0ff","on-tertiary-fixed":"#40000d","secondary-fixed-dim":"#c3c0ff","surface-dim":"#d2d9f4","surface-container-high":"#e2e7ff","outline":"#6d7a72","surface-bright":"#faf8ff","on-secondary":"#ffffff","inverse-surface":"#283044","background":"#faf8ff","error-container":"#ffdad6","on-error":"#ffffff","secondary-container":"#645efb","tertiary-fixed-dim":"#ffb2b7","secondary":"#4b41e1","primary-fixed-dim":"#68dba9","outline-variant":"#bccac0"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"gutter-lg":"1.5rem","gutter-2xl":"3rem","gutter-xl":"2rem","margin-desktop":"2.5rem","gutter-sm":"0.5rem","gutter-md":"1rem","gutter-xs":"0.25rem","margin-mobile":"1rem","margin-tablet":"1.5rem"},"fontFamily":{"headline-sm":["Inter"],"tabular-amount":["Inter"],"headline-xl-mobile":["Inter"],"headline-xl":["Inter"],"body-md":["Inter"],"body-lg":["Inter"],"metric-display":["Inter"],"label-md":["Inter"],"label-sm":["Inter"],"metric-display-mobile":["Inter"],"headline-lg":["Inter"]},"fontSize":{"headline-sm":["1.125rem",{"lineHeight":"1.5rem","letterSpacing":"-0.01em","fontWeight":"600"}],"tabular-amount":["0.875rem",{"lineHeight":"1.25rem","fontWeight":"500"}],"headline-xl-mobile":["1.75rem",{"lineHeight":"2.25rem","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-xl":["2.25rem",{"lineHeight":"2.75rem","letterSpacing":"-0.025em","fontWeight":"700"}],"body-md":["0.875rem",{"lineHeight":"1.25rem","fontWeight":"400"}],"body-lg":["1rem",{"lineHeight":"1.5rem","fontWeight":"400"}],"metric-display":["2rem",{"lineHeight":"2.25rem","letterSpacing":"-0.03em","fontWeight":"600"}],"label-md":["0.875rem",{"lineHeight":"1.25rem","fontWeight":"500"}],"label-sm":["0.75rem",{"lineHeight":"1rem","letterSpacing":"0.025em","fontWeight":"600"}],"metric-display-mobile":["1.5rem",{"lineHeight":"1.75rem","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-lg":["1.5rem",{"lineHeight":"2rem","letterSpacing":"-0.02em","fontWeight":"600"}]}}}}</script></head><body class="bg-surface text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop flex items-center justify-between"><div class="flex items-center gap-gutter-sm"><img alt="Brand logo. - Primary color: #059669
+- Font: inter
+- Mode: light
+- Roundness: rounded-md
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U6k6ArXjG8j2ORv0amT-fGqEcrqlZcT6ym49eT7zBKMP980HxJNN40cxgR016dhhxt4TSv0WzqfYLe4UCTXG1nLiw-spi-4YaISo_dsGWZmSxSMY00-dXx-EkH2uc2FwdHXKldm_Q8gjq61wa4R4NPvXKFx2m9PUbnLHcBvz5oyjd6ZVEXjGiZGWnsWdcBxdGzIr_z_m9o98cyBThxRoCsF8ZbKdxxWY71xnsNRKQo7Yqo4CWBhjKqNSQ"/><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface">nosko</span></div><nav class="hidden md:flex items-center gap-gutter-md" data-active-classes="bg-surface-container-high text-on-surface font-label-md text-label-md rounded-full"><a aria-current="page" class="px-gutter-sm py-gutter-xs transition-colors bg-surface-container-high text-on-surface font-label-md text-label-md rounded-full" data-path="inicio" href="#">Início</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface px-gutter-sm py-gutter-xs transition-colors" data-path="manifesto" href="#">Manifesto</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface px-gutter-sm py-gutter-xs transition-colors" data-path="seguranca" href="#">Segurança</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface px-gutter-sm py-gutter-xs transition-colors" data-path="validar-convite" href="#">Validar Convite</a></nav><div class="flex items-center gap-gutter-sm"><div class="hidden sm:flex items-center gap-gutter-xs bg-surface-container-low px-gutter-sm py-gutter-xs rounded-full"><span class="material-symbols-outlined text-[16px] text-primary">lock</span><span class="font-label-sm text-label-sm text-on-surface-variant">Acesso exclusivo por convite</span></div><button aria-label="Mudar idioma" class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="font-label-sm text-label-sm uppercase">PT</span></button><button aria-label="Alternar tema" class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">light_mode</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 flex-1 bg-gradient-to-b from-surface via-surface-container-low to-surface relative"><div class="flex flex-col w-full">
+<!-- Desktop Layout Wrapper with Sidebar & Main Frame -->
+<div class="flex w-full min-h-[calc(100vh-4rem)]">
+<!-- Sub-navigation / App Sidebar -->
+<aside class="hidden xl:flex flex-col w-72 shrink-0 bg-surface-container-lowest p-gutter-lg gap-gutter-lg">
+<!-- Space Switcher Segmented Control -->
+<div class="flex flex-col gap-gutter-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Espaço Ativo</span>
+<div class="flex p-1 bg-surface-container-low rounded-full">
+<button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-full bg-surface-container-lowest shadow-sm text-primary font-label-md text-label-md transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">diversity_3</span>
+<span>Casa</span>
+</button>
+<button class="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-full text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-all" type="button">
+<span class="material-symbols-outlined text-[16px] text-secondary">lock</span>
+<span>Pessoal</span>
+</button>
+</div>
+</div>
+<!-- Current Cycle Indicator Widget -->
+<div class="flex flex-col p-gutter-md bg-surface-container-low rounded-xl gap-gutter-xs">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="font-label-sm text-label-sm">Ciclo Atual</span>
+<span class="font-label-sm text-label-sm text-primary bg-surface-container-high px-2 py-0.5 rounded-full">Faltam 12 dias</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">23 Ago – 22 Set 2025</span>
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden mt-1">
+<div class="bg-primary h-full rounded-full" style="width: 62%;"></div>
+</div>
+</div>
+<!-- Primary Sidebar Navigation Menu -->
+<nav class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span>Visão geral</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+<span>Contas compartilhadas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+<span>Pagamentos & Rateios</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">event_repeat</span>
+<span>Ciclos Mensais</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+<span>Contas fixas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">track_changes</span>
+<span>Metas & Cofres</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface transition-colors font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">analytics</span>
+<span>Resumo & Balanço</span>
+</a>
+<!-- Highlighted Active Tab -->
+<a class="flex items-center justify-between px-3 py-2.5 rounded-lg bg-surface-container-high text-primary font-headline-sm text-headline-sm mt-2 transition-all" href="#">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">upload_file</span>
+<span>Importar extratos</span>
+</div>
+<span class="font-label-sm text-label-sm bg-primary text-on-primary px-1.5 py-0.5 rounded-md">OFX</span>
+</a>
+</nav>
+<!-- Sidebar Footer Info / Secondary Currency Widget -->
+<div class="flex flex-col gap-gutter-xs pt-gutter-md">
+<div class="flex items-center justify-between p-gutter-sm bg-surface-container-low rounded-lg">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Câmbio de Referência</span>
+<span class="font-label-sm text-label-sm text-on-surface font-tabular-amount">1 EUR = 5.92 BRL</span>
+</div>
+<div class="flex items-center gap-2 px-1 text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-primary">security</span>
+<span class="font-label-sm text-label-sm">Cofre local ativo</span>
+</div>
+</div>
+</aside>
+<!-- Main Dynamic Content Workspace -->
+<main class="flex-1 flex flex-col p-margin-mobile md:p-margin-tablet lg:p-margin-desktop gap-gutter-xl max-w-[1400px] mx-auto min-w-0">
+<!-- Top Action Bar / Context Header -->
+<section class="flex flex-col gap-gutter-sm">
+<div class="flex items-center gap-gutter-xs text-on-surface-variant font-label-sm text-label-sm">
+<span>Finanças</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span>Conciliação Bancária</span>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-on-surface">Importação de Extratos & OFX/CSV/PDF</span>
+</div>
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-gutter-md">
+<div class="flex flex-col gap-1 max-w-3xl">
+<div class="flex items-center gap-gutter-sm">
+<h1 class="font-headline-xl text-headline-xl text-on-surface">Importar Extratos Bancários</h1>
+<span class="bg-primary/10 text-primary font-label-sm text-label-sm px-2.5 py-0.5 rounded-full flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">auto_awesome</span> Mapeamento IA
+              </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+              Importe extratos em lote com conciliação automática, detecção de duplicidades por hash e separação estrita de destino entre o Espaço Pessoal e o Espaço Casa.
+            </p>
+</div>
+<!-- Actions Toolbar -->
+<div class="flex flex-wrap items-center gap-gutter-xs">
+<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-container-lowest text-on-surface hover:bg-surface-container-high font-label-md text-label-md shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+<span>Regras</span>
+</button>
+<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-container-lowest text-on-surface hover:bg-surface-container-high font-label-md text-label-md shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">download</span>
+<span>Modelo CSV</span>
+</button>
+<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">sync</span>
+<span>Open Finance</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Explanatory Privacy & Zero-Knowledge Routing Banner -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-gutter-md bg-surface-container-lowest p-gutter-lg rounded-2xl shadow-sm">
+<div class="flex flex-col gap-gutter-xs p-gutter-md bg-secondary/5 rounded-xl">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-secondary">lock</span>
+<span class="font-label-md text-label-md text-secondary uppercase tracking-wider">Destino Pessoal (Privado)</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Extratos de contas particulares (Revolut Privado, Nubank Reserva) são decodificados em memória com chave local AES-256 e nunca são revelados para Gabriele.
+          </p>
+<div class="flex items-center gap-1.5 mt-auto pt-1 font-label-sm text-label-sm text-secondary">
+<span class="material-symbols-outlined text-[14px]">verified</span>
+<span>Isolamento total de privacidade ativado</span>
+</div>
+</div>
+<div class="flex flex-col gap-gutter-xs p-gutter-md bg-primary/5 rounded-xl">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-primary">group</span>
+<span class="font-label-md text-label-md text-primary uppercase tracking-wider">Destino Compartilhado (Casa)</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Extratos de despesas conjuntas alimentam o ciclo compartilhado e os cálculos de rateio 50/50 instantaneamente, atribuindo cada gasto à categoria correta.
+          </p>
+<div class="flex items-center gap-1.5 mt-auto pt-1 font-label-sm text-label-sm text-primary">
+<span class="material-symbols-outlined text-[14px]">auto_fix_high</span>
+<span>Roteamento inteligente por IBAN ou Agência</span>
+</div>
+</div>
+</section>
+<!-- Large Unified Drag-and-Drop Dropzone -->
+<section class="flex flex-col items-center justify-center p-gutter-2xl bg-surface-container-lowest rounded-2xl shadow-sm text-center gap-gutter-md transition-all hover:bg-surface-container-low/50 group cursor-pointer">
+<div class="w-16 h-16 rounded-2xl bg-primary/10 text-primary flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[36px]">cloud_upload</span>
+</div>
+<div class="flex flex-col gap-1 max-w-lg">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Arraste seus extratos aqui ou clique para selecionar</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Formatos suportados: CSV, PDF, OFX, QIF e XLSX (Até 25MB por arquivo). Compatível com extratos protegidos por senha bancária.
+          </p>
+</div>
+<div class="flex flex-wrap items-center justify-center gap-gutter-xs">
+<button class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary hover:bg-primary-container font-label-md text-label-md shadow-sm transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">folder_open</span>
+<span>Selecionar arquivos do computador</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface-container-high text-on-surface hover:bg-surface-container-highest font-label-md text-label-md transition-all" type="button">
+<span>Arrastar múltiplos bancos ao mesmo tempo</span>
+</button>
+</div>
+<!-- Format Badges -->
+<div class="flex flex-wrap items-center justify-center gap-2 pt-2">
+<span class="px-2.5 py-1 rounded-md bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">CSV UTF-8</span>
+<span class="px-2.5 py-1 rounded-md bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">PDF Nativo</span>
+<span class="px-2.5 py-1 rounded-md bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">key</span> PDF com Senha
+          </span>
+<span class="px-2.5 py-1 rounded-md bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">OFX Open Bank</span>
+<span class="px-2.5 py-1 rounded-md bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm">MT940</span>
+</div>
+</section>
+<!-- Per-Bank Quick Presets Grid -->
+<section class="flex flex-col gap-gutter-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Predefinições por Instituição</h2>
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-full">6 contas configuradas</span>
+</div>
+<a class="font-label-md text-label-md text-primary hover:underline flex items-center gap-1" href="#">
+<span>Configurar novas contas</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter-md">
+<!-- Card 1: ING Direct -->
+<div class="flex flex-col bg-surface-container-lowest p-gutter-lg rounded-2xl shadow-sm justify-between gap-gutter-md hover:shadow-md transition-shadow">
+<div class="flex flex-col gap-gutter-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-orange-500/10 text-orange-600 flex items-center justify-center font-headline-sm text-headline-sm">
+                    ING
+                  </div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">ING Direct</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">CSV / MT940</span>
+</div>
+</div>
+<span class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">group</span> Casa
+                </span>
+</div>
+<div class="flex flex-col gap-1 p-gutter-sm bg-surface-container-low rounded-xl">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Destino:</span>
+<span class="font-label-md text-label-md text-on-surface">ING Betaalrekening •••• 4821</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">
+                Última importação há 3 dias • 38 transações lidas
+              </span>
+</div>
+<button class="w-full py-2.5 rounded-xl bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary font-label-md text-label-md transition-colors flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+<span>Carregar CSV do ING</span>
+</button>
+</div>
+<!-- Card 2: Revolut -->
+<div class="flex flex-col bg-surface-container-lowest p-gutter-lg rounded-2xl shadow-sm justify-between gap-gutter-md hover:shadow-md transition-shadow">
+<div class="flex flex-col gap-gutter-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-surface-container-high text-on-surface flex items-center justify-center font-headline-sm text-headline-sm font-bold">
+                    R
+                  </div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Revolut</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">CSV Mensal</span>
+</div>
+</div>
+<span class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary/10 text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">lock</span> Pessoal
+                </span>
+</div>
+<div class="flex flex-col gap-1 p-gutter-sm bg-surface-container-low rounded-xl">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Destino:</span>
+<span class="font-label-md text-label-md text-on-surface">Revolut Principal •••• 9042</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">
+                Sincronizado via Open Finance • Upload manual disponível
+              </span>
+</div>
+<button class="w-full py-2.5 rounded-xl bg-surface-container-high text-on-surface hover:bg-secondary hover:text-on-secondary font-label-md text-label-md transition-colors flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+<span>Carregar CSV Revolut</span>
+</button>
+</div>
+<!-- Card 3: American Express -->
+<div class="flex flex-col bg-surface-container-lowest p-gutter-lg rounded-2xl shadow-sm justify-between gap-gutter-md hover:shadow-md transition-shadow">
+<div class="flex flex-col gap-gutter-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-blue-600/10 text-blue-600 flex items-center justify-center font-headline-sm text-headline-sm font-bold">
+                    AX
+                  </div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">American Express</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">PDF Criptografado</span>
+</div>
+</div>
+<span class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary/10 text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">lock</span> Pessoal
+                </span>
+</div>
+<div class="flex flex-col gap-1 p-gutter-sm bg-surface-container-low rounded-xl">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Destino:</span>
+<span class="font-label-md text-label-md text-on-surface">Amex Gold Card •••• 4159</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px] text-secondary">key</span>
+<span>Chave no cofre local (ano + 4 dígitos)</span>
+</div>
+</div>
+<button class="w-full py-2.5 rounded-xl bg-surface-container-high text-on-surface hover:bg-secondary hover:text-on-secondary font-label-md text-label-md transition-colors flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">lock_open</span>
+<span>Carregar PDF com Senha</span>
+</button>
+</div>
+<!-- Card 4: Nubank -->
+<div class="flex flex-col bg-surface-container-lowest p-gutter-lg rounded-2xl shadow-sm justify-between gap-gutter-md hover:shadow-md transition-shadow">
+<div class="flex flex-col gap-gutter-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-purple-600/10 text-purple-600 flex items-center justify-center font-headline-sm text-headline-sm font-bold">
+                    Nu
+                  </div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Nubank</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">CSV Duplo (CC + Fatura)</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<span class="px-2 py-0.5 rounded-full bg-secondary/10 text-secondary font-label-sm text-label-sm">Pessoal</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm">Casa</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 p-gutter-sm bg-surface-container-low rounded-xl">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Destino Misto:</span>
+<span class="font-label-md text-label-md text-on-surface">Nubank Principal & Cartão •••• 1184</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">
+                Mapeador cambial PTAX automático ativo
+              </span>
+</div>
+<button class="w-full py-2.5 rounded-xl bg-surface-container-high text-on-surface hover:bg-surface-container-highest font-label-md text-label-md transition-colors flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+<span>Carregar CSV Nubank</span>
+</button>
+</div>
+<!-- Card 5: C6 Bank -->
+<div class="flex flex-col bg-surface-container-lowest p-gutter-lg rounded-2xl shadow-sm justify-between gap-gutter-md hover:shadow-md transition-shadow">
+<div class="flex flex-col gap-gutter-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-zinc-800 text-surface-container-lowest flex items-center justify-center font-headline-sm text-headline-sm font-bold">
+                    C6
+                  </div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">C6 Bank</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">PDF / CSV Investimentos</span>
+</div>
+</div>
+<span class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary/10 text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">lock</span> Pessoal
+                </span>
+</div>
+<div class="flex flex-col gap-1 p-gutter-sm bg-surface-container-low rounded-xl">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Destino:</span>
+<span class="font-label-md text-label-md text-on-surface">C6 Investimentos CDB •••• 5521</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">
+                Detecção automática de rendimento líquido de IR
+              </span>
+</div>
+<button class="w-full py-2.5 rounded-xl bg-surface-container-high text-on-surface hover:bg-secondary hover:text-on-secondary font-label-md text-label-md transition-colors flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+<span>Carregar PDF C6</span>
+</button>
+</div>
+<!-- Card 6: Millennium bcp -->
+<div class="flex flex-col bg-surface-container-lowest p-gutter-lg rounded-2xl shadow-sm justify-between gap-gutter-md hover:shadow-md transition-shadow">
+<div class="flex flex-col gap-gutter-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-pink-700/10 text-pink-700 flex items-center justify-center font-headline-sm text-headline-sm font-bold">
+                    bcp
+                  </div>
+<div class="flex flex-col">
+<span class="font-headline-sm text-headline-sm text-on-surface">Millennium bcp</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">CSV / XLS Ordenado</span>
+</div>
+</div>
+<span class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">group</span> Casa
+                </span>
+</div>
+<div class="flex flex-col gap-1 p-gutter-sm bg-surface-container-low rounded-xl">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Destino:</span>
+<span class="font-label-md text-label-md text-on-surface">Millennium Ordenado •••• 9104</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">
+                Última conciliação: 28 Ago (Salário & Rendas)
+              </span>
+</div>
+<button class="w-full py-2.5 rounded-xl bg-surface-container-high text-on-surface hover:bg-primary hover:text-on-primary font-label-md text-label-md transition-colors flex items-center justify-center gap-2" type="button">
+<span class="material-symbols-outlined text-[18px]">upload</span>
+<span>Carregar Extrato bcp</span>
+</button>
+</div>
+</div>
+</section>
+<!-- History and Logs Section -->
+<section class="flex flex-col bg-surface-container-lowest p-gutter-lg rounded-2xl shadow-sm gap-gutter-md">
+<!-- Table Control Toolbar -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-gutter-md">
+<div class="flex flex-col">
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Histórico de Importações Recentes</h2>
+<span class="font-body-md text-body-md text-on-surface-variant">Arquivos enviados nos últimos 30 dias com hash de integridade verificado</span>
+</div>
+<div class="flex flex-wrap items-center gap-gutter-xs">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-on-surface-variant">search</span>
+<input class="pl-9 pr-3 py-1.5 rounded-xl bg-surface-container-low font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant outline-none focus:bg-surface-container-high transition-colors w-64" placeholder="Filtrar por nome do arquivo..." type="text"/>
+</div>
+<button class="flex items-center gap-1 px-3 py-2 rounded-xl bg-surface-container-low text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px]">refresh</span>
+<span>Reprocessar</span>
+</button>
+</div>
+</div>
+<!-- Data Table Container -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-on-surface-variant font-label-sm text-label-sm border-b border-surface-container-high">
+<th class="py-3 px-4">Instituição</th>
+<th class="py-3 px-4">Arquivo & Tamanho</th>
+<th class="py-3 px-4">Período</th>
+<th class="py-3 px-4">Conta & Espaço</th>
+<th class="py-3 px-4">Lançamentos</th>
+<th class="py-3 px-4">Status</th>
+<th class="py-3 px-4 text-right">Ações</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low font-body-md text-body-md text-on-surface">
+<!-- Row 1: ING Direct -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3.5 px-4 font-label-md text-label-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-orange-500/10 text-orange-600 flex items-center justify-center text-[10px] font-bold">ING</span>
+<span>ING Direct</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="font-tabular-amount font-medium">ing_extrato_ago_2025.csv</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">420 KB • Hash #c92f</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-tabular-amount">01 Ago - 31 Ago 2025</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5">
+<span class="text-on-surface">ING Betaalrekening</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm">Casa</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="font-tabular-amount font-medium text-primary">64 conciliados</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Processado
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded-md transition-colors" title="Ver Detalhes" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded-md transition-colors" title="Baixar Log" type="button">
+<span class="material-symbols-outlined text-[18px]">description</span>
+</button>
+</td>
+</tr>
+<!-- Row 2: Revolut (Processing) -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3.5 px-4 font-label-md text-label-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-surface-container-high text-on-surface flex items-center justify-center text-[10px] font-bold">R</span>
+<span>Revolut</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="font-tabular-amount font-medium">revolut_statement_sep25.csv</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">180 KB</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-tabular-amount">01 Set - 22 Set 2025</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5">
+<span class="text-on-surface">Revolut Pessoal</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary/10 text-secondary font-label-sm text-label-sm">Pessoal</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col gap-1 w-28">
+<div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full animate-pulse" style="width: 74%;"></div>
+</div>
+<span class="font-label-sm text-label-sm text-secondary">74% lido...</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-secondary/10 text-secondary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px] animate-spin">sync</span> Processando...
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded-md transition-colors" title="Cancelar" type="button">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+</button>
+</td>
+</tr>
+<!-- Row 3: American Express -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3.5 px-4 font-label-md text-label-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-blue-600/10 text-blue-600 flex items-center justify-center text-[10px] font-bold">AX</span>
+<span>Amex</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="font-tabular-amount font-medium">amex_august_locked.pdf</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">1.2 MB • Descriptografado local</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-tabular-amount">15 Jul - 14 Ago 2025</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5">
+<span class="text-on-surface">Amex Gold</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary/10 text-secondary font-label-sm text-label-sm">Pessoal</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="font-tabular-amount font-medium text-on-surface">31 transações</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">lock_open</span> Processado
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded-md transition-colors" title="Ver Detalhes" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 4: Nubank -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3.5 px-4 font-label-md text-label-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-purple-600/10 text-purple-600 flex items-center justify-center text-[10px] font-bold">Nu</span>
+<span>Nubank</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="font-tabular-amount font-medium">nu_fatura_setembro_2025.csv</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">95 KB</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-tabular-amount">20 Ago - 19 Set 2025</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5">
+<span class="text-on-surface">Nubank Cartão</span>
+<span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm">Casa</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="font-tabular-amount font-medium text-primary">18 novos • 0 dups</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> Processado
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<button class="text-on-surface-variant hover:text-on-surface p-1 rounded-md transition-colors" title="Ver Detalhes" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility</span>
+</button>
+</td>
+</tr>
+<!-- Row 5: C6 Bank (Failed) -->
+<tr class="hover:bg-surface-container-low/50 transition-colors">
+<td class="py-3.5 px-4 font-label-md text-label-md">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-zinc-800 text-surface-container-lowest flex items-center justify-center text-[10px] font-bold">C6</span>
+<span>C6 Bank</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="font-tabular-amount font-medium">c6_extrato_investimentos.pdf</span>
+<span class="font-label-sm text-label-sm text-tertiary">850 KB • Senha pendente</span>
+</div>
+</td>
+<td class="py-3.5 px-4 text-on-surface-variant font-tabular-amount">01 Ago - 31 Ago 2025</td>
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-1.5">
+<span class="text-on-surface">C6 CDB Pós</span>
+<span class="px-2 py-0.5 rounded-full bg-secondary/10 text-secondary font-label-sm text-label-sm">Pessoal</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<span class="font-label-sm text-label-sm text-tertiary">0 lidos</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-tertiary/10 text-tertiary font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px]">error</span> Requer Senha
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<button class="px-2 py-1 rounded bg-tertiary text-on-tertiary font-label-sm text-label-sm hover:opacity-90 transition-opacity" type="button">
+                    Resolver 🔑
+                  </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Security & Client-Side Privacy Seal at Bottom -->
+<section class="flex items-start md:items-center gap-gutter-md p-gutter-lg bg-surface-container-low rounded-2xl">
+<div class="w-10 h-10 rounded-xl bg-surface-container-highest flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined text-[22px]">verified_user</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<span class="font-headline-sm text-headline-sm text-on-surface">Garantia de Processamento Local & Anti-Vazamento nosko</span>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Todos os arquivos PDF e CSV são interpretados diretamente na memória da sua sessão pelo Web Worker. Seus extratos de contas pessoais nunca transitam pelo banco de dados do Espaço Casa e senhas de PDF nunca saem da sua máquina.
+          </p>
+</div>
+</section>
+</main>
+</div>
+</div></main><footer class="w-full bg-surface-container-low/60 py-gutter-lg"><div class="w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop flex flex-col md:flex-row items-center justify-between gap-gutter-md text-center md:text-left"><div class="flex items-center gap-gutter-xs text-on-surface-variant"><span class="material-symbols-outlined text-[16px] text-primary">verified_user</span><span class="font-body-md text-body-md">Criptografia de ponta a ponta & privacidade total</span></div><div class="flex items-center gap-gutter-lg"><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="termos" href="#">Termos</a><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="privacidade" href="#">Privacidade</a><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="contato" href="#">Suporte</a></div></div></footer></body></html>

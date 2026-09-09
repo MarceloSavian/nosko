@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+
+<html lang="pt-BR"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"on-tertiary-fixed-variant":"#92002a","on-primary":"#ffffff","on-primary-fixed":"#002114","surface-container-highest":"#dae2fd","primary":"#006948","primary-container":"#00855d","tertiary-container":"#dc2c4f","surface-variant":"#dae2fd","surface":"#faf8ff","inverse-primary":"#68dba9","surface-container":"#eaedff","on-primary-fixed-variant":"#005137","surface-container-lowest":"#ffffff","surface-container-low":"#f2f3ff","on-error-container":"#93000a","tertiary":"#b90538","on-tertiary-container":"#fffbff","on-secondary-container":"#fffbff","on-surface-variant":"#3d4a42","on-primary-container":"#f5fff7","tertiary-fixed":"#ffdadb","primary-fixed":"#85f8c4","on-secondary-fixed":"#0f0069","on-surface":"#131b2e","secondary-fixed":"#e2dfff","surface-tint":"#006c4a","on-background":"#131b2e","on-tertiary":"#ffffff","on-secondary-fixed-variant":"#3323cc","error":"#ba1a1a","inverse-on-surface":"#eef0ff","on-tertiary-fixed":"#40000d","secondary-fixed-dim":"#c3c0ff","surface-dim":"#d2d9f4","surface-container-high":"#e2e7ff","outline":"#6d7a72","surface-bright":"#faf8ff","on-secondary":"#ffffff","inverse-surface":"#283044","background":"#faf8ff","error-container":"#ffdad6","on-error":"#ffffff","secondary-container":"#645efb","tertiary-fixed-dim":"#ffb2b7","secondary":"#4b41e1","primary-fixed-dim":"#68dba9","outline-variant":"#bccac0"},"borderRadius":{"DEFAULT":"0.25rem","lg":"0.5rem","xl":"0.75rem","full":"9999px"},"spacing":{"gutter-lg":"1.5rem","gutter-2xl":"3rem","gutter-xl":"2rem","margin-desktop":"2.5rem","gutter-sm":"0.5rem","gutter-md":"1rem","gutter-xs":"0.25rem","margin-mobile":"1rem","margin-tablet":"1.5rem"},"fontFamily":{"headline-sm":["Inter"],"tabular-amount":["Inter"],"headline-xl-mobile":["Inter"],"headline-xl":["Inter"],"body-md":["Inter"],"body-lg":["Inter"],"metric-display":["Inter"],"label-md":["Inter"],"label-sm":["Inter"],"metric-display-mobile":["Inter"],"headline-lg":["Inter"]},"fontSize":{"headline-sm":["1.125rem",{"lineHeight":"1.5rem","letterSpacing":"-0.01em","fontWeight":"600"}],"tabular-amount":["0.875rem",{"lineHeight":"1.25rem","fontWeight":"500"}],"headline-xl-mobile":["1.75rem",{"lineHeight":"2.25rem","letterSpacing":"-0.02em","fontWeight":"700"}],"headline-xl":["2.25rem",{"lineHeight":"2.75rem","letterSpacing":"-0.025em","fontWeight":"700"}],"body-md":["0.875rem",{"lineHeight":"1.25rem","fontWeight":"400"}],"body-lg":["1rem",{"lineHeight":"1.5rem","fontWeight":"400"}],"metric-display":["2rem",{"lineHeight":"2.25rem","letterSpacing":"-0.03em","fontWeight":"600"}],"label-md":["0.875rem",{"lineHeight":"1.25rem","fontWeight":"500"}],"label-sm":["0.75rem",{"lineHeight":"1rem","letterSpacing":"0.025em","fontWeight":"600"}],"metric-display-mobile":["1.5rem",{"lineHeight":"1.75rem","letterSpacing":"-0.02em","fontWeight":"600"}],"headline-lg":["1.5rem",{"lineHeight":"2rem","letterSpacing":"-0.02em","fontWeight":"600"}]}}}}</script></head><body class="bg-surface text-on-surface flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop flex items-center justify-between"><div class="flex items-center gap-gutter-sm"><img alt="Brand logo. - Primary color: #059669
+- Font: inter
+- Mode: light
+- Roundness: rounded-md
+" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1U6k6ArXjG8j2ORv0amT-fGqEcrqlZcT6ym49eT7zBKMP980HxJNN40cxgR016dhhxt4TSv0WzqfYLe4UCTXG1nLiw-spi-4YaISo_dsGWZmSxSMY00-dXx-EkH2uc2FwdHXKldm_Q8gjq61wa4R4NPvXKFx2m9PUbnLHcBvz5oyjd6ZVEXjGiZGWnsWdcBxdGzIr_z_m9o98cyBThxRoCsF8ZbKdxxWY71xnsNRKQo7Yqo4CWBhjKqNSQ"/><span class="font-headline-sm text-headline-sm tracking-tight text-on-surface">nosko</span></div><nav class="hidden md:flex items-center gap-gutter-md" data-active-classes="bg-surface-container-high text-on-surface font-label-md text-label-md rounded-full"><a aria-current="page" class="px-gutter-sm py-gutter-xs transition-colors bg-surface-container-high text-on-surface font-label-md text-label-md rounded-full" data-path="inicio" href="#">Início</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface px-gutter-sm py-gutter-xs transition-colors" data-path="manifesto" href="#">Manifesto</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface px-gutter-sm py-gutter-xs transition-colors" data-path="seguranca" href="#">Segurança</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface px-gutter-sm py-gutter-xs transition-colors" data-path="validar-convite" href="#">Validar Convite</a></nav><div class="flex items-center gap-gutter-sm"><div class="hidden sm:flex items-center gap-gutter-xs bg-surface-container-low px-gutter-sm py-gutter-xs rounded-full"><span class="material-symbols-outlined text-[16px] text-primary">lock</span><span class="font-label-sm text-label-sm text-on-surface-variant">Acesso exclusivo por convite</span></div><button aria-label="Mudar idioma" class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="font-label-sm text-label-sm uppercase">PT</span></button><button aria-label="Alternar tema" class="flex items-center justify-center w-8 h-8 rounded-full bg-surface-container-low text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors" type="button"><span class="material-symbols-outlined text-[18px]">light_mode</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="w-full pt-16 flex-1 bg-gradient-to-b from-surface via-surface-container-low to-surface relative"><div class="flex flex-col w-full">
+<!-- Content Workspace Container -->
+<div class="w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop py-gutter-lg flex flex-col gap-gutter-lg">
+<!-- Top Breadcrumb & Metadata Section -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-gutter-sm">
+<div class="flex flex-col gap-gutter-xs">
+<nav aria-label="Breadcrumb" class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="hover:text-on-surface cursor-pointer transition-colors">Finanças</span>
+<span class="text-outline-variant font-headline-sm">/</span>
+<span class="hover:text-on-surface cursor-pointer transition-colors">Conciliação Bancária</span>
+<span class="text-outline-variant font-headline-sm">/</span>
+<span class="text-primary font-medium">Fila de Revisão pós-importação</span>
+</nav>
+<div class="flex items-baseline gap-3 flex-wrap">
+<h1 class="font-headline-lg text-headline-lg text-on-surface">Fila de Revisão de Transações</h1>
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+            Importação Ativa #849
+          </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+          38 transações importadas de 4 extratos. Revise classificações automáticas, confirme destinos e descarte redundâncias.
+        </p>
+</div>
+<!-- Quick Metrics Snapshot Pill Group -->
+<div class="flex items-center gap-2 bg-surface-container-low p-1.5 rounded-2xl shadow-sm self-start md:self-auto">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container-lowest rounded-xl shadow-sm">
+<span class="material-symbols-outlined text-[18px] text-primary">analytics</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-[10px] uppercase text-on-surface-variant tracking-wider">Acurácia IA</span>
+<span class="font-tabular-amount text-tabular-amount font-semibold text-primary">94.2%</span>
+</div>
+</div>
+<div class="flex items-center gap-2 px-3 py-1.5">
+<span class="material-symbols-outlined text-[18px] text-secondary">database</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-[10px] uppercase text-on-surface-variant tracking-wider">Fontes</span>
+<span class="font-tabular-amount text-tabular-amount text-on-surface">4 Bancos</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Count Tabs / Segmented Filter Strip -->
+<div class="flex items-center justify-between gap-gutter-md overflow-x-auto pb-1 border-b border-outline-variant/20">
+<div class="flex items-center gap-2 min-w-max">
+<!-- Active Tab: Novos -->
+<button class="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-container-high text-on-surface font-label-md text-label-md font-semibold transition-all shadow-sm" type="button">
+<span>Novos</span>
+<span class="px-2 py-0.5 rounded-full bg-primary text-on-primary text-[11px] font-bold">24</span>
+</button>
+<!-- Confirmados -->
+<button class="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors" type="button">
+<span>Confirmados</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant text-[11px]">11</span>
+</button>
+<!-- Ignorados -->
+<button class="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors" type="button">
+<span>Ignorados</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant text-[11px]">2</span>
+</button>
+<!-- Duplicados Alert -->
+<button class="flex items-center gap-2 px-4 py-2 rounded-xl bg-error-container/40 hover:bg-error-container/70 text-on-error-container font-label-md text-label-md font-medium transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-error">warning</span>
+<span>Duplicados</span>
+<span class="px-2 py-0.5 rounded-full bg-error text-on-error text-[11px] font-bold">1</span>
+</button>
+<!-- Transferências Internas -->
+<button class="flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-surface-container text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[16px] text-secondary">sync_alt</span>
+<span>Transferências Internas</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant text-[11px]">2</span>
+</button>
+</div>
+<!-- Quick Toggles -->
+<div class="hidden lg:flex items-center gap-4 min-w-max text-on-surface-variant">
+<label class="flex items-center gap-2 cursor-pointer select-none">
+<input checked="" class="w-4 h-4 rounded text-primary focus:ring-primary focus:ring-offset-0 accent-primary" type="checkbox"/>
+<span class="font-label-sm text-label-sm">Exibir somente pendentes</span>
+</label>
+<span class="text-outline-variant">•</span>
+<div class="flex items-center gap-1.5 text-primary">
+<span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="font-label-sm text-label-sm font-semibold">Auto-categorização com IA</span>
+</div>
+</div>
+</div>
+<!-- Informational Destination Callout / Domain Privacy Guide -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter-md p-gutter-md bg-surface-container-low rounded-2xl border border-outline-variant/30 relative overflow-hidden">
+<!-- Subtle Decorative ambient blur -->
+<div class="absolute -right-20 -top-20 w-64 h-64 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute -left-20 -bottom-20 w-64 h-64 bg-secondary/5 rounded-full blur-3xl pointer-events-none"></div>
+<!-- Casa Pillar Callout -->
+<div class="flex items-start gap-3 bg-surface-container-lowest p-4 rounded-xl shadow-sm border-l-4 border-primary relative z-10">
+<div class="w-9 h-9 rounded-full bg-primary-fixed flex items-center justify-center shrink-0 text-on-primary-fixed">
+<span class="material-symbols-outlined text-[20px]">cottage</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Destino Compartilhado (Casa)</h4>
+<span class="px-2 py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-[10px] uppercase">Ciclo 23 Ago – 22 Set</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Ao confirmar lançamentos de contas conjuntas ou marcadas como Casa, eles entram no Ciclo Atual e ficam visíveis para ambos (<span class="font-medium text-on-surface">Marcelo & Gabriele</span>).
+          </p>
+</div>
+</div>
+<!-- Pessoal Pillar Callout -->
+<div class="flex items-start gap-3 bg-surface-container-lowest p-4 rounded-xl shadow-sm border-l-4 border-secondary relative z-10">
+<div class="w-9 h-9 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0 text-on-secondary-fixed">
+<span class="material-symbols-outlined text-[20px]">shield_person</span>
+</div>
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Destino Pessoal (Privado)</h4>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-fixed-dim/40 text-on-secondary-fixed-variant font-label-sm text-[10px]">
+<span class="material-symbols-outlined text-[11px]">lock</span> Só você vê isto
+            </span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+            Lançamentos de contas individuais ficam guardados exclusivamente no seu cofre privado, com zero visibilidade no Espaço Casa.
+          </p>
+</div>
+</div>
+</div>
+<!-- Bulk Actions & Advanced Filter Toolbar -->
+<div class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-gutter-md bg-surface-container-lowest p-4 rounded-2xl shadow-sm">
+<!-- Search and Quick Filter Chips -->
+<div class="flex flex-wrap items-center gap-2.5 flex-1 min-w-0">
+<!-- Search Input -->
+<div class="relative flex-1 min-w-[240px]">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full pl-9 pr-4 py-2 bg-surface-container-low rounded-xl font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary/20 border border-transparent focus:border-primary transition-all" placeholder="Buscar por descrição, contraparte ou valor..." type="text"/>
+</div>
+<!-- Filter Pills -->
+<div class="flex items-center gap-1.5 overflow-x-auto py-0.5">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container font-label-md text-label-md text-on-surface flex items-center gap-1.5 hover:bg-surface-container-high transition-colors" type="button">
+<span>Todas as contas</span>
+<span class="material-symbols-outlined text-[16px] text-outline">expand_more</span>
+</button>
+<button class="px-3 py-1.5 rounded-lg bg-primary-fixed/40 text-primary font-label-md text-label-md flex items-center gap-1 hover:bg-primary-fixed/70 transition-colors" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+            Apenas Casa (14)
+          </button>
+<button class="px-3 py-1.5 rounded-lg bg-secondary-fixed/40 text-secondary font-label-md text-label-md flex items-center gap-1 hover:bg-secondary-fixed/70 transition-colors" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+            Apenas Pessoal (10)
+          </button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-low text-on-surface-variant font-label-md text-label-md hover:bg-surface-container transition-colors" type="button">
+            EUR / BRL
+          </button>
+</div>
+</div>
+<!-- Bulk Actions Triggers -->
+<div class="flex items-center gap-2 shrink-0 border-t lg:border-t-0 pt-2 lg:pt-0 border-outline-variant/20">
+<button class="px-3.5 py-2 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high font-label-md text-label-md flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">rule</span>
+<span class="hidden sm:inline">Definir Categoria em Lote</span>
+</button>
+<button class="px-3.5 py-2 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high font-label-md text-label-md flex items-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">swap_horiz</span>
+<span class="hidden sm:inline">Espaço</span>
+</button>
+<button class="px-4 py-2 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-semibold flex items-center gap-2 shadow-sm hover:bg-primary-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">done_all</span>
+<span>Confirmar selecionados (24)</span>
+</button>
+</div>
+</div>
+<!-- Special Intelligence Notification 1: Internal Self-Transfer Grouping -->
+<div class="bg-surface-container-low rounded-2xl p-4 shadow-sm flex flex-col gap-3 border-l-4 border-secondary">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-secondary/10 text-secondary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">sync_alt</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Detecção Inteligente: Transferência entre contas próprias</span>
+<span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant font-label-sm text-[11px] font-medium">Neutro Financeiro</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-xs sm:text-sm">
+              Identificamos um fluxo correspondente de saída no Revolut e entrada no Nubank. Conciliar este par impede a duplicação ou inflação artificial de despesas no seu cofre.
+            </p>
+</div>
+</div>
+<button class="px-4 py-2 bg-secondary text-on-secondary rounded-xl font-label-md text-label-md font-medium shrink-0 hover:bg-secondary-container transition-colors shadow-sm flex items-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-[18px]">link</span>
+          Conciliar Par como Transferência Neutra
+        </button>
+</div>
+<!-- Visual Grouped Sub-Table -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2 border-t border-outline-variant/20">
+<div class="flex items-center justify-between p-2.5 bg-surface-container-lowest rounded-xl">
+<div class="flex items-center gap-2">
+<span class="w-7 h-7 rounded bg-secondary-fixed/50 text-secondary flex items-center justify-center font-bold text-[10px]">REV</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-medium text-on-surface">Revolut Principal (Pessoal)</span>
+<span class="font-label-sm text-[11px] text-outline">Wise Transfer EUR > BRL • 21 Ago</span>
+</div>
+</div>
+<span class="font-tabular-amount text-tabular-amount font-semibold text-error">-€ 500,00</span>
+</div>
+<div class="flex items-center justify-between p-2.5 bg-surface-container-lowest rounded-xl">
+<div class="flex items-center gap-2">
+<span class="w-7 h-7 rounded bg-surface-container-high text-on-surface flex items-center justify-center font-bold text-[10px]">NU</span>
+<div class="flex flex-col">
+<span class="font-label-md text-label-md font-medium text-on-surface">Nubank Reserva (Pessoal)</span>
+<span class="font-label-sm text-[11px] text-outline">Wise Remessa Câmbio • 21 Ago</span>
+</div>
+</div>
+<span class="font-tabular-amount text-tabular-amount font-semibold text-primary">+R$ 3.050,00</span>
+</div>
+</div>
+</div>
+<!-- Special Intelligence Notification 2: Duplicate Alert Bar -->
+<div class="bg-error-container/20 rounded-2xl p-3.5 flex items-center justify-between gap-3 border-l-4 border-error">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error text-[22px]">report_problem</span>
+<div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+<span class="font-label-md text-label-md font-bold text-on-surface">Duplicado Detectado:</span>
+<span class="font-body-md text-body-md text-on-surface-variant">
+            Transação idêntica já conciliada em 18 Ago (<span class="font-medium text-on-surface">ING Betaalrekening -€ 74,20 Albert Heijn</span>).
+          </span>
+</div>
+</div>
+<div class="flex items-center gap-2 shrink-0">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-colors" type="button">
+          Manter Avulso
+        </button>
+<button class="px-3 py-1.5 rounded-lg bg-error text-on-error font-label-sm text-label-sm font-semibold transition-colors" type="button">
+          Descartar Duplicado
+        </button>
+</div>
+</div>
+<!-- Main Review Queue Dense Table Card -->
+<div class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col">
+<!-- Table Header Bar -->
+<div class="p-4 border-b border-outline-variant/15 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<input checked="" class="w-4 h-4 rounded text-primary focus:ring-primary focus:ring-offset-0 accent-primary cursor-pointer" id="selectAll" type="checkbox"/>
+<label class="font-label-md text-label-md font-medium text-on-surface cursor-pointer select-none" for="selectAll">
+            Selecionar todos os 24 novos lançamentos
+          </label>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Mostrando 1–8 de 24</span>
+</div>
+<!-- Interactive Queue Table -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low/50 font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase border-b border-outline-variant/15">
+<th class="py-3 px-4 w-10"></th>
+<th class="py-3 px-3">Data</th>
+<th class="py-3 px-4">Conta & Espaço</th>
+<th class="py-3 px-4">Descrição Original</th>
+<th class="py-3 px-4">Contraparte</th>
+<th class="py-3 px-4 text-right">Valor</th>
+<th class="py-3 px-4">Categoria Sugerida</th>
+<th class="py-3 px-4 text-center">Ações Rápidas</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10 text-on-surface font-body-md text-body-md">
+<!-- Row 1: Albert Heijn (Casa / Shared) -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="py-3.5 px-4 text-center">
+<input checked="" class="w-4 h-4 rounded text-primary accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-3.5 px-3 font-tabular-amount text-tabular-amount whitespace-nowrap text-on-surface-variant">
+                22 Ago 2024
+              </td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-primary-fixed/70 text-on-primary-fixed font-bold text-[10px] flex items-center justify-center">ING</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-medium text-on-surface">Betaalrekening</span>
+<span class="inline-flex items-center gap-1 font-label-sm text-[10px] text-primary font-bold">
+<span class="material-symbols-outlined text-[12px]">cottage</span> Casa (Conjunta)
+                    </span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 max-w-[220px]">
+<div class="truncate text-on-surface-variant" title="Albert Heijn 1284 Amsterdam NL betaalautomaat">
+                  Albert Heijn 1284 Amsterdam
+                </div>
+<span class="font-label-sm text-[11px] text-outline">Transação POS Cartão • 9031</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Albert Heijn</span>
+</td>
+<td class="py-3.5 px-4 text-right whitespace-nowrap">
+<span class="font-tabular-amount text-tabular-amount font-semibold text-on-surface">-€ 42,50</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<button class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-fixed/40 text-on-primary-fixed hover:bg-primary-fixed transition-colors" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm font-medium">Supermercado (Casa 50/50)</span>
+<span class="material-symbols-outlined text-[14px]">arrow_drop_down</span>
+</button>
+</td>
+<td class="py-3.5 px-4 text-center whitespace-nowrap">
+<div class="inline-flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-primary-fixed/50 hover:bg-primary text-primary hover:text-on-primary flex items-center justify-center transition-colors" title="Confirmar" type="button">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" title="Ignorar" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility_off</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" title="Editar" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: Salary Transfer (Pessoal / Private) -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="py-3.5 px-4 text-center">
+<input checked="" class="w-4 h-4 rounded text-secondary accent-secondary cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-3.5 px-3 font-tabular-amount text-tabular-amount whitespace-nowrap text-on-surface-variant">
+                21 Ago 2024
+              </td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-secondary-fixed/70 text-on-secondary-fixed font-bold text-[10px] flex items-center justify-center">REV</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-medium text-on-surface">Revolut Pro</span>
+<span class="inline-flex items-center gap-1 font-label-sm text-[10px] text-secondary font-bold">
+<span class="material-symbols-outlined text-[12px]">lock</span> Pessoal (Privado)
+                    </span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 max-w-[220px]">
+<div class="truncate text-on-surface-variant" title="TechCorp BV Salary August 2024 SEPA transfer">
+                  TechCorp BV Salário Ago
+                </div>
+<span class="font-label-sm text-[11px] text-outline">Crédito SEPA Automático</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="font-label-md text-label-md font-semibold text-on-surface">TechCorp BV</span>
+</td>
+<td class="py-3.5 px-4 text-right whitespace-nowrap">
+<span class="font-tabular-amount text-tabular-amount font-semibold text-primary">+€ 3.200,00</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<button class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed/40 text-on-secondary-fixed hover:bg-secondary-fixed transition-colors" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm font-medium">Salário & Renda Pessoal</span>
+<span class="material-symbols-outlined text-[14px]">arrow_drop_down</span>
+</button>
+</td>
+<td class="py-3.5 px-4 text-center whitespace-nowrap">
+<div class="inline-flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-primary-fixed/50 hover:bg-primary text-primary hover:text-on-primary flex items-center justify-center transition-colors" title="Confirmar" type="button">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" title="Ignorar" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility_off</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" title="Editar" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Enel Energia (Casa / Shared) -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="py-3.5 px-4 text-center">
+<input checked="" class="w-4 h-4 rounded text-primary accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-3.5 px-3 font-tabular-amount text-tabular-amount whitespace-nowrap text-on-surface-variant">
+                20 Ago 2024
+              </td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-surface-container-high text-on-surface font-bold text-[10px] flex items-center justify-center">NU</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-medium text-on-surface">Nubank Conjunta</span>
+<span class="inline-flex items-center gap-1 font-label-sm text-[10px] text-primary font-bold">
+<span class="material-symbols-outlined text-[12px]">cottage</span> Casa (Compartilhado)
+                    </span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 max-w-[220px]">
+<div class="truncate text-on-surface-variant" title="Enel Distribuicao SP Pagamento Boleto Codigo 8382">
+                  Enel Distribuição Boleto
+                </div>
+<span class="font-label-sm text-[11px] text-outline">Débito em Conta • SP</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Enel Energia</span>
+</td>
+<td class="py-3.5 px-4 text-right whitespace-nowrap">
+<span class="font-tabular-amount text-tabular-amount font-semibold text-on-surface">-R$ 189,90</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<button class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-fixed/40 text-on-primary-fixed hover:bg-primary-fixed transition-colors" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm font-medium">Moradia & Contas (Casa)</span>
+<span class="material-symbols-outlined text-[14px]">arrow_drop_down</span>
+</button>
+</td>
+<td class="py-3.5 px-4 text-center whitespace-nowrap">
+<div class="inline-flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-primary-fixed/50 hover:bg-primary text-primary hover:text-on-primary flex items-center justify-center transition-colors" title="Confirmar" type="button">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" title="Ignorar" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility_off</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" title="Editar" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Amazon Web Services (Pessoal / Cloud Infrastructure) -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="py-3.5 px-4 text-center">
+<input checked="" class="w-4 h-4 rounded text-secondary accent-secondary cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-3.5 px-3 font-tabular-amount text-tabular-amount whitespace-nowrap text-on-surface-variant">
+                19 Ago 2024
+              </td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-surface-container-high text-on-surface font-bold text-[10px] flex items-center justify-center">AMX</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-medium text-on-surface">Amex Gold Privado</span>
+<span class="inline-flex items-center gap-1 font-label-sm text-[10px] text-secondary font-bold">
+<span class="material-symbols-outlined text-[12px]">lock</span> Pessoal (Privado)
+                    </span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 max-w-[220px]">
+<div class="truncate text-on-surface-variant" title="Amazon Web Services EMEA AWS.amazon.com IRL">
+                  AWS EMEA Luxembourg
+                </div>
+<span class="font-label-sm text-[11px] text-outline">Recorrente • Cartão • 1082</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="font-label-md text-label-md font-semibold text-on-surface">AWS Cloud</span>
+</td>
+<td class="py-3.5 px-4 text-right whitespace-nowrap">
+<span class="font-tabular-amount text-tabular-amount font-semibold text-on-surface">-€ 64,18</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<button class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-secondary-fixed/40 text-on-secondary-fixed hover:bg-secondary-fixed transition-colors" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+<span class="font-label-sm text-label-sm font-medium">Assinaturas & Nuvem</span>
+<span class="material-symbols-outlined text-[14px]">arrow_drop_down</span>
+</button>
+</td>
+<td class="py-3.5 px-4 text-center whitespace-nowrap">
+<div class="inline-flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-primary-fixed/50 hover:bg-primary text-primary hover:text-on-primary flex items-center justify-center transition-colors" title="Confirmar" type="button">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" title="Ignorar" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility_off</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" title="Editar" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: Uber BV (Casa / Shared) -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="py-3.5 px-4 text-center">
+<input checked="" class="w-4 h-4 rounded text-primary accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-3.5 px-3 font-tabular-amount text-tabular-amount whitespace-nowrap text-on-surface-variant">
+                19 Ago 2024
+              </td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-primary-fixed/70 text-on-primary-fixed font-bold text-[10px] flex items-center justify-center">ING</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-medium text-on-surface">Betaalrekening</span>
+<span class="inline-flex items-center gap-1 font-label-sm text-[10px] text-primary font-bold">
+<span class="material-symbols-outlined text-[12px]">cottage</span> Casa (Conjunta)
+                    </span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 max-w-[220px]">
+<div class="truncate text-on-surface-variant" title="Uber *Trip Help.uber.com AMS">
+                  Uber *Trip Help.uber.com
+                </div>
+<span class="font-label-sm text-[11px] text-outline">Mobilidade Urbana</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Uber BV</span>
+</td>
+<td class="py-3.5 px-4 text-right whitespace-nowrap">
+<span class="font-tabular-amount text-tabular-amount font-semibold text-on-surface">-€ 18,90</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<button class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-fixed/40 text-on-primary-fixed hover:bg-primary-fixed transition-colors" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm font-medium">Transporte (Casa)</span>
+<span class="material-symbols-outlined text-[14px]">arrow_drop_down</span>
+</button>
+</td>
+<td class="py-3.5 px-4 text-center whitespace-nowrap">
+<div class="inline-flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-primary-fixed/50 hover:bg-primary text-primary hover:text-on-primary flex items-center justify-center transition-colors" title="Confirmar" type="button">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" title="Ignorar" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility_off</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" title="Editar" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 6: Amazon.nl (Casa / Household goods) -->
+<tr class="hover:bg-surface-container-low/30 transition-colors group">
+<td class="py-3.5 px-4 text-center">
+<input checked="" class="w-4 h-4 rounded text-primary accent-primary cursor-pointer" type="checkbox"/>
+</td>
+<td class="py-3.5 px-3 font-tabular-amount text-tabular-amount whitespace-nowrap text-on-surface-variant">
+                18 Ago 2024
+              </td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-primary-fixed/70 text-on-primary-fixed font-bold text-[10px] flex items-center justify-center">ING</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm font-medium text-on-surface">Betaalrekening</span>
+<span class="inline-flex items-center gap-1 font-label-sm text-[10px] text-primary font-bold">
+<span class="material-symbols-outlined text-[12px]">cottage</span> Casa (Conjunta)
+                    </span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 max-w-[220px]">
+<div class="truncate text-on-surface-variant" title="Amazon Payments Europe NL Utensílios Cozinha">
+                  Amazon Payments NL
+                </div>
+<span class="font-label-sm text-[11px] text-outline">iDEAL Pago Instantâneo</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="font-label-md text-label-md font-semibold text-on-surface">Amazon.nl</span>
+</td>
+<td class="py-3.5 px-4 text-right whitespace-nowrap">
+<span class="font-tabular-amount text-tabular-amount font-semibold text-on-surface">-€ 54,90</span>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<button class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary-fixed/40 text-on-primary-fixed hover:bg-primary-fixed transition-colors" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-label-sm text-label-sm font-medium">Casa & Utensílios</span>
+<span class="material-symbols-outlined text-[14px]">arrow_drop_down</span>
+</button>
+</td>
+<td class="py-3.5 px-4 text-center whitespace-nowrap">
+<div class="inline-flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-primary-fixed/50 hover:bg-primary text-primary hover:text-on-primary flex items-center justify-center transition-colors" title="Confirmar" type="button">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" title="Ignorar" type="button">
+<span class="material-symbols-outlined text-[18px]">visibility_off</span>
+</button>
+<button class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors" title="Editar" type="button">
+<span class="material-symbols-outlined text-[18px]">tune</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Pagination Controls -->
+<div class="p-4 border-t border-outline-variant/15 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-surface-container-low/30">
+<span class="font-body-md text-body-md text-on-surface-variant">
+          Total de 24 itens pendentes de confirmação direta
+        </span>
+<div class="flex items-center gap-2 self-end sm:self-auto">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-low text-outline opacity-50 cursor-not-allowed font-label-md text-label-md" disabled="" type="button">
+            Anterior
+          </button>
+<button class="px-3 py-1.5 rounded-lg bg-primary text-on-primary font-label-md text-label-md font-semibold shadow-sm" type="button">
+            1
+          </button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-md text-label-md transition-colors" type="button">
+            2
+          </button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-md text-label-md transition-colors" type="button">
+            3
+          </button>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container text-on-surface hover:bg-surface-container-high font-label-md text-label-md transition-colors" type="button">
+            Próxima
+          </button>
+</div>
+</div>
+</div>
+<!-- Floating / Docked Audit Summary Bar -->
+<div class="sticky bottom-4 z-40 w-full bg-surface-container-lowest/95 backdrop-blur-xl border border-outline-variant/30 rounded-2xl p-4 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-4">
+<!-- Visual totals segregated by space -->
+<div class="flex flex-wrap items-center gap-6 w-full lg:w-auto">
+<!-- Casa Impact -->
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center text-on-primary-fixed shadow-sm">
+<span class="material-symbols-outlined text-[20px]">cottage</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-[11px] uppercase tracking-wider text-on-surface-variant">No Ciclo Casa</span>
+<div class="flex items-baseline gap-1.5">
+<span class="font-tabular-amount text-headline-sm text-primary font-bold">€ 482,30</span>
+<span class="font-label-sm text-[11px] text-outline">(12 lançamentos)</span>
+</div>
+</div>
+</div>
+<div class="hidden sm:block h-8 w-[1px] bg-outline-variant/30"></div>
+<!-- Pessoal Impact -->
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-secondary-fixed flex items-center justify-center text-on-secondary-fixed shadow-sm">
+<span class="material-symbols-outlined text-[20px]">lock</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-sm text-[11px] uppercase tracking-wider text-on-surface-variant">No Cofre Pessoal</span>
+<div class="flex items-baseline gap-1.5">
+<span class="font-tabular-amount text-headline-sm text-secondary font-bold">€ 1.240,15 + R$ 4.230,00</span>
+<span class="font-label-sm text-[11px] text-outline">(10 itens)</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Action Final CTAs -->
+<div class="flex items-center gap-3 w-full lg:w-auto justify-end">
+<button class="px-4 py-2.5 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container-high font-label-md text-label-md font-semibold transition-colors" type="button">
+          Salvar Progresso
+        </button>
+<button class="px-5 py-2.5 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-semibold shadow-md hover:bg-primary-container transition-all flex items-center gap-2" type="button">
+<span>Concluir Triagem & Ver Ciclo</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div></main><footer class="w-full bg-surface-container-low/60 py-gutter-lg"><div class="w-full max-w-[1280px] mx-auto px-margin-mobile md:px-margin-tablet lg:px-margin-desktop flex flex-col md:flex-row items-center justify-between gap-gutter-md text-center md:text-left"><div class="flex items-center gap-gutter-xs text-on-surface-variant"><span class="material-symbols-outlined text-[16px] text-primary">verified_user</span><span class="font-body-md text-body-md">Criptografia de ponta a ponta & privacidade total</span></div><div class="flex items-center gap-gutter-lg"><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="termos" href="#">Termos</a><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="privacidade" href="#">Privacidade</a><a class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" data-path="contato" href="#">Suporte</a></div></div></footer></body></html>
