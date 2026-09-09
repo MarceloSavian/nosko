@@ -4,6 +4,10 @@ export class EmailAlreadyRegistered extends Data.TaggedError("EmailAlreadyRegist
   readonly email: string
 }> {}
 
+export class UserNotFound extends Data.TaggedError("UserNotFound")<{
+  readonly userId: string
+}> {}
+
 export class InvalidCredentials extends Data.TaggedError("InvalidCredentials")<
   Record<string, never>
 > {}

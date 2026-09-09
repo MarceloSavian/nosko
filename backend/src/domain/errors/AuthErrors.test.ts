@@ -7,6 +7,7 @@ import {
   MfaCodeInvalid,
   SessionInvalid,
   TokenInvalid,
+  UserNotFound,
 } from "./AuthErrors"
 
 describe("auth errors", () => {
@@ -44,5 +45,10 @@ describe("auth errors", () => {
   it("carries the reason on SessionInvalid", () => {
     const error = new SessionInvalid({ reason: "revoked" })
     expect(error.reason).toBe("revoked")
+  })
+
+  it("carries the user id on UserNotFound", () => {
+    const error = new UserNotFound({ userId: "user-1" })
+    expect(error.userId).toBe("user-1")
   })
 })

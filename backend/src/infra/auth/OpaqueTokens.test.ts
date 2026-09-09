@@ -36,4 +36,25 @@ describe("OpaqueTokensLive", () => {
     )
     expect(hash).toBe(createHash("sha256").update("a-known-token-value").digest("hex"))
   })
+
+  it("generates a 6-digit code by default, hashed the same way", () => {
+    const { code, hash } = run(
+      Effect.gen(function* () {
+        const tokens = yield* OpaqueTokens
+        return tokens.generateCode()
+      }),
+    )
+    expect(code).toMatch(/^\d{6}$/)
+    expect(hash).toBe(createHash("sha256").update(code).digest("hex"))
+  })
+
+  it("generates a code with a custom digit count", () => {
+    const { code } = run(
+      Effect.gen(function* () {
+        const tokens = yield* OpaqueTokens
+        return tokens.generateCode(4)
+      }),
+    )
+    expect(code).toMatch(/^\d{4}$/)
+  })
 })
