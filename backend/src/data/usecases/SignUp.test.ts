@@ -42,6 +42,7 @@ describe("signUp", () => {
         id: "existing-user",
         email: "marcelo@example.com",
         passwordHash: "hash",
+        preferredLocale: "pt-BR",
         emailVerified: false,
         mfaEnabled: false,
         mfaSecret: null,

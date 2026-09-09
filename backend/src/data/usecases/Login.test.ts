@@ -44,6 +44,7 @@ const seedUser = async (
   id: "user-1",
   email: "marcelo@example.com",
   passwordHash: await hashPassword(PASSWORD),
+  preferredLocale: "pt-BR" as const,
   emailVerified: overrides.emailVerified ?? true,
   mfaEnabled: overrides.mfaEnabled ?? false,
   mfaSecret: overrides.mfaSecret ?? null,

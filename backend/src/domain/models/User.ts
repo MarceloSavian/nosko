@@ -25,6 +25,7 @@ export const UserCredentials = Schema.Struct({
   id: Schema.UUID,
   email: Schema.String,
   passwordHash: Schema.String,
+  preferredLocale: Locale,
   emailVerified: Schema.Boolean,
   mfaEnabled: Schema.Boolean,
   mfaSecret: Schema.NullOr(Schema.String),

@@ -10,6 +10,7 @@ const seedUser = () => ({
   id: "user-1",
   email: "marcelo@example.com",
   passwordHash: "hash",
+  preferredLocale: "pt-BR" as const,
   emailVerified: true,
   mfaEnabled: false,
   mfaSecret: null,

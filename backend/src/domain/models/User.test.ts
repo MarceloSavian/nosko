@@ -63,6 +63,7 @@ describe("UserCredentials", () => {
         id: "8c9e6679-7425-40de-944b-e07fc1f90ae7",
         email: "marcelo@example.com",
         passwordHash: "argon2id$...",
+        preferredLocale: "pt-BR",
         emailVerified: true,
         mfaEnabled: true,
         mfaSecret: "base32secret",
