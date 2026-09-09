@@ -9,7 +9,13 @@ export default {
   },
   coverageProvider: "v8",
   collectCoverage: true,
-  collectCoverageFrom: ["src/**/*.ts", "!src/**/*.test.ts", "!src/main/**", "!src/**/index.ts"],
+  collectCoverageFrom: [
+    "src/**/*.ts",
+    "!src/**/*.test.ts",
+    "!src/main/**",
+    "!src/test/**",
+    "!src/**/index.ts",
+  ],
   coverageThreshold: {
     global: {
       branches: 100,
