@@ -99,4 +99,34 @@ describe("HouseholdsRepositoryLive", () => {
       'INSERT INTO "household_members" ("household_id","user_id","role","display_name") VALUES ($1,$2,$3,$4) RETURNING *',
     )
   })
+
+  it("lists members of a household", async () => {
+    const { layer, queries } = makeTestSqlClient(() => [memberRow])
+
+    const decoded = await Effect.runPromise(
+      Effect.gen(function* () {
+        const repo = yield* HouseholdsRepository
+        return yield* repo.listMembers(householdRow.id)
+      }).pipe(Effect.provide(HouseholdsRepositoryLive), Effect.provide(layer)),
+    )
+
+    expect(decoded).toHaveLength(1)
+    expect(queries[0]?.sql).toBe('SELECT * FROM "household_members" WHERE "household_id" = $1')
+  })
+
+  it("removes a member from a household", async () => {
+    const { layer, queries } = makeTestSqlClient(() => [])
+
+    await Effect.runPromise(
+      Effect.gen(function* () {
+        const repo = yield* HouseholdsRepository
+        return yield* repo.removeMember(householdRow.id, householdRow.created_by)
+      }).pipe(Effect.provide(HouseholdsRepositoryLive), Effect.provide(layer)),
+    )
+
+    expect(queries[0]?.sql).toBe(
+      'DELETE FROM "household_members" WHERE "household_id" = $1 AND "user_id" = $2',
+    )
+    expect(queries[0]?.params).toEqual([householdRow.id, householdRow.created_by])
+  })
 })

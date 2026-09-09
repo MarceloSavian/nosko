@@ -50,6 +50,14 @@ export const HouseholdsRepositoryLive = Layer.effect(
           role: input.role,
           displayName: input.displayName,
         })} RETURNING *`.pipe(Effect.flatMap((rows) => decodeMember(rows[0]))),
+      listMembers: (householdId) =>
+        sql`SELECT * FROM ${sql("householdMembers")} WHERE ${sql("householdId")} = ${householdId}`.pipe(
+          Effect.flatMap((rows) => Effect.forEach(rows, decodeMember)),
+        ),
+      removeMember: (householdId, userId) =>
+        sql`DELETE FROM ${sql("householdMembers")} WHERE ${sql("householdId")} = ${householdId} AND ${sql("userId")} = ${userId}`.pipe(
+          Effect.asVoid,
+        ),
     }
   }),
 )

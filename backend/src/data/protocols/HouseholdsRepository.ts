@@ -18,5 +18,9 @@ export class HouseholdsRepository extends Context.Tag("HouseholdsRepository")<
       readonly role: HouseholdMemberRole
       readonly displayName: string | null
     }) => Effect.Effect<HouseholdMember, SqlError>
+    readonly listMembers: (
+      householdId: string,
+    ) => Effect.Effect<ReadonlyArray<HouseholdMember>, SqlError>
+    readonly removeMember: (householdId: string, userId: string) => Effect.Effect<void, SqlError>
   }
 >() {}

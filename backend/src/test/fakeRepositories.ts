@@ -197,6 +197,13 @@ export const makeFakeHouseholdsRepository = (
       members.push(record)
       return Effect.succeed(record)
     },
+    listMembers: (householdId) =>
+      Effect.succeed(members.filter((m) => m.householdId === householdId)),
+    removeMember: (householdId, userId) =>
+      Effect.sync(() => {
+        const index = members.findIndex((m) => m.householdId === householdId && m.userId === userId)
+        if (index >= 0) members.splice(index, 1)
+      }),
   })
 
   return { layer, households, members }
