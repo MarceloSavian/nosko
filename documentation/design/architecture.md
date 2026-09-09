@@ -23,7 +23,8 @@ API Gateway (HTTP API)                        [api-routing module]
     v
 BFF Lambda (Effect, single deployable)        [compute module]
     ├─ presentation:  RpcServer (per-section groups) + HttpApi groups + view-model mappers
-    ├─ domain:        use-cases + engines (Cycle, Projection, RecurringDetector) — pure
+    ├─ domain:        use-cases + pure engines (Cycle, Split/Settlement, Projection,
+    │                 RecurringDetector, SubscriptionAudit) + IngestionRules
     ├─ data:          service/repository ports
     └─ infra:         repositories (@effect/sql-pg), auth, parsers, mailer, config
     |            |               |
@@ -60,7 +61,8 @@ backend/src/
   domain/
     models/        Schema entities + value objects (Money, Currency, CycleKey, Locale)
     usecases/      port interfaces for application use-cases
-    services/      pure engines: CycleEngine, ProjectionEngine, RecurringDetector, DedupRules
+    services/      pure engines: CycleEngine, SplitSettlementEngine, ProjectionEngine,
+                   RecurringDetector, SubscriptionAuditEngine, IngestionRules
     errors/        tagged errors
   data/
     usecases/      use-case implementations orchestrating ports (Effect)
@@ -84,8 +86,9 @@ wires layers. Domain has zero infra imports.
 ## 3. BFF: RPC + HttpApi in one Lambda (C1=C)
 
 - **Frontend↔BFF: `@effect/rpc`** — `Schema`-defined requests/responses grouped **per section**:
-  `auth`, `household`, `settings`, `cycles`, `fixedBills`, `expenses`, `ingestion`,
-  `evaluations`, `savings`. `RpcGroup.make(Rpc.make("CycleById", { success, error, payload }))`;
+  `auth`, `household`, `accounts`, `cycles`, `bills`, `payments`/`ledger`, `goals`,
+  `savings`/`projection`, `subscriptions`, `evaluations`, `ingestion`, `settings` (see
+  `user-stories.md` for the actions per section). `RpcGroup.make(Rpc.make("CycleById", { success, error, payload }))`;
   handlers via `Group.toLayer`; typed client via `RpcClient.make`. Responses are **frontend-ready
   view models** (computed figures, formatting hints), so the client renders directly.
 - **Documented surface: `@effect/platform` `HttpApi`** — `HttpApiGroup` per section → OpenAPI +
@@ -111,10 +114,16 @@ reference only; localisation of labels happens in the frontend i18n layer, not i
 | disponível | available |
 | orçamento variável | variableBudget |
 | saldo inicial | openingBalance |
-| saque (sugerido / real) | withdrawal (suggested / actual) |
-| próximo saque sugerido | nextSuggestedWithdrawal |
+| saque | withdrawal (user-defined) |
+| disponível após pagamentos | availableAfterPayments |
 | sobra / falta | surplus (signed) |
 | por categoria | byCategory |
+| pagamentos compartilhados | sharedPayments (couple ledger) |
+| rateio | split (equal / proportional / custom) |
+| acerto | settlement |
+| meta / cofre | goal / vault |
+| assinaturas | subscriptions |
+| conta (visibilidade) | account (visibility: personal / shared) |
 | resumo | summary |
 | pode gastar €X/dia | dailyAllowance |
 
@@ -134,20 +143,20 @@ fixedTotal      = sum(fixedBills.amount)
 variableTotal   = sum(expenses.amount)
 reserve         = cycle.reserve (default from household settings)
 estimate        = seed.estimate        if seeded else prev.variableTotal
-totalToReserve  = fixedTotal + estimate + reserve
-suggestedWithdrawal[member]     = (income - totalToReserve) * pct[member]
-actualWithdrawal[member]        = seed.actualWithdrawal[member] if seeded else prev.suggestedWithdrawal[member]
-actualWithdrawalTotal           = sum(actualWithdrawal)
-openingBalance  = seed.openingBalance  if seeded else prev.surplus
-available       = openingBalance + income - actualWithdrawalTotal
+estimate               = seed.estimate if seeded else prev.variableTotal
+availableAfterPayments = openingBalance + income - fixedTotal - variableTotal - reserve
+withdrawal[member]     = user-defined input (set after seeing availableAfterPayments; default 0)
+withdrawalTotal        = sum(withdrawal)
+openingBalance  = seed.openingBalance if seeded else prev.surplus
+available       = openingBalance + income - withdrawalTotal
 totalSpent      = fixedTotal + variableTotal
 surplus         = available - totalSpent
 variableBudget  = available - fixedTotal
-nextSuggestedWithdrawal[member] = (income - (fixedTotal + variableTotal + reserve)) * pct[member]
-byCategory      = sum(expenses.amount) grouped by category
+byCategory      = sum(sharedPayments.amount) grouped by category
 ```
 
-`prev` for the next cycle = `{ variableTotal, suggestedWithdrawal, surplus }`.
+`prev` for the next cycle = `{ variableTotal, surplus }`. **Withdrawals are user-defined**, not
+computed — the engine surfaces `availableAfterPayments` and each member sets their own withdrawal.
 
 **Configurable cycle boundary.** The 23rd→22nd rule is not hardcoded. Each household sets a
 `cycleAnchorDay` (default 23). A cycle spans `[anchorDay of month M, (anchorDay − 1) of month
@@ -156,6 +165,18 @@ stored per cycle so a household can also override an individual cycle's dates. C
 detection returns the cycle whose `[startDate, endDate]` contains today;
 `dailyAllowance = (estimate − variableTotal) / max(daysUntilEnd, 1)`. Engine tests assert parity
 with the five existing money-evaluation cycles (anchor 23).
+
+## 5.1 Domain spec: the Split/Settlement Engine (the couple ledger)
+
+`SplitSettlementEngine` is **pure**. For each **shared payment** it computes the per-member owed
+`share` from the `split` method — `equal` (½ each), `proportional` (by the cycle income %), or
+`custom` (given shares) — with the remainder cent assigned deterministically so shares sum exactly
+to the amount. Over a cycle it computes, per member, `paid` (sum where `payer = member`) and `owed`
+(sum of shares); the **inter-partner balance** = `paid − owed`. The **suggested settlement** is the
+single transfer `from` the negative-balance member `to` the positive one for `|balance|`, which
+zeroes the ledger. Splits affect **only the household's monthly shared payments**; recorded
+`settlements` (acertos) persist and reset the balance. Property tests: shares sum to the amount;
+the suggested settlement drives the balance to 0.
 
 ## 6. Recurring detection & fixed-bill identification
 
@@ -189,20 +210,21 @@ Reproduces `ComputeSavingsProjection`:
 ## 8. Ingestion pipeline (P2)
 
 ```
-upload file ─► S3 (private) ─► statement_uploads(row) ─► parse (per-bank)
-   ─► normalise to transactions ─► dedup (per-source identity)
-   ─► classify transfers (link EUR↔BRL / internal / self)
-   ─► apply recurring/categorisation rules ─► review queue (staged)
+upload file (CSV; PDF for Amex/C6) ─► S3 (private) ─► statement_uploads(row) ─► parse (per-bank)
+   ─► normalise to transactions ─► dedup (per-source identity, hash)
+   ─► pair internal transfers (Wise EUR↔BRL / self between own accounts) as neutral
+   ─► route by account/IBAN to PERSONAL (private) or SHARED destination
+   ─► AI-assisted categorisation + apply recurring/categorisation rules ─► review queue (staged)
    ─► user confirms/categorises
-   ─► joint-account expense ─► create linked expense in the correct cycle (anchor boundary)
+   ─► shared ─► shared_payment in the correct cycle (anchor boundary); personal ─► private vault
    ─► fixed-bill rule match ─► auto-mark the cycle's fixed bill paid
 ```
 
 Parsers are `infra/parsers/*` returning `Effect<Transaction[], InvalidStatement>` (no try/catch;
-malformed rows → tagged failures). Dedup uses `transactions.dedup_hash` (unique per household).
-Transfer classification implements the money-flow rules from money-evaluation (Wise EUR↔BRL
-equivalence, self-transfers, Revolut internal moves, credit-card bill payments). Only joint
-accounts feed household expenses; personal cards feed evaluations.
+malformed rows → tagged failures). **No bank sync — file import only.** Dedup uses
+`transactions.dedup_hash` (unique per household). Transfer pairing implements the money-flow rules
+(Wise EUR↔BRL equivalence, self-transfers, internal moves). **Account/IBAN routing** sends each
+transaction to the owner's personal (private) space or the shared couple ledger.
 
 ## 9. Configuration-first design & i18n
 
@@ -245,6 +267,18 @@ a household, invites the partner by email (`household_invitations`), partner acc
 All data scoped by `household_id`; per-member attribution preserved. Authorization enforced in
 BFF middleware and again at the repository layer (household filter / optional RLS GUC).
 
+## 11.1 Visibility & personal-data encryption
+
+Every financial row carries `owner_user_id` + `visibility` (`personal` | `shared`). The BFF sets
+the caller's `user_id`/`household_id`; **shared** reads filter `visibility='shared' AND
+household_id=…`; **personal** reads additionally require `owner_user_id = caller`. Personal rows
+are **never** joined into a partner's response — repository tests assert this. Sensitive columns on
+personal rows (descriptions, counterparties, balances, notes) are **encrypted at rest** via a KMS
+**envelope** (per-household data key; `enc_*` + `enc_dek_id` columns), decrypted only for the owner
+in an `infra/crypto` adapter. This is the model behind the UI's "cofre / E2E" language; it is
+**not** client-side zero-knowledge (the BFF still computes personal projections/audits). No bank
+sync means no third-party account tokens to store.
+
 ## 12. Infrastructure as Code (Terraform, nosko modules)
 
 Reuse nosko's capability modules (`compute/aws-lambda`, `api-routing/aws-apigw-v2`,
@@ -274,10 +308,12 @@ Runner: **Jest with `@swc/jest`** (SWC/Rust transform for fast TS test execution
 and web — no Vitest. Effect programs are exercised with `Effect.runPromise`/`runPromiseExit` (a
 small local `it.effect`-style helper stands in for `@effect/vitest`, which is Vitest-specific).
 
-- **Unit** (all logic): Cycle Engine (parity), Projection Engine, RecurringDetector,
-  dedup/transfer rules, parsers (fixtures), auth token logic, view-model mappers, i18n dictionary
-  completeness.
-- **Integration:** repositories against a disposable Postgres. **Contract:** RPC/HttpApi schema
+- **Unit** (all logic): Cycle Engine (parity), **Split/Settlement Engine** (shares sum;
+  settlement zeroes balance), Projection Engine, RecurringDetector, **SubscriptionAuditEngine**,
+  IngestionRules (dedup/routing/transfer-pairing), parsers (fixtures), auth token logic, view-model
+  mappers, i18n dictionary completeness.
+- **Integration:** repositories against a disposable Postgres, including **privacy tests**
+  (personal rows returned only to the owner; KMS round-trip). **Contract:** RPC/HttpApi schema
   round-trips + OpenAPI snapshot. **Web:** `@testing-library/react` + `jsdom` under the same
   Jest/`@swc/jest`.
 - **Coverage: 100%** thresholds (statements/branches/functions/lines), **CI-enforced**. A minimal,

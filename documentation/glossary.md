@@ -17,10 +17,16 @@ never in code. This is the source of truth referenced by `backend/CONVENTIONS.md
 | disponível | available |
 | orçamento variável | variableBudget |
 | saldo inicial | openingBalance |
-| saque (sugerido / real) | withdrawal (suggested / actual) |
-| próximo saque sugerido | nextSuggestedWithdrawal |
+| saque | withdrawal (user-defined) |
+| disponível após pagamentos | availableAfterPayments |
 | sobra / falta | surplus (signed) |
 | por categoria | byCategory |
+| pagamentos compartilhados | sharedPayments (couple ledger) |
+| rateio | split (equal / proportional / custom) |
+| acerto | settlement |
+| meta / cofre | goal / vault |
+| assinaturas | subscriptions |
+| conta (visibilidade) | account (visibility: personal / shared) |
 | resumo | summary |
 | pode gastar €X/dia | dailyAllowance |
 | conta fixa recorrente (regra) | recurring rule / fixed-bill rule |

@@ -19,15 +19,17 @@ A deployed AWS web application, private to Marcelo + Gabriele, that replaces the
 
 | File | Purpose | Status |
 |---|---|---|
-| `reverse-engineering.md` | Capability capture from money-evaluation + nosko lessons | Done |
-| `requirements-questions.md` | Product decisions | Answered |
-| `requirements-clarification-questions.md` | Effect/BFF architecture decisions | Answered |
-| `requirements.md` | Functional + non-functional requirements | Done |
-| `design/architecture.md` | Effect + BFF + DDD + IaC architecture, cycle/projection specs | Done |
-| `design/database-design.md` | PostgreSQL/Neon schema | Done |
-| `design/units-of-work.md` | Dependency-ordered decomposition | Done |
+| `reverse-engineering.md` | Capability capture from money-evaluation + nosko-legacy lessons | Done |
+| `requirements-questions.md` / `requirements-clarification-questions.md` | Locked decisions | Answered |
+| `requirements.md` | Functional + non-functional requirements + Data Architecture (UI-aligned) | Done |
+| `user-stories.md` | Stories & actions per epic (BFF surface), from the generated UI | Done |
+| `stitch-prompts.md` | Google Stitch prompts (personal/shared spaces) | Done |
+| `ui/` | Generated Stitch screens (HTML + images + design tokens) | Reference |
+| `design/architecture.md` | Effect + BFF + DDD + IaC; Cycle/Split-Settlement/Projection specs; visibility+encryption | Done |
+| `design/database-design.md` | PostgreSQL/Neon schema (accounts+visibility, ledger, goals, subs, FX) | Done |
+| `design/units-of-work.md` | Dependency-ordered decomposition (U0–U15) | Done |
 | `repo-structure-and-agreements.md` | Which agreements go in which repo README/CONVENTIONS | Done |
-| `plans/implementation-plan.md` | Phased execution plan | **Awaiting approval** |
+| `plans/implementation-plan.md` | Phased execution plan (U0–U1 done; resumes at U2) | Approved |
 | `state.md` | Current lifecycle stage and next step | Live |
 | `verification.md` | Validation summary | Pending (post-implementation) |
 

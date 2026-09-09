@@ -1,118 +1,101 @@
 # Implementation Plan — nosko
 
-Phased execution of the units in `design/units-of-work.md`. **This plan is the approval gate: no
-application code is written until it is approved.** Each phase has a definition of done and the
-checks to run (NFR-TEST + build/lint/typecheck + `terraform validate/plan`).
+Phased execution of `design/units-of-work.md` (U0–U15), aligned to the generated UI and
+`user-stories.md`. **U0 and U1 are done and committed; U1 is deployed** to the nosko-test account
+(placeholder BFF). Everything below resumes at U2.
 
-## Approval gate
+## Status
 
-Because this introduces new architecture, new dependencies (Effect stack), and cloud
-infrastructure, implementation starts only after Marcelo replies **"approved"** (or requests
-changes). On approval, Phase 1 begins with U0.
+- **U0** ✅ monorepo + toolchain (TS7/SWC/Effect/Jest 100%/Biome).
+- **U1** ✅ Terraform baseline deployed (API GW, BFF + migration Lambdas, SSM, uploads, S3+CF,
+  strict cost controls). Placeholder BFF until U4/U5 code ships.
+- Everything else: pending.
 
-## Phase 1 — Foundation + core budget loop (U0–U7)
+## Phase 1 — Foundation + core budget loop (U2–U10)
 
-Goal: a deployed, private app where the household can sign up, link, and run the full 23rd→22nd
-budget loop (cycles, fixed bills, variable spend) with manual entry, viewed on Overview + Cycles.
+Goal: two users sign up, link into a household, register accounts (personal/shared), and run the
+full budget loop — cycles, fixed bills, and the **couple ledger with split + settlement** — on the
+Casa and Pessoal dashboards.
 
 Key tasks
-1. U0: scaffold monorepo (`backend/`, `web/`, `iac/`, `packages/contracts/`); **TypeScript 7
-   (`tsc`)**; Effect pinned (v3 stable `3.22.x`); Biome with a **lint rule banning
-   `try/catch` and bare `Promise.catch`**; **Jest + `@swc/jest` with a 100% coverage gate**; root
-   check scripts; **CONVENTIONS/README/glossary stubs** per `repo-structure-and-agreements.md`.
-2. U1: Terraform baseline from nosko modules (compute/api-routing/secrets/static-site) + uploads
-   bucket + Neon connection in SSM; `test` env first.
-3. U2: Neon migrations for identity/household/budgeting **+ household_settings/categories/
-   recurring_rules**; `SqlClient` layer; base repositories + integration test harness.
-4. U3: auth (signup/verify/login/MFA/session) + household create/invite/accept + settings
-   section; SES mailer (localised templates).
-5. U4: BFF skeleton — `RpcServer` + `HttpApi` in one layered Lambda; `packages/contracts`
-   (Schema + Rpc defs); typed client; OpenAPI/Swagger; auth middleware + household scoping;
-   **top-level error boundary** (typed errors + defect catch-all).
-6. U5: Cycle Engine (ported formulas, **configurable anchor day**, English identifiers) +
-   cycles/fixed-bills/expenses domain, repos, RPC sections; parity unit tests vs money-evaluation.
-7. U6: web foundation (Vite + Tailwind + Effect client) + **en/pt i18n dictionaries + switcher**
-   + auth screens + shell.
-8. U7: Overview + Cycles pages with manual add/edit; current-cycle + daily-allowance banner.
+1. U2: Neon migrations for identity/household/settings/accounts/categories/caps with
+   **owner_user_id + visibility** and **KMS envelope** for personal payloads; `SqlClient` layer;
+   base repositories + integration-test harness (privacy tests: personal rows owner-only).
+2. U3: auth (signup/verify/login/MFA/session) + household create/invite/accept + account
+   visibility; SES mailer (localised).
+3. U4: BFF — `RpcServer` + `HttpApi` in one layered Lambda; `packages/contracts`; typed client;
+   OpenAPI; auth middleware with **household + owner scoping**; top-level error boundary.
+4. U5: accounts domain + repos + `accounts.*` RPC (register, visibility toggle, summaries).
+5. U6: **CycleEngine** (availableAfterPayments, savings rate, daily allowance, chaining) +
+   cycles/incomes/**user-defined withdrawals** + fixed bills + recurring rules + RecurringDetector;
+   parity tests vs money-evaluation.
+6. U7: **SplitSettlementEngine** + shared payments + settlements; property tests (shares sum;
+   settlement zeroes balance).
+7. U8: web foundation (Vite+Tailwind+Effect client) + en/pt i18n + **Casa/Pessoal switcher** +
+   Shared-Ledger theme + auth/onboarding screens.
+8. U9: Casa screens — overview, shared accounts, payments (ledger), cycles + detail, fixed bills.
+9. U10: Pessoal screens — overview, my accounts, my payments (private).
 
-Definition of done: deployed to `test`; two accounts can sign up, link, set the cycle anchor +
-locale, create cycles/fixed-bills/expenses, and see correct derived figures in both languages;
-Cycle Engine parity tests green; the error boundary returns typed/safe responses; `biome` (incl.
-the no-try/catch rule), `tsc --noEmit`, `jest --coverage` (100% gate), `vite build`, and
-`terraform validate/plan` all clean.
+Definition of done: deployed to `test`; both users sign up, link, register accounts, and see a
+correct core budget loop with split/settlement in both spaces; personal data never leaks to the
+partner (repo privacy tests green); Cycle + Split/Settlement engine tests green; `biome` (+no-try/
+catch), `tsc`, `jest --coverage` (100%), `vite build`, `terraform validate` all clean.
 
-## Phase 2 — Ingestion (U8)
+## Phase 2 — Ingestion (U11)
 
-Goal: upload bank exports and turn them into confirmed gastos without double-counting.
+Key tasks: S3 upload + per-bank parsers (ING/Revolut/Nubank CSV; Amex/C6 PDF); dedup by hash;
+**IBAN routing to personal/shared**; internal-transfer pairing (Wise EUR↔BRL); AI-assisted
+categorisation; review queue; confirm shared → cycle, personal → private. Web import + review.
 
-Key tasks: S3 upload + `statement_uploads`; per-bank parsers (ING, Revolut, Amex, Nubank
-account+credit, C6) as `Effect`-returning modules with fixtures; dedup via `dedup_hash`;
-transfer-linking (Wise EUR↔BRL, self-transfers, Revolut internal); **RecurringDetector** proposing
-fixed-bill/categorisation rules + manual "mark as fixed bill"; active rules generate per-cycle
-fixed bills and **auto-mark them paid** on match; review queue; confirm-to-expense respecting the
-anchor boundary and joint-account-only rule; web review UI.
+Definition of done: overlapping re-imports don't duplicate; transfers paired not counted; routing
+keeps personal private and shared in Casa; confirming lands the payment in the right cycle; parser/
+dedup/routing tests green; checks clean.
 
-Definition of done: re-importing overlapping exports creates no duplicates; self-transfers are
-linked not counted; recurring charges are proposed as fixed bills and a matching import auto-marks
-the bill paid; confirming a joint-account transaction lands the expense in the right cycle;
-parser + dedup + detector tests green; standard checks clean.
+## Phase 3 — Evaluations & subscriptions (U12)
 
-## Phase 3 — Evaluations (U9)
+Key tasks: shared evaluations (monthly + category matrix); **SubscriptionAuditEngine** (recurring
+detection, redundancy grouping, efficiency score) for the personal space; web views.
 
-Goal: the spend/subscription analysis lens.
+Definition of done: evaluation figures match hand calculations; subscription audit flags known
+redundancies; personal audit stays private; checks clean.
 
-Key tasks: evaluation domain (monthly inflow/outflow/net; category matrix with computed
-avg/latestVsAvg; per-month narrative arrays); repos; RPC section; web views incl. subscription
-audit.
+## Phase 4 — Savings, investments, projection & goals (U13, U14)
 
-Definition of done: monthly + category + narrative views render from stored data; avg/latestVsAvg
-match hand calculations in tests; checks clean.
+Key tasks: personal savings accounts/events/holdings + `savings_monthly_v`; **ProjectionEngine**
+(two-phase + Box 3 + inflation + saved scenarios) + web panels; shared **goals/vaults** with
+per-member contributions + web.
 
-## Phase 4 — Savings & Projections (U10)
+Definition of done: projection series match money-evaluation behaviour; goals track contributions
+and progress; checks clean.
 
-Goal: savings tracking + the projection engine (the most sophisticated feature).
+## Phase 5 — Resumo, settings, export & hardening (U15)
 
-Key tasks: savings accounts/events/holdings + `savings_monthly_v` view; Projection Engine (EUR
-two-phase + Box-3 net line; BR CDB single-rate) with `projection_settings`; RPC section; web
-panels with horizon/contribution/reserve/post-reserve controls, comparison lines, milestone
-table, compact money formatting.
+Key tasks: WhatsApp resumo (with split + acerto); settings (categories/caps, fiscal params,
+privacy, export/backup JSON); security review (owner/household scoping, KMS, no PII in logs);
+promote `prod`.
 
-Definition of done: projection series match money-evaluation behaviour in tests; BR CDB included;
-controls work; checks clean.
-
-## Phase 5 — Resumo + BR completion + hardening (U11)
-
-Goal: close v1.
-
-Key tasks: current-cycle resumo builder + copy-to-clipboard; finalise BR accounts/cards support;
-security review (auth scoping, secrets, no PII in logs), household data export, backups/restore
-doc; promote `prod` environment.
-
-Definition of done: resumo copies a correct summary; full BR support present; security review
-passed; `prod` deployed; checks clean.
+Definition of done: resumo copies a correct summary; settings editable; export works; security
+review passed; `prod` deployed; checks clean.
 
 ## Cross-phase practices
 
-- Every PR runs `biome` (incl. no-try/catch), `tsc --noEmit`, `jest --coverage` (100% gate),
-  `vite build` (web), and `terraform validate` (+ `plan` on infra changes).
-- Conventional Commits; no commits/pushes without explicit ask; no AI attribution trailers.
-- No code comments; pin exact dependency versions; verify new packages.
-- Synthetic fixtures only; never commit real financial data or `.env`.
+- Every PR: `biome` (incl. no-try/catch), `tsc --noEmit`, `jest --coverage` (100% gate),
+  `vite build` (web), `terraform validate` (+ `plan` on infra changes).
+- Conventional Commits; commit/push only when Marcelo asks; no AI trailers; no code comments;
+  exact version pins; synthetic fixtures only (no real balances/PII).
+- **Privacy is a standing gate:** every data unit includes tests that personal rows never appear
+  in a partner's response.
 
 ## Risks & mitigations
 
-- **Effect API drift (v4 beta):** pin one version at U0; keep presentation adapters thin; the
-  `@effect-aws/lambda` adapter is verified but re-checked at U1/U4.
-- **TypeScript 7:** GA and pinned at `7.0.2`; the native compiler ships as the `tsc` binary (so
-  `tsc` here is TS 7, not the legacy compiler). Verified against Effect at U0 — all packages
-  type-check clean. 100% coverage is gated on logic with documented glue exclusions.
-- **PDF parsing (Amex/C6, password-protected):** highest-uncertainty parsers; timebox as a spike
-  in U8 and fall back to guided manual entry for those sources if needed.
-- **Neon + Lambda connections:** use Neon's pooled endpoint; keep the `SqlClient` layer at
-  runtime scope to reuse across warm invocations.
-- **Cost creep:** stay serverless; single region; Neon free tier; watch SES/log volume.
+- **PDF parsing (Amex/C6, password-protected):** highest-uncertainty parsers; timebox in U11,
+  fall back to guided manual entry.
+- **Personal encryption (KMS envelope):** keep crypto in one `infra` adapter; encrypt only the
+  sensitive columns; cache the data key per request.
+- **Split/settlement correctness:** property-based tests; money in integer minor units only.
+- **Effect API surface:** pinned v3 stable; thin presentation adapters.
 
-## Immediate next step (on approval)
+## Immediate next step
 
-Begin Phase 1 / U0: scaffold the monorepo and pin the Effect toolchain, then U1 infra `test`
-environment. I will not start until you approve this plan.
+Resume at **U2** (data + visibility foundation on Neon). U1 `apply` cutover to the renamed
+`nosko-*` stack + state bucket remains available when you want it (see iac scripts).
