@@ -312,6 +312,36 @@ personal rows. Data at rest is protected by Neon and S3 encryption against outsi
 no application-level envelope encryption and no client-side E2EE (the UI's "cofre / E2E" copy is
 dropped). No bank sync means no third-party account tokens to store.
 
+## 11.2 Session delivery: httpOnly cookies, never client-stored tokens
+
+The access and refresh tokens issued by `data/usecases/Sessions.ts` (§11) never reach browser
+JavaScript. The web client does not store or attach a token; it only ever calls `fetch` with
+`credentials: "include"`.
+
+- **Access token** (`jose` JWT, 15 min TTL): set as an `httpOnly`, `Secure`, `SameSite=Strict`
+  cookie (`nosko_at`), `path=/`, `Max-Age` matching the token TTL, on every `login` /
+  `mfaVerify` / `refresh` response. `@effect/rpc`'s middleware for every non-auth group
+  (`accounts`, `cycles`, …) reads it straight from the request's `Cookie` header — there is no
+  `Authorization` header anywhere in this app.
+- **Refresh token** (opaque, 30 day TTL): set the same way as `nosko_rt`, but scoped to
+  `path=/api/http/auth` — the only endpoints that ever need to read it (`refresh`, `logout`,
+  `revokeSession`). Narrower path means it is never sent alongside ordinary RPC calls.
+- **Why session-mutating auth endpoints (`login`, `mfaVerify`, `refresh`, `logout`,
+  `revokeSession`) live in the `auth` `HttpApi` group, not `@effect/rpc`:** `@effect/platform`
+  ships a matching primitive, `HttpApiSecurity.apiKey({ in: "cookie" })` +
+  `HttpApiBuilder.securitySetCookie`, purpose-built for reading/writing an httpOnly session
+  cookie from a typed handler. Every other use-case in `auth` (signup, verify, resend,
+  passwordReset) and all of `household` stay on `@effect/rpc` as usual, authenticated by reading
+  the same `nosko_at` cookie in `RpcMiddleware` (which only needs read access to `headers`).
+  Logout/revoke clear a cookie by setting `Max-Age=0`.
+- **CSRF:** same-origin only (CloudFront proxies `/api/*` to the same distribution as the SPA, so
+  there is no cross-origin case to support) plus `SameSite=Strict` means the cookie is never sent
+  on a cross-site request, and every mutating call is JSON (`Content-Type: application/json`),
+  which a cross-site `<form>` cannot forge. No separate CSRF token scheme.
+- Session cookie names/options live in one place (`infra/auth/SessionCookies.ts`) so the two
+  read sites (`RpcMiddleware`, the `auth` HttpApi group) and the two write sites (`login`/
+  `mfaVerify`/`refresh` handlers, `logout`/`revokeSession` handlers) never drift.
+
 ## 12. Infrastructure as Code (Terraform, nosko modules)
 
 Reuse nosko's capability modules (`compute/aws-lambda`, `api-routing/aws-apigw-v2`,
