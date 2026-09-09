@@ -23,5 +23,5 @@ export class MfaAlreadyEnabled extends Data.TaggedError("MfaAlreadyEnabled")<
 > {}
 
 export class SessionInvalid extends Data.TaggedError("SessionInvalid")<{
-  readonly reason: "not_found" | "revoked" | "expired"
+  readonly reason: "not_found" | "revoked" | "expired" | "invalid"
 }> {}

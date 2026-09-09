@@ -2,8 +2,9 @@ export default {
   testEnvironment: "node",
   testPathIgnorePatterns: ["/node_modules/", "/dist/"],
   transform: {
-    "^.+\\.tsx?$": ["@swc/jest"],
+    "^.+\\.(t|j)sx?$": ["@swc/jest"],
   },
+  transformIgnorePatterns: ["node_modules/(?!.*\\bjose\\b)"],
   moduleNameMapper: {
     "^@nosko/contracts$": "<rootDir>/../packages/contracts/src/index.ts",
   },
