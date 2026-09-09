@@ -23,14 +23,15 @@ API Gateway (HTTP API)                        [api-routing module]
     v
 BFF Lambda (Effect, single deployable)        [compute module]
     ├─ presentation:  RpcServer (per-section groups) + HttpApi groups + view-model mappers
-    ├─ domain:        use-cases + pure engines (Cycle, Split/Settlement, Projection,
-    │                 RecurringDetector, SubscriptionAudit) + IngestionRules
+    ├─ domain:        use-cases + pure engines (Cycle, Projection, RecurringDetector,
+    │                 SubscriptionAudit, Evaluation) + IngestionRules + FxConversion
     ├─ data:          service/repository ports
     └─ infra:         repositories (@effect/sql-pg), auth, parsers, mailer, config
     |            |               |
     v            v               v
 Neon Postgres   S3 (uploads)    SES (email: verify/MFA/invite)
-                                SSM / Secrets Manager (secrets)   [secrets module]
+(RLS on)                        SSM (secrets)                     [secrets module]
+                                EventBridge schedule → fx-rates fetch (daily, ECB)
 ```
 
 One region, all serverless, near-zero idle cost. The backend "separation" is the strict BFF
@@ -61,15 +62,16 @@ backend/src/
   domain/
     models/        Schema entities + value objects (Money, Currency, CycleKey, Locale)
     usecases/      port interfaces for application use-cases
-    services/      pure engines: CycleEngine, SplitSettlementEngine, ProjectionEngine,
-                   RecurringDetector, SubscriptionAuditEngine, IngestionRules
+    services/      pure engines: CycleEngine, ProjectionEngine, RecurringDetector,
+                   SubscriptionAuditEngine, EvaluationEngine, IngestionRules, FxConversion
     errors/        tagged errors
   data/
     usecases/      use-case implementations orchestrating ports (Effect)
     protocols/     repository/service port tags
   infra/
-    repositories/  @effect/sql-pg implementations
+    repositories/  @effect/sql-pg implementations (per-request transaction + RLS settings)
     auth/          password hashing, TOTP, tokens
+    fx/            ECB rate fetcher
     parsers/       per-bank statement parsers (ING/Revolut/Amex/Nubank/C6)
     mailer/        SES adapter (localised templates)
     config/        Config layer (SSM/env) + household settings loader
@@ -86,7 +88,7 @@ wires layers. Domain has zero infra imports.
 ## 3. BFF: RPC + HttpApi in one Lambda (C1=C)
 
 - **Frontend↔BFF: `@effect/rpc`** — `Schema`-defined requests/responses grouped **per section**:
-  `auth`, `household`, `accounts`, `cycles`, `bills`, `payments`/`ledger`, `goals`,
+  `auth`, `household`, `accounts`, `cycles`, `bills`, `payments`, `goals`,
   `savings`/`projection`, `subscriptions`, `evaluations`, `ingestion`, `settings` (see
   `user-stories.md` for the actions per section). `RpcGroup.make(Rpc.make("CycleById", { success, error, payload }))`;
   handlers via `Group.toLayer`; typed client via `RpcClient.make`. Responses are **frontend-ready
@@ -94,7 +96,10 @@ wires layers. Domain has zero infra imports.
 - **Documented surface: `@effect/platform` `HttpApi`** — `HttpApiGroup` per section → OpenAPI +
   Swagger. Same domain services back both channels.
 - **Middleware** validates the session, loads member + household + **household settings**, and
-  sets the household scope for repositories.
+  opens the per-request transaction that sets `app.user_id` / `app.household_id` for RLS (§11.1).
+- **Scope discipline:** `@effect/rpc` is the only channel the web client uses. `HttpApi` groups
+  are added only for operations worth documenting externally (auth, ingestion, export); "both per
+  section" is not a definition-of-done requirement.
 
 ## 4. Domain vocabulary (English identifiers)
 
@@ -114,13 +119,15 @@ reference only; localisation of labels happens in the frontend i18n layer, not i
 | disponível | available |
 | orçamento variável | variableBudget |
 | saldo inicial | openingBalance |
-| saque | withdrawal (user-defined) |
+| saque | withdrawal (member transfer `to_personal`, user-defined) |
+| aporte p/ casa | contribution (member transfer `to_household`) |
 | disponível após pagamentos | availableAfterPayments |
 | sobra / falta | surplus (signed) |
 | por categoria | byCategory |
-| pagamentos compartilhados | sharedPayments (couple ledger) |
-| rateio | split (equal / proportional / custom) |
-| acerto | settlement |
+| pagamentos compartilhados | sharedPayments |
+| participação na renda | contributionShare (income %) |
+| conta conjunta | joint account (ownership `joint`, two owners) |
+| teto | estimate (cycle) / cap (category) |
 | meta / cofre | goal / vault |
 | assinaturas | subscriptions |
 | conta (visibilidade) | account (visibility: personal / shared) |
@@ -133,30 +140,38 @@ This table is the source of truth for naming and is copied into `backend/CONVENT
 ## 5. Domain spec: the Cycle Engine (configurable, parity with money-evaluation)
 
 `CycleEngine` is **pure**, computing a cycle's derived figures from raw inputs plus the previous
-cycle's outputs (cycles ordered by `startDate`). Formulas ported from
-`money-evaluation/_build_dataset.py`, renamed to English (money in minor units):
+cycle's outputs (cycles ordered by `startDate`). It implements the **proportional model**
+(requirements § "How the household money flows"): income shares fund the joint account; fixed
+bills, then the variable estimate and the reserve are covered; the remainder is the couple's to
+spread by user-defined withdrawals. Formulas ported from `money-evaluation/_build_dataset.py`,
+renamed to English (money in base-currency minor units; `sharedPayments` use `amountBase`):
 
 ```
-income          = sum(salaries) + bonus
-pct[member]     = salary[member] / income          (0 if income = 0)
-fixedTotal      = sum(fixedBills.amount)
-variableTotal   = sum(expenses.amount)
-reserve         = cycle.reserve (default from household settings)
-estimate        = seed.estimate        if seeded else prev.variableTotal
-estimate               = seed.estimate if seeded else prev.variableTotal
-availableAfterPayments = openingBalance + income - fixedTotal - variableTotal - reserve
-withdrawal[member]     = user-defined input (set after seeing availableAfterPayments; default 0)
-withdrawalTotal        = sum(withdrawal)
-openingBalance  = seed.openingBalance if seeded else prev.surplus
-available       = openingBalance + income - withdrawalTotal
-totalSpent      = fixedTotal + variableTotal
-surplus         = available - totalSpent
-variableBudget  = available - fixedTotal
-byCategory      = sum(sharedPayments.amount) grouped by category
+income                 = sum(salaries) + bonus
+contributionShare[m]   = salary[m] / income                      (0 if income = 0)
+fixedTotal             = sum(fixedBills.amount)
+estimate               = cycle.estimate ?? prev.variableTotal    (seed.estimate on the first cycle)
+reserve                = cycle.reserve (default from household settings)
+openingBalance         = seed.openingBalance if seeded else prev.surplus
+availableAfterPayments = openingBalance + income - fixedTotal - estimate - reserve
+withdrawal[m]          = user-defined input (member transfer to_personal; default 0)
+contribution[m]        = user-defined input (member transfer to_household; default 0)
+withdrawalTotal        = sum(withdrawal) - sum(contribution)
+unallocated            = availableAfterPayments - withdrawalTotal   (stays in the joint account)
+available              = openingBalance + income - withdrawalTotal
+variableTotal          = sum(sharedPayments.amountBase)
+totalSpent             = fixedTotal + variableTotal
+surplus                = available - totalSpent
+variableBudget         = available - fixedTotal
+savingsRate            = surplus / income
+byCategory             = sum(sharedPayments.amountBase) grouped by category, vs category caps
+burnRate[day]          = cumulative variableTotal up to day, vs estimate * day / cycleDays
 ```
 
-`prev` for the next cycle = `{ variableTotal, surplus }`. **Withdrawals are user-defined**, not
-computed — the engine surfaces `availableAfterPayments` and each member sets their own withdrawal.
+`prev` for the next cycle = `{ variableTotal, surplus }`. There is **no payer, split, or
+settlement**: shared payments are household payments from joint accounts, and
+`contributionShare` is informational. **Withdrawals are user-defined**, not computed — the engine
+surfaces `availableAfterPayments` and each member records their own withdrawal.
 
 **Configurable cycle boundary.** The 23rd→22nd rule is not hardcoded. Each household sets a
 `cycleAnchorDay` (default 23). A cycle spans `[anchorDay of month M, (anchorDay − 1) of month
@@ -166,17 +181,15 @@ detection returns the cycle whose `[startDate, endDate]` contains today;
 `dailyAllowance = (estimate − variableTotal) / max(daysUntilEnd, 1)`. Engine tests assert parity
 with the five existing money-evaluation cycles (anchor 23).
 
-## 5.1 Domain spec: the Split/Settlement Engine (the couple ledger)
+## 5.1 Domain spec: FX conversion and the Evaluation Engine
 
-`SplitSettlementEngine` is **pure**. For each **shared payment** it computes the per-member owed
-`share` from the `split` method — `equal` (½ each), `proportional` (by the cycle income %), or
-`custom` (given shares) — with the remainder cent assigned deterministically so shares sum exactly
-to the amount. Over a cycle it computes, per member, `paid` (sum where `payer = member`) and `owed`
-(sum of shares); the **inter-partner balance** = `paid − owed`. The **suggested settlement** is the
-single transfer `from` the negative-balance member `to` the positive one for `|balance|`, which
-zeroes the ledger. Splits affect **only the household's monthly shared payments**; recorded
-`settlements` (acertos) persist and reset the balance. Property tests: shares sum to the amount;
-the suggested settlement drives the balance to 0.
+- `FxConversion` is pure: given `fx_rates` for a date (falling back to the latest earlier rate),
+  it converts a `Money` to the base currency and returns `{ amountBase, rate }`. Applied once, when
+  a non-base shared payment is confirmed (stored) and on read for display tiles (net worth, BRL
+  balances). Cycle math never mixes currencies.
+- `EvaluationEngine` is pure: from confirmed shared payments + fixed bills it builds the monthly
+  inflow/outflow/net series, the category × month matrix with averages and vs-average deltas,
+  biggest vendors, and recurring charges. Nothing is stored except optional `month_notes`.
 
 ## 6. Recurring detection & fixed-bill identification
 
@@ -212,26 +225,31 @@ Reproduces `ComputeSavingsProjection`:
 ```
 upload file (CSV; PDF for Amex/C6) ─► S3 (private) ─► statement_uploads(row) ─► parse (per-bank)
    ─► normalise to transactions ─► dedup (per-source identity, hash)
-   ─► pair internal transfers (Wise EUR↔BRL / self between own accounts) as neutral
+   ─► pair internal transfers (Wise EUR↔BRL / self between own accounts) as neutral;
+      a personal→joint pair becomes a member contribution (shared leg visible, personal leg private)
    ─► route by account/IBAN to PERSONAL (private) or SHARED destination
-   ─► AI-assisted categorisation + apply recurring/categorisation rules ─► review queue (staged)
+   ─► rule-based categorisation (recurring rules + last category per counterparty) ─► review queue
    ─► user confirms/categorises
-   ─► shared ─► shared_payment in the correct cycle (anchor boundary); personal ─► private vault
+   ─► shared ─► shared_payment in the correct cycle (anchor boundary), amountBase via FxConversion;
+      personal ─► private transaction
    ─► fixed-bill rule match ─► auto-mark the cycle's fixed bill paid
 ```
 
 Parsers are `infra/parsers/*` returning `Effect<Transaction[], InvalidStatement>` (no try/catch;
-malformed rows → tagged failures). **No bank sync — file import only.** Dedup uses
-`transactions.dedup_hash` (unique per household). Transfer pairing implements the money-flow rules
-(Wise EUR↔BRL equivalence, self-transfers, internal moves). **Account/IBAN routing** sends each
-transaction to the owner's personal (private) space or the shared couple ledger.
+malformed rows → tagged failures). A Nubank export may yield rows for two accounts (account +
+card). **No bank sync — file import only.** Dedup uses `transactions.dedup_hash` (unique per
+household). Transfer pairing implements the money-flow rules (Wise EUR↔BRL equivalence,
+self-transfers, internal moves). **Account/IBAN routing** sends each transaction to the owner's
+personal (private) space or to the household's shared payments. An LLM categoriser is an optional
+later add-on behind the same `Categoriser` port.
 
 ## 9. Configuration-first design & i18n
 
 - **Household settings** (one editable surface, `settings` RPC/HttpApi section): `cycleAnchorDay`,
-  `locale` (default), `baseCurrency`, `reserveDefault`, plus links to the other configurable
-  collections: `categories`, `recurring_rules`, `projection_settings`.
-- **Per-user preference:** `preferredLocale` (overrides household default in the UI).
+  `locale` (default), `baseCurrency`, `defaultReserve`, fiscal params, plus links to the other
+  configurable collections: `categories` + caps, `recurring_rules`, `projection_settings`.
+- **Per-user preference:** `preferredLocale` (overrides household default in the UI),
+  `user_settings.personalSpendCap`, personal categories; hide-values / last space are client-side.
 - **Bilingual UI (en + pt-BR):** the frontend holds typed locale dictionaries; **no hardcoded
   user-facing strings**. The backend returns locale-neutral data + codes; money/date formatting
   and labels are localised on the client. Server-generated text (emails, and the summary/resumo)
@@ -261,31 +279,36 @@ Guarantee: **no error path is unhandled**, on the server or the client.
 
 ## 11. Auth architecture (custom, ported from nosko to Effect)
 
-Signup → email verification (SES) → login → MFA (TOTP or email OTP) → access token (short-lived)
-+ refresh token (`user_sessions`); argon2id hashing. **Household linking (C5=A):** owner creates
-a household, invites the partner by email (`household_invitations`), partner accepts as member.
-All data scoped by `household_id`; per-member attribution preserved. Authorization enforced in
-BFF middleware and again at the repository layer (household filter / optional RLS GUC).
+Signup → email verification (SES) → login → MFA (TOTP or email OTP; "remember this device" marks
+the session `mfa_trusted_until` ≤ 30 days) → access token (short-lived) + refresh token
+(`user_sessions`); argon2id hashing (`@node-rs/argon2`, bundled for the Lambda platform). Password
+reset can revoke all other sessions. **Household linking (C5=A):** owner creates a household,
+invites the partner by email (`household_invitations`, tokenised link), partner accepts as member;
+a household has at most two members. All data scoped by `household_id`; per-member attribution
+preserved. Authorization enforced in BFF middleware and again at the database (§11.1).
 
-## 11.1 Visibility & personal-data encryption
+## 11.1 Visibility & isolation (mandatory RLS)
 
-Every financial row carries `owner_user_id` + `visibility` (`personal` | `shared`). The BFF sets
-the caller's `user_id`/`household_id`; **shared** reads filter `visibility='shared' AND
-household_id=…`; **personal** reads additionally require `owner_user_id = caller`. Personal rows
-are **never** joined into a partner's response — repository tests assert this. Sensitive columns on
-personal rows (descriptions, counterparties, balances, notes) are **encrypted at rest** via a KMS
-**envelope** (per-household data key; `enc_*` + `enc_dek_id` columns), decrypted only for the owner
-in an `infra/crypto` adapter. This is the model behind the UI's "cofre / E2E" language; it is
-**not** client-side zero-knowledge (the BFF still computes personal projections/audits). No bank
-sync means no third-party account tokens to store.
+Threat model: outsiders and a compromised client — not cryptographic isolation between the two
+partners. Every financial row carries `owner_user_id` + `visibility` (`personal` | `shared`);
+joint accounts add `co_owner_user_id`. The BFF middleware opens one transaction per request and
+runs `SET LOCAL app.user_id / app.household_id` (Neon's pooled endpoint is PgBouncer in transaction
+mode, so session `SET` is not reliable). **Row-Level Security is enabled on every financial
+table**: shared rows are visible to the household, personal rows only to their owner, accounts to
+owner or co-owner. The application role is not the table owner and cannot bypass RLS.
+Repositories repeat the filters explicitly (defence in depth), and integration tests assert that a
+partner never receives personal rows. Data at rest is protected by Neon and S3 encryption; no
+application-level envelope encryption and no client-side E2EE (the UI's "cofre / E2E" copy is
+dropped). No bank sync means no third-party account tokens to store.
 
 ## 12. Infrastructure as Code (Terraform, nosko modules)
 
 Reuse nosko's capability modules (`compute/aws-lambda`, `api-routing/aws-apigw-v2`,
-`secrets/aws-ssm`, `static-site/aws-s3-cloudfront`) + an uploads S3 bucket and Neon connection in
-SSM. Environments `iac/environments/{test,prod}`; shared domain + ACM in the existing
-`personal/terraform` repo. Region `eu-central-1` or `eu-west-1` (decide at infra setup). Secrets
-in SSM/Secrets Manager, never in code.
+`secrets/aws-ssm`, `static-site/aws-s3-cloudfront`, `storage/aws-s3-private`) + Neon connection
+in SSM. Environments `iac/environments/{test,prod}` (`test` deployed at U1; `prod` at U15); the
+`nosko.app` domain is attached later from the management account. Region **eu-west-1**. Still to
+add: an EventBridge schedule invoking the BFF (or a small Lambda) for the daily FX fetch (U5), and
+SES sender/recipient verification (U3). Secrets in SSM, never in code.
 
 ## 13. Repository layout (monorepo)
 
@@ -300,7 +323,9 @@ nosko/
 
 `packages/contracts` gives end-to-end type safety (web imports the exact BFF types). The
 per-directory `CONVENTIONS.md`/`README.md` split is specified in
-`documentation/repo-structure-and-agreements.md`.
+`documentation/repo-structure-and-agreements.md`. On the web, RPC calls run through a small
+`useRpc` hook (Effect program → React state: loading / typed error / value) chosen at U8; no
+extra data-fetching library.
 
 ## 14. Testing strategy (strict, 100% coverage)
 
@@ -308,14 +333,15 @@ Runner: **Jest with `@swc/jest`** (SWC/Rust transform for fast TS test execution
 and web — no Vitest. Effect programs are exercised with `Effect.runPromise`/`runPromiseExit` (a
 small local `it.effect`-style helper stands in for `@effect/vitest`, which is Vitest-specific).
 
-- **Unit** (all logic): Cycle Engine (parity), **Split/Settlement Engine** (shares sum;
-  settlement zeroes balance), Projection Engine, RecurringDetector, **SubscriptionAuditEngine**,
+- **Unit** (all logic): Cycle Engine (parity with the proportional model), Projection Engine,
+  RecurringDetector, **SubscriptionAuditEngine**, **EvaluationEngine**, FxConversion,
   IngestionRules (dedup/routing/transfer-pairing), parsers (fixtures), auth token logic, view-model
   mappers, i18n dictionary completeness.
-- **Integration:** repositories against a disposable Postgres, including **privacy tests**
-  (personal rows returned only to the owner; KMS round-trip). **Contract:** RPC/HttpApi schema
-  round-trips + OpenAPI snapshot. **Web:** `@testing-library/react` + `jsdom` under the same
-  Jest/`@swc/jest`.
+- **Integration:** repositories against a disposable Postgres (local Docker `postgres:17` in CI
+  and dev; RLS policies applied by the same migrations), including **privacy tests** (a partner's
+  session never receives personal rows; RLS blocks a raw query without `app.user_id`).
+  **Contract:** RPC/HttpApi schema round-trips + OpenAPI snapshot. **Web:**
+  `@testing-library/react` + `jsdom` under the same Jest/`@swc/jest`.
 - **Coverage: 100%** thresholds (statements/branches/functions/lines), **CI-enforced**. A minimal,
   documented exclusion list covers non-logic glue (Lambda entrypoint, layer wiring, config,
   generated types), which is exercised by integration tests instead — so 100% is a real gate on

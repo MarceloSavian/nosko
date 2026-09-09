@@ -16,8 +16,9 @@ Durable rules for `@nosko/backend`. Extracted from `documentation/design/archite
 
 - Layers: `domain` ← `data` ← `presentation`; `infra` implements `domain`/`data` ports; `main`
   wires layers. **Domain imports no infra.** Dependencies point inward.
-- Pure engines (Cycle, Projection, RecurringDetector) live in `domain/services` and are unit
-  tested to parity with money-evaluation.
+- Pure engines (Cycle, Projection, RecurringDetector, SubscriptionAudit, Evaluation,
+  FxConversion, IngestionRules) live in `domain/services` and are unit tested; the Cycle Engine to
+  parity with money-evaluation.
 
 ## Naming
 
@@ -27,8 +28,10 @@ Durable rules for `@nosko/backend`. Extracted from `documentation/design/archite
 
 ## Persistence
 
-- `@effect/sql-pg` repositories; every query scoped by `household_id` (+ optional RLS). SQL
-  migrations in `migrations/`.
+- `@effect/sql-pg` repositories; one transaction per request with `SET LOCAL app.user_id` /
+  `app.household_id`; **RLS is mandatory** on every financial table and every query also filters
+  by `household_id` (and `owner_user_id` for personal rows). SQL migrations in `migrations/`; a
+  migration that adds a financial table adds its policies.
 
 ## BFF
 

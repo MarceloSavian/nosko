@@ -42,7 +42,8 @@ have to read the whole DLC set to follow the rules.
 - DDD layer boundaries + inward dependency direction (`presentation → data → domain`; `infra`
   implements ports; domain imports no infra).
 - English identifiers everywhere; link to `glossary.md`.
-- Repository patterns with `@effect/sql-pg`; household scoping/RLS; migrations location.
+- Repository patterns with `@effect/sql-pg`; per-request transaction + `SET LOCAL app.*`;
+  **mandatory RLS** (every financial table ships policies in its migration); migrations location.
 - BFF conventions: per-section `RpcGroup`s + `HttpApi` groups; return frontend-ready view models.
 - Parser conventions: `Effect`-returning, tagged failures, fixture-driven tests.
 - Testing: **Jest + `@swc/jest`, 100% coverage** (CI-enforced, documented exclusions);
@@ -70,5 +71,5 @@ have to read the whole DLC set to follow the rules.
 ## Sequencing
 
 Stubs for every `CONVENTIONS.md`/`README.md` and `glossary.md` are created in **U0**; each is
-filled by the unit that introduces its area (backend rules with U4/U5, web/i18n rules with U6,
+filled by the unit that introduces its area (backend rules with U4/U5, web/i18n rules with U8,
 IaC rules with U1). This doc is the checklist for that.

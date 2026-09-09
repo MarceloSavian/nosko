@@ -14,10 +14,17 @@ Design tokens (colors, typography, radii) for the "Shared Ledger" theme are in
 - **No bank sync / Open Finance.** Several screens show "Open Finance", "Sincronizar", and live
   sync affordances — **remove these**; ingestion is file import only (CSV primarily; PDF for
   Amex/C6). See requirements FR-ING / FR-ACC.
-- **Personal privacy** = server-side isolation + KMS envelope encryption (the UI's "E2E / cofre"
-  language maps to this, not to client-side zero-knowledge crypto).
-- **Withdrawals are user-defined** after seeing `availableAfterPayments`; the split
-  (equal/proportional/custom) applies only to the household's monthly shared payments.
+- **No payer / split / settlement.** Shared payments come from joint accounts owned by both
+  members. Remove payer avatars, "50/50" chips, "Registrar acerto", "Compensação sugerida",
+  "Divisão do ciclo" by payer, and the settlement line in the resumo. Keep the per-member
+  **contribution share** (income %) as an informational figure.
+- **Personal privacy** = application rule + mandatory Postgres RLS (threat model: outsiders).
+  Drop the "E2E / cofre / chaves no browser / AES-256" copy.
+- **Withdrawals are user-defined** after seeing `availableAfterPayments` (no "sugerido" column);
+  "Transferir p/ Casa" records a contribution transfer, it does not share an account.
+- **Joint accounts** show both owners; there is one row per joint account.
+- Drop: the couple join code on the landing page (invites are email links), OFX/QIF/XLSX/MT940,
+  streaming usage minutes, "real-time sync & auto-save", deficit coverage from the reserve.
 
 ## Screens
 

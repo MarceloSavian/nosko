@@ -1,5 +1,6 @@
 export default {
   testEnvironment: "jsdom",
+  testPathIgnorePatterns: ["/node_modules/", "/dist/"],
   setupFilesAfterEnv: ["<rootDir>/src/test/setup.ts"],
   transform: {
     "^.+\\.(t|j)sx?$": ["@swc/jest"],

@@ -39,28 +39,42 @@
 - **UI review + requirements alignment (done):** reviewed both Stitch exports (~30 screens).
   Rewrote `requirements.md` and `design/database-design.md` to match the generated UI. New/expanded
   concepts folded in: strict **Casa (shared) vs Pessoal (personal, private)** with per-row
-  `owner_user_id` + `visibility`; **couple ledger** (per-payment payer + split/rateio +
-  inter-partner **settlements/acertos**); **accounts** with personal/shared **visibility**;
-  **file import** (CSV; PDF for Amex/C6) with **IBAN routing** + internal-transfer pairing + AI
-  categorisation; **goals/vaults** with per-member contributions;
-  **subscription audit** (redundancy + efficiency score); **category caps**, **FX (EUR/BRL)**,
-  NL Box-3 params, savings-rate/multi-cycle trends; a **Data Architecture** section + screen→data
-  mapping. New domain engine: **Split/Settlement Engine**.
-- **Decisions (resolved with Marcelo):** (1) personal privacy = **server-side isolation + KMS
-  envelope** (no client-side E2EE); (2) **no bank sync** — file import only (CSV primarily; PDF for
-  Amex/C6); Open Finance/sync UI removed on build; (3) split methods equal/proportional/custom
-  apply **only to the household's monthly shared payments** (settlements are first-class transfers),
-  and **personal withdrawals are user-defined** after seeing `availableAfterPayments` (no forced
-  suggestion).
+  `owner_user_id` + `visibility`; **accounts** with personal/shared **visibility**;
+  **file import** (CSV; PDF for Amex/C6) with **IBAN routing** + internal-transfer pairing +
+  categorisation; **goals/vaults** with per-member contributions; **subscription audit**
+  (redundancy + efficiency score); **category caps**, **FX (EUR/BRL)**, NL Box-3 params,
+  savings-rate/multi-cycle trends; a **Data Architecture** section + screen→data mapping. (The
+  per-payment couple ledger introduced here was dropped in the 2026-09-09 review round.)
+- **Decisions (resolved with Marcelo, superseded in part by the review round below):** (1) personal
+  privacy = server-side isolation (now: mandatory RLS, no KMS); (2) **no bank sync** — file import
+  only (CSV primarily; PDF for Amex/C6); Open Finance/sync UI removed on build; (3) **personal
+  withdrawals are user-defined** after seeing `availableAfterPayments` (no forced suggestion);
+  the per-payment split/settlement idea was dropped in the review round.
 - **Propagation (done):** wrote `user-stories.md` (15 epics + the per-section actions/BFF
-  surface); updated `design/architecture.md` (Split/Settlement Engine, SubscriptionAudit,
-  visibility + KMS-envelope encryption, expanded BFF sections, file-only ingestion with IBAN
-  routing, user-defined withdrawals), `design/units-of-work.md` (U0–U15), and
-  `plans/implementation-plan.md` (phases re-scoped). Everything on GitHub (`MarceloSavian/nosko`).
-- **Next step:** **U2** — data + visibility foundation: Neon migrations for the expanded schema
-  (identity/household/settings/accounts/categories/caps with `owner_user_id` + `visibility` + KMS
-  envelope), the `@effect/sql-pg` `SqlClient` layer, and base repositories with privacy +
-  integration tests. (U1 `apply` cutover to `nosko-*` remains available when wanted.)
+  surface); updated `design/architecture.md` (SubscriptionAudit, visibility, expanded BFF
+  sections, file-only ingestion with IBAN routing, user-defined withdrawals),
+  `design/units-of-work.md` (U0–U15), and `plans/implementation-plan.md` (phases re-scoped).
+  Everything on GitHub (`MarceloSavian/nosko`).
+- **Review round (2026-09-09, done):** full project check against the 30 generated screens.
+  Decisions with Marcelo: **proportional model, no ledger** (income shares fund the joint
+  budget; fixed bills → variable estimate → reserve → the remainder spread by user-defined
+  withdrawals; **no per-payment payer/split/settlement**, Split/Settlement Engine removed);
+  **joint accounts have two owners** (one row per household, `ownership=joint`, co-owner);
+  **RLS mandatory**, threat model = outsiders, **KMS envelope dropped**; cycle math in base
+  currency (BRL shared payments converted at confirmation); personal categories + personal cap
+  per user, personal period = household cycle; cycle status + surplus destination (goal); member
+  transfers in both directions; goal contribution plans; evaluations computed (no stored
+  narratives); credit-card fields; deficit-from-reserve out of scope. Propagated to
+  `requirements.md`, `database-design.md`, `architecture.md`, `user-stories.md`,
+  `units-of-work.md`, `implementation-plan.md`, `glossary.md`, `ui/README.md`, conventions.
+  Repo hygiene: legacy worktrees/branches/stash and untracked legacy files removed; Biome scoped
+  to source (`documentation/**` excluded); Jest ignores `dist/`; `web/CONVENTIONS.md` stub added.
+  `pnpm verify` green; `terraform init` for `test` needs a fresh `.terraform` (stale provider cache).
+- **Next step:** **U2** — data + isolation foundation: Neon migrations for the schema
+  (identity/household/settings/accounts incl. joint co-owner/categories/caps with
+  `owner_user_id` + `visibility` + **RLS policies**), the `@effect/sql-pg` `SqlClient` layer with
+  the per-request transaction (`SET LOCAL app.*`), and base repositories with privacy +
+  integration tests on Docker Postgres.
 
 ## Locked decisions (from requirements-questions.md + chat)
 
