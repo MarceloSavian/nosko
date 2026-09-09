@@ -3,10 +3,11 @@
 - **Project:** nosko
 - **Task size:** Large (confirmed — Q1=A)
 - **Phase:** CONSTRUCTION
-- **Current stage:** Phase 1 / **U0 + U1 committed; U1 applied** to the nosko-test account. The
-  HTTP API, both Lambdas (placeholder handler), IAM, SSM, uploads bucket, and S3+CloudFront are
-  live on default endpoints (real BFF replaces the placeholder at U4). Region `eu-west-1`, Node
-  24 local, Lambda `nodejs22.x`.
+- **Current stage:** Phase 1 / **U0 + U1 committed; U1 applied** to the nosko-test account; **U2
+  delivered (not yet applied — no live Neon database targeted this session)**. The HTTP API, both
+  Lambdas (placeholder handler), IAM, SSM, uploads bucket, and S3+CloudFront are live on default
+  endpoints (real BFF replaces the placeholder at U4). Region `eu-west-1`, Node 24 local, Lambda
+  `nodejs22.x`.
 - **U1 delivered (no apply):** reusable capability modules (`compute/aws-lambda` with an extra
   IAM-policy hook, `api-routing/aws-apigw-v2`, `secrets/aws-ssm`, `static-site/aws-s3-cloudfront`
   domain-optional, `storage/aws-s3-private`) + an `environments/test` root wiring a single **BFF
@@ -70,11 +71,34 @@
   Repo hygiene: legacy worktrees/branches/stash and untracked legacy files removed; Biome scoped
   to source (`documentation/**` excluded); Jest ignores `dist/`; `web/CONVENTIONS.md` stub added.
   `pnpm verify` green; `terraform init` for `test` needs a fresh `.terraform` (stale provider cache).
-- **Next step:** **U2** — data + isolation foundation: Neon migrations for the schema
-  (identity/household/settings/accounts incl. joint co-owner/categories/caps with
-  `owner_user_id` + `visibility` + **RLS policies**), the `@effect/sql-pg` `SqlClient` layer with
-  the per-request transaction (`SET LOCAL app.*`), and base repositories with privacy +
-  integration tests on Docker Postgres.
+- **U2 delivered (2026-09-09):** 7 migrations (`backend/migrations/0001`–`0007`: extensions,
+  `app_role`, users/auth_tokens/user_sessions, households/settings/members/invitations,
+  user_settings, categories, accounts) with RLS enabled + **forced** on every financial table;
+  `@effect/sql-pg` `PgLive` layer (`DatabaseConfig.ts`) with `snakeToCamel`/`camelToSnake`
+  transforms; `RequestScope.withRlsScope` (`select set_config('app.user_id'/'app.household_id',
+  $1, true)` inside `sql.withTransaction`); a first repository slice (Users, Households —
+  atomic create + seed settings + owner member, Accounts, Categories) over ports in
+  `data/protocols/*`; `pnpm migrate` (Node 24 runs `.ts` migrations natively, no build step) and
+  `pnpm verify:migrations` (embedded-Postgres check via `@electric-sql/pglite`, since Jest's VM
+  sandbox blocks pglite's internal dynamic import). 41 tests, 100% coverage; `pnpm verify` green.
+  Deferred to U3 (owned by the auth/invite use-cases that need them): repositories for
+  `auth_tokens`, `user_sessions`, `household_invitations`.
+  **Critical finding, fixed and verified:** Neon's console/CLI-created role inherits
+  `neon_superuser`, which carries `BYPASSRLS` — `FORCE ROW LEVEL SECURITY` does nothing for it
+  (confirmed empirically: a partner could read personal accounts through it). Fixed by having
+  migration `0002_app_role.ts` create `app_role` by SQL (`NOSUPERUSER NOBYPASSRLS`, table-level
+  grants only, no ownership) — the only way to get a role outside `neon_superuser` on Neon. This
+  changes the IaC contract: **two Postgres connection strings**, `database_url` (admin, DDL,
+  `migration-v1` only) and `app_database_url` (`app_role`, all runtime queries, `bff-v1` only);
+  never point the BFF at `database_url`. `iac/` updated (`variables.tf`, `secrets.tf`,
+  `compute.tf`, `terraform.tfvars.example`, `README.md`, `CONVENTIONS.md`) — **not yet applied**;
+  first deploy needs a two-pass sequence documented in `iac/README.md` (apply once to get
+  `app_role` provisioned and its password set, then fill in `app_database_url` and re-apply).
+  Also fixed: a custom GUC reverts to `''` (not `NULL`) on `RESET`, and `''::uuid` raises instead
+  of denying — every policy now guards with `nullif(current_setting(...), '')` before the cast.
+- **Next step:** **U3** — Auth & Household: signup/verify/login/MFA (remember device)/sessions;
+  the `auth_tokens`/`user_sessions`/`household_invitations` repositories deferred from U2;
+  create/invite/accept (max 2 members, already enforced by a DB trigger); SES mailer.
 
 ## Locked decisions (from requirements-questions.md + chat)
 

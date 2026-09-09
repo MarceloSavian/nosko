@@ -216,12 +216,23 @@ base, quote). Fetched daily (ECB) by a scheduled job; used for display conversio
 ## Access, isolation & indexing
 
 - **Casa vs Pessoal from one model:** the BFF opens a transaction per request and runs
-  `SET LOCAL app.user_id = …; SET LOCAL app.household_id = …` (session-level `SET` does not survive
-  Neon's pooled endpoint). RLS policies on every financial table then enforce: shared rows require
-  `household_id = current_setting('app.household_id')`; personal rows additionally require
-  `owner_user_id = current_setting('app.user_id')`; accounts also allow `co_owner_user_id`.
-  Repositories add the same filters explicitly (defence in depth). The application role is **not**
-  the table owner and has no `BYPASSRLS`.
+  `select set_config('app.user_id', $1, true)` (and `app.household_id` when known) — `set_config`
+  with `is_local=true` behaves like `SET LOCAL` but accepts a bound parameter, unlike a literal
+  `SET` statement. RLS policies on every financial table then enforce: shared rows require
+  `household_id = nullif(current_setting('app.household_id', true), '')::uuid`; personal rows
+  additionally require the analogous check against `app.user_id`; accounts also allow
+  `co_owner_user_id`. The `nullif(..., '')` guard matters: a custom GUC that has been `SET` at
+  least once in a session reverts to `''` (not `NULL`) on `RESET`, and `''::uuid` raises instead of
+  denying — this is otherwise easy to hit on a pooled connection. Repositories add the same filters
+  explicitly (defence in depth).
+- **`app_role` is not the Neon console/CLI-created role.** Neon's default role for a
+  database/branch inherits `neon_superuser`, which carries `BYPASSRLS` — `FORCE ROW LEVEL
+  SECURITY` does **not** apply to it (verified empirically: a personal account is visible to the
+  partner when connected as that role, invisible once connected as `app_role`). `app_role` is a
+  role created by SQL inside the migrations (`0002_app_role.ts`, `NOSUPERUSER NOBYPASSRLS`), with
+  table-level `GRANT`s only — no ownership, no ability to alter RLS settings. `migration-v1`
+  connects as the admin/owner role to run DDL and to set `app_role`'s password; `bff-v1` connects
+  as `app_role` for every runtime query. See `iac/README.md` for the two-connection-string setup.
 - Cascade from `cycles`/`goals` to children; `restrict` from `households`.
 - Indexes: `accounts(household_id, visibility)`, unique `(household_id, masked_id)`;
   `transactions(household_id, dedup_hash)` unique, `(account_id, booked_at)`,

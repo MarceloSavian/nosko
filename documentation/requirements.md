@@ -274,7 +274,10 @@ threat model (encryption at rest, secrets) is **people outside the household**.
 - NFR-PRIV-1: Personal-scoped data (accounts, transactions, savings, subscriptions, personal
   categories) is **never returned to the partner** by any endpoint. Authorization is enforced at
   the BFF (owner check) **and** by **mandatory Postgres Row-Level Security**: every financial table
-  has policies on `app.user_id` / `app.household_id`, set per request inside a transaction.
+  has policies on `app.user_id` / `app.household_id`, set per request inside a transaction. The
+  BFF connects as a role created by SQL specifically for this (`app_role`, `NOSUPERUSER
+  NOBYPASSRLS`) — never as Neon's console/CLI-created role, which inherits `neon_superuser`
+  (`BYPASSRLS`) and would make every policy above a no-op.
 - NFR-PRIV-2: Encryption at rest is provided by Neon (storage-level) and S3 (SSE); no
   application-level envelope encryption. Secrets that must never be readable from the database
   (MFA secrets, tokens) are stored hashed or encrypted with a key from SSM.
@@ -371,8 +374,11 @@ models in the domain layer** so each screen gets exactly what it renders. Full s
 
 ### Decisions (resolved)
 
-1. **Privacy** — server-side isolation with mandatory RLS; threat model is outsiders; no KMS
-   envelope, no client-side E2EE.
+1. **Privacy** — hidden from the partner by design, enforced by the app and by mandatory RLS
+   (not cryptography); encryption at rest/in transit is the separate, narrower defence against
+   outsiders. No KMS envelope, no client-side E2EE. RLS must run under a genuinely restricted
+   Postgres role (`NOSUPERUSER NOBYPASSRLS`), not Neon's console/CLI-created role, which inherits
+   `neon_superuser` (`BYPASSRLS`) and would bypass every policy — see `database-design.md` § Access.
 2. **No bank sync** — file import only (CSV primarily; PDF for Amex/C6).
 3. **Proportional model, no ledger** — income shares fund the joint budget; fixed bills, then the
    variable estimate and reserve are covered; the remainder is split by the couple's decision

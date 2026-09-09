@@ -9,6 +9,10 @@ Phased execution of `design/units-of-work.md` (U0–U15), aligned to the generat
 - **U0** ✅ monorepo + toolchain (TS7/SWC/Effect/Jest 100%/Biome).
 - **U1** ✅ Terraform baseline deployed (API GW, BFF + migration Lambdas, SSM, uploads, S3+CF,
   strict cost controls). Placeholder BFF until U4 code ships.
+- **U2** ✅ delivered (migrations, `app_role`, `SqlClient` layer, first repository slice,
+  `pnpm verify:migrations`); **not yet applied** — no live Neon database targeted. Terraform gained
+  a second connection string (`app_database_url`) that needs a two-pass first deploy; see
+  `iac/README.md`.
 - Everything else: pending.
 
 ## Phase 1 — Foundation + core budget loop (U2–U10)
@@ -18,10 +22,14 @@ the full budget loop — cycles with the **proportional model**, fixed bills, sh
 user-defined withdrawals — on the Casa and Pessoal dashboards.
 
 Key tasks
-1. U2: Neon migrations for identity/household/settings/accounts/categories/caps with
-   **owner_user_id + visibility** and **RLS policies**; `SqlClient` layer with the per-request
-   transaction + `SET LOCAL app.user_id/app.household_id`; base repositories + Docker-Postgres
-   integration harness (privacy tests: personal rows owner-only, raw query blocked).
+1. U2 ✅: Neon migrations for identity/household/settings/accounts/categories with
+   **owner_user_id + visibility** and **forced RLS policies**; a genuinely restricted `app_role`
+   (Neon's console/CLI role inherits `neon_superuser`/`BYPASSRLS` and cannot be used at runtime);
+   `SqlClient` layer with the per-request transaction + `set_config(..., true)`; a first
+   repository slice (users, households, accounts, categories); `pnpm verify:migrations`
+   (pglite-backed privacy/RLS checks — Jest's VM sandbox blocks pglite's dynamic import, so this
+   runs as a plain script, not under `pnpm test`). `category_caps` deferred to U6 (FKs `cycles`);
+   `auth_tokens`/`user_sessions`/`household_invitations` repositories deferred to U3.
 2. U3: auth (signup/verify/login/MFA + remember device/sessions) + household create/invite/accept
    (max 2 members) + account visibility; SES mailer (localised), sender verified.
 3. U4: BFF — `RpcServer` (+ minimal `HttpApi`) in one layered Lambda; `packages/contracts`; typed
@@ -96,12 +104,15 @@ review passed; `prod` deployed; checks clean.
 
 - **PDF parsing (Amex/C6, password-protected):** highest-uncertainty parsers; timebox in U11,
   fall back to guided manual entry.
-- **RLS on a pooled connection:** always `SET LOCAL` inside the request transaction; an
-  integration test asserts a query outside the transaction sees nothing.
+- **RLS on a pooled connection:** always `set_config(..., true)` inside the request transaction;
+  `pnpm verify:migrations` asserts a reset scope denies rather than errors and that the connecting
+  role is genuinely non-superuser/`NOBYPASSRLS` (Neon's console/CLI role is neither).
 - **Multi-currency cycle math:** convert once at confirmation, store the rate; money in integer
   minor units only.
 - **Effect API surface:** pinned v3 stable; thin presentation adapters; RPC only for the web.
 
 ## Immediate next step
 
-Resume at **U2** (data + isolation foundation on Neon).
+Resume at **U3** (Auth & Household). Applying U2's Terraform changes to nosko-test (the two-pass
+`app_role` deploy in `iac/README.md`) can happen whenever Marcelo wants a live Neon database;
+U3's code does not require it to keep being written and unit-tested.

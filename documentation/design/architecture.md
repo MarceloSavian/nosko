@@ -289,16 +289,27 @@ preserved. Authorization enforced in BFF middleware and again at the database (�
 
 ## 11.1 Visibility & isolation (mandatory RLS)
 
-Threat model: outsiders and a compromised client — not cryptographic isolation between the two
-partners. Every financial row carries `owner_user_id` + `visibility` (`personal` | `shared`);
-joint accounts add `co_owner_user_id`. The BFF middleware opens one transaction per request and
-runs `SET LOCAL app.user_id / app.household_id` (Neon's pooled endpoint is PgBouncer in transaction
-mode, so session `SET` is not reliable). **Row-Level Security is enabled on every financial
-table**: shared rows are visible to the household, personal rows only to their owner, accounts to
-owner or co-owner. The application role is not the table owner and cannot bypass RLS.
-Repositories repeat the filters explicitly (defence in depth), and integration tests assert that a
-partner never receives personal rows. Data at rest is protected by Neon and S3 encryption; no
-application-level envelope encryption and no client-side E2EE (the UI's "cofre / E2E" copy is
+**By design, each member's personal data is hidden from the other member** — enforced by the
+application and by mandatory RLS, not by cryptography (there is no cryptographic isolation
+between the two partners; a database administrator can read everything). The cryptographic
+concern is a separate, narrower one: outsiders and a compromised client, addressed by encryption
+at rest/in transit, below. Every financial row carries `owner_user_id` + `visibility`
+(`personal` | `shared`); joint accounts add `co_owner_user_id`. The BFF middleware opens one
+transaction per request and runs `select set_config('app.user_id', $1, true)` (and
+`app.household_id` when known) — `set_config(..., true)` behaves like `SET LOCAL` but, unlike a
+literal `SET`, accepts a bound parameter (Neon's pooled endpoint is PgBouncer in transaction mode,
+so a plain session `SET` would not be reliable either way). **Row-Level Security is enabled and
+forced on every financial table**: shared rows are visible to the household, personal rows only
+to their owner, accounts to owner or co-owner; policies guard the GUC read with
+`nullif(current_setting(...), '')` since a reset custom GUC reverts to `''`, not `NULL`. Crucially,
+the runtime role (`app_role`) is created by SQL inside the migrations and is genuinely
+`NOSUPERUSER NOBYPASSRLS` with table-level grants only — **not** the Neon console/CLI-created
+role, which inherits `neon_superuser` (`BYPASSRLS`) and would silently skip every policy. See
+`design/database-design.md` § Access and `iac/README.md` for the two-connection-string setup this
+requires (`migration-v1` as the admin role, `bff-v1` as `app_role`). Repositories repeat the
+filters explicitly (defence in depth), and integration tests assert that a partner never receives
+personal rows. Data at rest is protected by Neon and S3 encryption against outsiders/compromise;
+no application-level envelope encryption and no client-side E2EE (the UI's "cofre / E2E" copy is
 dropped). No bank sync means no third-party account tokens to store.
 
 ## 12. Infrastructure as Code (Terraform, nosko modules)
