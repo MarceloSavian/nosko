@@ -1,259 +1,246 @@
 # Database Design — nosko (PostgreSQL / Neon)
 
-Relational model for `requirements.md`, accessed via `@effect/sql-pg` and evolved with SQL
-migrations. **All identifiers are English** (see architecture §4 vocabulary). Derived cycle
-figures and projections are **computed in the domain layer, not stored** (architecture §5/§7);
-this schema holds **raw inputs + configuration + audit data**.
+Storage model for `requirements.md`, aligned to the generated UI. Accessed via `@effect/sql-pg`,
+evolved with SQL migrations. **All identifiers English.** The DB holds **raw inputs +
+configuration + audit data**; derived figures (cycle math, split/settlement, projections) are
+computed in the domain layer and returned as view models.
 
 ## Conventions
 
-- PKs: `uuid` (`gen_random_uuid()`, `pgcrypto`).
-- Money: **`amount_minor bigint`** (integer minor units) + **`currency char(3)`** (ISO 4217).
-  Never floats. Rates/percentages: `numeric(10,6)`.
-- Timestamps: `timestamptz`; `created_at`/`updated_at` (trigger-maintained).
-- Every household-owned table carries `household_id` (app scoping + optional RLS via
-  `current_setting('app.household_id')`).
-- Enums as Postgres `enum` types (inline). snake_case names.
+- PKs `uuid` (`gen_random_uuid()`, `pgcrypto`). Money `amount_minor bigint` + `currency char(3)`
+  (ISO 4217). Rates/percent `numeric(10,6)`. Timestamps `timestamptz`.
+- **Ownership + visibility on financial rows:** `household_id` (scoping), `owner_user_id`, and
+  `visibility` (`personal` | `shared`). Personal rows are readable only by the owner; shared rows
+  by both members. Enforced in repositories (+ optional Postgres RLS on `app.user_id` /
+  `app.household_id`).
+- **Personal data encryption:** for `visibility='personal'` rows, sensitive columns
+  (descriptions, counterparties, notes, balances) are stored via **KMS envelope encryption**
+  (`enc_*` bytea + `enc_dek_id`), decrypted only for the owner in the BFF. Shared rows stored in
+  plaintext columns (both members read them). See "Personal vault" note.
+- Enums as Postgres enum types (inline). snake_case. `citext` for emails.
 
 ## Entity overview (text ERD)
 
 ```
-users ──< household_members >── households ──1:1── household_settings
-users ──< auth_tokens / user_sessions
-households ──< household_invitations
-households ──< categories
-households ──< recurring_rules            (fixed-bill templates + categorisation rules)
-households ──< cycles ──< cycle_incomes            (member salaries/bonus)
-                    │  ──< cycle_withdrawals        (actual withdrawal, per member)
-                    │  ──< fixed_bills ──< fixed_bill_items      (fixed_bills.recurring_rule_id?)
-                    │  ──< expenses ──(optional)── transactions  (transactions.expense_id?)
-households ──< bank_accounts ──< transactions >── statement_uploads
-households ──< savings_accounts ──< savings_events / savings_rate_history / holdings
-households ──< projection_settings (1:1)
-households ──< evaluation_months
-households ──< evaluation_categories ──< evaluation_category_values
+users ─< household_members >─ households ─1:1─ household_settings
+users ─< auth_tokens / user_sessions ; households ─< household_invitations
+households ─< categories ─< category_caps            (per-cycle spend caps / tetos)
+users ─< accounts                                    (owner + visibility; source manual|file_import)
+accounts ─< transactions >─ statement_uploads        (owner + visibility; dedup_hash; transfer link)
+households ─< cycles ─< cycle_incomes                 (per member)
+                  │  ─< cycle_withdrawals             (saques to personal; settled_at)
+                  │  ─< fixed_bills ─< fixed_bill_items (paying_account, paid_by)
+                  │  ─< shared_payments ─< payment_splits   (payer + per-member share)
+                  │  ─< settlements                   (acertos: inter-partner transfers)
+households ─< recurring_rules
+households ─< goals ─< goal_contributions             (linked vault account, per member)
+users ─< savings_accounts ─< savings_events / savings_rate_history / holdings   (personal)
+users ─1:1─ projection_settings ; users ─< projection_scenarios
+users ─< subscriptions                                (personal; NL/BR)
+households ─< evaluation_months / evaluation_categories ─< evaluation_category_values
+fx_rates                                              (reference)
 ```
 
-Cycle chaining (estimate ← prev variableTotal, openingBalance ← prev surplus) is an **ordering
-over `cycles`** resolved by the Cycle Engine, not a stored FK.
-
 ---
 
-## Tables
+## Identity, household & configuration
 
-### Identity & auth
+**users** — id · email citext unique · password_hash (argon2id) · name · preferred_locale ·
+email_verified · mfa_enabled · mfa_secret (encrypted) · created_at/updated_at.
 
-**users** — `id` pk · `email` citext unique · `password_hash` (argon2id) · `name` ·
-`preferred_locale` text null (per-user UI language, overrides household default) · `email_verified`
-bool · `mfa_enabled` bool · `mfa_secret` text null (encrypted) · `created_at`/`updated_at`.
+**auth_tokens** — id · user_id · type(`email_verify`|`password_reset`|`mfa_otp`) · token_hash ·
+expires_at · consumed_at.  **user_sessions** — id · user_id · refresh_token_hash · expires_at ·
+revoked_at.
 
-**auth_tokens** — `id` pk · `user_id` fk · `type` enum(`email_verify`,`password_reset`,`mfa_otp`)
-· `token_hash` · `expires_at` · `consumed_at` null · `created_at`.
+**households** — id · name · base_currency char(3) default 'EUR' · created_by · timestamps.
 
-**user_sessions** — `id` pk · `user_id` fk · `refresh_token_hash` · `user_agent`/`ip` null ·
-`expires_at` · `revoked_at` null · `created_at`.
+**household_settings** (1:1) — household_id pk · cycle_anchor_day int default 23 · locale default
+'pt-BR' · base_currency · emergency_reserve_minor · **box3_allowance_minor** (~€57k) ·
+**box3_rate** (~0.0216) · inflation_rate default 0 · updated_at.
 
-### Household & configuration
+**household_members** — (household_id, user_id) pk · role(`owner`|`member`) · display_name ·
+joined_at.  **household_invitations** — id · household_id · email · token_hash · invited_by ·
+status(`pending`|`accepted`|`revoked`|`expired`) · expires_at · accepted_by.
 
-**households** — `id` pk · `name` · `base_currency` char(3) default 'EUR' · `created_by` fk users
-· `created_at`/`updated_at`.
+**categories** — id · household_id · name · color · sort_order · unique(household_id,name).
+**category_caps** — id · category_id · cycle_id · cap_minor · unique(category_id,cycle_id).
 
-**household_settings** (1:1 — the primary configuration surface)
-| column | type | notes |
-|---|---|---|
-| household_id | uuid pk fk households | |
-| cycle_anchor_day | int not null default 23 | configurable cycle start day |
-| locale | text not null default 'pt-BR' | default UI language (`pt-BR`/`en`) |
-| base_currency | char(3) not null default 'EUR' | mirrors households for convenience |
-| reserve_default_minor | bigint not null default 10000 | default cycle reserve (€100) |
-| updated_at | timestamptz | |
+## Accounts & connections
 
-**household_members** — `(household_id, user_id)` pk · `role` enum(`owner`,`member`) ·
-`display_name` (e.g. "Marcelo"/"Gabriele") · `joined_at`.
-
-**household_invitations** — `id` pk · `household_id` fk · `email` citext · `token_hash` ·
-`invited_by` fk users · `status` enum(`pending`,`accepted`,`revoked`,`expired`) default 'pending'
-· `expires_at` · `accepted_by` fk users null · `created_at`.
-
-**categories** (configurable) — `id` pk · `household_id` fk · `name` text · `sort_order` int
-default 0 · unique(`household_id`, `name`). Seeded on household creation using the household
-`locale` (e.g. pt: Mercado/Lazer/Outros; en: Groceries/Leisure/Other). Names are user data.
-
-**recurring_rules** (fixed-bill templates **and** categorisation rules)
+**accounts**
 | column | type | notes |
 |---|---|---|
 | id | uuid pk | |
-| household_id | uuid fk households | |
-| match_type | enum(`vendor_exact`,`vendor_contains`,`counterparty`) not null | |
-| matcher | text not null | pattern to match transaction description/counterparty |
-| expected_amount_minor | bigint null | for fixed bills |
-| currency | char(3) null | |
-| category | text null | auto-assigned category on match |
-| cadence | enum(`monthly`,`yearly`,`irregular`) not null default 'monthly' | |
-| is_fixed_bill | boolean not null default false | generate a fixed bill each cycle |
-| active | boolean not null default true | |
-| source | enum(`auto_detected`,`user_defined`) not null | |
-| confidence | numeric(10,6) null | detector score (auto only) |
-| created_at / updated_at | timestamptz | |
+| household_id | uuid fk | |
+| owner_user_id | uuid fk users | who registered it |
+| visibility | enum(`personal`,`shared`) not null default 'personal' | shared = appears in Casa |
+| institution | enum(`ing`,`revolut`,`amex`,`nubank`,`c6`,`abn`,`other`) | |
+| nickname | text | e.g. "ING Conjunta" |
+| type | enum(`checking`,`credit_card`,`savings`,`brokerage`,`investment`,`vault`) | |
+| currency | char(3) | EUR/BRL |
+| masked_id | text | masked IBAN/number |
+| balance_minor | bigint null | latest known |
+| purpose | text null | e.g. "Moradia & Débitos" |
+| source | enum(`manual`,`file_import`) not null default 'manual' | how data enters (no live sync) |
+| last_import_at | timestamptz null | shown in the UI |
+| created_at/updated_at | timestamptz | |
+| index | (household_id, visibility), (owner_user_id) | |
 
-### Budgeting
+No bank-sync/connection table: data comes from manual entry and imported statement files only.
 
-**cycles**
+## Transactions & the couple ledger
+
+**statement_uploads** — id · household_id · account_id null · uploader owner_user_id · file_key
+(S3) · original_filename · format enum(`csv`,`pdf`) · period_start/end ·
+status(`uploaded`|`parsing`|`parsed`|`failed`) · error · uploaded_at.
+
+**transactions** (normalised; staged → confirmed; personal or shared)
 | column | type | notes |
 |---|---|---|
 | id | uuid pk | |
-| household_id | uuid fk households | |
-| cycle_key | text not null | e.g. `2026-04-23` (anchor-dated) |
-| title | text not null | e.g. "23 Apr – 22 May" (localised on the client) |
-| start_date | date not null | anchor day (from settings, overridable) |
-| end_date | date not null | day before next anchor |
-| reserve_minor | bigint not null | defaults from household_settings |
-| seed_estimate_minor | bigint null | first/seeded cycle only; else chained |
-| seed_opening_balance_minor | bigint null | first/seeded cycle only; else chained |
-| created_at / updated_at | timestamptz | |
-| unique | (household_id, cycle_key) | |
-| index | (household_id, start_date) | chaining order |
-
-**cycle_incomes** — `id` pk · `cycle_id` fk · `member_user_id` fk users null (null = household
-bonus) · `kind` enum(`salary`,`bonus`) · `amount_minor` · `currency` default 'EUR'.
-
-**cycle_withdrawals** (raw actual withdrawal per member; suggested is derived) — `id` pk ·
-`cycle_id` fk · `member_user_id` fk users · `amount_minor` · `currency` default 'EUR'.
-
-**fixed_bills**
-| column | type | notes |
-|---|---|---|
-| id | uuid pk | |
-| cycle_id | uuid fk cycles | |
-| recurring_rule_id | uuid fk recurring_rules null | template that generated it, if any |
-| label | text not null | |
-| amount_minor | bigint not null | |
-| currency | char(3) not null default 'EUR' | |
-| paid | boolean not null default false | |
-| paid_on_day | int null | |
-| auto_paid | boolean not null default false | set when matched by an ingested transaction |
-| sort_order | int not null default 0 | |
-| created_at / updated_at | timestamptz | |
-
-**fixed_bill_items** — `id` pk · `fixed_bill_id` fk · `item_date` date null · `description` ·
-`amount_minor` · `category` null.
-
-**expenses** (variable expenses — formerly "gastos")
-| column | type | notes |
-|---|---|---|
-| id | uuid pk | |
-| cycle_id | uuid fk cycles | |
-| household_id | uuid fk households | denormalised for isolation/queries |
-| description | text not null | |
-| amount_minor | bigint not null | may be negative (reimbursement) |
-| currency | char(3) not null default 'EUR' | |
-| category | text not null | references categories.name (soft) |
-| day | int null | day-of-month |
-| source | enum(`manual`,`ingested`) not null default 'manual' | |
-| transaction_id | uuid fk transactions null | link when created from ingestion |
-| created_at / updated_at | timestamptz | |
-
-### Ingestion
-
-**bank_accounts** — `id` pk · `household_id` fk · `institution`
-enum(`ing`,`revolut`,`amex`,`nubank`,`c6`) · `label` · `kind`
-enum(`checking`,`credit`,`savings`,`brokerage`,`investment`) · `currency` · `owner_user_id` fk
-users null (null = joint) · `is_joint` bool default false · `created_at`.
-
-**statement_uploads** — `id` pk · `household_id` fk · `bank_account_id` fk null · `institution`
-enum · `file_key` (S3) · `original_filename` · `format` enum(`csv`,`pdf`) · `period_start`/
-`period_end` date null · `status` enum(`uploaded`,`parsing`,`parsed`,`failed`) default 'uploaded'
-· `error` text null · `uploaded_by` fk users · `uploaded_at`.
-
-**transactions**
-| column | type | notes |
-|---|---|---|
-| id | uuid pk | |
-| household_id | uuid fk households | |
-| bank_account_id | uuid fk bank_accounts | |
+| household_id | uuid fk | |
+| account_id | uuid fk accounts | |
+| owner_user_id | uuid fk users | derived from the account |
+| visibility | enum(`personal`,`shared`) | derived from the account |
 | upload_id | uuid fk statement_uploads null | |
 | external_id | text null | e.g. Nubank UUID |
-| booked_date | date not null | |
-| description | text not null | |
-| counterparty | text null | |
-| amount_minor | bigint not null | |
-| currency | char(3) not null | |
-| direction | enum(`debit`,`credit`) not null | |
-| category | text null | assigned on review (or by a recurring_rule) |
-| is_transfer | boolean not null default false | self-transfer flag |
-| linked_transaction_id | uuid fk transactions null | matched other leg (Wise EUR↔BRL) |
-| status | enum(`staged`,`confirmed`,`ignored`,`duplicate`) not null default 'staged' | |
-| expense_id | uuid fk expenses null | set when confirmed into a cycle |
-| matched_rule_id | uuid fk recurring_rules null | fixed-bill/categorisation match |
-| dedup_hash | text not null | per-source identity hash |
+| booked_at | timestamptz | |
+| description / counterparty | text (enc_* for personal) | |
+| amount_minor | bigint · currency char(3) | |
+| direction | enum(`debit`,`credit`) | |
+| category | text null | assigned on review or by a rule |
+| category_confidence | numeric null | AI auto-categoriser |
+| is_transfer | boolean default false · linked_transaction_id uuid null | internal-transfer pair |
+| matched_rule_id | uuid fk recurring_rules null | |
+| status | enum(`staged`,`confirmed`,`ignored`,`duplicate`) default 'staged' | |
+| shared_payment_id | uuid fk shared_payments null | set when a shared txn enters the ledger |
+| dedup_hash | text | unique(household_id, dedup_hash) |
 | created_at | timestamptz | |
-| unique | (household_id, dedup_hash) | dedupe guarantee |
-| index | (household_id, bank_account_id, booked_date) | |
+| index | (household_id, account_id, booked_at), (owner_user_id, visibility) | |
 
-### Savings & investments
+**shared_payments** (a confirmed shared transaction in the couple ledger)
+| column | type | notes |
+|---|---|---|
+| id | uuid pk | |
+| household_id | uuid fk · cycle_id fk cycles | |
+| account_id | uuid fk accounts (shared) | |
+| transaction_id | uuid fk transactions null | source, if ingested |
+| booked_at · description · counterparty | | |
+| amount_minor · currency | | |
+| category | text | |
+| payer_user_id | uuid fk users | who paid |
+| split_method | enum(`equal`,`proportional`,`custom`) default 'equal' | |
+| created_at/updated_at | | |
 
-**savings_accounts** — `id` pk · `household_id` fk · `name` · `kind`
-enum(`cash_savings`,`cdb`,`brokerage`) · `currency` · `current_balance_minor` · `as_of` date ·
-`annual_rate` numeric null · `monthly_contribution_minor` bigint null · `net_redemption_minor`
-bigint null (CDB net-of-tax) · `total_invested_minor` bigint null (CDB principal) · `note` null ·
-`created_at`/`updated_at`.
+**payment_splits** — id · shared_payment_id fk · member_user_id fk · share_minor · unique(payment,
+member). (Per-member owed share; sums to the payment amount.)
 
-**savings_events** — `id` pk · `savings_account_id` fk · `event_date` date · `type`
-enum(`deposit`,`withdrawal`,`interest`) · `amount_minor` · `balance_minor` (running) ·
-`created_at`. Monthly rollups are a derived view `savings_monthly_v` over this table.
+**settlements** (acertos — inter-partner transfers that rebalance the ledger)
+| column | type | notes |
+|---|---|---|
+| id | uuid pk · household_id fk · cycle_id fk null | |
+| from_user_id · to_user_id | uuid fk users | who pays whom |
+| amount_minor · currency | | |
+| status | enum(`suggested`,`recorded`,`settled`) default 'recorded' | |
+| method | text null | e.g. SEPA/Tikkie |
+| settled_at | timestamptz null · created_at | |
 
-**savings_rate_history** — `id` pk · `savings_account_id` fk · `effective_date` date · `rate`
-numeric(10,6).
+The running inter-partner balance and the *suggested* settlement are **computed** by the
+Split/Settlement Engine from `payment_splits` vs `payer`; only recorded/settled acertos persist.
 
-**holdings** (brokerage positions) — `id` pk · `savings_account_id` fk null · `household_id` fk ·
-`name` · `currency` · `quantity` numeric(18,6) null · `unit_cost_minor` bigint null ·
-`value_minor` bigint · `as_of` date · `note` null.
+## Cycles
 
-**projection_settings** (1:1) — `household_id` pk fk · `reserve_target_minor` bigint default
-2400000 (€24k) · `post_reserve_rate` numeric default 0.10 · `wealth_tax_allowance_minor` bigint
-default 5700000 (~€57k) · `wealth_tax_rate` numeric default 0.0216 (Box 3) · `default_horizon_years`
-int default 20.
+**cycles** — id · household_id · cycle_key · title · start_date · end_date · reserve_minor ·
+seed_estimate_minor null · seed_opening_balance_minor null · reserve_destination text null ·
+timestamps · unique(household_id, cycle_key) · index(household_id, start_date).
 
-### Evaluations
+**cycle_incomes** — id · cycle_id · member_user_id null · kind(`salary`|`bonus`) · amount_minor ·
+currency.
 
-**evaluation_months** — `id` pk · `household_id` fk · `month` text `YYYY-MM` ·
-`inflow_minor`/`outflow_minor`/`net_minor` bigint null · `top_categories`/`biggest`/`recurring`/
-`watch`/`suggestions`/`notes` jsonb default '[]' · unique(`household_id`, `month`).
+**cycle_withdrawals** (saques to personal accounts — **user-defined**, set after seeing the cycle's
+`availableAfterPayments`) — id · cycle_id · member_user_id · amount_minor · currency · settled_at
+timestamptz null · method text null.
 
-**evaluation_categories** — `id` pk · `household_id` fk · `name`.
-**evaluation_category_values** — `id` pk · `category_id` fk · `month` · `amount_minor` ·
-unique(`category_id`, `month`). (avg / latestVsAvg computed in the domain layer.)
+**fixed_bills** — id · cycle_id · recurring_rule_id fk null · label · amount_minor · currency ·
+paid bool · paid_on_day int null · **paying_account_id** fk accounts null · **paid_by_user_id** fk
+users null · due_day int null · auto_paid bool default false · sort_order · timestamps.
+**fixed_bill_items** — id · fixed_bill_id · item_date · description · amount_minor · category.
+
+**recurring_rules** — id · household_id · match_type(`vendor_exact`|`vendor_contains`|
+`counterparty`) · matcher · expected_amount_minor null · currency null · category null · cadence
+(`monthly`|`yearly`|`irregular`) · is_fixed_bill bool · active bool · source(`auto_detected`|
+`user_defined`) · confidence numeric null · timestamps.
+
+## Goals & vaults (shared)
+
+**goals** — id · household_id · name · category · target_minor · accumulated_minor · currency ·
+deadline date null · status(`in_progress`|`achieved`|`paused`) · yield_rate numeric null ·
+vault_account_id fk accounts null · created_at/updated_at.
+**goal_contributions** — id · goal_id · member_user_id · cycle_id null · amount_minor ·
+contributed_at.
+
+## Personal savings, investments & subscriptions (private)
+
+**savings_accounts** — id · owner_user_id · household_id · name · kind(`cash_savings`|`cdb`|
+`brokerage`) · currency · current_balance_minor · as_of · annual_rate null ·
+monthly_contribution_minor null · net_redemption_minor null · total_invested_minor null · note null.
+**savings_events** — id · savings_account_id · event_date · type(`deposit`|`withdrawal`|
+`interest`) · amount_minor · balance_minor.  Monthly rollups via view `savings_monthly_v`.
+**savings_rate_history** — id · savings_account_id · effective_date · rate.
+**holdings** — id · owner_user_id · savings_account_id null · name · currency · quantity ·
+unit_cost_minor null · value_minor · custodian text null · as_of · note.
+
+**projection_settings** (1:1 per user) — owner_user_id pk · reserve_target_minor default 2400000 ·
+post_reserve_rate default 0.10 · base_rate default 0.02 · wealth_tax_allowance_minor default
+5700000 · wealth_tax_rate default 0.0216 · inflation_rate default 0 · default_horizon_years 30.
+**projection_scenarios** — id · owner_user_id · name · params jsonb · created_at (saved scenarios).
+
+**subscriptions** — id · owner_user_id · name · country enum(`NL`|`BR`) · account_id fk null ·
+monthly_minor · currency · cadence · recommendation enum(`keep`|`review`|`cancel`) null ·
+detected_from text null · active bool · created_at. Redundancy groups + efficiency score computed
+in the domain layer.
+
+## Evaluations (shared) & reference
+
+**evaluation_months** — id · household_id · month `YYYY-MM` · inflow/outflow/net_minor · jsonb
+arrays (top_categories, biggest, recurring, watch, suggestions, notes) · unique(household_id,month).
+**evaluation_categories** + **evaluation_category_values** — the category matrix (avg/vsAvg computed).
+
+**fx_rates** — id · rate_date · base char(3) · quote char(3) · rate numeric · unique(rate_date,
+base, quote). Used to convert BRL↔EUR for display and net-worth tiles.
 
 ---
 
-## Isolation, integrity, indexing
+## Access, isolation & indexing
 
-- **Household isolation:** repositories filter by the authenticated member's `household_id`;
-  optional Postgres **RLS** on household-owned tables keyed to `app.household_id` GUC set per
-  request by the BFF.
-- **Referential integrity:** cascade from `cycles` to children; `restrict` from `households`.
-- **Indexes:** `cycles(household_id, start_date)`; `expenses(cycle_id)`;
-  `transactions(household_id, dedup_hash)` unique; `transactions(bank_account_id, booked_date)`;
-  `savings_events(savings_account_id, event_date)`; `evaluation_category_values(category_id, month)`;
-  `recurring_rules(household_id, active)`.
-- **Extensions:** `pgcrypto`, `citext`.
+- **Casa vs Pessoal from one model:** the BFF sets the caller's `user_id`/`household_id`; shared
+  reads filter `visibility='shared' AND household_id=…`; personal reads add
+  `owner_user_id=caller`. Never join personal rows into a partner's response.
+- Cascade from `cycles`/`goals` to children; `restrict` from `households`.
+- Indexes: `accounts(household_id, visibility)`; `transactions(household_id, dedup_hash)` unique,
+  `(account_id, booked_at)`, `(owner_user_id, visibility)`; `shared_payments(cycle_id)`;
+  `payment_splits(shared_payment_id)`; `settlements(household_id, cycle_id)`;
+  `savings_events(savings_account_id, event_date)`; `fx_rates(rate_date, base, quote)`.
+- Extensions: `pgcrypto`, `citext`.
+
+## Personal vault (encryption) — resolved
+
+**Server-side isolation + KMS envelope encryption.** Personal (`visibility='personal'`) rows are
+owner-scoped, and sensitive columns are encrypted at rest with per-household KMS data keys. The BFF
+decrypts only for the owner and can still compute personal projections/audits server-side. This
+protects against DB/backup compromise and enforces partner-invisibility. Client-side zero-knowledge
+E2EE is **not** pursued (it would force personal analytics onto the client and complicate imports);
+the UI's "vault/E2E" language maps to this model.
 
 ## Migrations & seeding
 
-- SQL migrations under `backend/migrations/` (nosko convention), run by the `@effect/sql`
-  migrator (or a light SQL migrator) in deploy/CI.
-- On household creation: seed `household_settings`, `projection_settings`, and default
-  `categories` in the chosen `locale`.
+SQL migrations in `backend/migrations/` (run by the `@effect/sql` migrator). On household
+creation: seed `household_settings`, `projection_settings` per user, default `categories` (locale),
+and default `recurring_rules` off.
 
 ## Notes vs money-evaluation
 
-- Portuguese domain fields are renamed to English (architecture §4). Derived figures
-  (`suggestedWithdrawal`, `available`, `variableBudget`, `surplus`, `byCategory`, chained
-  `estimate`) are **domain computations**, keeping the DB normalised to raw inputs.
-- The **cycle boundary is configurable** via `household_settings.cycle_anchor_day` (default 23),
-  with per-cycle date overrides.
-- **Fixed bills** can be **auto-identified** (`recurring_rules.source = auto_detected`) or
-  **user-defined**; active `is_fixed_bill` rules generate per-cycle `fixed_bills` and are
-  auto-marked paid by matching ingested transactions.
-- Multi-currency is first-class; no conversion persisted. Optional `fx_rates(date, base, quote,
-  rate)` can back comparison views later.
+- The couple **ledger** (payer + split + settlement) is new and central; money-evaluation only had
+  joint variable spend. Personal vs shared **visibility** is the new backbone. Accounts +
+  connections, goals/vaults, subscriptions, category caps, FX, and projection scenarios are added
+  to match the generated screens. Derived figures remain computed, not stored.

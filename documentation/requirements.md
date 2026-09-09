@@ -1,46 +1,47 @@
 # Requirements — nosko
 
-Derived from `reverse-engineering.md` (functional scope from money-evaluation) plus the locked
-answers in `state.md`. IDs are referenced by the design and the implementation plan.
+Aligned to the generated UI (see `stitch-prompts.md` and the two Stitch exports) and the locked
+decisions in `state.md`. IDs are referenced by the design, the data architecture (§ Data
+Architecture below + `design/database-design.md`), and the implementation plan.
+
+## Product model (the core idea)
+
+nosko is a **private finance app for a couple** (Marcelo + Gabriele), base currency **EUR** with a
+secondary **BRL**. It has **two spaces**, and the boundary between them is the defining rule:
+
+- **Casa (Shared)** — joint accounts, shared payments, the shared monthly budget (cycles running a
+  configurable anchor day → the day before, default 23→22), shared fixed bills, and shared goals.
+  Both partners see everything here. Shared spending is a **couple ledger**: every payment records
+  who paid and how it is split, and nosko tracks the running inter-partner balance and suggests
+  settlements.
+- **Pessoal (Personal)** — each person's own accounts, payments, savings/investments, and
+  subscriptions. **Private: never visible to the partner.** Personal analytics (projections,
+  subscription audit) live only here.
+
+Each account a user adds has a **visibility**: `personal` (private) or `shared` (visible in Casa).
+Onboarding: sign up → add your accounts (set visibility) → create household → invite partner →
+partner joins and shares their side of the joint accounts.
 
 ## Personas
 
-- **Marcelo** — primary user, technical, in the Netherlands. Earns in EUR (PostNL), maintains BR
-  accounts (Nubank/C6) and investments.
-- **Gabriele** — partner, second household member. Contributes EUR income into the joint budget.
-- Both are **normal, independent users** who sign up separately and **link** into one household.
-  No single shared login.
+- **Marcelo** — primary user, NL resident, EUR income (PostNL), plus BR accounts (Nubank/C6).
+- **Gabriele** — partner, second member, EUR income into the joint budget.
+- Both are independent users who link into one **household**; personal data stays private per user.
 
-## Goals
-
-- Replace the hand-maintained `money-evaluation` (`source.json` + static dashboard) with a real,
-  private, multi-user web app on AWS.
-- Reproduce money-evaluation's proven functionality: couple budgeting cycles, fixed-bill
-  tracking, variable-spend categorisation, spend/subscription evaluations, savings + projections,
-  and the WhatsApp summary (the "resumo").
-- Support EUR (base) and BRL from day one, with the Brazil side (accounts, cards, CDB) fully in
-  scope for v1.
-
-## Scope
-
-In scope (v1, delivered in phases): everything in the Functional Requirements below.
-
-Out of scope (v1): mobile app (planned later), automated open-banking aggregation (ingestion is
-file-upload + manual), importing the legacy `source.json` history (start empty), admin/multi-
-household tenancy beyond the two users' single household.
-
-## Delivery phases
+## Scope & phasing
 
 | Phase | Theme | Requirements |
 |---|---|---|
-| P1 | Foundation + core budget loop | Infra baseline, auth + household, cycles, fixed bills, variable spend, Overview + Cycles UI (manual entry) |
-| P2 | Ingestion | Statement upload + per-bank parsers, dedupe, transfer-linking, confirm-to-expense |
-| P3 | Evaluations | Spend/subscription analysis views |
-| P4 | Savings + projections | Savings accounts/events, EUR two-phase + Box-3 projection, BR CDB, brokerage holdings |
-| P5 | Summary + BR completion + polish | WhatsApp summary, finalise BR accounts/cards, hardening |
+| P1 | Foundation + core budget loop | Infra, auth + household + account visibility, accounts, manual entry, cycles, fixed bills, shared payments **with payer+split+settlement**, Casa + Pessoal overviews |
+| P2 | Ingestion | File import (CSV primarily; PDF for Amex/C6), dedup, IBAN routing (personal/shared), internal-transfer pairing, AI-assisted categorisation, review queue |
+| P3 | Evaluations & subscriptions | Spend analysis, subscription/recurring audit (personal + shared), recurring-rule auto-detection |
+| P4 | Savings, investments & goals | Personal savings/investments, projection engine (two-phase + Box 3 + inflation), BR CDB, shared goals/vaults |
+| P5 | Summary & polish | WhatsApp resumo, hardening, export/backup |
 
-Multi-currency (EUR + BRL) is present in the data model from P1. "Full BR support" (Q10) is
-threaded across P2 (Nubank/C6 parsers), P4 (C6 CDB, BR holdings), and P5.
+Multi-currency (EUR + BRL) and the personal/shared visibility model are present from P1.
+**No live bank sync / account linking** — data comes from **manual entry and exported statement
+files only** (CSV primarily; PDF for banks that only export PDF). The generated UI shows "Open
+Finance / sync" affordances; **those are removed when implementing** (see FR-X-3).
 
 ---
 
@@ -48,221 +49,266 @@ threaded across P2 (Nubank/C6 parsers), P4 (C6 CDB, BR holdings), and P5.
 
 ### Auth & Household (FR-AUTH) — P1
 
-- FR-AUTH-1: Users sign up with email + password; email verification required before full access.
-- FR-AUTH-2: Login with email + password; **MFA** (TOTP or email OTP) as a second factor.
-- FR-AUTH-3: Password reset and email re-verification flows.
-- FR-AUTH-4: Session management (short-lived access token + refresh token; revticable).
-- FR-AUTH-5: A user can **create a household** (becomes owner) with a base currency (EUR).
-- FR-AUTH-6: The owner **invites the partner by email**; the partner accepts to join the
-  household as a member (per C5=A).
-- FR-AUTH-7: Household members share all household data (cycles, bills, expenses, savings,
-  evaluations). Per-member attribution is preserved (income split, withdrawals).
-- FR-AUTH-8: Every data operation is scoped to the caller's household; no cross-household access.
+- FR-AUTH-1: Sign up (name, email, password); email verification before full access.
+- FR-AUTH-2: Login + **MFA** (TOTP or email OTP); password reset; email re-verification.
+- FR-AUTH-3: Session management (short-lived access + refresh tokens, revocable).
+- FR-AUTH-4: Create a **household** (owner) with name, base currency (EUR), and cycle anchor day.
+- FR-AUTH-5: Invite the partner **by email**; on acceptance they join as a member.
+- FR-AUTH-6: All household-scoped data is visible to both members; **personal-scoped data is
+  visible only to its owner** (enforced server-side; see NFR-SEC/NFR-PRIV).
+
+### Accounts & Connections (FR-ACC) — P1 (+ sync P5)
+
+- FR-ACC-1: A user registers **accounts**: institution (ING, Revolut, Amex, Nubank, C6, ABN, …),
+  nickname, type (checking / credit card / savings / brokerage / investment/CDB / vault), currency
+  (EUR/BRL), masked identifier (IBAN/number), and optional balance.
+- FR-ACC-2: Each account has a **visibility**: `personal` (default, private) or `shared` (appears
+  in Casa for both). Visibility is toggleable ("Compartilhar com a casa" / un-share) and
+  reversible; un-sharing removes it from Casa without deleting history.
+- FR-ACC-3: **Shared accounts** screen: joint accounts with balance, purpose, masked IBAN, cycle
+  commitment %, and total joint balance. **My accounts** screen: the owner's personal accounts,
+  personal net worth (EUR + BRL converted), liquid vs invested, card invoices — private.
+- FR-ACC-4: Each account records its data **source** (`manual` or `file_import`) and a
+  **last-import** timestamp shown in the UI. **No live bank sync/linking** — data comes from manual
+  entry and imported statement files only.
+- FR-ACC-5: Balances and account state feed the Casa/Pessoal overviews and the net-worth tiles.
+
+### Shared payments — the couple ledger (FR-LEDGER) — P1
+
+- FR-LEDGER-1: A **shared payment** records: date/time, merchant/description, shared account,
+  category, currency, amount, **payer (which member paid)**, and a **split** (`rateio`): `equal`
+  (50/50), `proportional` (by income), or `custom` per-member share. The split applies **only to
+  the household's monthly shared payments** (it does not drive personal withdrawals).
+- FR-LEDGER-2: nosko computes per-member **contribution totals and percentages** for the cycle,
+  and a running **inter-partner balance** (who has advanced more than their share).
+- FR-LEDGER-3: nosko computes a **suggested settlement** (`acerto`): the transfer that rebalances
+  the ledger (e.g. "Gabriele → Marcelo €30"). The user can **record/settle** an `acerto`, which
+  resets the balance and is itself logged.
+- FR-LEDGER-4: The Payments screen lists cycle transactions with filters (cycle, account,
+  category, member), a cycle total vs ceiling, the split summary, average/day, and CSV export.
+- FR-LEDGER-5: Categories are configurable with defaults seen in the UI: Mercado & Feira,
+  Moradia & Fixas, Lazer & Restaurantes, Transporte, Saúde & Pets, Subscrições, Outros.
 
 ### Budgeting Cycles (FR-CYC) — P1
 
-- FR-CYC-1: Cycles run on a **configurable anchor day** (default 23), spanning `[anchorDay of
-  month M, (anchorDay − 1) of month M+1]` with day-clamping; per-cycle date overrides allowed.
-  The 23rd→22nd behaviour is the default, not a hardcode.
-- FR-CYC-2: Per cycle, capture raw inputs: per-member salaries + bonus; `reserve` (default 100);
-  optional `seed` (`estimate`, per-member `actualWithdrawal`, `openingBalance`) for the
-  first/new cycle.
-- FR-CYC-3: The system **computes derived figures** exactly as money-evaluation's builder does
-  (see design's Cycle Engine): income total + per-member pct split; `fixedTotal`,
-  `variableTotal`, `byCategory`; chained `estimate`; `totalToReserve`; `suggestedWithdrawal` per
-  member; `available`; `variableBudget`; `surplus`; `nextSuggestedWithdrawal`.
-- FR-CYC-4: Cycles **chain**: a cycle's `estimate` defaults to the previous cycle's actual
-  variable spend, and its `openingBalance` to the previous cycle's `surplus`. Derived figures are
-  never hand-edited.
-- FR-CYC-5: Detect the **current cycle** (the cycle whose 22nd-end contains today) and surface a
-  "can spend €X/day for the remaining days" figure.
-- FR-CYC-6: Create the next cycle by scaffolding from the current one (carry forward fixed bills
-  as unpaid, seed estimate/openingBalance).
-- FR-CYC-7: The 22nd/23rd boundary rule: spend dated the 22nd belongs to the closing cycle.
+- FR-CYC-1: Cycles run on a **configurable anchor day** (default 23; options include 1/15/23/28),
+  spanning `[anchorDay of month M, (anchorDay − 1) of M+1]`, with per-cycle date overrides.
+- FR-CYC-2: Raw inputs per cycle: per-member salaries + bonus; `reserve`; optional `seed`
+  (`estimate`, per-member `actualWithdrawal`, `openingBalance`) for the first/seeded cycle.
+- FR-CYC-3: Derived figures (computed, never hand-edited): income total + per-member split %,
+  `fixedTotal`, `variableTotal`, `byCategory`, chained `estimate`, **`availableAfterPayments`**
+  (household income − shared fixed bills − shared variable payments − reserve — the leftover shown
+  so each member can decide their withdrawal), `variableBudget`, `surplus`, **savings rate %**, and
+  the **daily allowance** ("pode gastar €X/dia" for remaining days).
+- FR-CYC-4: Cycles **chain** (estimate ← prev variableTotal, openingBalance ← prev surplus).
+- FR-CYC-5: **Withdrawals to personal accounts** (`saques`) are **user-defined per member**: after
+  seeing `availableAfterPayments` (the leftover once the month's household payments are covered),
+  each member **decides how much to move** to their personal account — there is no forced
+  suggestion. Records the amount + settlement status/timestamp (e.g. "liquidado via SEPA").
+- FR-CYC-6: The per-member income split % informs the **proportional `rateio`** option for shared
+  payments only. It does **not** dictate withdrawals (those are user-defined, FR-CYC-5).
+- FR-CYC-7: Cycles list with history, **multi-cycle surplus/savings trends**, average savings over
+  N cycles, yearly total saved, and a **reserve destination** label (e.g. house down payment).
+  Compare cycles. Create/scaffold the next cycle.
+- FR-CYC-8: Per-category **caps (tetos)** configurable; the UI shows "teto" per category and cycle.
 
-### Fixed Bills (FR-BILL) — P1
+### Fixed bills & recurring rules (FR-BILL) — P1
 
-- FR-BILL-1: Per cycle, a list of fixed bills (`label`, `value`, `paid`, `paidOn`, optional
-  itemised sub-lines).
-- FR-BILL-2: Mark a bill paid/unpaid with a paid-on day; marking paid must **not** change
-  `surplus` (it is already in `fixedTotal`).
-- FR-BILL-3: "Situação atual" summary: N/M paid, total paid vs total remaining.
-- FR-BILL-4: Recurring NL obligations are the default carry-forward set (rent, CZ health,
-  Eneco, Odido, Waternet/Waterschap, Swapfiets, De Unie, ING fee, card auto-debits).
-- FR-BILL-5: **Automatic identification** — the app detects recurring charges from transactions
-  (periodic same-vendor, stable amount) and proposes them as fixed bills for the user to confirm.
-- FR-BILL-6: **Manual identification** — the user can mark any transaction or vendor as a fixed
-  bill. Both paths create a reusable recurring rule.
-- FR-BILL-7: Active fixed-bill rules generate each new cycle's fixed bills (carry-forward), and a
-  matching ingested transaction **auto-marks the bill paid**.
+- FR-BILL-1: Per cycle, shared fixed bills: label, amount, currency, paid/unpaid toggle, paid-on
+  day, **paying account**, **paid-by member**, due date, optional items.
+- FR-BILL-2: "Situação atual" totals: predicted, paid, pending (with next due bill).
+- FR-BILL-3: **Recurring rules** (household-level): matcher (vendor/counterparty), expected
+  amount, category, cadence, "is fixed bill", active, source (auto-detected/user-defined).
+- FR-BILL-4: **Auto-detection** ("Inteligência nosko"): scan recent transactions (e.g. last 90
+  days) for periodic same-vendor charges and propose them as fixed bills / recurring rules to
+  confirm or ignore.
+- FR-BILL-5: Active `isFixedBill` rules generate each cycle's bills; a matching imported/synced
+  transaction **auto-marks the bill paid** (with the paying account + payer).
 
-### Variable Spend / Expenses (FR-VAR) — P1
+### Shared goals & vaults (FR-GOAL) — P4
 
-- FR-VAR-1: Per cycle, variable expenses (`description`, `amount`, `category`, `day`).
-- FR-VAR-2: Categories are configurable; defaults seeded by locale (pt: Mercado/Lazer/Outros;
-  en: Groceries/Leisure/Other).
-- FR-VAR-3: `byCategory` totals and variable total are computed.
-- FR-VAR-4: Manual add/edit/delete of expenses is always available (independent of ingestion).
-- FR-VAR-5: An expense may originate from a confirmed ingested transaction (link preserved).
+- FR-GOAL-1: Shared **goals** (metas): name, category, target amount, accumulated amount, progress
+  %, **monthly contribution split per member**, deadline/projected completion, status
+  (in-progress/achieved/paused), and an optional **yield rate**.
+- FR-GOAL-2: A goal may be backed by a **vault/reserve account** (linked account) providing
+  liquidity + yield; the UI shows accumulated vs target and "aportar" (contribute).
+- FR-GOAL-3: Aggregate: total accumulated across goals, % of a global target, combined monthly
+  contribution, next milestone.
 
-### Ingestion (FR-ING) — P2
+### Personal space (FR-PER) — private (P1 overview; P3/P4 depth)
 
-- FR-ING-1: Upload statement files per institution: ING (CSV), Revolut (CSV), Amex (PDF, password
-  `089862`), Nubank account + credit (CSV), C6 (PDF, password `089862`).
-- FR-ING-2: Per-bank parsers normalise rows into transactions (date, description, counterparty,
-  amount, currency, direction) using the documented schema crib-notes.
-- FR-ING-3: **Deduplicate** using each source's identity rule (e.g. ING: date + amount +
-  description + resulting balance; Nubank account: UUID; Amex: statement close-date; etc.).
-- FR-ING-4: Detect and **link self-transfers** (Wise EUR↔BRL, "MARCELO SAVIAN" counterparty,
-  Revolut internal moves) so they are not double-counted as spend and income.
-- FR-ING-5: Only **joint ING** transactions feed household variable spend; personal cards
-  (Amex/Revolut) feed evaluations, not the cycle budget.
-- FR-ING-6: Review queue: user confirms/categorises staged transactions before they persist;
-  confirming a household variable transaction creates a linked expense in the right cycle
-  (respecting the 22nd boundary).
-- FR-ING-7: Overlapping re-exports must not create duplicates; the newer CSV is authoritative
-  over a screenshot/PDF for the same window.
-- FR-ING-8: Uploaded files are stored (S3) as an audit trail; parsing failures are surfaced.
+- FR-PER-1: **Personal overview** (private): personal balance across personal accounts, personal
+  monthly spend vs cap, personal savings, subscriptions total, spend-by-category, monthly
+  evolution. A "Transferir p/ Casa" action to share.
+- FR-PER-2: **Personal payments** (private): the owner's transactions on personal accounts;
+  filters; never shared with the partner.
+- FR-PER-3: **Personal savings & investments** (private): EUR reserve (balance, APY, monthly
+  rollup: aportes/retiradas/juros/saldo/delta, coverage months), brokerage holdings (positions,
+  value, % change, custodian), BR CDB (invested, current, % CDI, liquidity). Net worth EUR + BRL.
+- FR-PER-4: **Personal savings projection** (private): two-phase model (grow at reserve rate to a
+  configurable **reserve target** default €24k, then excess compounds at a **post-reserve return**
+  default 10%), **NL Box-3 wealth tax** (~2.16% above ~€57k allowance), optional **inflation
+  adjustment**, horizon 1/5/10/15/20/30/40/50y, monthly contribution, comparison lines, milestone
+  table, **save scenario**, export PDF.
+- FR-PER-5: **Personal subscription audit** (private): detected recurring charges grouped by
+  country (NL/BR), monthly + annualised cost, **redundancy detection** (duplicate cloud plans,
+  "streaming fatigue"), an **efficiency score**, potential savings, and recommendations
+  (keep/review/cancel).
 
-### Evaluations (FR-EVAL) — P3
+### Evaluations (shared) (FR-EVAL) — P3
 
-- FR-EVAL-1: Monthly summary: inflow, outflow, net per month.
-- FR-EVAL-2: Category matrix across months with computed `avg` and `latestVsAvg`.
-- FR-EVAL-3: Per-month narrative: top categories, biggest vendors, recurring subscriptions,
-  watch items, suggestions, notes.
-- FR-EVAL-4: Subscription audit view (the FINDINGS.md lens): recurring charges, duplicates
-  across countries, cancellation candidates.
+- FR-EVAL-1: Shared monthly analysis: inflow/outflow/net, category matrix across months with
+  computed averages and vs-average deltas, biggest vendors, recurring charges.
 
-### Savings & Projections (FR-SAV) — P4
+### Ingestion (FR-ING) — P2 (sync P5)
 
-- FR-SAV-1: EUR savings account: current balance, annual rate, rate history, events
-  (deposit/withdrawal/interest with running balance), monthly rollups (derived).
-- FR-SAV-2: Brazil C6 CDB: current balance, `liquidoResgate`, `totalInvestido`, annual rate,
-  monthly contribution.
-- FR-SAV-3: Brokerage holdings (`otherHoldings`): named positions with currency, quantity,
-  value, note.
-- FR-SAV-4: **EUR projection engine**: two-phase emergency-fund model (grow at savings rate to a
-  configurable **reserve target**, default €24k; excess compounds at a configurable
-  **post-reserve stock return**, default 10%), plus **NL Box-3 wealth-tax** modelling
-  (~2.16%/yr above ~€57k allowance, deducted monthly) producing a net-of-tax line.
-- FR-SAV-5: Projection controls: horizon 1/5/10/15/20/30/40/50 years, contribution slider,
-  reserve-target + post-reserve-rate sliders, comparison line, milestone table, compact money
-  formatting for large values.
-- FR-SAV-6: **BR CDB projection**: single-rate model with its own contribution slider and
-  "só aportes" comparison.
+- FR-ING-1: Import **exported statement files — CSV primarily** (ING/Revolut/Nubank), plus **PDF
+  for banks that only export PDF** (Amex, C6; incl. password-protected); multiple banks at once;
+  per-institution presets. **No live/link sync** — file export only.
+- FR-ING-2: Parse to normalised transactions; **deduplicate by hash** (per-source identity).
+- FR-ING-3: **Route each transaction by account/IBAN to the personal or shared destination**;
+  personal-account transactions stay private, shared-account transactions feed the couple ledger.
+- FR-ING-4: **AI-assisted auto-categorisation** with a confidence indicator; user overrides.
+- FR-ING-5: **Internal-transfer pairing**: detect matching out/in legs across the user's own
+  accounts (e.g. Wise EUR→BRL) and mark the pair a neutral transfer (not spend/income).
+- FR-ING-6: **Review queue**: staged transactions with counts (new/confirmed/ignored/duplicates/
+  internal-transfers), per-row destination (Casa/Pessoal) + suggested category, bulk confirm/
+  categorise; confirming a shared transaction adds it to the current cycle for both members.
+- FR-ING-7: Uploaded files stored (private) as an audit trail; parse failures surfaced.
 
 ### Summary / resumo (FR-RES) — P5
 
-- FR-RES-1: Generate a WhatsApp-ready text summary of the current cycle (renda, contas fixas,
-  variable used vs estimated, "livres", €/day for remaining days, top variable categories).
-- FR-RES-2: One-click copy to clipboard.
+- FR-RES-1: WhatsApp-ready recap of the current **shared** cycle: household income, fixed bills,
+  variable used vs ceiling, daily allowance, top categories, **and the 50/50 split + suggested
+  acerto**. Emoji/short/detailed variants. Copy-to-clipboard + open-in-WhatsApp. Shared data only.
 
 ### Cross-cutting product (FR-X)
 
-- FR-X-1: Multi-currency: amounts stored in source currency; convert only for comparison. EUR is
-  household base; BRL secondary. (P1 model, used throughout.)
-- FR-X-2: **Fully bilingual UI — English and Portuguese (pt-BR)**, user-switchable, with a
-  household default locale and a per-user override. No hardcoded user-facing strings; server text
-  (emails, summary) is localised via templates. (P1 baseline.)
-- FR-X-3: Web dashboard, **rebuilt from scratch** (C4=B) in React + Effect, covering Overview,
-  Cycles, Evaluations, Savings, and summary. Same feature set, fresh components.
+- FR-X-1: **Multi-currency** EUR (base) + BRL; store amounts in source currency (integer minor
+  units); convert for display via a daily **FX rate** shown in the UI ("1 EUR = R$X").
+- FR-X-2: **Bilingual** UI (pt-BR default, English), user-switchable; household default locale +
+  per-user override; localised server text (emails, resumo).
+- FR-X-3: Web dashboard (React + Effect), the Casa/Pessoal **space switcher**, matching the
+  generated design (Shared-Ledger theme: emerald primary, indigo secondary/personal, rose). When
+  implementing, **drop the Open Finance / bank-sync affordances** from the generated screens (no
+  live sync — imports are file-based).
 - FR-X-4: A documented internal API surface (OpenAPI/Swagger) alongside the typed RPC channel.
-- FR-X-5: **Configuration-first** — a settings surface exposes the configurable knobs: cycle
-  anchor day, locale, base currency, reserve default, categories, recurring/fixed-bill rules, and
-  projection parameters. Configurability is concrete knobs, not a speculative plugin framework.
-- FR-X-6: **English code identifiers** — all code, database columns, and API fields use English
-  names (see architecture §4 vocabulary); Portuguese appears only in user-facing content/locale.
+- FR-X-5: **Configuration-first** settings: household (name, base currency, cycle anchor,
+  emergency reserve), account visibility, members, language/region, categories & caps, **fiscal
+  parameters (NL Box 3)**, privacy/keys, security/2FA, **export/backup (JSON)**.
+- FR-X-6: **English code identifiers** everywhere (see `glossary.md`); Portuguese only in content.
+- FR-X-7: "Hide values" toggle to blur monetary figures on screen.
 
 ---
 
 ## Non-Functional Requirements
 
-### Security & privacy (NFR-SEC)
+### Privacy of the personal space (NFR-PRIV) — defining requirement
 
-- NFR-SEC-1: Every endpoint authenticated; all data scoped to the caller's household (defence in
-  depth: application scoping + Postgres row filtering by household).
-- NFR-SEC-2: Passwords hashed (argon2/bcrypt); MFA required; tokens short-lived + revocable.
-- NFR-SEC-3: Secrets in AWS SSM/Secrets Manager; never in code or logs. Bank-file passwords and
-  financial data never logged.
-- NFR-SEC-4: Encryption in transit (TLS) and at rest (Neon-managed, S3 SSE).
-- NFR-SEC-5: Uploaded statements in a private S3 bucket; least-privilege IAM.
+- NFR-PRIV-1: Personal-scoped data (accounts, transactions, savings, subscriptions) is **never
+  returned to the partner** by any endpoint. Authorization is enforced by owner at the BFF and
+  again at the repository (row filter by `owner_user_id` + `visibility='personal'`).
+- NFR-PRIV-2: Personal financial payloads are **encrypted at rest** using envelope encryption
+  (AWS KMS data keys), so DB/backup compromise does not expose plaintext personal data.
+- NFR-PRIV-3: **Resolved** — personal privacy uses **server-side isolation + KMS envelope
+  encryption** (the BFF can still compute personal projections/audits). True zero-knowledge
+  client-side E2EE is **not** pursued. The UI's "vault/E2E" language maps to this model.
 
-### Cost (NFR-COST)
+### Security (NFR-SEC)
 
-- NFR-COST-1: Minimise running cost for a two-user app. Serverless (Lambda), Neon free tier,
-  S3 + CloudFront, SES. Target near-zero idle cost.
+- NFR-SEC-1: Every endpoint authenticated; all data scoped to the caller's household and, for
+  personal data, to the owner (defence in depth: app scoping + Postgres row filtering / RLS).
+- NFR-SEC-2: Argon2id password hashing; MFA; short-lived + revocable tokens.
+- NFR-SEC-3: Secrets in SSM/Secrets Manager; personal payloads encrypted via KMS envelope; never
+  logged. No balances/PII/statement contents in logs.
+- NFR-SEC-4: TLS in transit; encryption at rest (Neon + KMS envelope for personal payloads);
+  uploads in a private S3 bucket.
 
-### Performance & availability (NFR-PERF)
+### Cost, performance, tech, testing, error handling (unchanged mandates)
 
-- NFR-PERF-1: Read endpoints p95 < 500 ms at this data scale (handful of cycles, thousands of
-  transactions). Cold starts acceptable.
-- NFR-PERF-2: Single AWS region (candidate `eu-central-1` or `eu-west-1` — confirm at infra
-  setup). Best-effort availability; no multi-region.
+- NFR-COST-1: Minimise cost (serverless; strict API throttling + account concurrency cap; monthly
+  budget alerts — already in the infra).
+- NFR-PERF-1: Read endpoints p95 < 500 ms at this scale; single AWS region (eu-west-1).
+- NFR-TECH-1..10: **Effect** end-to-end (no try/catch, tagged errors); **DDD/Clean Architecture**;
+  **Effect `Schema`** contracts; **BFF** = `@effect/rpc` + `@effect/platform` HttpApi in one
+  layered Lambda; **Neon Postgres** via `@effect/sql-pg`; **Terraform**; **TypeScript 7 (`tsc`)** +
+  **SWC** (emit + `@swc/jest`); pinned exact versions; no code comments.
+- NFR-ERR-1..4: Exhaustive typed error handling; top-level boundary; no `try/catch`/bare
+  `.catch`; safe localised client messages.
+- NFR-TEST-1..5: **Jest + `@swc/jest`, 100% coverage** (CI-enforced) on logic (Cycle Engine,
+  **Split/Settlement Engine**, Projection Engine, RecurringDetector, dedup/transfer pairing,
+  parsers, subscription-audit), integration for repositories, contract tests for RPC/HttpApi.
 
-### Technical constraints (NFR-TECH)
+---
 
-- NFR-TECH-1: **Effect** used idiomatically end-to-end (backend + frontend). `Effect<A, E, R>`,
-  `Layer`/`Context` for DI, tagged errors (`Data.TaggedError`). **No try/catch** — all failures
-  flow through the Effect error channel.
-- NFR-TECH-2: **DDD / Clean Architecture** layering from nosko (domain / data / infra /
-  handlers), implemented with Effect services and layers.
-- NFR-TECH-3: **Effect `Schema`** is the single contract/validation language (replaces Zod),
-  used for API contracts, encode/decode, and OpenAPI derivation.
-- NFR-TECH-4: **BFF**: `@effect/rpc` for the typed, per-section frontend↔BFF channel **and**
-  `@effect/platform` `HttpApi` for the documented internal API surface, both served from one
-  layered Lambda (C1=C, C2=A).
-- NFR-TECH-5: **Database** PostgreSQL on Neon, accessed via `@effect/sql-pg`; SQL migrations.
-- NFR-TECH-6: **IaC** Terraform, reusing nosko's cloud-agnostic capability modules
-  (compute/api-routing/secrets/static-site) + shared domain/ACM repo.
-- NFR-TECH-7: **Frontend** React 19 + Vite + Tailwind + Effect client.
-- NFR-TECH-8: Pin exact dependency versions; verify new packages; no code comments.
-- NFR-TECH-9: Effect ecosystem pinned to a single unified version (latest stable line; Effect v4
-  beta is opt-in and decided at implementation start, not assumed).
-- NFR-TECH-10: **TypeScript 7** (GA; native compiler `tsc`) for type-checking; **SWC** for
-  transpile/emit; **Jest + `@swc/jest`** (Rust-backed transform) as the test runner. No Vitest.
+## Data Architecture (how data is stored to serve the clients)
 
-### Testing (NFR-TEST) — strict, 100% coverage
+Goal: store **raw inputs + configuration + audit data**, and **compute derived, screen-ready view
+models in the domain layer** so each screen gets exactly what it renders. Full schema in
+`design/database-design.md`; this is the storage strategy and the screen→data mapping.
 
-- NFR-TEST-1: Test runner is **Jest with `@swc/jest`** (SWC/Rust transform) across backend and
-  web; no Vitest. Effect programs run via `Effect.runPromise`/`runPromiseExit` with a small local
-  `it.effect`-style helper.
-- NFR-TEST-2: **Very strict unit testing — 100% coverage** thresholds
-  (statements/branches/functions/lines), **CI-enforced**, with a minimal, documented exclusion
-  list for non-logic glue (Lambda entrypoint, layer wiring, config, generated types) covered by
-  integration instead.
-- NFR-TEST-3: Unit-test all domain logic — Cycle Engine, Projection Engine, RecurringDetector
-  (parity with money-evaluation figures), dedup/transfer rules, parsers, auth, view-model
-  mappers, i18n completeness.
-- NFR-TEST-4: Integration tests for repositories against a disposable Postgres.
-- NFR-TEST-5: Contract tests validating RPC/HttpApi schemas + OpenAPI snapshot.
+### Storage principles
 
-### Error handling (NFR-ERR) — "really handle all errors"
+- **PostgreSQL (Neon)**, accessed via `@effect/sql-pg`. Money = `bigint` minor units +
+  `currency char(3)`; rates/percent = `numeric`. English identifiers.
+- **Visibility & ownership on every financial row**: `household_id` for scoping, plus
+  `owner_user_id` + `visibility` (`personal`/`shared`) so the BFF can serve Casa vs Pessoal from
+  the same tables with a single access rule. Personal rows filter to the owner; shared rows are
+  visible to both members.
+- **Derived figures are never stored** — the Cycle Engine, Split/Settlement Engine, and Projection
+  Engine compute them on read (cheap at this scale) and the BFF returns view models. Exception:
+  monthly rollups are exposed as SQL **views**.
+- **Personal payloads encrypted at rest** via KMS envelope (per NFR-PRIV-2); shared data stored
+  normally (both members may read it).
+- **FX rates** stored daily (`fx_rates`) to convert BRL↔EUR for display and net-worth tiles.
 
-- NFR-ERR-1: **No error path is unhandled.** Every RPC/HttpApi endpoint declares a full typed
-  error union (Effect `Schema`); domain use-cases return tagged errors; handling is exhaustive
-  (`catchTags`), compiler-enforced.
-- NFR-ERR-2: A **top-level boundary** in the Lambda handler catches known errors (→ typed,
-  localisable client responses) and unexpected defects (`catchAllCause`/`catchAllDefect` → logged
-  with a correlation id → generic `InternalError` with no internals). The handler never throws.
-- NFR-ERR-3: Validation (Schema decode) failures become a safe `ValidationError` with field
-  detail, not a 500.
-- NFR-ERR-4: **No `try/catch` and no bare `Promise.catch`** anywhere (lint-enforced), client or
-  server; the Effect client consumes success + typed error channels explicitly and renders
-  user-friendly, localised messages.
+### Core entities (columns in database-design.md)
 
-### Configurability (NFR-CFG)
+- **Identity/household:** `users`, `auth_tokens`, `user_sessions`, `households`,
+  `household_members`, `household_invitations`, `household_settings` (cycle anchor, locale, base
+  currency, emergency reserve, fiscal params), `categories` (+ per-cycle caps).
+- **Accounts:** `accounts` (owner, visibility, institution, type, currency, masked id, balance,
+  **source** manual/file_import, **last_import_at**). No live-sync / connection table.
+- **Transactions & ledger:** `transactions` (owner/visibility, account, date, description,
+  counterparty, amount, currency, direction, category, dedup_hash, status, is_transfer + linked
+  leg, source), `statement_uploads`. Shared confirmed transactions become **`shared_payments`**
+  with `payer_user_id` + `split` (method + per-member shares) linked to a cycle; **`settlements`**
+  (acertos) record inter-partner transfers.
+- **Cycles:** `cycles`, `cycle_incomes` (per member salary/bonus), `cycle_withdrawals` (saques:
+  **user-defined amount** + settled_at), `fixed_bills` (+ paying account, paid_by),
+  `fixed_bill_items`, `recurring_rules`.
+- **Goals/vaults:** `goals` (target, status, deadline, yield), `goal_contributions` (per member,
+  per cycle), optional link to a vault `account`.
+- **Savings/investments (personal):** `savings_accounts` (cash/CDB/brokerage), `savings_events`,
+  `savings_rate_history`, `holdings`, `projection_settings`, `projection_scenarios`.
+- **Subscriptions:** `subscriptions` (recurring charges, country, cost, recommendation); redundancy
+  + efficiency computed in the domain layer.
+- **Reference:** `fx_rates`.
 
-- NFR-CFG-1: Behavioural defaults (cycle anchor, reserve, categories, locale, projection
-  parameters, recurring/fixed-bill rules) are **data, not code** — editable via settings and
-  persisted per household.
+### Screen → data mapping (representative)
 
-### Observability (NFR-OBS)
+| Screen | Reads | Computed by |
+|---|---|---|
+| Casa overview | cycle + incomes + fixed_bills + shared_payments | Cycle Engine (available, surplus, daily allowance, byCategory) |
+| Shared accounts | accounts(visibility=shared) + connections | balance aggregation |
+| Payments (ledger) | shared_payments + splits | Split/Settlement Engine (per-member totals, balance, suggested acerto) |
+| Cycles list/detail | cycles + incomes + withdrawals + fixed_bills + shared_payments | Cycle Engine (+ multi-cycle trends) |
+| Fixed bills | fixed_bills + recurring_rules + recent transactions | RecurringDetector |
+| Goals | goals + goal_contributions + linked vault account | progress/projection |
+| Personal overview/accounts/payments | accounts/transactions where owner=caller, visibility=personal | owner-only aggregations |
+| Personal savings/investments | savings_accounts + events + holdings + fx_rates | rollup views + net worth |
+| Personal projection | projection_settings/scenarios | Projection Engine (two-phase + Box 3 + inflation) |
+| Subscriptions | subscriptions + personal transactions | audit (redundancy, efficiency score) |
+| Review queue | transactions(status=staged) + accounts (routing) | dedup + transfer pairing + categoriser |
+| Resumo | current shared cycle + split | Cycle + Settlement Engines → localised text |
+| Settings | household_settings + accounts(visibility) + members + categories + projection_settings | — |
 
-- NFR-OBS-1: Structured logging via Effect's logger; request/trace correlation; **never** log
-  balances, PII, or bank-file contents.
-- NFR-OBS-2: Errors logged with tagged types + correlation id; mapped to safe client messages.
+### Decisions (resolved)
 
-### Data lifecycle (NFR-DATA)
-
-- NFR-DATA-1: Neon point-in-time recovery/backups; documented restore.
-- NFR-DATA-2: Household data export (JSON) for portability and personal backup.
+1. **Personal vault** — server-side isolation + KMS envelope encryption; no client-side E2EE.
+2. **No bank sync** — file import only (CSV primarily; PDF for Amex/C6). The Open Finance / sync
+   affordances in the generated UI are removed when implementing.
+3. **Split & withdrawals** — split methods `equal`/`proportional`/`custom` apply **only** to the
+   household's monthly shared payments; settlements (acertos) are first-class inter-partner
+   transfers. **Personal withdrawals are user-defined** after seeing `availableAfterPayments` — no
+   forced/proportional suggestion.

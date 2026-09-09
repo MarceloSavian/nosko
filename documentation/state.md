@@ -36,9 +36,27 @@
   UI; automatic + manual **fixed-bill identification** (recurring_rules); **configuration-first**
   settings surface; **exhaustive error handling** (NFR-ERR); the repo agreements map; and the
   toolchain — **TypeScript 7 (`tsc`)**, **SWC** (emit + `@swc/jest`), **100% coverage**.
-- **Next step:** U2 — data foundation: Neon schema migrations (identity/household/budgeting +
-  household_settings/categories/recurring_rules), the `@effect/sql-pg` `SqlClient` layer, and
-  base repositories with an integration-test harness. (U1 `apply` remains gated on Marcelo.)
+- **UI review + requirements alignment (done):** reviewed both Stitch exports (~30 screens).
+  Rewrote `requirements.md` and `design/database-design.md` to match the generated UI. New/expanded
+  concepts folded in: strict **Casa (shared) vs Pessoal (personal, private)** with per-row
+  `owner_user_id` + `visibility`; **couple ledger** (per-payment payer + split/rateio +
+  inter-partner **settlements/acertos**); **accounts + connections** (manual/file_import/
+  open_finance sync); multi-format import (CSV/PDF/OFX/QIF/XLSX/MT940) with **IBAN routing** +
+  internal-transfer pairing + AI categorisation; **goals/vaults** with per-member contributions;
+  **subscription audit** (redundancy + efficiency score); **category caps**, **FX (EUR/BRL)**,
+  NL Box-3 params, savings-rate/multi-cycle trends; a **Data Architecture** section + screen→data
+  mapping. New domain engine: **Split/Settlement Engine**.
+- **Decisions (resolved with Marcelo):** (1) personal privacy = **server-side isolation + KMS
+  envelope** (no client-side E2EE); (2) **no bank sync** — file import only (CSV primarily; PDF for
+  Amex/C6); Open Finance/sync UI removed on build; (3) split methods equal/proportional/custom
+  apply **only to the household's monthly shared payments** (settlements are first-class transfers),
+  and **personal withdrawals are user-defined** after seeing `availableAfterPayments` (no forced
+  suggestion).
+- **Follow-up:** update `design/architecture.md` for the new engines (Split/Settlement) and the
+  visibility/encryption model; refresh `units-of-work.md`/`plans` for the expanded scope.
+- **Next step:** confirm the three decisions, then U2 — data foundation: Neon migrations for the
+  expanded schema, the `@effect/sql-pg` `SqlClient` layer, and base repositories with an
+  integration-test harness. (U1 `apply` remains gated on Marcelo.)
 
 ## Locked decisions (from requirements-questions.md + chat)
 
