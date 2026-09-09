@@ -5,18 +5,28 @@
   "type": "module",
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",
+    "migrate": "node src/main/migrate.ts",
+    "verify:migrations": "node src/main/verifyMigrations.ts",
     "test": "jest",
     "build": "echo \"@nosko/backend bundling is set up at U1 (infra); no build yet\""
   },
   "dependencies": {
     "@nosko/contracts": "workspace:*",
-    "effect": "3.22.1"
+    "@effect/experimental": "0.61.1",
+    "@effect/platform": "0.97.2",
+    "@effect/platform-node": "0.108.2",
+    "@effect/sql": "0.52.1",
+    "@effect/sql-pg": "0.53.0",
+    "effect": "3.22.2",
+    "pg": "8.23.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
     "@jest/globals": "30.5.0",
     "@swc/core": "1.16.1",
     "@swc/jest": "0.2.39",
     "@types/node": "26.4.0",
+    "@types/pg": "8.23.1",
     "jest": "30.5.0",
     "typescript": "7.0.2"
   }

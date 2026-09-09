@@ -14,7 +14,7 @@
     "build": "echo \"@nosko/contracts is a source-only package (no build)\""
   },
   "dependencies": {
-    "effect": "3.22.1"
+    "effect": "3.22.2"
   },
   "devDependencies": {
     "@jest/globals": "30.5.0",
