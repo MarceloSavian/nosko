@@ -78,4 +78,50 @@ describe("AccessTokensLive", () => {
     )
     expect(exit._tag).toBe("Failure")
   })
+
+  it("decodeUnverified reads claims from an expired token", async () => {
+    const key = new TextEncoder().encode("a-very-long-random-jwt-signing-secret-value-1234567890")
+    const expired = await new SignJWT({ sid: "session-1" })
+      .setProtectedHeader({ alg: "HS256" })
+      .setSubject("user-1")
+      .setIssuedAt()
+      .setExpirationTime(Math.floor(Date.now() / 1000) - 10)
+      .sign(key)
+
+    const claims = await run(
+      Effect.gen(function* () {
+        const tokens = yield* AccessTokens
+        return yield* tokens.decodeUnverified(expired)
+      }),
+    )
+    expect(claims).toEqual({ userId: "user-1", sessionId: "session-1" })
+  })
+
+  it("decodeUnverified rejects a garbage token as invalid", async () => {
+    const exit = await Effect.runPromiseExit(
+      Effect.gen(function* () {
+        const tokens = yield* AccessTokens
+        return yield* tokens.decodeUnverified("not-a-real-jwt")
+      }).pipe(Effect.provide(AccessTokensLive), Effect.withConfigProvider(withConfig)),
+    )
+    expect(exit._tag).toBe("Failure")
+  })
+
+  it("decodeUnverified rejects a token missing the session claim", async () => {
+    const key = new TextEncoder().encode("a-very-long-random-jwt-signing-secret-value-1234567890")
+    const malformed = await new SignJWT({})
+      .setProtectedHeader({ alg: "HS256" })
+      .setSubject("user-1")
+      .setIssuedAt()
+      .setExpirationTime("15m")
+      .sign(key)
+
+    const exit = await Effect.runPromiseExit(
+      Effect.gen(function* () {
+        const tokens = yield* AccessTokens
+        return yield* tokens.decodeUnverified(malformed)
+      }).pipe(Effect.provide(AccessTokensLive), Effect.withConfigProvider(withConfig)),
+    )
+    expect(exit._tag).toBe("Failure")
+  })
 })

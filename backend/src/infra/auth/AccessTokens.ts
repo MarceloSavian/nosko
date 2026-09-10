@@ -1,5 +1,5 @@
 import { Config, Context, Effect, Layer, Redacted } from "effect"
-import { jwtVerify, SignJWT } from "jose"
+import { decodeJwt, jwtVerify, SignJWT } from "jose"
 import { SessionInvalid } from "../../domain/errors/AuthErrors"
 
 export interface AccessTokenClaims {
@@ -7,11 +7,19 @@ export interface AccessTokenClaims {
   readonly sessionId: string
 }
 
+const claimsFromPayload = (payload: { readonly sub?: string; readonly sid?: unknown }) => {
+  if (typeof payload.sub !== "string" || typeof payload.sid !== "string") {
+    throw new Error("access token is missing required claims")
+  }
+  return { userId: payload.sub, sessionId: payload.sid }
+}
+
 export class AccessTokens extends Context.Tag("AccessTokens")<
   AccessTokens,
   {
     readonly sign: (claims: AccessTokenClaims) => Effect.Effect<string>
     readonly verify: (token: string) => Effect.Effect<AccessTokenClaims, SessionInvalid>
+    readonly decodeUnverified: (token: string) => Effect.Effect<AccessTokenClaims, SessionInvalid>
   }
 >() {}
 
@@ -35,11 +43,13 @@ export const AccessTokensLive = Layer.effect(
         Effect.tryPromise({
           try: async () => {
             const { payload } = await jwtVerify(token, key)
-            if (typeof payload.sub !== "string" || typeof payload.sid !== "string") {
-              throw new Error("access token is missing required claims")
-            }
-            return { userId: payload.sub, sessionId: payload.sid }
+            return claimsFromPayload(payload)
           },
+          catch: () => new SessionInvalid({ reason: "invalid" }),
+        }),
+      decodeUnverified: (token) =>
+        Effect.try({
+          try: () => claimsFromPayload(decodeJwt(token)),
           catch: () => new SessionInvalid({ reason: "invalid" }),
         }),
     }
