@@ -1,11 +1,15 @@
 import { randomUUID } from "node:crypto"
 import { DateTime, Effect, Layer, Option } from "effect"
+import { AccountsRepository } from "../data/protocols/AccountsRepository"
 import { AuthTokensRepository } from "../data/protocols/AuthTokensRepository"
+import { FxRatesRepository } from "../data/protocols/FxRatesRepository"
 import { HouseholdInvitationsRepository } from "../data/protocols/HouseholdInvitationsRepository"
 import { HouseholdsRepository } from "../data/protocols/HouseholdsRepository"
 import { UserSessionsRepository } from "../data/protocols/UserSessionsRepository"
 import { UsersRepository } from "../data/protocols/UsersRepository"
+import type { Account } from "../domain/models/Account"
 import type { AuthToken } from "../domain/models/AuthToken"
+import type { FxRate } from "../domain/models/FxRate"
 import type { Household, HouseholdMember } from "../domain/models/Household"
 import type { HouseholdInvitation } from "../domain/models/HouseholdInvitation"
 import type { User, UserCredentials } from "../domain/models/User"
@@ -265,4 +269,123 @@ export const makeFakeHouseholdInvitationsRepository = () => {
   })
 
   return { layer, invitations }
+}
+
+export const makeFakeFxRatesRepository = (seed: ReadonlyArray<FxRate> = []) => {
+  const rates: Array<FxRate> = [...seed]
+
+  const layer = Layer.succeed(FxRatesRepository, {
+    upsert: (input) => {
+      const existingIndex = rates.findIndex(
+        (r) =>
+          r.base === input.base &&
+          r.quote === input.quote &&
+          DateTime.toEpochMillis(r.rateDate) === input.rateDate.getTime(),
+      )
+      const record: FxRate = {
+        id: existingIndex >= 0 ? (rates[existingIndex] as FxRate).id : randomUUID(),
+        rateDate: asUtc(input.rateDate),
+        base: input.base,
+        quote: input.quote,
+        rate: input.rate,
+        createdAt: now(),
+      }
+      if (existingIndex >= 0) {
+        rates[existingIndex] = record
+      } else {
+        rates.push(record)
+      }
+      return Effect.succeed(record)
+    },
+    findOnOrBefore: (base, quote, date) =>
+      Effect.succeed(
+        Option.fromNullable(
+          rates
+            .filter(
+              (r) =>
+                r.base === base &&
+                r.quote === quote &&
+                DateTime.toEpochMillis(r.rateDate) <= date.getTime(),
+            )
+            .sort(
+              (a, b) => DateTime.toEpochMillis(b.rateDate) - DateTime.toEpochMillis(a.rateDate),
+            )[0],
+        ),
+      ),
+  })
+
+  return { layer, rates }
+}
+
+export const makeFakeAccountsRepository = (seed: ReadonlyArray<Account> = []) => {
+  const accounts = new Map<string, Account>(seed.map((a) => [a.id, a]))
+
+  const layer = Layer.succeed(AccountsRepository, {
+    create: (input) => {
+      const id = randomUUID()
+      const record: Account = {
+        id,
+        householdId: input.householdId,
+        ownerUserId: input.ownerUserId,
+        coOwnerUserId: null,
+        ownership: input.ownership,
+        visibility: input.visibility,
+        institution: input.institution,
+        nickname: input.nickname,
+        type: input.type,
+        currency: input.currency,
+        maskedId: input.maskedId,
+        balanceMinor: input.balanceMinor,
+        purpose: input.purpose,
+        statementCloseDay: input.statementCloseDay,
+        creditLimitMinor: input.creditLimitMinor,
+        autopayAccountId: input.autopayAccountId,
+        source: "manual",
+        lastImportAt: null,
+        createdAt: now(),
+        updatedAt: now(),
+      }
+      accounts.set(id, record)
+      return Effect.succeed(record)
+    },
+    findById: (id) => Effect.succeed(Option.fromNullable(accounts.get(id))),
+    list: () => Effect.succeed([...accounts.values()]),
+    update: (id, input) => {
+      const existing = accounts.get(id)
+      if (!existing) return Effect.die(new Error(`account ${id} not found`))
+      const updated: Account = {
+        ...existing,
+        nickname: input.nickname,
+        maskedId: input.maskedId,
+        balanceMinor: input.balanceMinor,
+        purpose: input.purpose,
+        statementCloseDay: input.statementCloseDay,
+        creditLimitMinor: input.creditLimitMinor,
+        autopayAccountId: input.autopayAccountId,
+        updatedAt: now(),
+      }
+      accounts.set(id, updated)
+      return Effect.succeed(updated)
+    },
+    setVisibility: (id, visibility) => {
+      const existing = accounts.get(id)
+      if (!existing) return Effect.die(new Error(`account ${id} not found`))
+      const updated = { ...existing, visibility, updatedAt: now() }
+      accounts.set(id, updated)
+      return Effect.succeed(updated)
+    },
+    setCoOwner: (id, coOwnerUserId) => {
+      const existing = accounts.get(id)
+      if (!existing) return Effect.die(new Error(`account ${id} not found`))
+      const updated = { ...existing, coOwnerUserId, updatedAt: now() }
+      accounts.set(id, updated)
+      return Effect.succeed(updated)
+    },
+    remove: (id) =>
+      Effect.sync(() => {
+        accounts.delete(id)
+      }),
+  })
+
+  return { layer, accounts }
 }
