@@ -1,5 +1,11 @@
 import { BrowserRouter, Route, Routes } from "react-router"
 import { ForgotPasswordPage } from "../presentation/pages/ForgotPasswordPage"
+import { CasaOverviewPage } from "../presentation/pages/household/CasaOverviewPage"
+import { CycleDetailPage } from "../presentation/pages/household/CycleDetailPage"
+import { CyclesListPage } from "../presentation/pages/household/CyclesListPage"
+import { FixedBillsPage } from "../presentation/pages/household/FixedBillsPage"
+import { PaymentsPage } from "../presentation/pages/household/PaymentsPage"
+import { SharedAccountsPage } from "../presentation/pages/household/SharedAccountsPage"
 import { LandingPage } from "../presentation/pages/LandingPage"
 import { LoginPage } from "../presentation/pages/LoginPage"
 import { MfaChallengePage } from "../presentation/pages/MfaChallengePage"
@@ -37,11 +43,12 @@ export const AppRouter = () => (
 
         <Route element={<RequireHousehold />}>
           <Route element={<AppShell />}>
-            <Route path="/household" element={<ComingSoonPage />} />
-            <Route path="/household/accounts" element={<ComingSoonPage />} />
-            <Route path="/household/payments" element={<ComingSoonPage />} />
-            <Route path="/household/cycles" element={<ComingSoonPage />} />
-            <Route path="/household/fixed-bills" element={<ComingSoonPage />} />
+            <Route path="/household" element={<CasaOverviewPage />} />
+            <Route path="/household/accounts" element={<SharedAccountsPage />} />
+            <Route path="/household/payments" element={<PaymentsPage />} />
+            <Route path="/household/cycles" element={<CyclesListPage />} />
+            <Route path="/household/cycles/:id" element={<CycleDetailPage />} />
+            <Route path="/household/fixed-bills" element={<FixedBillsPage />} />
             <Route path="/household/goals" element={<ComingSoonPage />} />
             <Route path="/household/summary" element={<ComingSoonPage />} />
             <Route path="/personal" element={<ComingSoonPage />} />
