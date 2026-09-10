@@ -100,6 +100,13 @@ Phased execution of `design/units-of-work.md` (U0–U15), aligned to the generat
   RPC and FR-PAY-4's seven default household categories (seeded on `household.create`) were
   added. `e2e/web` gained a spec covering the full loop (start a cycle, fixed bill, payment,
   transfer, close) against the live backend.
+- **U10** ✅ delivered (2026-09-10): Pessoal screens — personal overview
+  (`accounts.personalSummary`) and my accounts (add/list/remove, scope=personal). My payments
+  stays "coming soon": the documented model routes personal spend through U11's file-import
+  `transactions` table, not manual entry, confirmed with Marcelo before building. Also fixed a
+  bug found after U9 shipped: `household.listMembers` showed a raw user id instead of a name in
+  the Casa contribution-share chips. `e2e/web` gained coverage for the personal account
+  add/verify/remove flow.
 - Everything else: pending.
 
 ## Phase 1 — Foundation + core budget loop (U2–U10)
@@ -146,7 +153,8 @@ Key tasks
    alongside it.
 8. U9 ✅: Casa screens — overview, shared accounts, payments, cycles + detail, fixed bills;
    `categories.list` RPC + default household categories added along the way.
-9. U10: Pessoal screens — overview (personal categories + cap), my accounts, my payments.
+9. U10 ✅: Pessoal screens — overview, my accounts. My payments deferred to U11 (needs the
+   `transactions` table; no manual-entry path exists for personal spend by design).
 
 Definition of done: deployed to `test`; both users sign up, link, register accounts (incl. one
 joint account with two owners), and see a correct core budget loop in both spaces; personal data
@@ -213,10 +221,10 @@ review passed; `prod` deployed; checks clean.
 
 ## Immediate next step
 
-Resume at **U10** (Pessoal screens) — U9 (Casa screens) is delivered and deployed, exercised
-end to end against the live `test.nosko.app`/`test.api.nosko.app` backend via `e2e/web`'s
-`05-casa-cycle.spec.ts` (start a cycle, add a fixed bill, add a payment, record and settle a
-transfer, close the cycle). U10 builds the personal-space equivalents (overview with personal
-categories + cap, my accounts, my payments — all private, never visible to the partner) over
-the same U5/U8 foundations. Add `e2e/web` coverage for each new screen as it lands, per its
-README's convention.
+Resume at **U11** (Ingestion) — Phase 1 is now complete: U0–U10 all delivered and, from U4
+onward, exercised end to end against the live `test.nosko.app`/`test.api.nosko.app` backend via
+`e2e/web`. U11 (file import + per-bank parsers, dedup, IBAN routing, transfer pairing,
+categorisation, review queue) is also what finally backs a real "my payments" screen for
+Pessoal — U10 left that nav entry pointing at a placeholder specifically because personal
+spend has no data source until this unit lands. Add `e2e/web` coverage for each new screen as
+it lands, per its README's convention.

@@ -182,8 +182,22 @@
   the live backend; two existing specs updated since their assertions targeted the old
   placeholder text. `e2e/web`'s default expect timeout raised to 10s — occasional slower
   Lambda/Neon round trips in this heavier multi-page flow aren't a real bug.
-- **Next step:** **U10** — Pessoal screens (personal overview with personal categories + cap,
-  my accounts, my payments — private), the other Phase 1 unit unblocked since U8 landed.
+- **Bug found and fixed post-U9 (2026-09-10):** `household.listMembers` returned
+  `household_members.display_name` as-is, which is always null today (nothing sets it) — the
+  Casa contribution-share chips showed a raw user id instead of a name. Fixed by falling back
+  to the member's actual account name; deployed and re-verified via `e2e/web`.
+- **U10 delivered (2026-09-10): Pessoal screens.** Personal overview (liquid/invested/total via
+  `accounts.personalSummary`, account list) and my accounts (add/list/remove, scope=personal) —
+  same shape as U9's Casa/shared-accounts pair. **My payments deliberately stays "coming
+  soon"**: unlike Casa's `shared_payments` (manually entered), the documented architecture
+  models personal spend as coming only from the `transactions` table populated by file import
+  (U11) — there is no manual-entry path for it today, confirmed with Marcelo before scoping.
+  A nav entry and route exist and resolve to the placeholder so the feature's presence is
+  visible. `e2e/web` gained a spec covering add/verify/remove for a personal account and the
+  My Payments placeholder.
+- **Next step:** **U11** — Ingestion (file import + parsers + dedup + IBAN routing + transfer
+  pairing + categorisation + review queue), which is also what finally backs a real "my
+  payments" screen for Pessoal.
 
 ## Locked decisions (from requirements-questions.md + chat)
 
