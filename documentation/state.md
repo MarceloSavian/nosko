@@ -126,10 +126,49 @@
   always failed — fixed by building fake dates via `DateTime.unsafeFromDate`. 159 tests, 100%
   coverage; `pnpm verify` green. Not yet wired to any transport (RPC/HttpApi is U4) and not
   exercised against a live database (still no Neon target this session).
-- **Next step:** **U4** — BFF skeleton: `RpcServer` (+ minimal `HttpApi`) in one layered Lambda,
-  `packages/contracts`, typed client, OpenAPI, auth middleware wiring `RequestScope` from the
-  verified access token, top-level error boundary, and the build script producing
-  `iac/environments/test/artifacts/bff-v1.zip` that replaces U1's placeholder.
+- **U4–U7 delivered and, unlike the note above, now applied and exercised against a live
+  database** (`test.nosko.app`, nosko-test account): BFF skeleton (`RpcServer` + `HttpApi`,
+  cookie sessions, `AuthMiddleware`), accounts + FX, CycleEngine + cycles/bills/rules, and
+  shared payments. See `plans/implementation-plan.md` for the per-unit detail; this file no
+  longer re-derives it to avoid drift.
+- **`test.nosko.app` custom domain live (2026-09-10):** API Gateway + CloudFront both on ACM
+  certs under `test.nosko.app`/`test.api.nosko.app`, Route53 records in the management account
+  (`aws.mgmt` provider, cross-account assume-role from `iac/environments/test`).
+- **`auth.me` RPC endpoint added:** returns the current session's user profile
+  (id/email/name/preferredLocale/emailVerified/mfaEnabled) — nothing previously exposed this to
+  a client.
+- **Email delivery switched from SES to Resend (2026-09-10):** SES was never actually
+  configured (sandbox mode, no verified identity) so every send silently failed via the
+  `Effect.ignore` wrapping mailer errors. Resend now runs on a dedicated `mail.nosko.app`
+  subdomain (DNS verified), `ResendMailerLive` replaces `SesMailerLive`, `@aws-sdk/client-sesv2`
+  removed.
+- **Two independent CORS bugs found and fixed against the live API:** (1) API Gateway's
+  `cors_configuration` needed `allow_credentials = true` and `traceparent`/`b3` added to
+  `allow_headers` (Effect's RpcClient auto-attaches those trace-propagation headers to every
+  request). (2) The API's single `$default` catch-all route means API Gateway forwards OPTIONS
+  to the Lambda instead of auto-answering it; `HttpApiBuilder`'s router 404s on an unmatched
+  OPTIONS, which browsers treat as a failed preflight — fixed via `HttpMiddleware.cors()` wired
+  through `LambdaHandler.fromHttpApi`'s `middleware` option.
+- **U8 delivered (2026-09-10): web foundation.** React app (Vite + Tailwind + `@effect-atom/atom-react`)
+  with the same DDD layering as the backend (domain/data/infra/validation/presentation/main);
+  full auth flow (signup, email verification via OTP, login, MFA challenge, forgot/reset
+  password), household-creation + account-adding onboarding, invitation acceptance, and an
+  authenticated app shell with the Casa/Pessoal switcher (routes stubbed as "coming soon" —
+  U9/U10 build the real screens). Every route is authenticated except the explicitly public auth
+  pages (`RequireAuth`/`RequireGuest`/`RequireHousehold` guards). All URL path segments are
+  English (`/login`, `/onboarding/household`, `/household/accounts`, ...); all UI copy stays
+  pt-BR/en per the existing i18n dictionary — only the address bar changed. A Vite dev-server
+  proxy makes `localhost:5173` same-origin with the API so `SameSite=Strict` session cookies
+  survive local dev without weakening the cookie policy.
+- **`e2e/web` delivered (2026-09-10):** Playwright suite driving the real deployed backend
+  through an actual browser (not mocks) — this is what caught both CORS bugs and a session bug
+  (email verification alone doesn't create a session; only login/mfaVerify/refresh do). 13 tests
+  across signup/verify/login/reset, household onboarding + invite + accounts, cross-session
+  invitation acceptance, and shell nav/guards/logout. Cleans up all data it creates; verified 0
+  leftover rows after a clean run.
+- **Next step:** **U9** — Casa screens (overview, shared accounts, payments, cycles + detail,
+  fixed bills), replacing U8's "coming soon" placeholders with real views over the U5–U7 RPC
+  surface.
 
 ## Locked decisions (from requirements-questions.md + chat)
 

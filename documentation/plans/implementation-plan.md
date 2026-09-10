@@ -79,6 +79,20 @@ Phased execution of `design/units-of-work.md` (U0–U15), aligned to the generat
   each cycle's real `shared_payments.amountBaseMinor`, so `CycleFigures.surplus`/`variableBudget`/
   `dailyAllowance` reflect real spend for the first time. Not yet exercised against a live
   database.
+- **U4–U7 are now applied and exercised against a live database** (`test.nosko.app` on the
+  nosko-test AWS account, live Neon database) — the "not yet exercised" caveats in each unit's
+  note above are stale as of 2026-09-10.
+- **U8** ✅ delivered (2026-09-10): web foundation. React app (Vite + Tailwind +
+  `@effect-atom/atom-react`) DDD-layered like the backend (domain/data/infra/validation/
+  presentation/main); auth screens (signup, email verify via OTP, login, MFA, forgot/reset
+  password), household + accounts onboarding, invitation acceptance, and an authenticated app
+  shell with the Casa/Pessoal switcher (section routes stubbed "coming soon" pending U9/U10).
+  Every route authenticated except the public auth pages. English URL paths, pt-BR/en UI copy
+  unchanged. `e2e/web` (Playwright, 13 tests against the live deployed backend through a real
+  browser) added alongside it, catching two real CORS bugs and a session-cookie bug along the
+  way (both fixed and redeployed — see `state.md`). Also delivered opportunistically while
+  wiring U8 against the live API: `auth.me` RPC endpoint, SES→Resend mailer swap (SES was never
+  actually configured), and the `test.nosko.app` custom domain.
 - Everything else: pending.
 
 ## Phase 1 — Foundation + core budget loop (U2–U10)
@@ -120,8 +134,9 @@ Key tasks
 6. U7 ✅: `shared_payments` (no payer/split) + base-currency conversion at confirmation
    (`FxConversion`, stored not recomputed) + `payments.*` RPC + `payments.exportCsv` HttpApi +
    `computeByCategory` cap-vs-spend summaries; `variableTotal` now real.
-7. U8: web foundation (Vite+Tailwind+Effect client + `useRpc`) + en/pt i18n + **Casa/Pessoal
-   switcher** + Shared-Ledger theme + auth/onboarding screens; fill `web/CONVENTIONS.md`.
+7. U8 ✅: web foundation (Vite+Tailwind+Effect client via `@effect-atom/atom-react`) + en/pt
+   i18n + **Casa/Pessoal switcher** + auth/onboarding screens; `e2e/web` Playwright suite added
+   alongside it.
 8. U9: Casa screens — overview, shared accounts, payments, cycles + detail, fixed bills.
 9. U10: Pessoal screens — overview (personal categories + cap), my accounts, my payments.
 
@@ -190,11 +205,10 @@ review passed; `prod` deployed; checks clean.
 
 ## Immediate next step
 
-Resume at **U8** (Web foundation) — the first Phase 1 unit not already delivered, and the one
-that finally gives U5–U7's RPC surface a client. Applying U2's Terraform changes to nosko-test
-(the two-pass `app_role` deploy in `iac/README.md`), then re-running `terraform apply` with
-U4/U5's real Lambda artifacts (`pnpm --filter @nosko/backend build` — `bff-v1.zip` and
-`fx-rates-v1.zip`) in place of the placeholders, can happen whenever Marcelo wants a live Neon
-database and a real deployed BFF; nothing in U8+ needs that to happen first to keep being written
-and unit-tested. Note U9/U10 (Casa/Pessoal screens) also depend on U6/U7, both now delivered, so
-the critical path is unblocked through U10 once U8 lands.
+Resume at **U9** (Casa screens) — U8 (web foundation) is delivered, the app is deployed and
+live on `test.nosko.app`/`test.api.nosko.app` against a real Neon database, and `e2e/web`
+proves the full auth + onboarding flow works end-to-end through a real browser. U9 replaces the
+app shell's "coming soon" placeholders for the Casa space (overview, shared accounts, payments,
+cycles + detail, fixed bills) with real views over the already-delivered U5–U7 RPC surface. U10
+(Pessoal screens) can follow immediately after, same dependency story. Add `e2e/web` coverage
+for each new screen as it lands, per its README's convention.
