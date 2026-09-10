@@ -73,3 +73,4 @@ minimumReleaseAgeExclude:
   - effect@3.22.2
   - '@effect/platform-node@0.108.2'
   - '@aws-sdk/client-sesv2@3.1128.0'
+  - scheduler@0.28.0

@@ -9,7 +9,7 @@ describe("i18n", () => {
   })
 
   it("translates a key per locale", () => {
-    expect(translate("en", "overview")).toBe("Overview")
-    expect(translate("pt-BR", "overview")).toBe("Visão geral")
+    expect(translate("en", "app.title")).toBe("nosko")
+    expect(translate("pt-BR", "login.submit")).toBe("Entrar no nosko")
   })
 })
