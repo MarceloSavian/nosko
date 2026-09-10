@@ -69,7 +69,7 @@ test.describe("onboarding: create household, invite partner, add accounts", () =
 
     await page.getByRole("button", { name: "Continuar" }).click()
     await expect(page).toHaveURL(/\/household$/)
-    await expect(page.getByText("Esta seção chega em breve.")).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Comece seu primeiro ciclo" })).toBeVisible()
   })
 
   test("skipping the invite and the accounts step still reaches the Casa shell", async ({

@@ -83,7 +83,7 @@ test.describe("shell: space switcher, nav, guards while authenticated, logout", 
 
     await page.getByRole("link", { name: "Contas compartilhadas" }).click()
     await expect(page).toHaveURL(/\/household\/accounts/)
-    await expect(page.getByText("Esta seção chega em breve.")).toBeVisible()
+    await expect(page.getByRole("heading", { name: "Contas compartilhadas" })).toBeVisible()
 
     await page.getByRole("link", { name: "Pessoal" }).click()
     await expect(page).toHaveURL(/\/personal$/)

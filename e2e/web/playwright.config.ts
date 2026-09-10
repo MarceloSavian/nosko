@@ -18,6 +18,9 @@ export default defineConfig({
   workers: 1,
   retries: process.env.CI ? 1 : 0,
   reporter: "list",
+  // Real Lambda/Neon round trips occasionally take longer than Playwright's 5s default
+  // (cold starts), especially in flows with several sequential cross-page RPC calls.
+  expect: { timeout: 10_000 },
   use: {
     baseURL,
     trace: "retain-on-failure",
