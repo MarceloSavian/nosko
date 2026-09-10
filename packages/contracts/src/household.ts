@@ -1,13 +1,13 @@
 import * as Rpc from "@effect/rpc/Rpc"
 import * as RpcGroup from "@effect/rpc/RpcGroup"
 import { Schema } from "effect"
-import { AuthMiddleware } from "./authMiddleware"
+import { AuthMiddleware } from "./authMiddleware.ts"
 import {
   HouseholdFull,
   InvitationInvalid,
   NoHousehold,
   NotHouseholdOwner,
-} from "./errors/householdErrors"
+} from "./errors/householdErrors.ts"
 
 export const HouseholdView = Schema.Struct({
   id: Schema.UUID,

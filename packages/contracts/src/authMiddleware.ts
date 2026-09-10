@@ -1,6 +1,6 @@
 import * as RpcMiddleware from "@effect/rpc/RpcMiddleware"
 import { Context } from "effect"
-import { SessionInvalid } from "./errors/authErrors"
+import { SessionInvalid } from "./errors/authErrors.ts"
 
 export class CurrentUser extends Context.Tag("CurrentUser")<
   CurrentUser,

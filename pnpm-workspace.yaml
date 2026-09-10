@@ -2,6 +2,7 @@ packages:
   - "packages/*"
   - "backend"
   - "web"
+  - "e2e/*"
 allowBuilds:
   '@parcel/watcher': false
   '@swc/core': true

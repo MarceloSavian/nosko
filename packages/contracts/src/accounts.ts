@@ -1,9 +1,9 @@
 import * as Rpc from "@effect/rpc/Rpc"
 import * as RpcGroup from "@effect/rpc/RpcGroup"
 import { Schema } from "effect"
-import { AuthMiddleware } from "./authMiddleware"
-import { AccountNotFound, JointAccountVisibilityLocked } from "./errors/accountErrors"
-import { NoHousehold } from "./errors/householdErrors"
+import { AuthMiddleware } from "./authMiddleware.ts"
+import { AccountNotFound, JointAccountVisibilityLocked } from "./errors/accountErrors.ts"
+import { NoHousehold } from "./errors/householdErrors.ts"
 
 export const AccountOwnership = Schema.Literal("sole", "joint")
 export type AccountOwnership = typeof AccountOwnership.Type

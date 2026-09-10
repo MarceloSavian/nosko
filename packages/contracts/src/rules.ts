@@ -1,9 +1,9 @@
 import * as Rpc from "@effect/rpc/Rpc"
 import * as RpcGroup from "@effect/rpc/RpcGroup"
 import { Schema } from "effect"
-import { AuthMiddleware } from "./authMiddleware"
-import { NoHousehold } from "./errors/householdErrors"
-import { RecurringRuleNotFound } from "./errors/ruleErrors"
+import { AuthMiddleware } from "./authMiddleware.ts"
+import { NoHousehold } from "./errors/householdErrors.ts"
+import { RecurringRuleNotFound } from "./errors/ruleErrors.ts"
 
 export const RuleMatchType = Schema.Literal("vendor_exact", "vendor_contains", "counterparty")
 export type RuleMatchType = typeof RuleMatchType.Type

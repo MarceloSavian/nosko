@@ -5,7 +5,7 @@ import {
   InvalidCredentials,
   MfaCodeInvalid,
   SessionInvalid,
-} from "./errors/authErrors"
+} from "./errors/authErrors.ts"
 
 export const LoginResultView = Schema.Union(
   Schema.Struct({ status: Schema.Literal("authenticated"), userId: Schema.UUID }),

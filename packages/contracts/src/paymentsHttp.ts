@@ -1,8 +1,8 @@
 import { HttpApiEndpoint, HttpApiGroup, HttpApiSchema } from "@effect/platform"
 import { Schema } from "effect"
-import { SessionInvalid } from "./errors/authErrors"
-import { CycleNotFound } from "./errors/cycleErrors"
-import { NoHousehold } from "./errors/householdErrors"
+import { SessionInvalid } from "./errors/authErrors.ts"
+import { CycleNotFound } from "./errors/cycleErrors.ts"
+import { NoHousehold } from "./errors/householdErrors.ts"
 
 export const PaymentsApiGroup = HttpApiGroup.make("payments")
   .add(

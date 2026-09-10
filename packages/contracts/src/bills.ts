@@ -1,10 +1,10 @@
 import * as Rpc from "@effect/rpc/Rpc"
 import * as RpcGroup from "@effect/rpc/RpcGroup"
 import { Schema } from "effect"
-import { AuthMiddleware } from "./authMiddleware"
-import { FixedBillNotFound } from "./errors/billErrors"
-import { CycleClosed, CycleNotFound } from "./errors/cycleErrors"
-import { NoHousehold } from "./errors/householdErrors"
+import { AuthMiddleware } from "./authMiddleware.ts"
+import { FixedBillNotFound } from "./errors/billErrors.ts"
+import { CycleClosed, CycleNotFound } from "./errors/cycleErrors.ts"
+import { NoHousehold } from "./errors/householdErrors.ts"
 
 export const FixedBillView = Schema.Struct({
   id: Schema.UUID,

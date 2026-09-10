@@ -1,10 +1,10 @@
-import { AccountsRpcs } from "./accounts"
-import { AuthRpcs } from "./auth"
-import { BillsRpcs } from "./bills"
-import { CyclesRpcs } from "./cycles"
-import { HouseholdRpcs } from "./household"
-import { PaymentsRpcs } from "./payments"
-import { RulesRpcs } from "./rules"
+import { AccountsRpcs } from "./accounts.ts"
+import { AuthRpcs } from "./auth.ts"
+import { BillsRpcs } from "./bills.ts"
+import { CyclesRpcs } from "./cycles.ts"
+import { HouseholdRpcs } from "./household.ts"
+import { PaymentsRpcs } from "./payments.ts"
+import { RulesRpcs } from "./rules.ts"
 
 export const AppRpcs = AuthRpcs.merge(
   HouseholdRpcs,

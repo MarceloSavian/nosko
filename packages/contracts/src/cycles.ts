@@ -1,14 +1,14 @@
 import * as Rpc from "@effect/rpc/Rpc"
 import * as RpcGroup from "@effect/rpc/RpcGroup"
 import { Schema } from "effect"
-import { AuthMiddleware } from "./authMiddleware"
+import { AuthMiddleware } from "./authMiddleware.ts"
 import {
   CycleAlreadyExists,
   CycleClosed,
   CycleNotFound,
   MemberTransferNotFound,
-} from "./errors/cycleErrors"
-import { NoHousehold } from "./errors/householdErrors"
+} from "./errors/cycleErrors.ts"
+import { NoHousehold } from "./errors/householdErrors.ts"
 
 export const CycleStatus = Schema.Literal("open", "closed")
 export type CycleStatus = typeof CycleStatus.Type

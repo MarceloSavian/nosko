@@ -1,7 +1,7 @@
 import * as Rpc from "@effect/rpc/Rpc"
 import * as RpcGroup from "@effect/rpc/RpcGroup"
 import { Schema } from "effect"
-import { AuthMiddleware } from "./authMiddleware"
+import { AuthMiddleware } from "./authMiddleware.ts"
 import {
   EmailAlreadyRegistered,
   MfaAlreadyEnabled,
@@ -9,8 +9,8 @@ import {
   SessionInvalid,
   TokenInvalid,
   UserNotFound,
-} from "./errors/authErrors"
-import { Locale } from "./locale"
+} from "./errors/authErrors.ts"
+import { Locale } from "./locale.ts"
 
 export const AuthUserView = Schema.Struct({
   id: Schema.UUID,

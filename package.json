@@ -10,6 +10,7 @@
     "check:fix": "biome check --write .",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
+    "test:e2e:backend": "pnpm --filter @nosko/e2e-backend test:e2e",
     "build": "pnpm -r build",
     "verify": "pnpm check && pnpm typecheck && pnpm test && pnpm build"
   },

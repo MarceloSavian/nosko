@@ -1,16 +1,16 @@
 import * as Rpc from "@effect/rpc/Rpc"
 import * as RpcGroup from "@effect/rpc/RpcGroup"
 import { Schema } from "effect"
-import { AuthMiddleware } from "./authMiddleware"
-import { AccountNotFound } from "./errors/accountErrors"
-import { CycleClosed, CycleNotFound } from "./errors/cycleErrors"
-import { NoFxRate } from "./errors/fxErrors"
-import { NoHousehold } from "./errors/householdErrors"
+import { AuthMiddleware } from "./authMiddleware.ts"
+import { AccountNotFound } from "./errors/accountErrors.ts"
+import { CycleClosed, CycleNotFound } from "./errors/cycleErrors.ts"
+import { NoFxRate } from "./errors/fxErrors.ts"
+import { NoHousehold } from "./errors/householdErrors.ts"
 import {
   NoCycleForDate,
   SharedAccountRequired,
   SharedPaymentNotFound,
-} from "./errors/paymentErrors"
+} from "./errors/paymentErrors.ts"
 
 export const SharedPaymentView = Schema.Struct({
   id: Schema.UUID,
