@@ -74,6 +74,33 @@ export const computeCycleWindow = (anchorDay: number, referenceDate: Date): Cycl
   return { startDate, endDate, cycleKey }
 }
 
+export interface CategorySpend {
+  readonly categoryId: string
+  readonly spentMinor: number
+  readonly capMinor: number | null
+}
+
+export const computeByCategory = (
+  payments: ReadonlyArray<{ readonly categoryId: string; readonly amountBaseMinor: number }>,
+  caps: ReadonlyArray<{ readonly categoryId: string; readonly capMinor: number }>,
+): ReadonlyArray<CategorySpend> => {
+  const spendByCategory = new Map<string, number>()
+  for (const payment of payments) {
+    spendByCategory.set(
+      payment.categoryId,
+      (spendByCategory.get(payment.categoryId) ?? 0) + payment.amountBaseMinor,
+    )
+  }
+  const capByCategory = new Map(caps.map((cap) => [cap.categoryId, cap.capMinor]))
+  const categoryIds = new Set([...spendByCategory.keys(), ...capByCategory.keys()])
+
+  return [...categoryIds].map((categoryId) => ({
+    categoryId,
+    spentMinor: spendByCategory.get(categoryId) ?? 0,
+    capMinor: capByCategory.get(categoryId) ?? null,
+  }))
+}
+
 export const computeCycleFigures = (input: CycleEngineInput): CycleFigures => {
   const income = input.incomes.reduce((sum, i) => sum + i.amountMinor, 0)
 

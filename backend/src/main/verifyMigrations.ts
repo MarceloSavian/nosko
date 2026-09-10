@@ -285,7 +285,7 @@ const main = Effect.gen(function* () {
   )
 
   yield* check(
-    "a cycle, its fixed bill, and its recurring rule are never visible to a different household",
+    "a cycle, its fixed bill, its recurring rule, and its shared payment are never visible to a different household",
     async () => {
       const ownerA = "e0000000-0000-0000-0000-000000000001"
       const ownerB = "e0000000-0000-0000-0000-000000000002"
@@ -296,6 +296,8 @@ const main = Effect.gen(function* () {
       const bill = "e0000000-0000-0000-0000-000000000007"
       const cap = "e0000000-0000-0000-0000-000000000008"
       const category = "e0000000-0000-0000-0000-000000000009"
+      const account = "e0000000-0000-0000-0000-00000000000a"
+      const payment = "e0000000-0000-0000-0000-00000000000b"
 
       await db.query("set role app_role")
       for (const [id, email] of [
@@ -343,6 +345,18 @@ const main = Effect.gen(function* () {
         "insert into category_caps (id, household_id, cycle_id, category_id, cap_minor) values ($1, $2, $3, $4, 40000)",
         [cap, householdA, cycle, category],
       )
+      await db.query(
+        `insert into accounts
+           (id, household_id, owner_user_id, ownership, visibility, institution, nickname, type, currency)
+         values ($1, $2, $3, 'joint', 'shared', 'ing', 'ING Conjunta', 'checking', 'EUR')`,
+        [account, householdA, ownerA],
+      )
+      await db.query(
+        `insert into shared_payments
+           (id, household_id, cycle_id, account_id, booked_at, description, amount_minor, currency, amount_base_minor, category_id, created_by)
+         values ($1, $2, $3, $4, '2026-01-05', 'Mercado', 10000, 'EUR', 10000, $5, $6)`,
+        [payment, householdA, cycle, account, category, ownerA],
+      )
 
       await db.query("select set_config('app.user_id', $1, false)", [ownerB])
       await db.query(
@@ -364,6 +378,14 @@ const main = Effect.gen(function* () {
       assert.equal(rulesFromB.rows.length, 0, "household B must not see household A's rule")
       const capsFromB = await db.query("select id from category_caps where id = $1", [cap])
       assert.equal(capsFromB.rows.length, 0, "household B must not see household A's category cap")
+      const paymentsFromB = await db.query("select id from shared_payments where id = $1", [
+        payment,
+      ])
+      assert.equal(
+        paymentsFromB.rows.length,
+        0,
+        "household B must not see household A's shared payment",
+      )
 
       await db.query("select set_config('app.household_id', $1, false)", [householdA])
       const cyclesFromA = await db.query("select id from cycles where id = $1", [cycle])

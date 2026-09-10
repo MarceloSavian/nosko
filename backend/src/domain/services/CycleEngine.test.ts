@@ -1,5 +1,31 @@
 import { describe, expect, it } from "@jest/globals"
-import { computeCycleFigures, computeCycleWindow } from "./CycleEngine"
+import { computeByCategory, computeCycleFigures, computeCycleWindow } from "./CycleEngine"
+
+describe("computeByCategory", () => {
+  it("sums spend per category and attaches its cap", () => {
+    const result = computeByCategory(
+      [
+        { categoryId: "groceries", amountBaseMinor: 10_000 },
+        { categoryId: "groceries", amountBaseMinor: 5_000 },
+        { categoryId: "leisure", amountBaseMinor: 3_000 },
+      ],
+      [{ categoryId: "groceries", capMinor: 40_000 }],
+    )
+
+    expect(result).toEqual(
+      expect.arrayContaining([
+        { categoryId: "groceries", spentMinor: 15_000, capMinor: 40_000 },
+        { categoryId: "leisure", spentMinor: 3_000, capMinor: null },
+      ]),
+    )
+  })
+
+  it("includes a capped category with no spend yet", () => {
+    const result = computeByCategory([], [{ categoryId: "transport", capMinor: 20_000 }])
+
+    expect(result).toEqual([{ categoryId: "transport", spentMinor: 0, capMinor: 20_000 }])
+  })
+})
 
 describe("computeCycleWindow", () => {
   it("starts the previous month's cycle when today is before the anchor day", () => {
