@@ -9,6 +9,7 @@ import { FxRatesRepository } from "../data/protocols/FxRatesRepository"
 import { HouseholdInvitationsRepository } from "../data/protocols/HouseholdInvitationsRepository"
 import { HouseholdsRepository } from "../data/protocols/HouseholdsRepository"
 import { RecurringRulesRepository } from "../data/protocols/RecurringRulesRepository"
+import { SharedPaymentsRepository } from "../data/protocols/SharedPaymentsRepository"
 import { UserSessionsRepository } from "../data/protocols/UserSessionsRepository"
 import { UsersRepository } from "../data/protocols/UsersRepository"
 import type { Account } from "../domain/models/Account"
@@ -20,6 +21,7 @@ import type { FxRate } from "../domain/models/FxRate"
 import type { Household, HouseholdMember, HouseholdSettings } from "../domain/models/Household"
 import type { HouseholdInvitation } from "../domain/models/HouseholdInvitation"
 import type { RecurringRule } from "../domain/models/RecurringRule"
+import type { SharedPayment } from "../domain/models/SharedPayment"
 import type { User, UserCredentials } from "../domain/models/User"
 import type { UserSession } from "../domain/models/UserSession"
 
@@ -673,6 +675,64 @@ export const makeFakeRecurringRulesRepository = (seed: ReadonlyArray<RecurringRu
   })
 
   return { layer, rules }
+}
+
+export const makeFakeSharedPaymentsRepository = (seed: ReadonlyArray<SharedPayment> = []) => {
+  const payments = new Map<string, SharedPayment>(seed.map((p) => [p.id, p]))
+
+  const layer = Layer.succeed(SharedPaymentsRepository, {
+    create: (input) => {
+      const id = randomUUID()
+      const record: SharedPayment = {
+        id,
+        householdId: input.householdId,
+        cycleId: input.cycleId,
+        accountId: input.accountId,
+        bookedAt: asUtc(input.bookedAt),
+        description: input.description,
+        counterparty: input.counterparty,
+        amountMinor: input.amountMinor,
+        currency: input.currency,
+        amountBaseMinor: input.amountBaseMinor,
+        fxRate: input.fxRate,
+        categoryId: input.categoryId,
+        createdBy: input.createdBy,
+        createdAt: now(),
+        updatedAt: now(),
+      }
+      payments.set(id, record)
+      return Effect.succeed(record)
+    },
+    findById: (id) => Effect.succeed(Option.fromNullable(payments.get(id))),
+    listByCycle: (cycleId) =>
+      Effect.succeed(
+        [...payments.values()]
+          .filter((p) => p.cycleId === cycleId)
+          .sort((a, b) => DateTime.toEpochMillis(a.bookedAt) - DateTime.toEpochMillis(b.bookedAt)),
+      ),
+    update: (id, input) => {
+      const existing = payments.get(id)
+      if (!existing) return Effect.die(new Error(`shared payment ${id} not found`))
+      const updated: SharedPayment = {
+        ...existing,
+        description: input.description,
+        counterparty: input.counterparty,
+        amountMinor: input.amountMinor,
+        amountBaseMinor: input.amountBaseMinor,
+        fxRate: input.fxRate,
+        categoryId: input.categoryId,
+        updatedAt: now(),
+      }
+      payments.set(id, updated)
+      return Effect.succeed(updated)
+    },
+    remove: (id) =>
+      Effect.sync(() => {
+        payments.delete(id)
+      }),
+  })
+
+  return { layer, payments }
 }
 
 export const makeFakeCategoryCapsRepository = (seed: ReadonlyArray<CategoryCap> = []) => {
