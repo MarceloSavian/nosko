@@ -5,6 +5,7 @@ import {
   makeFakeCyclesRepository,
   makeFakeFixedBillsRepository,
   makeFakeRecurringRulesRepository,
+  makeFakeSharedPaymentsRepository,
 } from "../../test/fakeRepositories"
 import { CyclesRepository } from "../protocols/CyclesRepository"
 import { RecurringRulesRepository } from "../protocols/RecurringRulesRepository"
@@ -16,7 +17,8 @@ describe("figuresForAllCycles", () => {
   it("chains estimate and surplus forward across cycles in start-date order", async () => {
     const cyclesFake = makeFakeCyclesRepository()
     const billsFake = makeFakeFixedBillsRepository()
-    const layer = Layer.mergeAll(cyclesFake.layer, billsFake.layer)
+    const paymentsFake = makeFakeSharedPaymentsRepository()
+    const layer = Layer.mergeAll(cyclesFake.layer, billsFake.layer, paymentsFake.layer)
 
     const run = <A>(effect: Effect.Effect<A, unknown, CyclesRepository>) =>
       Effect.runPromise(effect.pipe(Effect.provide(layer)))

@@ -9,6 +9,7 @@ import {
 import { CyclesRepository } from "../protocols/CyclesRepository"
 import { FixedBillsRepository } from "../protocols/FixedBillsRepository"
 import { RecurringRulesRepository } from "../protocols/RecurringRulesRepository"
+import { SharedPaymentsRepository } from "../protocols/SharedPaymentsRepository"
 
 export interface CycleWithFigures {
   readonly cycle: Cycle
@@ -20,6 +21,7 @@ const DAY_MS = 24 * 60 * 60 * 1000
 export const figuresForAllCycles = Effect.gen(function* () {
   const cyclesRepo = yield* CyclesRepository
   const billsRepo = yield* FixedBillsRepository
+  const paymentsRepo = yield* SharedPaymentsRepository
 
   const all = yield* cyclesRepo.list()
   const results: Array<CycleWithFigures> = []
@@ -31,6 +33,8 @@ export const figuresForAllCycles = Effect.gen(function* () {
     const transfers = yield* cyclesRepo.listTransfers(cycle.id)
     const cycleBills = yield* billsRepo.listByCycle(cycle.id)
     const fixedTotal = cycleBills.reduce((sum, b) => sum + b.amountMinor, 0)
+    const cyclePayments = yield* paymentsRepo.listByCycle(cycle.id)
+    const variableTotal = cyclePayments.reduce((sum, p) => sum + p.amountBaseMinor, 0)
 
     const startMillis = DateTime.toEpochMillis(cycle.startDate)
     const endMillis = DateTime.toEpochMillis(cycle.endDate)
@@ -49,7 +53,7 @@ export const figuresForAllCycles = Effect.gen(function* () {
       seedOpeningBalanceMinor: cycle.seedOpeningBalanceMinor,
       prev,
       transfers: transfers.map((t) => ({ direction: t.direction, amountMinor: t.amountMinor })),
-      variableTotal: 0,
+      variableTotal,
       cycleDays,
       daysUntilEnd,
     })

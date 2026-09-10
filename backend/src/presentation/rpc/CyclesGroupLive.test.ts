@@ -12,6 +12,7 @@ import {
   makeFakeFixedBillsRepository,
   makeFakeHouseholdsRepository,
   makeFakeRecurringRulesRepository,
+  makeFakeSharedPaymentsRepository,
 } from "../../test/fakeRepositories"
 import { makeTestSqlClient } from "../../test/sqlClientTestkit"
 import { AuthMiddlewareLive } from "./AuthMiddlewareLive"
@@ -33,6 +34,7 @@ const buildTestLayer = () => {
   const billsFake = makeFakeFixedBillsRepository()
   const rulesFake = makeFakeRecurringRulesRepository()
   const capsFake = makeFakeCategoryCapsRepository()
+  const paymentsFake = makeFakeSharedPaymentsRepository()
   const householdsFake = makeFakeHouseholdsRepository({
     households: [
       {
@@ -61,6 +63,7 @@ const buildTestLayer = () => {
     billsFake.layer,
     rulesFake.layer,
     capsFake.layer,
+    paymentsFake.layer,
     householdsFake.layer,
     AccessTokensLive,
   )
