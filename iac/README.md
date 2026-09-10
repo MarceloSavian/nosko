@@ -3,17 +3,22 @@
 Serverless AWS baseline for nosko, region **eu-west-1**. Capability modules (reused from
 the nosko pattern) wired per environment.
 
-## AWS account (nosko-test)
+## AWS accounts (nosko-mgmt + nosko-test)
 
-Terraform deploys **directly into the nosko-test account** (`936834757679`) — `aws-vault exec
-nosko-test` already assumes `OrganizationAccountAccessRole`, so there is **no provider-level
-assume_role**. Remote state lives in the `nosko-tfstate-936834757679` S3 bucket **in that
-account** (create once via `scripts/bootstrap-state.sh`), with S3-native locking. This is a
-**personal** org — never the PostNL work accounts.
+Two accounts: **nosko-mgmt** (management, owns the `nosko.app` Route53 zone) and **nosko-test**
+(`936834757679`, app infra). Terraform itself always runs as the `nosko-mgmt` aws-vault profile —
+the default and `us_east_1` providers each carry a provider-level `assume_role` into
+`nosko-test`'s `OrganizationAccountAccessRole`, and a separate `aws.mgmt` provider alias uses the
+ambient management credentials directly (no assume_role) for the Route53 zone. The S3 state
+backend needs its own `assume_role` block too (backend blocks can't reference provider config).
+This is a **personal** org — never the PostNL work accounts.
 
-The `nosko.app` custom domain is a later addition: that Route53 zone is in the **management**
-account, so attaching it needs management-account credentials for the DNS + ACM-validation
-records. The baseline runs on the default CloudFront / API Gateway URLs.
+Direct `aws` CLI calls against already-deployed resources (not through Terraform) still use the
+`nosko-test` profile, since Terraform's own assume-role hop doesn't apply outside of Terraform.
+
+Custom domains are live: `https://test.api.nosko.app` (API) and `https://test.nosko.app` (web).
+That Route53 zone lives in the management account, wired via the `aws.mgmt` provider alias plus
+the DNS/ACM-validation records in `data.tf` — no manual per-domain step needed anymore.
 
 ## Layout
 
@@ -46,8 +51,9 @@ environments/
     created by SQL in the migrations (`NOSUPERUSER NOBYPASSRLS`, table-level grants only), so
     Row-Level Security actually applies to it. **The BFF must never use `database_url`.**
 
-Custom domains are **off by default** (default endpoints). Set `web_domain`/`api_domain` (+ a
-us-east-1 ACM cert for CloudFront) to attach them later.
+`web_domain`/`api_domain` default to `test.nosko.app`/`test.api.nosko.app` in this environment;
+unset them (or point to a different environment's `terraform.tfvars`) to fall back to the default
+CloudFront/API Gateway endpoints instead.
 
 ## Cost controls (strict)
 
@@ -84,15 +90,18 @@ First deploy needs two passes because `app_role`'s password only exists after th
    PASSWORD` step from `0002_app_role.ts` under a fresh id, running `migration-v1`, and updating
    `app_database_url` to match before the next `apply`.
 
-Real commands use the aws-vault `nosko-test` profile (run the bootstrap once, from the repo root):
+Real commands use the aws-vault `nosko-mgmt` profile (run the bootstrap once, from the repo root):
 
 ```bash
-aws-vault exec nosko-test -- iac/scripts/bootstrap-state.sh        # one-time: create state bucket
+aws-vault exec nosko-mgmt -- iac/scripts/bootstrap-state.sh        # one-time: create state bucket
 cd iac/environments/test
-aws-vault exec nosko-test -- terraform init
-aws-vault exec nosko-test -- terraform plan     # needs terraform.tfvars + built artifacts
-aws-vault exec nosko-test -- terraform apply
+aws-vault exec nosko-mgmt -- terraform init
+aws-vault exec nosko-mgmt -- terraform plan     # needs terraform.tfvars + built artifacts
+aws-vault exec nosko-mgmt -- terraform apply
 ```
+
+Any plain `aws` CLI command against a deployed resource (not via Terraform) uses `nosko-test`
+instead — e.g. `aws-vault exec nosko-test -- aws lambda invoke ...`.
 
 Lambda artifacts (`artifacts/*.zip`) are built from `backend/` at U4 (not committed). Terraform
 only uploads them; it does not build.
@@ -100,6 +109,8 @@ only uploads them; it does not build.
 ## State
 
 Remote state in the `nosko-tfstate-936834757679` S3 bucket in the nosko-test account
-(key `nosko/test/terraform.tfstate`, eu-west-1, **S3-native locking** — no DynamoDB).
-Create the bucket once with `scripts/bootstrap-state.sh`, then `terraform init`. Validation still
-uses `terraform init -backend=false` (no state/creds).
+(key `nosko/test/terraform.tfstate`, eu-west-1, **S3-native locking** — no DynamoDB). Since
+Terraform runs as `nosko-mgmt`, the backend block carries its own `assume_role` into that
+account too (backend config can't reference the provider blocks). Create the bucket once with
+`scripts/bootstrap-state.sh`, then `terraform init`. Validation still uses
+`terraform init -backend=false` (no state/creds).
