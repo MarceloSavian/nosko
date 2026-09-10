@@ -10,12 +10,15 @@ import { PasswordHasherLive } from "../infra/auth/PasswordHasher"
 import { TotpServiceLive } from "../infra/auth/TotpService"
 import { PgLive } from "../infra/config/DatabaseConfig"
 import { SesMailerLive } from "../infra/mailer/SesMailer"
+import { AccountsRepositoryLive } from "../infra/repositories/AccountsRepositoryLive"
 import { AuthTokensRepositoryLive } from "../infra/repositories/AuthTokensRepositoryLive"
+import { FxRatesRepositoryLive } from "../infra/repositories/FxRatesRepositoryLive"
 import { HouseholdInvitationsRepositoryLive } from "../infra/repositories/HouseholdInvitationsRepositoryLive"
 import { HouseholdsRepositoryLive } from "../infra/repositories/HouseholdsRepositoryLive"
 import { UserSessionsRepositoryLive } from "../infra/repositories/UserSessionsRepositoryLive"
 import { UsersRepositoryLive } from "../infra/repositories/UsersRepositoryLive"
 import { AuthApiLive } from "../presentation/http/AuthApiLive"
+import { AccountsGroupLive } from "../presentation/rpc/AccountsGroupLive"
 import { AuthGroupLive } from "../presentation/rpc/AuthGroupLive"
 import { AuthMiddlewareLive } from "../presentation/rpc/AuthMiddlewareLive"
 import { HouseholdGroupLive } from "../presentation/rpc/HouseholdGroupLive"
@@ -26,6 +29,8 @@ const RestOfInfraLive = Layer.mergeAll(
   UserSessionsRepositoryLive,
   HouseholdsRepositoryLive,
   HouseholdInvitationsRepositoryLive,
+  AccountsRepositoryLive,
+  FxRatesRepositoryLive,
   PasswordHasherLive,
   TotpServiceLive,
   OpaqueTokensLive,
@@ -37,7 +42,7 @@ const provideInfra = <A, E, R>(layer: Layer.Layer<A, E, R>) =>
   layer.pipe(Layer.provide(RestOfInfraLive), Layer.provide(PgLive))
 
 const RpcGroupsLive = provideInfra(
-  Layer.mergeAll(AuthGroupLive, HouseholdGroupLive, AuthMiddlewareLive),
+  Layer.mergeAll(AuthGroupLive, HouseholdGroupLive, AccountsGroupLive, AuthMiddlewareLive),
 )
 
 const RpcMountLive = Layer.scopedDiscard(
