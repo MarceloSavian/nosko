@@ -3,6 +3,12 @@ variable "aws_region" {
   default = "eu-west-1"
 }
 
+variable "account_id" {
+  description = "nosko-test account ID; the default/us_east_1 providers assume OrganizationAccountAccessRole here"
+  type        = string
+  default     = "936834757679"
+}
+
 variable "project" {
   type    = string
   default = "nosko"

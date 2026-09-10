@@ -19,10 +19,15 @@ terraform {
   required_version = ">= 1.6"
 }
 
-# aws-vault exec nosko-test already assumes OrganizationAccountAccessRole into the test account,
-# so Terraform runs directly as that account — no provider-level assume_role.
+# Run as the management profile (aws-vault exec mgmt). App infra lives in the test
+# account, so the default/us_east_1 providers assume OrganizationAccountAccessRole there;
+# the mgmt provider keeps the ambient management creds for the nosko.app Route53 zone.
 provider "aws" {
   region = var.aws_region
+
+  assume_role {
+    role_arn = "arn:aws:iam::${var.account_id}:role/OrganizationAccountAccessRole"
+  }
 
   default_tags {
     tags = {
@@ -37,6 +42,10 @@ provider "aws" {
 provider "aws" {
   alias  = "us_east_1"
   region = "us-east-1"
+
+  assume_role {
+    role_arn = "arn:aws:iam::${var.account_id}:role/OrganizationAccountAccessRole"
+  }
 
   default_tags {
     tags = {
