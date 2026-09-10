@@ -19,6 +19,7 @@ variable "functions" {
     reserved_concurrent_executions = optional(number, -1)
     env_vars                       = map(string)
     secret_arns                    = optional(list(string), [])
+    schedule_expression            = optional(string)
   }))
 }
 

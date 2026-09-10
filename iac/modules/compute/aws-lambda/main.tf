@@ -103,3 +103,33 @@ resource "aws_lambda_function" "fn" {
 
   depends_on = [aws_cloudwatch_log_group.lambda]
 }
+
+locals {
+  scheduled_functions = {
+    for k, v in var.functions : k => v if v.schedule_expression != null
+  }
+}
+
+resource "aws_cloudwatch_event_rule" "schedule" {
+  for_each = local.scheduled_functions
+
+  name                = "${var.project}-${var.environment}-${each.key}-schedule"
+  schedule_expression = each.value.schedule_expression
+}
+
+resource "aws_cloudwatch_event_target" "schedule" {
+  for_each = local.scheduled_functions
+
+  rule = aws_cloudwatch_event_rule.schedule[each.key].name
+  arn  = aws_lambda_function.fn[each.key].arn
+}
+
+resource "aws_lambda_permission" "schedule" {
+  for_each = local.scheduled_functions
+
+  statement_id  = "AllowEventBridgeInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.fn[each.key].function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.schedule[each.key].arn
+}

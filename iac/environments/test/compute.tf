@@ -25,6 +25,14 @@ locals {
     module.secrets.secret_arns["DATABASE_URL"],
     module.secrets.secret_arns["APP_DB_PASSWORD"],
   ]
+
+  # fx-rates-v1 only ever reads/writes fx_rates, so app_role is enough — same rule as bff-v1.
+  fx_rates_env = {
+    DATABASE_URL = var.app_database_url
+  }
+  fx_rates_secret_arns = [
+    module.secrets.secret_arns["APP_DATABASE_URL"],
+  ]
 }
 
 data "aws_iam_policy_document" "bff" {
@@ -66,6 +74,18 @@ module "compute" {
       reserved_concurrent_executions = -1
       env_vars                       = local.db_env
       secret_arns                    = local.db_secret_arns
+    }
+
+    fx-rates-v1 = {
+      handler                        = "index.handler"
+      runtime                        = var.lambda_runtime
+      source_path                    = "${local.artifacts_dir}/fx-rates-v1.zip"
+      timeout                        = 30
+      reserved_concurrent_executions = -1
+      env_vars                       = local.fx_rates_env
+      secret_arns                    = local.fx_rates_secret_arns
+      # Once daily; ECB publishes its reference rates on TARGET business days around 16:00 CET.
+      schedule_expression = "cron(0 17 * * ? *)"
     }
   }
 
