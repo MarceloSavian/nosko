@@ -12,16 +12,23 @@ import { PgLive } from "../infra/config/DatabaseConfig"
 import { SesMailerLive } from "../infra/mailer/SesMailer"
 import { AccountsRepositoryLive } from "../infra/repositories/AccountsRepositoryLive"
 import { AuthTokensRepositoryLive } from "../infra/repositories/AuthTokensRepositoryLive"
+import { CategoryCapsRepositoryLive } from "../infra/repositories/CategoryCapsRepositoryLive"
+import { CyclesRepositoryLive } from "../infra/repositories/CyclesRepositoryLive"
+import { FixedBillsRepositoryLive } from "../infra/repositories/FixedBillsRepositoryLive"
 import { FxRatesRepositoryLive } from "../infra/repositories/FxRatesRepositoryLive"
 import { HouseholdInvitationsRepositoryLive } from "../infra/repositories/HouseholdInvitationsRepositoryLive"
 import { HouseholdsRepositoryLive } from "../infra/repositories/HouseholdsRepositoryLive"
+import { RecurringRulesRepositoryLive } from "../infra/repositories/RecurringRulesRepositoryLive"
 import { UserSessionsRepositoryLive } from "../infra/repositories/UserSessionsRepositoryLive"
 import { UsersRepositoryLive } from "../infra/repositories/UsersRepositoryLive"
 import { AuthApiLive } from "../presentation/http/AuthApiLive"
 import { AccountsGroupLive } from "../presentation/rpc/AccountsGroupLive"
 import { AuthGroupLive } from "../presentation/rpc/AuthGroupLive"
 import { AuthMiddlewareLive } from "../presentation/rpc/AuthMiddlewareLive"
+import { BillsGroupLive } from "../presentation/rpc/BillsGroupLive"
+import { CyclesGroupLive } from "../presentation/rpc/CyclesGroupLive"
 import { HouseholdGroupLive } from "../presentation/rpc/HouseholdGroupLive"
+import { RulesGroupLive } from "../presentation/rpc/RulesGroupLive"
 
 const RestOfInfraLive = Layer.mergeAll(
   UsersRepositoryLive,
@@ -31,6 +38,10 @@ const RestOfInfraLive = Layer.mergeAll(
   HouseholdInvitationsRepositoryLive,
   AccountsRepositoryLive,
   FxRatesRepositoryLive,
+  CyclesRepositoryLive,
+  FixedBillsRepositoryLive,
+  RecurringRulesRepositoryLive,
+  CategoryCapsRepositoryLive,
   PasswordHasherLive,
   TotpServiceLive,
   OpaqueTokensLive,
@@ -42,7 +53,15 @@ const provideInfra = <A, E, R>(layer: Layer.Layer<A, E, R>) =>
   layer.pipe(Layer.provide(RestOfInfraLive), Layer.provide(PgLive))
 
 const RpcGroupsLive = provideInfra(
-  Layer.mergeAll(AuthGroupLive, HouseholdGroupLive, AccountsGroupLive, AuthMiddlewareLive),
+  Layer.mergeAll(
+    AuthGroupLive,
+    HouseholdGroupLive,
+    AccountsGroupLive,
+    CyclesGroupLive,
+    BillsGroupLive,
+    RulesGroupLive,
+    AuthMiddlewareLive,
+  ),
 )
 
 const RpcMountLive = Layer.scopedDiscard(
