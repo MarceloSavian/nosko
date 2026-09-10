@@ -12,3 +12,6 @@ build/
 *.tfstate.*
 .vite/
 coverage/
+test-results/
+playwright-report/
+blob-report/
