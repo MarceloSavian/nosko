@@ -11,7 +11,7 @@ Dependency-ordered decomposition, aligned to the generated UI, `requirements.md`
 | U3 | Auth & Household ✅ | signup/verify/login/MFA (TOTP + email OTP, remember device via the session's own refresh token)/sessions; the `auth_tokens`/`user_sessions`/`household_invitations` repositories (deferred from U2) + `HouseholdsRepository.update`/`listMembers`/`removeMember`; password hashing (argon2id via `hash-wasm`, WASM so no Lambda-arch-specific binary)/TOTP/opaque tokens/JWT in `infra/auth`; SES mailer + bilingual templates in `infra/mailer`; create/invite/accept (max 2 members, already DB-enforced) (E1, E2) | P1 | U2 |
 | U4 | BFF skeleton + error boundary ✅ | `RpcServer` (auth minus its 4 cookie-writing ops, + household) mounted alongside a minimal `HttpApi` (`login`/`mfaVerify`/`refresh`/`logout`, OpenAPI auto-generated) in one router; `@nosko/contracts` `RpcGroup`s/`HttpApi` group; `AuthMiddleware` (wrap-style) verifying the `nosko_at` cookie and opening the per-request RLS transaction (**household scoping via `app.household_id`, discovered from `household_members` since it isn't known upfront**); `SqlError`s not part of a contract's declared union become defects (`dieOnSqlError`) rather than leak; real Lambda artifact (`esbuild` + `archiver`) replaces the placeholder. Two RLS gaps found and fixed along the way (migrations `0008`/`0009`, see below). Typed client deferred to U8 (no consumer yet) | P1 | U2, U3 |
 | U5 | Accounts + FX ✅ | `accounts.*` RPC (list scoped Casa/Pessoal, create, update, setVisibility, setCoOwner, remove, sharedSummary, personalSummary); joint accounts force `visibility=shared` and refuse to be un-shared; `fx_rates` table + `FxRatesRepository` + pure **FxConversion** (falls back to the latest earlier rate); ECB daily fetcher + `fx-rates-v1` Lambda on a daily EventBridge schedule (E3, FR-X-1) | P1 | U4 |
-| U6 | Cycle core | **CycleEngine** (proportional model: contribution shares, estimate, availableAfterPayments, user-defined withdrawals/contributions, savings rate, daily allowance, burn rate, close) + cycles/incomes/member_transfers + fixed bills + recurring rules + `category_caps` (per-cycle; deferred from U2 since it FKs `cycles`) + **RecurringDetector** (E5, E6) | P1 | U5 |
+| U6 | Cycle core ✅ | Pure `CycleEngine` (`computeCycleFigures`/`computeCycleWindow`: contribution shares, estimate/openingBalance chaining, availableAfterPayments, user-defined withdrawals/contributions, savings rate, daily allowance) + `cycles.*`/`bills.*`/`rules.*` RPC (12+5+4 ops) over `cycles`/`cycle_incomes`/`member_transfers`/`fixed_bills`/`recurring_rules`/`category_caps` (household-scoped RLS, no visibility split); `cycles.create` scaffolds fixed bills from active rules; pure **RecurringDetector** ships unwired (needs U11's transaction feed) (E5, E6) | P1 | U5 |
 | U7 | Shared payments | shared payments from joint accounts (no payer/split), base-currency amount at confirmation, category caps, summaries, CSV export (E7) | P1 | U6 |
 | U8 | Web foundation | React+Vite+Tailwind+Effect client (`useRpc`), **en/pt i18n**, **Casa/Pessoal space switcher**, Shared-Ledger theme, auth + onboarding screens (add accounts, create household, invite/accept) (E1–E3 UI); `web/CONVENTIONS.md` filled | P1 | U4 |
 | U9 | Web: Casa core | overview, shared accounts, payments, cycles list, cycle detail, fixed bills (E5–E7 UI) | P1 | U5, U6, U7, U8 |
@@ -42,6 +42,17 @@ proportional model on both Casa and Pessoal screens. U11–U15 branch off after 
   before `app.household_id` was set (`household_members_insert` required it; the fix scopes
   `household_invitations` by matching invitee email too, and `household_members_insert` by
   `user_id` alone).
+- U6 ✅: `pnpm verify:migrations` gained a cross-household isolation check for the new
+  household-scoped-only tables (`cycles`, `fixed_bills`, `recurring_rules`, `category_caps`) —
+  a second household's session can insert its own rows but never sees the first household's
+  cycle, fixed bill, rule, or cap. `CycleEngine` parity with money-evaluation's proportional
+  model is verified by fully synthetic, hand-verified fixtures rather than by replaying the real
+  five-cycle dataset in `~/Documents/money-evaluation/source.json` — committing those real
+  balances would violate the standing "no money/PII in fixtures" rule, so parity is established by
+  code review of the ported formulas, not by a byte-for-byte historical replay. `dailyAllowance`
+  and the `availableAfterPayments`/`reserve` split have no legacy precedent at all (new nosko-only
+  concepts — the old spreadsheet-era script only computed `disponivel`/`orcamentoVariavel`
+  directly from `openingBalance + income - withdrawalTotal`).
 - U6: CycleEngine reproduces the money-evaluation cycle figures (surplus, byCategory,
   availableAfterPayments) for a fixture dataset; withdrawals are user-defined inputs.
 - U7: shared payments in BRL land in the cycle in EUR with the stored rate; totals vs estimate

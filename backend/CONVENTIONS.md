@@ -76,6 +76,36 @@ Durable rules for `@nosko/backend`. Extracted from `documentation/design/archite
   `infra/config/DatabaseConfig.ts` (OID 1700 = `numeric`) rather than per-field — check this file
   before adding any new numeric column.
 
+## Domain services vs data/usecases
+
+- A **pure** engine with no I/O (`FxConversion`, `CycleEngine`, `RecurringDetector`) lives in
+  `domain/services` as plain exported functions — no `Layer`/`Context`, Effect only where a typed
+  failure is genuinely possible. Orchestration that fans a pure engine out across repository calls
+  (e.g. `data/usecases/Cycles.ts`'s `figuresForAllCycles`, which folds `computeCycleFigures` over
+  every cycle in start-date order to thread `prev` forward) belongs in `data/usecases`, not in the
+  domain service itself.
+- A pure engine can ship fully unit-tested before its real data source exists. `RecurringDetector`
+  takes a generic `TransactionCandidate` shape rather than reading from `transactions` (which
+  doesn't exist until U11) — this keeps the detector reusable once ingestion lands instead of
+  writing it twice.
+- **Parity claims against `~/Documents/money-evaluation`'s real figures must never be verified with
+  real numbers in a committed test.** `~/Documents/money-evaluation/source.json` holds real
+  financial data; committing it (even to assert a computed match) would violate the "no money/PII
+  in fixtures" rule. Verify a ported formula with fully synthetic, hand-computed fixtures instead,
+  and treat any one-off check against the real dataset as local-only, never committed.
+
+## Household-scoped-only tables (no visibility split)
+
+- Tables like `cycles`, `cycle_incomes`, `member_transfers`, `fixed_bills`, `recurring_rules`, and
+  `category_caps` are shared household data with no personal/owner branch (unlike `accounts` or
+  `categories`) — their RLS policies collapse to a single
+  `household_id = nullif(current_setting('app.household_id', true), '')::uuid` predicate for every
+  operation. **Denormalize `household_id` onto every RLS-protected row**, even rows that already
+  reach their household through a FK chain (e.g. `fixed_bills.household_id` duplicates
+  `fixed_bills.cycle_id → cycles.household_id`) — every existing RLS policy in this codebase checks
+  a column on the row directly, none join through a policy subquery, and breaking that precedent
+  would make `pnpm verify:migrations`' cross-household checks meaningfully slower to reason about.
+
 ## Testing
 
 - **Jest + `@swc/jest`, 100% coverage** (CI-enforced). Effect programs run via

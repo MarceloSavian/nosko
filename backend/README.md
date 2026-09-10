@@ -10,7 +10,9 @@ household as one `@effect/rpc` group, the 4 cookie-writing auth ops (`login`/`mf
 transaction, and the real Lambda handler that replaces U1's placeholder. U5: the `accounts.*` RPC
 group (register/edit/remove, joint co-owner, visibility toggle, shared + personal summaries);
 `fx_rates` + the pure `FxConversion` service + a daily ECB fetcher running as its own scheduled
-Lambda (`fetchFxRates.ts`).
+Lambda (`fetchFxRates.ts`). U6: the pure `CycleEngine` (proportional model) and `RecurringDetector`
+services; `cycles.*`/`bills.*`/`rules.*` RPC groups over the new `cycles`, `cycle_incomes`,
+`member_transfers`, `fixed_bills`, `recurring_rules`, and `category_caps` tables.
 
 ## Layout
 
@@ -23,9 +25,9 @@ src/
               auth (password hashing, TOTP, opaque tokens, JWT, session cookies), mailer (SES + templates),
               fx (EcbFetcher — daily ECB reference-rate feed)
   presentation/
-    rpc/      AuthGroupLive, HouseholdGroupLive, AccountsGroupLive (the RpcGroup handlers),
-              AuthMiddlewareLive, dieOnSqlError (SqlErrors outside a contract's declared union
-              become defects)
+    rpc/      AuthGroupLive, HouseholdGroupLive, AccountsGroupLive, CyclesGroupLive,
+              BillsGroupLive, RulesGroupLive (the RpcGroup handlers), AuthMiddlewareLive,
+              dieOnSqlError (SqlErrors outside a contract's declared union become defects)
     http/     AuthApiLive (the 4 cookie-writing auth endpoints)
   main/       layers.ts (composes every Live layer), handler.ts (BFF Lambda entry),
               fetchFxRates.ts (scheduled Lambda entry), migrate.ts, verifyMigrations.ts (excluded

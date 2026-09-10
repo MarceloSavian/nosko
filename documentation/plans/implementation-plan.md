@@ -44,6 +44,24 @@ Phased execution of `design/units-of-work.md` (U0–U15), aligned to the generat
   (liquid = checking/savings/vault, invested = brokerage/investment, credit cards excluded) —
   worth revisiting once real UI wireframes are consulted at U9/U10. Not yet exercised against a
   live database or a live ECB fetch.
+- **U6** ✅ delivered: pure `CycleEngine` (`computeCycleFigures` — proportional model: income,
+  contributionShare, estimate/openingBalance chaining off the previous cycle, availableAfterPayments,
+  withdrawalTotal, available, surplus, variableBudget, savingsRate, dailyAllowance —
+  `computeCycleWindow` for the household's anchor-day cycle boundary) with fully synthetic,
+  hand-verified test fixtures (no money-evaluation figures committed, per the standing money/PII
+  fixture rule); `cycles`/`cycle_incomes`/`member_transfers`/`recurring_rules`/`fixed_bills`/
+  `category_caps` tables (household-scoped RLS, no visibility split) + repositories; `cycles.*`
+  RPC (list/get/getCurrent/create/update/close/setIncome/recordTransfer/settleTransfer/
+  setCategoryCaps/trends/compare), `bills.*` (list/create/update/setPaid/remove), `rules.*`
+  (list/create/update/deactivate — the manual `user_defined` path only); `cycles.create` scaffolds
+  fixed bills from active `is_fixed_bill` recurring rules ("scaffold next cycle"). A pure
+  `RecurringDetector` (matcher grouping, monthly-cadence + amount-stability heuristics, confidence
+  score) ships fully unit-tested but unwired — its real input (confirmed transactions) doesn't
+  exist until U11, so `rules.suggestions`/`acceptSuggestion`/`ignoreSuggestion` are deferred there
+  too. `variableTotal` (shared-payment spend) is hardcoded to 0 until U7 adds `shared_payments`;
+  `fixed_bill_items` (line-item breakdown) is deferred — no FR or RPC action references it yet.
+  `verify:migrations` gained a cross-household RLS isolation check for the new household-scoped
+  tables. Not yet exercised against a live database.
 - Everything else: pending.
 
 ## Phase 1 — Foundation + core budget loop (U2–U10)
@@ -78,10 +96,10 @@ Key tasks
    when `web` (U8) actually needs it, to avoid building unused plumbing.
 4. U5 ✅: accounts domain + repos + `accounts.*` RPC (register, joint co-owner, visibility
    toggle, summaries); `fx_rates` + daily ECB fetch (EventBridge) + FxConversion.
-5. U6: **CycleEngine** (contribution shares, estimate, availableAfterPayments, user-defined
-   withdrawals/contributions, savings rate, daily allowance, burn rate, close, chaining) +
-   cycles/incomes/member_transfers + fixed bills + recurring rules + RecurringDetector; parity
-   tests vs money-evaluation.
+5. U6 ✅: **CycleEngine** (contribution shares, estimate/openingBalance chaining, available,
+   availableAfterPayments, user-defined withdrawals/contributions, savings rate, daily allowance) +
+   cycles/incomes/member_transfers + fixed bills + recurring rules (manual path) + `category_caps`
+   + pure RecurringDetector (unwired; needs U11's transaction feed).
 6. U7: shared payments (no payer/split) + base-currency conversion at confirmation + caps +
    summaries + CSV export.
 7. U8: web foundation (Vite+Tailwind+Effect client + `useRpc`) + en/pt i18n + **Casa/Pessoal
@@ -154,8 +172,11 @@ review passed; `prod` deployed; checks clean.
 
 ## Immediate next step
 
-Resume at **U6** (Cycle core). Applying U2's Terraform changes to nosko-test (the two-pass
+Resume at **U7** (Shared payments). Applying U2's Terraform changes to nosko-test (the two-pass
 `app_role` deploy in `iac/README.md`), then re-running `terraform apply` with U4/U5's real
 Lambda artifacts (`pnpm --filter @nosko/backend build` — `bff-v1.zip` and `fx-rates-v1.zip`) in
 place of the placeholders, can happen whenever Marcelo wants a live Neon database and a real
-deployed BFF; nothing in U6+ needs that to happen first to keep being written and unit-tested.
+deployed BFF; nothing in U7+ needs that to happen first to keep being written and unit-tested.
+U7 (shared payments from joint accounts, base-currency conversion at confirmation, category caps
+enforcement, summaries, CSV export) is what finally gives `CycleEngine.variableTotal` real data —
+it's hardcoded to 0 since U6.
