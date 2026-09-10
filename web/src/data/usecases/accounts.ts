@@ -5,3 +5,6 @@ export const listAccountsAtom = (scope: "personal" | "shared") =>
 export const createAccountAtom = ApiClient.mutation("accounts.create")
 export const updateAccountAtom = ApiClient.mutation("accounts.update")
 export const removeAccountAtom = ApiClient.mutation("accounts.remove")
+export const personalSummaryAtom = ApiClient.query("accounts.personalSummary", undefined, {
+  reactivityKeys: ["accounts"],
+})

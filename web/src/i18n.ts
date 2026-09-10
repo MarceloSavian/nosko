@@ -270,6 +270,22 @@ export const dictionaries = {
     "fixedBills.pending": "Pending",
     "fixedBills.remove": "Remove",
 
+    "personalOverview.title": "Personal overview",
+    "personalOverview.subtitle": "Your own accounts and savings — never visible to your partner.",
+    "personalOverview.liquid": "Liquid",
+    "personalOverview.invested": "Invested",
+    "personalOverview.total": "Total",
+    "personalOverview.accountsTitle": "Your accounts",
+    "personalOverview.empty": "No personal accounts yet.",
+    "personalOverview.paymentsNoticeTitle": "Personal payments",
+    "personalOverview.paymentsNoticeBody":
+      "Your personal spending will appear here once statement import is available.",
+
+    "myAccounts.subtitle": "Accounts only you can see.",
+    "myAccounts.addAccount": "Add account",
+    "myAccounts.empty": "No personal accounts yet.",
+    "myAccounts.remove": "Remove",
+
     "shell.switcher.casa": "Home",
     "shell.switcher.pessoal": "Personal",
     "shell.nav.overview": "Overview",
@@ -280,6 +296,7 @@ export const dictionaries = {
     "shell.nav.goals": "Goals",
     "shell.nav.summary": "Summary",
     "shell.nav.myAccounts": "My accounts",
+    "shell.nav.myPayments": "My payments",
     "shell.nav.savings": "Savings & investments",
     "shell.nav.projection": "Savings projection",
     "shell.nav.subscriptions": "Subscriptions",
@@ -556,6 +573,22 @@ export const dictionaries = {
     "fixedBills.pending": "Pendente",
     "fixedBills.remove": "Remover",
 
+    "personalOverview.title": "Visão geral pessoal",
+    "personalOverview.subtitle": "Suas contas e economias — nunca visíveis ao seu parceiro(a).",
+    "personalOverview.liquid": "Líquido",
+    "personalOverview.invested": "Investido",
+    "personalOverview.total": "Total",
+    "personalOverview.accountsTitle": "Suas contas",
+    "personalOverview.empty": "Nenhuma conta pessoal ainda.",
+    "personalOverview.paymentsNoticeTitle": "Pagamentos pessoais",
+    "personalOverview.paymentsNoticeBody":
+      "Seus gastos pessoais aparecerão aqui quando a importação de extratos estiver disponível.",
+
+    "myAccounts.subtitle": "Contas que só você pode ver.",
+    "myAccounts.addAccount": "Adicionar conta",
+    "myAccounts.empty": "Nenhuma conta pessoal ainda.",
+    "myAccounts.remove": "Remover",
+
     "shell.switcher.casa": "Casa",
     "shell.switcher.pessoal": "Pessoal",
     "shell.nav.overview": "Visão geral",
@@ -566,6 +599,7 @@ export const dictionaries = {
     "shell.nav.goals": "Metas",
     "shell.nav.summary": "Resumo",
     "shell.nav.myAccounts": "Minhas contas",
+    "shell.nav.myPayments": "Meus pagamentos",
     "shell.nav.savings": "Poupança e investimentos",
     "shell.nav.projection": "Projeção de poupança",
     "shell.nav.subscriptions": "Assinaturas",

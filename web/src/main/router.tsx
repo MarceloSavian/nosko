@@ -13,6 +13,8 @@ import { AcceptInvitationPage } from "../presentation/pages/onboarding/AcceptInv
 import { AccountFormPage } from "../presentation/pages/onboarding/AccountFormPage"
 import { AddAccountsPage } from "../presentation/pages/onboarding/AddAccountsPage"
 import { CreateHouseholdPage } from "../presentation/pages/onboarding/CreateHouseholdPage"
+import { MyAccountsPage } from "../presentation/pages/personal/MyAccountsPage"
+import { PersonalOverviewPage } from "../presentation/pages/personal/PersonalOverviewPage"
 import { ResetPasswordPage } from "../presentation/pages/ResetPasswordPage"
 import { SignUpPage } from "../presentation/pages/SignUpPage"
 import { AppShell } from "../presentation/pages/shell/AppShell"
@@ -51,8 +53,9 @@ export const AppRouter = () => (
             <Route path="/household/fixed-bills" element={<FixedBillsPage />} />
             <Route path="/household/goals" element={<ComingSoonPage />} />
             <Route path="/household/summary" element={<ComingSoonPage />} />
-            <Route path="/personal" element={<ComingSoonPage />} />
-            <Route path="/personal/accounts" element={<ComingSoonPage />} />
+            <Route path="/personal" element={<PersonalOverviewPage />} />
+            <Route path="/personal/accounts" element={<MyAccountsPage />} />
+            <Route path="/personal/payments" element={<ComingSoonPage />} />
             <Route path="/personal/savings" element={<ComingSoonPage />} />
             <Route path="/personal/projection" element={<ComingSoonPage />} />
             <Route path="/personal/subscriptions" element={<ComingSoonPage />} />

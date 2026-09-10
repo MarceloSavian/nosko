@@ -24,6 +24,7 @@ const householdNav = [
 const personalNav = [
   { labelKey: "shell.nav.overview", path: "/personal" },
   { labelKey: "shell.nav.myAccounts", path: "/personal/accounts" },
+  { labelKey: "shell.nav.myPayments", path: "/personal/payments" },
   { labelKey: "shell.nav.savings", path: "/personal/savings" },
   { labelKey: "shell.nav.projection", path: "/personal/projection" },
   { labelKey: "shell.nav.subscriptions", path: "/personal/subscriptions" },
