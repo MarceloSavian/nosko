@@ -1,7 +1,7 @@
 import * as HttpApiBuilder from "@effect/platform/HttpApiBuilder"
 import * as HttpServer from "@effect/platform/HttpServer"
 import { describe, expect, it } from "@jest/globals"
-import { AuthApi } from "@nosko/contracts"
+import { NoskoHttpApi } from "@nosko/contracts"
 import { ConfigProvider, Effect, Layer } from "effect"
 import { Secret, TOTP } from "otpauth"
 import { AccessTokensLive } from "../../infra/auth/AccessTokens"
@@ -12,11 +12,15 @@ import { TotpServiceLive } from "../../infra/auth/TotpService"
 import { makeFakeMailer } from "../../test/fakeMailer"
 import {
   makeFakeAuthTokensRepository,
+  makeFakeCyclesRepository,
+  makeFakeHouseholdsRepository,
+  makeFakeSharedPaymentsRepository,
   makeFakeUserSessionsRepository,
   makeFakeUsersRepository,
 } from "../../test/fakeRepositories"
 import { makeTestSqlClient } from "../../test/sqlClientTestkit"
 import { AuthApiLive } from "./AuthApiLive"
+import { PaymentsApiLive } from "./PaymentsApiLive"
 
 const withConfig = ConfigProvider.fromMap(
   new Map([["JWT_SECRET", "a-very-long-random-jwt-signing-secret-value-1234567890"]]),
@@ -30,6 +34,9 @@ const buildHandler = async (mfaEnabled: boolean) => {
   const authTokensRepo = makeFakeAuthTokensRepository()
   const sessionsRepo = makeFakeUserSessionsRepository()
   const mailer = makeFakeMailer()
+  const householdsRepo = makeFakeHouseholdsRepository()
+  const cyclesRepo = makeFakeCyclesRepository()
+  const paymentsRepo = makeFakeSharedPaymentsRepository()
 
   const infraLayer = Layer.mergeAll(
     sqlLayer,
@@ -37,6 +44,9 @@ const buildHandler = async (mfaEnabled: boolean) => {
     authTokensRepo.layer,
     sessionsRepo.layer,
     mailer.layer,
+    householdsRepo.layer,
+    cyclesRepo.layer,
+    paymentsRepo.layer,
     OpaqueTokensLive,
     PasswordHasherLive,
     TotpServiceLive,
@@ -44,7 +54,9 @@ const buildHandler = async (mfaEnabled: boolean) => {
   ).pipe(Layer.provide(Layer.setConfigProvider(withConfig)))
 
   const apiLayer = Layer.mergeAll(
-    HttpApiBuilder.api(AuthApi).pipe(Layer.provide(AuthApiLive)),
+    HttpApiBuilder.api(NoskoHttpApi).pipe(
+      Layer.provide(Layer.mergeAll(AuthApiLive, PaymentsApiLive)),
+    ),
     HttpServer.layerContext,
   ).pipe(Layer.provide(infraLayer))
 

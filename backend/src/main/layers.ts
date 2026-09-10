@@ -2,7 +2,7 @@ import * as HttpApiBuilder from "@effect/platform/HttpApiBuilder"
 import * as HttpServer from "@effect/platform/HttpServer"
 import * as RpcSerialization from "@effect/rpc/RpcSerialization"
 import * as RpcServer from "@effect/rpc/RpcServer"
-import { AppRpcs, AuthApi } from "@nosko/contracts"
+import { AppRpcs, NoskoHttpApi } from "@nosko/contracts"
 import { Effect, Layer } from "effect"
 import { AccessTokensLive } from "../infra/auth/AccessTokens"
 import { OpaqueTokensLive } from "../infra/auth/OpaqueTokens"
@@ -19,15 +19,18 @@ import { FxRatesRepositoryLive } from "../infra/repositories/FxRatesRepositoryLi
 import { HouseholdInvitationsRepositoryLive } from "../infra/repositories/HouseholdInvitationsRepositoryLive"
 import { HouseholdsRepositoryLive } from "../infra/repositories/HouseholdsRepositoryLive"
 import { RecurringRulesRepositoryLive } from "../infra/repositories/RecurringRulesRepositoryLive"
+import { SharedPaymentsRepositoryLive } from "../infra/repositories/SharedPaymentsRepositoryLive"
 import { UserSessionsRepositoryLive } from "../infra/repositories/UserSessionsRepositoryLive"
 import { UsersRepositoryLive } from "../infra/repositories/UsersRepositoryLive"
 import { AuthApiLive } from "../presentation/http/AuthApiLive"
+import { PaymentsApiLive } from "../presentation/http/PaymentsApiLive"
 import { AccountsGroupLive } from "../presentation/rpc/AccountsGroupLive"
 import { AuthGroupLive } from "../presentation/rpc/AuthGroupLive"
 import { AuthMiddlewareLive } from "../presentation/rpc/AuthMiddlewareLive"
 import { BillsGroupLive } from "../presentation/rpc/BillsGroupLive"
 import { CyclesGroupLive } from "../presentation/rpc/CyclesGroupLive"
 import { HouseholdGroupLive } from "../presentation/rpc/HouseholdGroupLive"
+import { PaymentsGroupLive } from "../presentation/rpc/PaymentsGroupLive"
 import { RulesGroupLive } from "../presentation/rpc/RulesGroupLive"
 
 const RestOfInfraLive = Layer.mergeAll(
@@ -42,6 +45,7 @@ const RestOfInfraLive = Layer.mergeAll(
   FixedBillsRepositoryLive,
   RecurringRulesRepositoryLive,
   CategoryCapsRepositoryLive,
+  SharedPaymentsRepositoryLive,
   PasswordHasherLive,
   TotpServiceLive,
   OpaqueTokensLive,
@@ -60,6 +64,7 @@ const RpcGroupsLive = provideInfra(
     CyclesGroupLive,
     BillsGroupLive,
     RulesGroupLive,
+    PaymentsGroupLive,
     AuthMiddlewareLive,
   ),
 )
@@ -76,7 +81,9 @@ const RpcMountLive = Layer.scopedDiscard(
   ),
 )
 
-const HttpApiLive = HttpApiBuilder.api(AuthApi).pipe(Layer.provide(provideInfra(AuthApiLive)))
+const HttpApiLive = HttpApiBuilder.api(NoskoHttpApi).pipe(
+  Layer.provide(provideInfra(Layer.mergeAll(AuthApiLive, PaymentsApiLive))),
+)
 
 const OpenApiLive = HttpApiBuilder.middlewareOpenApi().pipe(Layer.provide(HttpApiLive))
 

@@ -2,7 +2,7 @@ import * as HttpApiBuilder from "@effect/platform/HttpApiBuilder"
 import * as HttpServerRequest from "@effect/platform/HttpServerRequest"
 import * as HttpServerResponse from "@effect/platform/HttpServerResponse"
 import { SqlClient } from "@effect/sql"
-import { AuthApi } from "@nosko/contracts"
+import { NoskoHttpApi } from "@nosko/contracts"
 import { Effect, Option } from "effect"
 import { login, mfaVerify } from "../../data/usecases/Login"
 import { logout, refreshSession } from "../../data/usecases/Sessions"
@@ -25,7 +25,7 @@ const currentRequestHeaders = Effect.map(
 
 const jsonOrDie = (body: unknown) => HttpServerResponse.json(body).pipe(Effect.orDie)
 
-export const AuthApiLive = HttpApiBuilder.group(AuthApi, "auth", (handlers) =>
+export const AuthApiLive = HttpApiBuilder.group(NoskoHttpApi, "auth", (handlers) =>
   Effect.gen(function* () {
     const sql = yield* SqlClient.SqlClient
     const accessTokens = yield* AccessTokens
