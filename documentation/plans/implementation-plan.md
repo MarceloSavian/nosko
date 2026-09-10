@@ -93,6 +93,13 @@ Phased execution of `design/units-of-work.md` (U0–U15), aligned to the generat
   way (both fixed and redeployed — see `state.md`). Also delivered opportunistically while
   wiring U8 against the live API: `auth.me` RPC endpoint, SES→Resend mailer swap (SES was never
   actually configured), and the `test.nosko.app` custom domain.
+- **U9** ✅ delivered (2026-09-10): Casa screens — overview, shared accounts, payments, cycles
+  list, cycle detail, fixed bills — real views replacing U8's "coming soon" placeholders over
+  the U5–U7 RPC surface. Discovered and fixed a gap along the way: nothing exposed categories
+  to any client despite `payments.create`/`bills.create` requiring one, so a `categories.list`
+  RPC and FR-PAY-4's seven default household categories (seeded on `household.create`) were
+  added. `e2e/web` gained a spec covering the full loop (start a cycle, fixed bill, payment,
+  transfer, close) against the live backend.
 - Everything else: pending.
 
 ## Phase 1 — Foundation + core budget loop (U2–U10)
@@ -137,7 +144,8 @@ Key tasks
 7. U8 ✅: web foundation (Vite+Tailwind+Effect client via `@effect-atom/atom-react`) + en/pt
    i18n + **Casa/Pessoal switcher** + auth/onboarding screens; `e2e/web` Playwright suite added
    alongside it.
-8. U9: Casa screens — overview, shared accounts, payments, cycles + detail, fixed bills.
+8. U9 ✅: Casa screens — overview, shared accounts, payments, cycles + detail, fixed bills;
+   `categories.list` RPC + default household categories added along the way.
 9. U10: Pessoal screens — overview (personal categories + cap), my accounts, my payments.
 
 Definition of done: deployed to `test`; both users sign up, link, register accounts (incl. one
@@ -205,10 +213,10 @@ review passed; `prod` deployed; checks clean.
 
 ## Immediate next step
 
-Resume at **U9** (Casa screens) — U8 (web foundation) is delivered, the app is deployed and
-live on `test.nosko.app`/`test.api.nosko.app` against a real Neon database, and `e2e/web`
-proves the full auth + onboarding flow works end-to-end through a real browser. U9 replaces the
-app shell's "coming soon" placeholders for the Casa space (overview, shared accounts, payments,
-cycles + detail, fixed bills) with real views over the already-delivered U5–U7 RPC surface. U10
-(Pessoal screens) can follow immediately after, same dependency story. Add `e2e/web` coverage
-for each new screen as it lands, per its README's convention.
+Resume at **U10** (Pessoal screens) — U9 (Casa screens) is delivered and deployed, exercised
+end to end against the live `test.nosko.app`/`test.api.nosko.app` backend via `e2e/web`'s
+`05-casa-cycle.spec.ts` (start a cycle, add a fixed bill, add a payment, record and settle a
+transfer, close the cycle). U10 builds the personal-space equivalents (overview with personal
+categories + cap, my accounts, my payments — all private, never visible to the partner) over
+the same U5/U8 foundations. Add `e2e/web` coverage for each new screen as it lands, per its
+README's convention.

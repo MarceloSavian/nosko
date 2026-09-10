@@ -166,9 +166,24 @@
   across signup/verify/login/reset, household onboarding + invite + accounts, cross-session
   invitation acceptance, and shell nav/guards/logout. Cleans up all data it creates; verified 0
   leftover rows after a clean run.
-- **Next step:** **U9** — Casa screens (overview, shared accounts, payments, cycles + detail,
-  fixed bills), replacing U8's "coming soon" placeholders with real views over the U5–U7 RPC
-  surface.
+- **`categories.list` RPC + default category seeding added (2026-09-10):** discovered while
+  building U9 that nothing exposed categories to any client (`CategoriesRepository` had no
+  callers at all) even though `payments.create`/`bills.create` both require a `categoryId`.
+  Added a household-scoped `categories.list` endpoint and seed FR-PAY-4's seven default
+  household categories (Mercado & Feira, Moradia & Fixas, Lazer & Restaurantes, Transporte,
+  Saúde & Pets, Subscrições, Outros) on `household.create`. Full category management
+  (rename/add/remove) stays deferred to U15 (settings).
+- **U9 delivered (2026-09-10): Casa screens.** Overview (cycle figures, contribution shares,
+  set-income form, fixed-bills/payments previews), shared accounts (add/list/remove),
+  payments (add/list, per-cycle summary), cycles list, cycle detail (full figures breakdown,
+  record/settle member transfers, close cycle), and fixed bills (add/list, mark paid/pending) —
+  replacing U8's "coming soon" placeholders over the U5–U7 RPC surface. `e2e/web` gained a new
+  spec driving the whole loop (start a cycle → fixed bill → payment → transfer → close) against
+  the live backend; two existing specs updated since their assertions targeted the old
+  placeholder text. `e2e/web`'s default expect timeout raised to 10s — occasional slower
+  Lambda/Neon round trips in this heavier multi-page flow aren't a real bug.
+- **Next step:** **U10** — Pessoal screens (personal overview with personal categories + cap,
+  my accounts, my payments — private), the other Phase 1 unit unblocked since U8 landed.
 
 ## Locked decisions (from requirements-questions.md + chat)
 
