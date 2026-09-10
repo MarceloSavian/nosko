@@ -2,8 +2,8 @@ import { describe, expect, it } from "@jest/globals"
 import { AppRpcs } from "./app"
 
 describe("AppRpcs", () => {
-  it("merges every auth, household, account, cycle, bill, rule, and payment action into one group", () => {
-    expect(AppRpcs.requests.size).toBe(56)
+  it("merges every auth, household, account, cycle, bill, rule, payment, and category action into one group", () => {
+    expect(AppRpcs.requests.size).toBe(57)
     expect(AppRpcs.requests.has("auth.signUp")).toBe(true)
     expect(AppRpcs.requests.has("household.create")).toBe(true)
     expect(AppRpcs.requests.has("accounts.list")).toBe(true)
@@ -11,5 +11,6 @@ describe("AppRpcs", () => {
     expect(AppRpcs.requests.has("bills.list")).toBe(true)
     expect(AppRpcs.requests.has("rules.list")).toBe(true)
     expect(AppRpcs.requests.has("payments.list")).toBe(true)
+    expect(AppRpcs.requests.has("categories.list")).toBe(true)
   })
 })

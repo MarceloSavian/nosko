@@ -1,6 +1,7 @@
 import { AccountsRpcs } from "./accounts.ts"
 import { AuthRpcs } from "./auth.ts"
 import { BillsRpcs } from "./bills.ts"
+import { CategoriesRpcs } from "./categories.ts"
 import { CyclesRpcs } from "./cycles.ts"
 import { HouseholdRpcs } from "./household.ts"
 import { PaymentsRpcs } from "./payments.ts"
@@ -13,4 +14,5 @@ export const AppRpcs = AuthRpcs.merge(
   BillsRpcs,
   RulesRpcs,
   PaymentsRpcs,
+  CategoriesRpcs,
 )

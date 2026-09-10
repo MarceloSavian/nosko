@@ -12,6 +12,7 @@ import { PgLive } from "../infra/config/DatabaseConfig"
 import { ResendMailerLive } from "../infra/mailer/ResendMailer"
 import { AccountsRepositoryLive } from "../infra/repositories/AccountsRepositoryLive"
 import { AuthTokensRepositoryLive } from "../infra/repositories/AuthTokensRepositoryLive"
+import { CategoriesRepositoryLive } from "../infra/repositories/CategoriesRepositoryLive"
 import { CategoryCapsRepositoryLive } from "../infra/repositories/CategoryCapsRepositoryLive"
 import { CyclesRepositoryLive } from "../infra/repositories/CyclesRepositoryLive"
 import { FixedBillsRepositoryLive } from "../infra/repositories/FixedBillsRepositoryLive"
@@ -28,6 +29,7 @@ import { AccountsGroupLive } from "../presentation/rpc/AccountsGroupLive"
 import { AuthGroupLive } from "../presentation/rpc/AuthGroupLive"
 import { AuthMiddlewareLive } from "../presentation/rpc/AuthMiddlewareLive"
 import { BillsGroupLive } from "../presentation/rpc/BillsGroupLive"
+import { CategoriesGroupLive } from "../presentation/rpc/CategoriesGroupLive"
 import { CyclesGroupLive } from "../presentation/rpc/CyclesGroupLive"
 import { HouseholdGroupLive } from "../presentation/rpc/HouseholdGroupLive"
 import { PaymentsGroupLive } from "../presentation/rpc/PaymentsGroupLive"
@@ -46,6 +48,7 @@ const RestOfInfraLive = Layer.mergeAll(
   RecurringRulesRepositoryLive,
   CategoryCapsRepositoryLive,
   SharedPaymentsRepositoryLive,
+  CategoriesRepositoryLive,
   PasswordHasherLive,
   TotpServiceLive,
   OpaqueTokensLive,
@@ -65,6 +68,7 @@ const RpcGroupsLive = provideInfra(
     BillsGroupLive,
     RulesGroupLive,
     PaymentsGroupLive,
+    CategoriesGroupLive,
     AuthMiddlewareLive,
   ),
 )

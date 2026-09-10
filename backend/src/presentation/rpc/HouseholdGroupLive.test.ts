@@ -7,6 +7,7 @@ import { OpaqueTokensLive } from "../../infra/auth/OpaqueTokens"
 import { ACCESS_TOKEN_COOKIE } from "../../infra/auth/SessionCookies"
 import { makeFakeMailer } from "../../test/fakeMailer"
 import {
+  makeFakeCategoriesRepository,
   makeFakeHouseholdInvitationsRepository,
   makeFakeHouseholdsRepository,
   makeFakeUsersRepository,
@@ -44,6 +45,7 @@ const buildTestLayer = () => {
   const usersRepo = makeFakeUsersRepository([marcelo, gabriele])
   const householdsRepo = makeFakeHouseholdsRepository()
   const invitationsRepo = makeFakeHouseholdInvitationsRepository()
+  const categoriesRepo = makeFakeCategoriesRepository()
   const mailer = makeFakeMailer()
 
   const infraLayer = Layer.mergeAll(
@@ -51,6 +53,7 @@ const buildTestLayer = () => {
     usersRepo.layer,
     householdsRepo.layer,
     invitationsRepo.layer,
+    categoriesRepo.layer,
     mailer.layer,
     OpaqueTokensLive,
     AccessTokensLive,
@@ -64,6 +67,7 @@ const buildTestLayer = () => {
     testLayer,
     households: householdsRepo.households,
     members: householdsRepo.members,
+    categories: categoriesRepo.categories,
     sent: mailer.sent,
   }
 }
@@ -108,6 +112,38 @@ describe("HouseholdGroupLive", () => {
     expect(Exit.isSuccess(exit)).toBe(true)
     if (Exit.isSuccess(exit)) {
       expect(exit.value.name).toBe("Casa")
+    }
+  })
+
+  it("household.create seeds the default household categories from FR-PAY-4", async () => {
+    const { testLayer, categories } = buildTestLayer()
+    const token = await signAccessToken(marcelo.id)
+
+    const exit = await run(
+      testLayer,
+      Effect.gen(function* () {
+        const client = yield* RpcTest.makeClient(HouseholdRpcs, { flatten: true })
+        return yield* client(
+          "household.create",
+          { name: "Casa", baseCurrency: "EUR" },
+          headersFor(token),
+        )
+      }),
+    )
+
+    expect(Exit.isSuccess(exit)).toBe(true)
+    if (Exit.isSuccess(exit)) {
+      const seeded = [...categories.values()].filter((c) => c.householdId === exit.value.id)
+      expect(seeded.map((c) => c.name)).toEqual([
+        "Mercado & Feira",
+        "Moradia & Fixas",
+        "Lazer & Restaurantes",
+        "Transporte",
+        "Saúde & Pets",
+        "Subscrições",
+        "Outros",
+      ])
+      expect(seeded.every((c) => c.scope === "household")).toBe(true)
     }
   })
 

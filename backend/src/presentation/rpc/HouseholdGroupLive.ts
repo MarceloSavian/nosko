@@ -1,5 +1,6 @@
 import { CurrentUser, HouseholdRpcs } from "@nosko/contracts"
 import { type DateTime, Effect, Option } from "effect"
+import { CategoriesRepository } from "../../data/protocols/CategoriesRepository"
 import { HouseholdInvitationsRepository } from "../../data/protocols/HouseholdInvitationsRepository"
 import { HouseholdsRepository } from "../../data/protocols/HouseholdsRepository"
 import { UsersRepository } from "../../data/protocols/UsersRepository"
@@ -16,6 +17,18 @@ const dieIfMissing = <A>(found: Option.Option<A>) =>
     onNone: () => Effect.die(new Error("expected row vanished mid-request")),
     onSome: Effect.succeed,
   })
+
+// FR-PAY-4's default household categories, seeded once so payments/fixed bills have something to
+// categorise against from the start — full category management (rename/add/remove) is U15 scope.
+const DEFAULT_HOUSEHOLD_CATEGORIES = [
+  "Mercado & Feira",
+  "Moradia & Fixas",
+  "Lazer & Restaurantes",
+  "Transporte",
+  "Saúde & Pets",
+  "Subscrições",
+  "Outros",
+]
 
 const toHouseholdView = (household: { id: string; name: string; baseCurrency: string }) => ({
   id: household.id,
@@ -46,6 +59,7 @@ export const HouseholdGroupLive = HouseholdRpcs.toLayer(
     const households = yield* HouseholdsRepository
     const invitations = yield* HouseholdInvitationsRepository
     const users = yield* UsersRepository
+    const categories = yield* CategoriesRepository
 
     const requireHousehold = (householdId: string | null) =>
       householdId === null
@@ -77,6 +91,17 @@ export const HouseholdGroupLive = HouseholdRpcs.toLayer(
               createdBy: currentUser.userId,
             })
             .pipe(dieOnSqlError)
+          yield* Effect.forEach(
+            DEFAULT_HOUSEHOLD_CATEGORIES,
+            (name, index) =>
+              categories.createHousehold({
+                householdId: household.id,
+                name,
+                color: null,
+                sortOrder: index,
+              }),
+            { discard: true },
+          ).pipe(dieOnSqlError)
           return toHouseholdView(household)
         }),
 

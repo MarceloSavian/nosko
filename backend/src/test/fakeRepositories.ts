@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto"
 import { DateTime, Effect, Layer, Option } from "effect"
 import { AccountsRepository } from "../data/protocols/AccountsRepository"
 import { AuthTokensRepository } from "../data/protocols/AuthTokensRepository"
+import { CategoriesRepository } from "../data/protocols/CategoriesRepository"
 import { CategoryCapsRepository } from "../data/protocols/CategoryCapsRepository"
 import { CyclesRepository } from "../data/protocols/CyclesRepository"
 import { FixedBillsRepository } from "../data/protocols/FixedBillsRepository"
@@ -14,6 +15,7 @@ import { UserSessionsRepository } from "../data/protocols/UserSessionsRepository
 import { UsersRepository } from "../data/protocols/UsersRepository"
 import type { Account } from "../domain/models/Account"
 import type { AuthToken } from "../domain/models/AuthToken"
+import type { Category } from "../domain/models/Category"
 import type { CategoryCap } from "../domain/models/CategoryCap"
 import type { Cycle, CycleIncome, MemberTransfer } from "../domain/models/Cycle"
 import type { FixedBill } from "../domain/models/FixedBill"
@@ -762,4 +764,42 @@ export const makeFakeCategoryCapsRepository = (seed: ReadonlyArray<CategoryCap> 
   })
 
   return { layer, caps }
+}
+
+export const makeFakeCategoriesRepository = (seed: ReadonlyArray<Category> = []) => {
+  const categories = new Map<string, Category>(seed.map((c) => [c.id, c]))
+
+  const layer = Layer.succeed(CategoriesRepository, {
+    createHousehold: (input) => {
+      const id = randomUUID()
+      const record: Category = {
+        id,
+        householdId: input.householdId,
+        scope: "household",
+        ownerUserId: null,
+        name: input.name,
+        color: input.color,
+        sortOrder: input.sortOrder,
+      }
+      categories.set(id, record)
+      return Effect.succeed(record)
+    },
+    createPersonal: (input) => {
+      const id = randomUUID()
+      const record: Category = {
+        id,
+        householdId: input.householdId,
+        scope: "personal",
+        ownerUserId: input.ownerUserId,
+        name: input.name,
+        color: input.color,
+        sortOrder: input.sortOrder,
+      }
+      categories.set(id, record)
+      return Effect.succeed(record)
+    },
+    list: () => Effect.succeed([...categories.values()]),
+  })
+
+  return { layer, categories }
 }
