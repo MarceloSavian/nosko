@@ -284,6 +284,95 @@ const main = Effect.gen(function* () {
     },
   )
 
+  yield* check(
+    "a cycle, its fixed bill, and its recurring rule are never visible to a different household",
+    async () => {
+      const ownerA = "e0000000-0000-0000-0000-000000000001"
+      const ownerB = "e0000000-0000-0000-0000-000000000002"
+      const householdA = "e0000000-0000-0000-0000-000000000003"
+      const householdB = "e0000000-0000-0000-0000-000000000004"
+      const cycle = "e0000000-0000-0000-0000-000000000005"
+      const rule = "e0000000-0000-0000-0000-000000000006"
+      const bill = "e0000000-0000-0000-0000-000000000007"
+      const cap = "e0000000-0000-0000-0000-000000000008"
+      const category = "e0000000-0000-0000-0000-000000000009"
+
+      await db.query("set role app_role")
+      for (const [id, email] of [
+        [ownerA, "owner-a-cycle-check@example.com"],
+        [ownerB, "owner-b-cycle-check@example.com"],
+      ]) {
+        await db.query(
+          "insert into users (id, email, password_hash, name) values ($1, $2, 'hash', 'X')",
+          [id, email],
+        )
+      }
+
+      await db.query("select set_config('app.user_id', $1, false)", [ownerA])
+      await db.query(
+        "insert into households (id, name, base_currency, created_by) values ($1, 'Casa A', 'EUR', $2)",
+        [householdA, ownerA],
+      )
+      await db.query("select set_config('app.household_id', $1, false)", [householdA])
+      await db.query("insert into household_settings (household_id) values ($1)", [householdA])
+      await db.query(
+        "insert into household_members (household_id, user_id, role) values ($1, $2, 'owner')",
+        [householdA, ownerA],
+      )
+      await db.query(
+        "insert into categories (id, household_id, scope, name) values ($1, $2, 'household', 'Casa')",
+        [category, householdA],
+      )
+      await db.query(
+        `insert into cycles (id, household_id, cycle_key, start_date, end_date)
+         values ($1, $2, '2026-01', '2025-12-23', '2026-01-22')`,
+        [cycle, householdA],
+      )
+      await db.query(
+        `insert into recurring_rules
+           (id, household_id, match_type, matcher, cadence, is_fixed_bill, source)
+         values ($1, $2, 'vendor_exact', 'Aluguel', 'monthly', true, 'user_defined')`,
+        [rule, householdA],
+      )
+      await db.query(
+        `insert into fixed_bills (id, cycle_id, household_id, recurring_rule_id, label, amount_minor, currency)
+         values ($1, $2, $3, $4, 'Aluguel', 150000, 'EUR')`,
+        [bill, cycle, householdA, rule],
+      )
+      await db.query(
+        "insert into category_caps (id, household_id, cycle_id, category_id, cap_minor) values ($1, $2, $3, $4, 40000)",
+        [cap, householdA, cycle, category],
+      )
+
+      await db.query("select set_config('app.user_id', $1, false)", [ownerB])
+      await db.query(
+        "insert into households (id, name, base_currency, created_by) values ($1, 'Casa B', 'EUR', $2)",
+        [householdB, ownerB],
+      )
+      await db.query("select set_config('app.household_id', $1, false)", [householdB])
+      await db.query("insert into household_settings (household_id) values ($1)", [householdB])
+      await db.query(
+        "insert into household_members (household_id, user_id, role) values ($1, $2, 'owner')",
+        [householdB, ownerB],
+      )
+
+      const cyclesFromB = await db.query("select id from cycles where id = $1", [cycle])
+      assert.equal(cyclesFromB.rows.length, 0, "household B must not see household A's cycle")
+      const billsFromB = await db.query("select id from fixed_bills where id = $1", [bill])
+      assert.equal(billsFromB.rows.length, 0, "household B must not see household A's fixed bill")
+      const rulesFromB = await db.query("select id from recurring_rules where id = $1", [rule])
+      assert.equal(rulesFromB.rows.length, 0, "household B must not see household A's rule")
+      const capsFromB = await db.query("select id from category_caps where id = $1", [cap])
+      assert.equal(capsFromB.rows.length, 0, "household B must not see household A's category cap")
+
+      await db.query("select set_config('app.household_id', $1, false)", [householdA])
+      const cyclesFromA = await db.query("select id from cycles where id = $1", [cycle])
+      assert.equal(cyclesFromA.rows.length, 1, "household A must still see its own cycle")
+
+      await db.query("reset role")
+    },
+  )
+
   yield* Effect.promise(() => db.close())
 
   yield* Effect.sync(() =>
