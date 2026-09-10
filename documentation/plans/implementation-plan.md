@@ -58,10 +58,27 @@ Phased execution of `design/units-of-work.md` (U0–U15), aligned to the generat
   `RecurringDetector` (matcher grouping, monthly-cadence + amount-stability heuristics, confidence
   score) ships fully unit-tested but unwired — its real input (confirmed transactions) doesn't
   exist until U11, so `rules.suggestions`/`acceptSuggestion`/`ignoreSuggestion` are deferred there
-  too. `variableTotal` (shared-payment spend) is hardcoded to 0 until U7 adds `shared_payments`;
-  `fixed_bill_items` (line-item breakdown) is deferred — no FR or RPC action references it yet.
+  too (U6's `variableTotal` was hardcoded to 0, since `shared_payments` didn't exist yet — fixed in
+  U7 below). `fixed_bill_items` (line-item breakdown) is deferred — no FR or RPC action
+  references it yet.
   `verify:migrations` gained a cross-household RLS isolation check for the new household-scoped
   tables. Not yet exercised against a live database.
+- **U7** ✅ delivered: `shared_payments` table (household-scoped RLS, same no-visibility-split
+  shape as U6's tables) + `SharedPaymentsRepository`; `payments.*` RPC
+  (list/create/update/remove/summary) plus a `payments.exportCsv` `HttpApi` endpoint (CSV isn't a
+  clean RPC response, same reasoning as auth's 4 cookie-writing ops — merged into one combined
+  `NoskoHttpApi` alongside auth's group, since `HttpApiBuilder.api` can only mount a single
+  `HttpApi` per app). `payments.create` resolves the owning cycle from the booked date
+  (`CyclesRepository.findCurrent`, now actually exercised — previously wired but uncalled from
+  U6), requires a `visibility=shared` account, and converts a non-base-currency amount **once, at
+  confirmation** (`FxConversion` + `FxRatesRepository.findOnOrBefore`, storing `amountBaseMinor` +
+  `fxRate` rather than recomputing on every read, unlike accounts' live/on-read conversion) — a
+  missing rate is a real, propagated `NoFxRate` failure here, not swallowed to `null`.
+  `CycleEngine.computeByCategory` (new pure helper) drives `payments.summary`'s per-category spend
+  vs cap. **`figuresForAllCycles`'s `variableTotal` is no longer hardcoded to 0** — it now sums
+  each cycle's real `shared_payments.amountBaseMinor`, so `CycleFigures.surplus`/`variableBudget`/
+  `dailyAllowance` reflect real spend for the first time. Not yet exercised against a live
+  database.
 - Everything else: pending.
 
 ## Phase 1 — Foundation + core budget loop (U2–U10)
@@ -100,8 +117,9 @@ Key tasks
    availableAfterPayments, user-defined withdrawals/contributions, savings rate, daily allowance) +
    cycles/incomes/member_transfers + fixed bills + recurring rules (manual path) + `category_caps`
    + pure RecurringDetector (unwired; needs U11's transaction feed).
-6. U7: shared payments (no payer/split) + base-currency conversion at confirmation + caps +
-   summaries + CSV export.
+6. U7 ✅: `shared_payments` (no payer/split) + base-currency conversion at confirmation
+   (`FxConversion`, stored not recomputed) + `payments.*` RPC + `payments.exportCsv` HttpApi +
+   `computeByCategory` cap-vs-spend summaries; `variableTotal` now real.
 7. U8: web foundation (Vite+Tailwind+Effect client + `useRpc`) + en/pt i18n + **Casa/Pessoal
    switcher** + Shared-Ledger theme + auth/onboarding screens; fill `web/CONVENTIONS.md`.
 8. U9: Casa screens — overview, shared accounts, payments, cycles + detail, fixed bills.
@@ -172,11 +190,11 @@ review passed; `prod` deployed; checks clean.
 
 ## Immediate next step
 
-Resume at **U7** (Shared payments). Applying U2's Terraform changes to nosko-test (the two-pass
-`app_role` deploy in `iac/README.md`), then re-running `terraform apply` with U4/U5's real
-Lambda artifacts (`pnpm --filter @nosko/backend build` — `bff-v1.zip` and `fx-rates-v1.zip`) in
-place of the placeholders, can happen whenever Marcelo wants a live Neon database and a real
-deployed BFF; nothing in U7+ needs that to happen first to keep being written and unit-tested.
-U7 (shared payments from joint accounts, base-currency conversion at confirmation, category caps
-enforcement, summaries, CSV export) is what finally gives `CycleEngine.variableTotal` real data —
-it's hardcoded to 0 since U6.
+Resume at **U8** (Web foundation) — the first Phase 1 unit not already delivered, and the one
+that finally gives U5–U7's RPC surface a client. Applying U2's Terraform changes to nosko-test
+(the two-pass `app_role` deploy in `iac/README.md`), then re-running `terraform apply` with
+U4/U5's real Lambda artifacts (`pnpm --filter @nosko/backend build` — `bff-v1.zip` and
+`fx-rates-v1.zip`) in place of the placeholders, can happen whenever Marcelo wants a live Neon
+database and a real deployed BFF; nothing in U8+ needs that to happen first to keep being written
+and unit-tested. Note U9/U10 (Casa/Pessoal screens) also depend on U6/U7, both now delivered, so
+the critical path is unblocked through U10 once U8 lands.

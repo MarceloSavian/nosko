@@ -106,6 +106,35 @@ Durable rules for `@nosko/backend`. Extracted from `documentation/design/archite
   a column on the row directly, none join through a policy subquery, and breaking that precedent
   would make `pnpm verify:migrations`' cross-household checks meaningfully slower to reason about.
 
+## HttpApi
+
+- **There is exactly one `HttpApi` object for the whole app (`NoskoHttpApi` in
+  `@nosko/contracts`), never one per feature area.** `HttpApiBuilder.api(someApi)` provides a
+  singleton `HttpApi.Api` context tag; two separate `HttpApiBuilder.api(...)` layers merged
+  together would silently fight over that same tag instead of composing. A new set of HTTP-only
+  endpoints (anything that isn't a clean JSON RPC response — a cookie-writing auth op, a CSV
+  download) gets its own `HttpApiGroup` with its own `.prefix(...)`, added to the existing
+  `HttpApi.make("nosko")` builder in `httpApi.ts`, not a new top-level `HttpApi.make(...)`.
+- A consequence: any test that builds a real web handler for one HTTP group (via
+  `HttpApiBuilder.api(NoskoHttpApi)` + `HttpApiBuilder.toWebHandler`) must supply **every** other
+  group's handler layer too, even if the test only exercises one group's endpoints — see
+  `AuthApiLive.test.ts` and `PaymentsApiLive.test.ts`, which both merge `AuthApiLive` and
+  `PaymentsApiLive` together for exactly this reason.
+- A non-JSON response (e.g. CSV) uses `HttpApiSchema.Text({ contentType })` as the endpoint's
+  `addSuccess` schema — the handler just returns a plain string, the framework skips JSON envelope
+  encoding and serves it with that content type. See `PaymentsApiLive`'s `exportCsv`.
+
+## Confirmation-time vs on-read currency conversion
+
+- Two different conversion strategies coexist deliberately: `accounts.sharedSummary`/
+  `personalSummary` convert **live, on every read** (`AccountsGroupLive`'s `toBase`), swallowing a
+  missing `NoFxRate` into a `null` balance, because an account's live balance is a display-only
+  estimate with no ledger meaning. A `shared_payments` row converts **once, at creation**
+  (`data/usecases/SharedPayments.ts`), storing `amountBaseMinor`/`fxRate`, and a missing rate is a
+  real, propagated `NoFxRate` failure — the confirmed amount is part of the cycle's arithmetic
+  (`CycleEngine.variableTotal`), so it must be deterministic once written, never silently nulled.
+  Don't reuse one pattern for the other's use case.
+
 ## Testing
 
 - **Jest + `@swc/jest`, 100% coverage** (CI-enforced). Effect programs run via

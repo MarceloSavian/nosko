@@ -12,7 +12,10 @@ group (register/edit/remove, joint co-owner, visibility toggle, shared + persona
 `fx_rates` + the pure `FxConversion` service + a daily ECB fetcher running as its own scheduled
 Lambda (`fetchFxRates.ts`). U6: the pure `CycleEngine` (proportional model) and `RecurringDetector`
 services; `cycles.*`/`bills.*`/`rules.*` RPC groups over the new `cycles`, `cycle_incomes`,
-`member_transfers`, `fixed_bills`, `recurring_rules`, and `category_caps` tables.
+`member_transfers`, `fixed_bills`, `recurring_rules`, and `category_caps` tables. U7: `shared_payments`
++ `payments.*` RPC + a `payments.exportCsv` HttpApi endpoint (merged into the same combined
+`NoskoHttpApi` as auth's cookie-writing group); base-currency conversion happens once, at
+confirmation, and is stored rather than recomputed on read.
 
 ## Layout
 
@@ -26,9 +29,11 @@ src/
               fx (EcbFetcher — daily ECB reference-rate feed)
   presentation/
     rpc/      AuthGroupLive, HouseholdGroupLive, AccountsGroupLive, CyclesGroupLive,
-              BillsGroupLive, RulesGroupLive (the RpcGroup handlers), AuthMiddlewareLive,
-              dieOnSqlError (SqlErrors outside a contract's declared union become defects)
-    http/     AuthApiLive (the 4 cookie-writing auth endpoints)
+              BillsGroupLive, RulesGroupLive, PaymentsGroupLive (the RpcGroup handlers),
+              AuthMiddlewareLive, dieOnSqlError (SqlErrors outside a contract's declared union
+              become defects)
+    http/     AuthApiLive (the 4 cookie-writing auth endpoints), PaymentsApiLive (CSV export) —
+              both mounted under one combined `NoskoHttpApi` (see CONVENTIONS.md)
   main/       layers.ts (composes every Live layer), handler.ts (BFF Lambda entry),
               fetchFxRates.ts (scheduled Lambda entry), migrate.ts, verifyMigrations.ts (excluded
               from unit coverage — see Scripts)
