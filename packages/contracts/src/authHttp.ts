@@ -1,4 +1,4 @@
-import { HttpApi, HttpApiEndpoint, HttpApiGroup } from "@effect/platform"
+import { HttpApiEndpoint, HttpApiGroup } from "@effect/platform"
 import { Schema } from "effect"
 import {
   EmailNotVerified,
@@ -41,5 +41,4 @@ export const AuthApiGroup = HttpApiGroup.make("auth")
   )
   .add(HttpApiEndpoint.post("refresh", "/refresh").addSuccess(Schema.Void).addError(SessionInvalid))
   .add(HttpApiEndpoint.post("logout", "/logout").addSuccess(Schema.Void))
-
-export const AuthApi = HttpApi.make("nosko").add(AuthApiGroup).prefix("/api/http/auth")
+  .prefix("/api/http/auth")

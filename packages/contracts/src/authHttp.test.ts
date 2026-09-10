@@ -1,7 +1,7 @@
 import { HttpApi } from "@effect/platform"
 import { describe, expect, it } from "@jest/globals"
 import { Effect, Schema } from "effect"
-import { AuthApi, LoginResultView } from "./authHttp"
+import { AuthApiGroup, LoginResultView } from "./authHttp"
 
 describe("LoginResultView", () => {
   it("decodes the authenticated branch", async () => {
@@ -25,10 +25,10 @@ describe("LoginResultView", () => {
   })
 })
 
-describe("AuthApi", () => {
+describe("AuthApiGroup", () => {
   it("declares the four cookie-writing auth endpoints", () => {
     let endpoints: ReadonlyArray<{ readonly method: string; readonly path: string }> = []
-    HttpApi.reflect(AuthApi, {
+    HttpApi.reflect(HttpApi.make("test").add(AuthApiGroup), {
       onGroup: () => {},
       onEndpoint: ({ endpoint }) => {
         endpoints = [...endpoints, { method: endpoint.method, path: endpoint.path }]
