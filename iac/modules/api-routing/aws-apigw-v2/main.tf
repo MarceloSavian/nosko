@@ -3,9 +3,13 @@ resource "aws_apigatewayv2_api" "api" {
   protocol_type = "HTTP"
 
   cors_configuration {
-    allow_origins = var.cors_origins
-    allow_methods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-    allow_headers = ["Content-Type", "Authorization", "x-api-key"]
+    allow_origins     = var.cors_origins
+    allow_methods     = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    # traceparent/b3: @effect/rpc's RpcClient attaches W3C trace-context / Zipkin B3 propagation
+    # headers to every request by default; the browser's CORS preflight rejects them otherwise.
+    allow_headers     = ["Content-Type", "Authorization", "x-api-key", "traceparent", "b3"]
+    allow_credentials = true
+    max_age           = 300
   }
 }
 
