@@ -1,7 +1,7 @@
 import { SqlClient } from "@effect/sql"
 import { Effect, Layer, Option } from "effect"
 import { HouseholdsRepository } from "../../data/protocols/HouseholdsRepository"
-import { Household, HouseholdMember } from "../../domain/models/Household"
+import { Household, HouseholdMember, HouseholdSettings } from "../../domain/models/Household"
 import { decodeRow } from "./decode"
 
 export const HouseholdsRepositoryLive = Layer.effect(
@@ -10,6 +10,7 @@ export const HouseholdsRepositoryLive = Layer.effect(
     const sql = yield* SqlClient.SqlClient
     const decodeHousehold = decodeRow(Household)
     const decodeMember = decodeRow(HouseholdMember)
+    const decodeSettings = decodeRow(HouseholdSettings)
 
     return {
       create: (input) =>
@@ -70,6 +71,14 @@ export const HouseholdsRepositoryLive = Layer.effect(
             rows.length === 0
               ? Effect.succeed(Option.none())
               : decodeMember(rows[0]).pipe(Effect.map(Option.some)),
+          ),
+        ),
+      findSettings: (householdId) =>
+        sql`SELECT * FROM ${sql("householdSettings")} WHERE ${sql("householdId")} = ${householdId}`.pipe(
+          Effect.flatMap((rows) =>
+            rows.length === 0
+              ? Effect.succeed(Option.none())
+              : decodeSettings(rows[0]).pipe(Effect.map(Option.some)),
           ),
         ),
     }

@@ -4,6 +4,7 @@ import type {
   Household,
   HouseholdMember,
   HouseholdMemberRole,
+  HouseholdSettings,
   NewHousehold,
 } from "../../domain/models/Household"
 
@@ -29,5 +30,8 @@ export class HouseholdsRepository extends Context.Tag("HouseholdsRepository")<
     readonly findMembershipByUserId: (
       userId: string,
     ) => Effect.Effect<Option.Option<HouseholdMember>, SqlError>
+    readonly findSettings: (
+      householdId: string,
+    ) => Effect.Effect<Option.Option<HouseholdSettings>, SqlError>
   }
 >() {}

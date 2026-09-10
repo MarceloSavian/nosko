@@ -23,6 +23,18 @@ const memberRow = {
   joined_at: now,
 }
 
+const settingsRow = {
+  household_id: householdRow.id,
+  cycle_anchor_day: 23,
+  locale: "pt-BR",
+  base_currency: "EUR",
+  default_reserve_minor: 0,
+  box3_allowance_minor: 5_700_000,
+  box3_rate: 0.0216,
+  inflation_rate: 0,
+  updated_at: now,
+}
+
 describe("HouseholdsRepositoryLive", () => {
   it("creates a household, seeds its settings, and adds the creator as owner", async () => {
     const { layer, queries } = makeTestSqlClient((query) =>
@@ -171,6 +183,34 @@ describe("HouseholdsRepositoryLive", () => {
       Effect.gen(function* () {
         const repo = yield* HouseholdsRepository
         return yield* repo.findMembershipByUserId("nobody")
+      }).pipe(Effect.provide(HouseholdsRepositoryLive), Effect.provide(layer)),
+    )
+
+    expect(Option.isNone(decoded)).toBe(true)
+  })
+
+  it("finds a household's settings", async () => {
+    const { layer, queries } = makeTestSqlClient(() => [settingsRow])
+
+    const decoded = await Effect.runPromise(
+      Effect.gen(function* () {
+        const repo = yield* HouseholdsRepository
+        return yield* repo.findSettings(householdRow.id)
+      }).pipe(Effect.provide(HouseholdsRepositoryLive), Effect.provide(layer)),
+    )
+
+    expect(Option.isSome(decoded)).toBe(true)
+    expect(queries[0]?.sql).toBe('SELECT * FROM "household_settings" WHERE "household_id" = $1')
+    expect(queries[0]?.params).toEqual([householdRow.id])
+  })
+
+  it("returns none when a household has no settings row", async () => {
+    const { layer } = makeTestSqlClient(() => [])
+
+    const decoded = await Effect.runPromise(
+      Effect.gen(function* () {
+        const repo = yield* HouseholdsRepository
+        return yield* repo.findSettings("missing")
       }).pipe(Effect.provide(HouseholdsRepositoryLive), Effect.provide(layer)),
     )
 

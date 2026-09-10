@@ -2,16 +2,24 @@ import { randomUUID } from "node:crypto"
 import { DateTime, Effect, Layer, Option } from "effect"
 import { AccountsRepository } from "../data/protocols/AccountsRepository"
 import { AuthTokensRepository } from "../data/protocols/AuthTokensRepository"
+import { CategoryCapsRepository } from "../data/protocols/CategoryCapsRepository"
+import { CyclesRepository } from "../data/protocols/CyclesRepository"
+import { FixedBillsRepository } from "../data/protocols/FixedBillsRepository"
 import { FxRatesRepository } from "../data/protocols/FxRatesRepository"
 import { HouseholdInvitationsRepository } from "../data/protocols/HouseholdInvitationsRepository"
 import { HouseholdsRepository } from "../data/protocols/HouseholdsRepository"
+import { RecurringRulesRepository } from "../data/protocols/RecurringRulesRepository"
 import { UserSessionsRepository } from "../data/protocols/UserSessionsRepository"
 import { UsersRepository } from "../data/protocols/UsersRepository"
 import type { Account } from "../domain/models/Account"
 import type { AuthToken } from "../domain/models/AuthToken"
+import type { CategoryCap } from "../domain/models/CategoryCap"
+import type { Cycle, CycleIncome, MemberTransfer } from "../domain/models/Cycle"
+import type { FixedBill } from "../domain/models/FixedBill"
 import type { FxRate } from "../domain/models/FxRate"
-import type { Household, HouseholdMember } from "../domain/models/Household"
+import type { Household, HouseholdMember, HouseholdSettings } from "../domain/models/Household"
 import type { HouseholdInvitation } from "../domain/models/HouseholdInvitation"
+import type { RecurringRule } from "../domain/models/RecurringRule"
 import type { User, UserCredentials } from "../domain/models/User"
 import type { UserSession } from "../domain/models/UserSession"
 
@@ -165,11 +173,35 @@ export const makeFakeUserSessionsRepository = () => {
   return { layer, sessions }
 }
 
+const defaultSettingsFor = (household: Household): HouseholdSettings => ({
+  householdId: household.id,
+  cycleAnchorDay: 23,
+  locale: "pt-BR",
+  baseCurrency: household.baseCurrency,
+  defaultReserveMinor: 0,
+  box3AllowanceMinor: 5_700_000,
+  box3Rate: 0.0216,
+  inflationRate: 0,
+  updatedAt: now(),
+})
+
 export const makeFakeHouseholdsRepository = (
-  seed: { households?: ReadonlyArray<Household>; members?: ReadonlyArray<HouseholdMember> } = {},
+  seed: {
+    households?: ReadonlyArray<Household>
+    members?: ReadonlyArray<HouseholdMember>
+    settings?: ReadonlyArray<HouseholdSettings>
+  } = {},
 ) => {
   const households = new Map<string, Household>((seed.households ?? []).map((h) => [h.id, h]))
   const members: Array<HouseholdMember> = [...(seed.members ?? [])]
+  const settings = new Map<string, HouseholdSettings>(
+    (seed.settings ?? []).map((s) => [s.householdId, s]),
+  )
+  for (const household of households.values()) {
+    if (!settings.has(household.id)) {
+      settings.set(household.id, defaultSettingsFor(household))
+    }
+  }
 
   const layer = Layer.succeed(HouseholdsRepository, {
     create: (input) => {
@@ -183,6 +215,7 @@ export const makeFakeHouseholdsRepository = (
         updatedAt: now(),
       }
       households.set(id, record)
+      settings.set(id, defaultSettingsFor(record))
       return Effect.succeed(record)
     },
     findById: (id) => Effect.succeed(Option.fromNullable(households.get(id))),
@@ -217,9 +250,10 @@ export const makeFakeHouseholdsRepository = (
       }),
     findMembershipByUserId: (userId) =>
       Effect.succeed(Option.fromNullable(members.find((m) => m.userId === userId))),
+    findSettings: (householdId) => Effect.succeed(Option.fromNullable(settings.get(householdId))),
   })
 
-  return { layer, households, members }
+  return { layer, households, members, settings }
 }
 
 export const makeFakeHouseholdInvitationsRepository = () => {
@@ -388,4 +422,284 @@ export const makeFakeAccountsRepository = (seed: ReadonlyArray<Account> = []) =>
   })
 
   return { layer, accounts }
+}
+
+export const makeFakeCyclesRepository = (seed: ReadonlyArray<Cycle> = []) => {
+  const cycles = new Map<string, Cycle>(seed.map((c) => [c.id, c]))
+  const incomes = new Map<string, CycleIncome>()
+  const transfers = new Map<string, MemberTransfer>()
+
+  const layer = Layer.succeed(CyclesRepository, {
+    create: (input) => {
+      const id = randomUUID()
+      const record: Cycle = {
+        id,
+        householdId: input.householdId,
+        cycleKey: input.cycleKey,
+        title: input.title,
+        startDate: asUtc(input.startDate),
+        endDate: asUtc(input.endDate),
+        status: "open",
+        closedAt: null,
+        reserveMinor: input.reserveMinor,
+        estimateMinor: input.estimateMinor,
+        seedOpeningBalanceMinor: input.seedOpeningBalanceMinor,
+        surplusGoalId: null,
+        surplusDestinationLabel: null,
+        createdAt: now(),
+        updatedAt: now(),
+      }
+      cycles.set(id, record)
+      return Effect.succeed(record)
+    },
+    findById: (id) => Effect.succeed(Option.fromNullable(cycles.get(id))),
+    findByCycleKey: (householdId, cycleKey) =>
+      Effect.succeed(
+        Option.fromNullable(
+          [...cycles.values()].find(
+            (c) => c.householdId === householdId && c.cycleKey === cycleKey,
+          ),
+        ),
+      ),
+    list: () =>
+      Effect.succeed(
+        [...cycles.values()].sort(
+          (a, b) => DateTime.toEpochMillis(a.startDate) - DateTime.toEpochMillis(b.startDate),
+        ),
+      ),
+    findCurrent: (today) =>
+      Effect.succeed(
+        Option.fromNullable(
+          [...cycles.values()].find(
+            (c) =>
+              DateTime.toEpochMillis(c.startDate) <= today.getTime() &&
+              DateTime.toEpochMillis(c.endDate) >= today.getTime(),
+          ),
+        ),
+      ),
+    update: (id, input) => {
+      const existing = cycles.get(id)
+      if (!existing) return Effect.die(new Error(`cycle ${id} not found`))
+      const updated: Cycle = {
+        ...existing,
+        title: input.title,
+        reserveMinor: input.reserveMinor,
+        estimateMinor: input.estimateMinor,
+        surplusGoalId: input.surplusGoalId,
+        surplusDestinationLabel: input.surplusDestinationLabel,
+        updatedAt: now(),
+      }
+      cycles.set(id, updated)
+      return Effect.succeed(updated)
+    },
+    close: (id) => {
+      const existing = cycles.get(id)
+      if (!existing) return Effect.die(new Error(`cycle ${id} not found`))
+      const updated: Cycle = { ...existing, status: "closed", closedAt: now(), updatedAt: now() }
+      cycles.set(id, updated)
+      return Effect.succeed(updated)
+    },
+    listIncomes: (cycleId) =>
+      Effect.succeed([...incomes.values()].filter((i) => i.cycleId === cycleId)),
+    setIncome: (input) => {
+      const existingEntry = [...incomes.entries()].find(
+        ([, i]) =>
+          i.cycleId === input.cycleId &&
+          i.memberUserId === input.memberUserId &&
+          i.kind === input.kind,
+      )
+      const id = existingEntry ? existingEntry[0] : randomUUID()
+      const record: CycleIncome = {
+        id,
+        cycleId: input.cycleId,
+        memberUserId: input.memberUserId,
+        kind: input.kind,
+        amountMinor: input.amountMinor,
+        currency: input.currency,
+        createdAt: existingEntry ? existingEntry[1].createdAt : now(),
+        updatedAt: now(),
+      }
+      incomes.set(id, record)
+      return Effect.succeed(record)
+    },
+    listTransfers: (cycleId) =>
+      Effect.succeed([...transfers.values()].filter((t) => t.cycleId === cycleId)),
+    findTransferById: (id) => Effect.succeed(Option.fromNullable(transfers.get(id))),
+    recordTransfer: (input) => {
+      const id = randomUUID()
+      const record: MemberTransfer = {
+        id,
+        cycleId: input.cycleId,
+        memberUserId: input.memberUserId,
+        direction: input.direction,
+        amountMinor: input.amountMinor,
+        currency: input.currency,
+        settledAt: null,
+        method: input.method,
+        createdAt: now(),
+      }
+      transfers.set(id, record)
+      return Effect.succeed(record)
+    },
+    settleTransfer: (id) => {
+      const existing = transfers.get(id)
+      if (!existing) return Effect.die(new Error(`transfer ${id} not found`))
+      const updated = { ...existing, settledAt: now() }
+      transfers.set(id, updated)
+      return Effect.succeed(updated)
+    },
+  })
+
+  return { layer, cycles, incomes, transfers }
+}
+
+export const makeFakeFixedBillsRepository = (seed: ReadonlyArray<FixedBill> = []) => {
+  const bills = new Map<string, FixedBill>(seed.map((b) => [b.id, b]))
+
+  const layer = Layer.succeed(FixedBillsRepository, {
+    create: (input) => {
+      const id = randomUUID()
+      const record: FixedBill = {
+        id,
+        cycleId: input.cycleId,
+        recurringRuleId: input.recurringRuleId,
+        label: input.label,
+        amountMinor: input.amountMinor,
+        currency: input.currency,
+        paid: false,
+        paidOnDay: null,
+        payingAccountId: input.payingAccountId,
+        dueDay: input.dueDay,
+        autoPaid: false,
+        categoryId: input.categoryId,
+        sortOrder: input.sortOrder,
+        createdAt: now(),
+        updatedAt: now(),
+      }
+      bills.set(id, record)
+      return Effect.succeed(record)
+    },
+    findById: (id) => Effect.succeed(Option.fromNullable(bills.get(id))),
+    listByCycle: (cycleId) =>
+      Effect.succeed(
+        [...bills.values()]
+          .filter((b) => b.cycleId === cycleId)
+          .sort((a, b) => a.sortOrder - b.sortOrder),
+      ),
+    update: (id, input) => {
+      const existing = bills.get(id)
+      if (!existing) return Effect.die(new Error(`fixed bill ${id} not found`))
+      const updated: FixedBill = {
+        ...existing,
+        label: input.label,
+        amountMinor: input.amountMinor,
+        payingAccountId: input.payingAccountId,
+        dueDay: input.dueDay,
+        categoryId: input.categoryId,
+        sortOrder: input.sortOrder,
+        updatedAt: now(),
+      }
+      bills.set(id, updated)
+      return Effect.succeed(updated)
+    },
+    setPaid: (id, paid, paidOnDay) => {
+      const existing = bills.get(id)
+      if (!existing) return Effect.die(new Error(`fixed bill ${id} not found`))
+      const updated = { ...existing, paid, paidOnDay, updatedAt: now() }
+      bills.set(id, updated)
+      return Effect.succeed(updated)
+    },
+    remove: (id) =>
+      Effect.sync(() => {
+        bills.delete(id)
+      }),
+  })
+
+  return { layer, bills }
+}
+
+export const makeFakeRecurringRulesRepository = (seed: ReadonlyArray<RecurringRule> = []) => {
+  const rules = new Map<string, RecurringRule>(seed.map((r) => [r.id, r]))
+
+  const layer = Layer.succeed(RecurringRulesRepository, {
+    create: (input) => {
+      const id = randomUUID()
+      const record: RecurringRule = {
+        id,
+        householdId: input.householdId,
+        matchType: input.matchType,
+        matcher: input.matcher,
+        expectedAmountMinor: input.expectedAmountMinor,
+        currency: input.currency,
+        categoryId: input.categoryId,
+        cadence: input.cadence,
+        isFixedBill: input.isFixedBill,
+        active: true,
+        source: "user_defined",
+        confidence: null,
+        createdAt: now(),
+        updatedAt: now(),
+      }
+      rules.set(id, record)
+      return Effect.succeed(record)
+    },
+    findById: (id) => Effect.succeed(Option.fromNullable(rules.get(id))),
+    list: () => Effect.succeed([...rules.values()]),
+    listActiveFixedBillRules: () =>
+      Effect.succeed([...rules.values()].filter((r) => r.active && r.isFixedBill)),
+    update: (id, input) => {
+      const existing = rules.get(id)
+      if (!existing) return Effect.die(new Error(`rule ${id} not found`))
+      const updated: RecurringRule = {
+        ...existing,
+        matcher: input.matcher,
+        expectedAmountMinor: input.expectedAmountMinor,
+        currency: input.currency,
+        categoryId: input.categoryId,
+        cadence: input.cadence,
+        isFixedBill: input.isFixedBill,
+        updatedAt: now(),
+      }
+      rules.set(id, updated)
+      return Effect.succeed(updated)
+    },
+    deactivate: (id) => {
+      const existing = rules.get(id)
+      if (!existing) return Effect.die(new Error(`rule ${id} not found`))
+      const updated = { ...existing, active: false, updatedAt: now() }
+      rules.set(id, updated)
+      return Effect.succeed(updated)
+    },
+  })
+
+  return { layer, rules }
+}
+
+export const makeFakeCategoryCapsRepository = (seed: ReadonlyArray<CategoryCap> = []) => {
+  const caps = new Map<string, CategoryCap>(seed.map((c) => [c.id, c]))
+
+  const layer = Layer.succeed(CategoryCapsRepository, {
+    listByCycle: (cycleId) =>
+      Effect.succeed([...caps.values()].filter((c) => c.cycleId === cycleId)),
+    replaceForCycle: (householdId, cycleId, input) => {
+      for (const [id, c] of caps) {
+        if (c.cycleId === cycleId) caps.delete(id)
+      }
+      const created = input.map((cap) => {
+        const id = randomUUID()
+        const record: CategoryCap = {
+          id,
+          householdId,
+          cycleId,
+          categoryId: cap.categoryId,
+          capMinor: cap.capMinor,
+        }
+        caps.set(id, record)
+        return record
+      })
+      return Effect.succeed(created)
+    },
+  })
+
+  return { layer, caps }
 }
