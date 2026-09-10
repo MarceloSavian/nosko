@@ -7,13 +7,20 @@ terraform {
   }
 
   # State bucket in the nosko-test account (create once via scripts/bootstrap-state.sh).
-  # S3-native locking (use_lockfile) — no DynamoDB table required.
+  # S3-native locking (use_lockfile) — no DynamoDB table required. Backend blocks can't
+  # reference variables, so the account id is hardcoded here (matches var.account_id's
+  # default) — run as the mgmt profile, which has no direct bucket access, so state reads
+  # go through the same OrganizationAccountAccessRole hop the providers below use.
   backend "s3" {
     bucket       = "nosko-tfstate-936834757679"
     key          = "nosko/test/terraform.tfstate"
     region       = "eu-west-1"
     encrypt      = true
     use_lockfile = true
+
+    assume_role = {
+      role_arn = "arn:aws:iam::936834757679:role/OrganizationAccountAccessRole"
+    }
   }
 
   required_version = ">= 1.6"
