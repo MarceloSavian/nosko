@@ -311,6 +311,53 @@ describe("AuthGroupLive", () => {
     expect(Exit.isFailure(exit)).toBe(true)
   })
 
+  it("auth.me returns the authenticated user's profile", async () => {
+    const { testLayer } = buildTestLayer()
+    const token = await signAccessToken(marceloCredentials.id)
+
+    const exit = await run(
+      testLayer,
+      Effect.gen(function* () {
+        const client = yield* RpcTest.makeClient(AuthRpcs, { flatten: true })
+        return yield* client("auth.me", undefined, {
+          headers: { cookie: `${ACCESS_TOKEN_COOKIE}=${token}` },
+        })
+      }),
+    )
+
+    expect(Exit.isSuccess(exit)).toBe(true)
+    if (Exit.isSuccess(exit)) {
+      expect(exit.value).toEqual({
+        id: marceloCredentials.id,
+        email: marceloCredentials.email,
+        name: "Test User",
+        preferredLocale: marceloCredentials.preferredLocale,
+        emailVerified: marceloCredentials.emailVerified,
+        mfaEnabled: marceloCredentials.mfaEnabled,
+      })
+    }
+  })
+
+  it("auth.me dies if the authenticated user's row is gone by the time the handler runs", async () => {
+    const { testLayer } = buildTestLayer()
+    const token = await signAccessToken("33333333-3333-3333-3333-333333333333")
+
+    const exit = await run(
+      testLayer,
+      Effect.gen(function* () {
+        const client = yield* RpcTest.makeClient(AuthRpcs, { flatten: true })
+        return yield* client("auth.me", undefined, {
+          headers: { cookie: `${ACCESS_TOKEN_COOKIE}=${token}` },
+        })
+      }),
+    )
+
+    expect(Exit.isFailure(exit)).toBe(true)
+    if (Exit.isFailure(exit)) {
+      expect(exit.cause._tag).toBe("Die")
+    }
+  })
+
   it("auth.mfaEnroll returns a secret and enrollment uri for the authenticated user", async () => {
     const { testLayer } = buildTestLayer()
     const token = await signAccessToken(marceloCredentials.id)

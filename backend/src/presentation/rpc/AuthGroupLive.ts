@@ -76,6 +76,21 @@ export const AuthGroupLive = AuthRpcs.toLayer(
             .pipe(dieOnSqlError)
         }),
 
+      "auth.me": () =>
+        Effect.gen(function* () {
+          const currentUser = yield* CurrentUser
+          const found = yield* users.findById(currentUser.userId).pipe(dieOnSqlError)
+          const user = yield* dieIfMissing(found)
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            preferredLocale: user.preferredLocale,
+            emailVerified: user.emailVerified,
+            mfaEnabled: user.mfaEnabled,
+          }
+        }),
+
       "auth.mfaEnroll": () =>
         Effect.gen(function* () {
           const currentUser = yield* CurrentUser

@@ -54,6 +54,7 @@ describe("AuthRpcs", () => {
       "auth.mfaChallenge",
       "auth.requestPasswordReset",
       "auth.resetPassword",
+      "auth.me",
       "auth.mfaEnroll",
       "auth.mfaConfirmEnroll",
       "auth.mfaDisable",

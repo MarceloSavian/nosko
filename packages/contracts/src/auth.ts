@@ -72,6 +72,9 @@ export const AuthRpcs = RpcGroup.make(
     },
     error: TokenInvalid,
   }),
+  Rpc.make("auth.me", {
+    success: AuthUserView,
+  }).middleware(AuthMiddleware),
   Rpc.make("auth.mfaEnroll", {
     success: MfaEnrollmentView,
     error: MfaAlreadyEnabled,

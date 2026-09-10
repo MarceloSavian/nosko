@@ -3,7 +3,7 @@ import { AppRpcs } from "./app"
 
 describe("AppRpcs", () => {
   it("merges every auth, household, account, cycle, bill, rule, and payment action into one group", () => {
-    expect(AppRpcs.requests.size).toBe(55)
+    expect(AppRpcs.requests.size).toBe(56)
     expect(AppRpcs.requests.has("auth.signUp")).toBe(true)
     expect(AppRpcs.requests.has("household.create")).toBe(true)
     expect(AppRpcs.requests.has("accounts.list")).toBe(true)

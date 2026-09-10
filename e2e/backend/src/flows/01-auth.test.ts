@@ -90,11 +90,24 @@ describe("auth: signup, verification, login, mfa, sessions, password reset", () 
     assert.match(session.jar.header(), /nosko_at=/)
     assert.match(session.jar.header(), /nosko_rt=/)
 
+    const me = await rpc((client) =>
+      client.auth.me(undefined, { headers: { cookie: session.jar.header() } }),
+    )
+    assert.equal(me.id, user.id)
+    assert.equal(me.email, user.email)
+    assert.equal(me.emailVerified, true)
+
     await refreshSession(session)
     assert.match(session.jar.header(), /nosko_at=/)
 
     await logout(session)
     assert.doesNotMatch(session.jar.header(), /nosko_at=/)
+
+    const afterLogout = await rpcEither((client) =>
+      client.auth.me(undefined, { headers: { cookie: session.jar.header() } }),
+    )
+    assert.ok(Either.isLeft(afterLogout))
+    assert.equal(afterLogout.left._tag, "SessionInvalid")
   })
 
   it("can resend a verification email and use the new code", async () => {
