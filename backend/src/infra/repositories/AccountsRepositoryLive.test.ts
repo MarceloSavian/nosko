@@ -1,5 +1,5 @@
 import { describe, expect, it } from "@jest/globals"
-import { Effect } from "effect"
+import { Effect, Option } from "effect"
 import { AccountsRepository } from "../../data/protocols/AccountsRepository"
 import { makeTestSqlClient } from "../../test/sqlClientTestkit"
 import { AccountsRepositoryLive } from "./AccountsRepositoryLive"
@@ -61,6 +61,33 @@ describe("AccountsRepositoryLive", () => {
     expect(queries[0]?.sql.endsWith(") RETURNING *")).toBe(true)
   })
 
+  it("finds an account by id", async () => {
+    const { layer, queries } = makeTestSqlClient(() => [accountRow])
+
+    const decoded = await Effect.runPromise(
+      Effect.gen(function* () {
+        const repo = yield* AccountsRepository
+        return yield* repo.findById(accountRow.id)
+      }).pipe(Effect.provide(AccountsRepositoryLive), Effect.provide(layer)),
+    )
+
+    expect(Option.isSome(decoded)).toBe(true)
+    expect(queries[0]?.sql).toBe('SELECT * FROM "accounts" WHERE id = $1')
+  })
+
+  it("returns none when no account matches the id", async () => {
+    const { layer } = makeTestSqlClient(() => [])
+
+    const decoded = await Effect.runPromise(
+      Effect.gen(function* () {
+        const repo = yield* AccountsRepository
+        return yield* repo.findById("missing")
+      }).pipe(Effect.provide(AccountsRepositoryLive), Effect.provide(layer)),
+    )
+
+    expect(Option.isNone(decoded)).toBe(true)
+  })
+
   it("lists accounts visible to the current RLS scope", async () => {
     const { layer, queries } = makeTestSqlClient(() => [accountRow, accountRow])
 
@@ -73,6 +100,45 @@ describe("AccountsRepositoryLive", () => {
 
     expect(decoded).toHaveLength(2)
     expect(queries[0]?.sql).toBe('SELECT * FROM "accounts" ORDER BY "created_at"')
+  })
+
+  it("updates an account's editable fields", async () => {
+    const { layer, queries } = makeTestSqlClient(() => [
+      { ...accountRow, nickname: "Revolut Savings", purpose: "Emergency fund" },
+    ])
+
+    const decoded = await Effect.runPromise(
+      Effect.gen(function* () {
+        const repo = yield* AccountsRepository
+        return yield* repo.update(accountRow.id, {
+          nickname: "Revolut Savings",
+          maskedId: null,
+          balanceMinor: null,
+          purpose: "Emergency fund",
+          statementCloseDay: null,
+          creditLimitMinor: null,
+          autopayAccountId: null,
+        })
+      }).pipe(Effect.provide(AccountsRepositoryLive), Effect.provide(layer)),
+    )
+
+    expect(decoded.nickname).toBe("Revolut Savings")
+    expect(queries[0]?.sql).toContain('SET "nickname" = $1')
+    expect(queries[0]?.sql.endsWith("WHERE id = $9 RETURNING *")).toBe(true)
+  })
+
+  it("removes an account", async () => {
+    const { layer, queries } = makeTestSqlClient(() => [])
+
+    await Effect.runPromise(
+      Effect.gen(function* () {
+        const repo = yield* AccountsRepository
+        return yield* repo.remove(accountRow.id)
+      }).pipe(Effect.provide(AccountsRepositoryLive), Effect.provide(layer)),
+    )
+
+    expect(queries[0]?.sql).toBe('DELETE FROM "accounts" WHERE id = $1')
+    expect(queries[0]?.params).toEqual([accountRow.id])
   })
 
   it("sets an account's visibility", async () => {
