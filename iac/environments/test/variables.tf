@@ -63,9 +63,15 @@ variable "jwt_secret" {
 }
 
 variable "email_from" {
-  description = "Verified SES sender address for verification/MFA/invite emails"
+  description = "Verified Resend sender address for verification/MFA/invite emails"
   type        = string
-  default     = "noreply@example.com"
+  default     = "noreply@mail.nosko.app"
+}
+
+variable "resend_api_key" {
+  description = "Resend API key for sending transactional email (verification/MFA/invite)"
+  type        = string
+  sensitive   = true
 }
 
 variable "web_domain" {

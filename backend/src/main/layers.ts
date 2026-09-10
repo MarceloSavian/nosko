@@ -9,7 +9,7 @@ import { OpaqueTokensLive } from "../infra/auth/OpaqueTokens"
 import { PasswordHasherLive } from "../infra/auth/PasswordHasher"
 import { TotpServiceLive } from "../infra/auth/TotpService"
 import { PgLive } from "../infra/config/DatabaseConfig"
-import { SesMailerLive } from "../infra/mailer/SesMailer"
+import { ResendMailerLive } from "../infra/mailer/ResendMailer"
 import { AccountsRepositoryLive } from "../infra/repositories/AccountsRepositoryLive"
 import { AuthTokensRepositoryLive } from "../infra/repositories/AuthTokensRepositoryLive"
 import { CategoryCapsRepositoryLive } from "../infra/repositories/CategoryCapsRepositoryLive"
@@ -50,7 +50,7 @@ const RestOfInfraLive = Layer.mergeAll(
   TotpServiceLive,
   OpaqueTokensLive,
   AccessTokensLive,
-  SesMailerLive,
+  ResendMailerLive,
 )
 
 const provideInfra = <A, E, R>(layer: Layer.Layer<A, E, R>) =>

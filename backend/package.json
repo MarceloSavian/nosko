@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@nosko/contracts": "workspace:*",
-    "@aws-sdk/client-sesv2": "3.1128.0",
     "@effect-aws/lambda": "1.7.0",
     "@effect/experimental": "0.61.1",
     "@effect/platform": "0.97.2",

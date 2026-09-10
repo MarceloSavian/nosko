@@ -1,5 +1,5 @@
 # Copy to terraform.tfvars (gitignored) and fill in real values.
-# Run terraform with: aws-vault exec nosko-test -- terraform <cmd>
+# Run terraform with: aws-vault exec nosko-mgmt -- terraform <cmd>
 
 # Neon pooled connection string for the ADMIN/owner role (Settings -> Connection -> Pooled
 # connection). Used only by migration-v1 to run DDL and provision app_role. This role inherits
@@ -19,8 +19,9 @@ app_database_url = "postgresql://app_role:REPLACE_WITH_A_LONG_RANDOM_PASSWORD@ep
 # Long random string for signing session/access tokens.
 jwt_secret = "REPLACE_WITH_A_LONG_RANDOM_SECRET"
 
-# Verified SES sender for verification / MFA / invite emails.
-# email_from = "noreply@your-domain"
+# Verified Resend sender for verification / MFA / invite emails, and its API key.
+# email_from = "noreply@mail.nosko.app"
+resend_api_key = "re_REPLACE_WITH_YOUR_RESEND_API_KEY"
 
 # Custom domains (default to the test.nosko.app URLs; the nosko.app Route53 zone
 # lives in the management account, managed via the aws.mgmt provider alias).

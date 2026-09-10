@@ -6,13 +6,15 @@ locals {
     UPLOADS_BUCKET = module.uploads.bucket_name
     EMAIL_FROM     = var.email_from
     # app_role only — never the admin database_url (it would bypass RLS via neon_superuser).
-    DATABASE_URL = var.app_database_url
-    JWT_SECRET   = var.jwt_secret
+    DATABASE_URL   = var.app_database_url
+    JWT_SECRET     = var.jwt_secret
+    RESEND_API_KEY = var.resend_api_key
   }
 
   bff_secret_arns = [
     module.secrets.secret_arns["APP_DATABASE_URL"],
     module.secrets.secret_arns["JWT_SECRET"],
+    module.secrets.secret_arns["RESEND_API_KEY"],
   ]
 
   # migration-v1 runs DDL and provisions app_role, so it needs the admin connection plus the
@@ -40,12 +42,6 @@ data "aws_iam_policy_document" "bff" {
     sid       = "UploadsBucket"
     actions   = ["s3:GetObject", "s3:PutObject", "s3:ListBucket"]
     resources = [module.uploads.bucket_arn, "${module.uploads.bucket_arn}/*"]
-  }
-
-  statement {
-    sid       = "SendEmail"
-    actions   = ["ses:SendEmail", "ses:SendRawEmail"]
-    resources = ["*"]
   }
 }
 
