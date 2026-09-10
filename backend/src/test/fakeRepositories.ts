@@ -211,6 +211,8 @@ export const makeFakeHouseholdsRepository = (
         const index = members.findIndex((m) => m.householdId === householdId && m.userId === userId)
         if (index >= 0) members.splice(index, 1)
       }),
+    findMembershipByUserId: (userId) =>
+      Effect.succeed(Option.fromNullable(members.find((m) => m.userId === userId))),
   })
 
   return { layer, households, members }

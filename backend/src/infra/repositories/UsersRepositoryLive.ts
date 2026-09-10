@@ -24,7 +24,10 @@ export const UsersRepositoryLive = Layer.effect(
           passwordHash: input.passwordHash,
           name: input.name,
           preferredLocale: input.preferredLocale,
-        })} RETURNING *`.pipe(Effect.flatMap((rows) => decodeUser(rows[0]))),
+        })} RETURNING *`.pipe(
+          Effect.flatMap((rows) => decodeUser(rows[0])),
+          Effect.tap((user) => sql`select set_config('app.user_id', ${user.id}, true)`),
+        ),
       findById: (id) =>
         sql`SELECT * FROM ${sql("users")} WHERE id = ${id}`.pipe(
           Effect.flatMap(decodeOption(decodeUser)),

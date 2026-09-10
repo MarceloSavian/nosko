@@ -49,11 +49,12 @@ describe("UsersRepositoryLive", () => {
       createdAt: now,
       updatedAt: now,
     })
-    expect(queries).toHaveLength(1)
-    expect(queries[0]?.sql).toBe(
+    expect(queries.map((q) => q.sql)).toEqual([
       'INSERT INTO "users" ("email","password_hash","name","preferred_locale") VALUES ($1,$2,$3,$4) RETURNING *',
-    )
+      "select set_config('app.user_id', $1, true)",
+    ])
     expect(queries[0]?.params).toEqual(["marcelo@example.com", "argon2id$...", "Marcelo", "pt-BR"])
+    expect(queries[1]?.params).toEqual([userRow.id])
   })
 
   it("finds a user by id", async () => {

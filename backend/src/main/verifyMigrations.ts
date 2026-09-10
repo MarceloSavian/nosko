@@ -177,6 +177,113 @@ const main = Effect.gen(function* () {
     },
   )
 
+  yield* check(
+    "a member can find their own household membership without app.household_id set",
+    async () => {
+      const marcelo = "c0000000-0000-0000-0000-000000000001"
+      const gabriele = "c0000000-0000-0000-0000-000000000002"
+      const household = "c0000000-0000-0000-0000-000000000003"
+
+      await db.query("set role app_role")
+      await db.query(
+        "insert into users (id, email, password_hash, name) values ($1, $2, 'hash', 'Marcelo')",
+        [marcelo, "marcelo-membership-check@example.com"],
+      )
+      await db.query(
+        "insert into users (id, email, password_hash, name) values ($1, $2, 'hash', 'Gabriele')",
+        [gabriele, "gabriele-membership-check@example.com"],
+      )
+      await db.query("select set_config('app.user_id', $1, false)", [marcelo])
+      await db.query(
+        "insert into households (id, name, base_currency, created_by) values ($1, 'Casa', 'EUR', $2)",
+        [household, marcelo],
+      )
+      await db.query("select set_config('app.household_id', $1, false)", [household])
+      await db.query("insert into household_settings (household_id) values ($1)", [household])
+      await db.query(
+        "insert into household_members (household_id, user_id, role) values ($1, $2, 'owner')",
+        [household, marcelo],
+      )
+
+      await db.query("select set_config('app.household_id', '', false)")
+      const ownMembership = await db.query(
+        "select household_id from household_members where user_id = $1",
+        [marcelo],
+      )
+      assert.equal(ownMembership.rows.length, 1, "a member must find their own membership")
+
+      await db.query("select set_config('app.user_id', $1, false)", [gabriele])
+      const strangerLookup = await db.query(
+        "select household_id from household_members where user_id = $1",
+        [marcelo],
+      )
+      assert.equal(strangerLookup.rows.length, 0, "a non-member must not see someone else's row")
+
+      await db.query("reset role")
+    },
+  )
+
+  yield* check(
+    "an invited user can read and accept their invitation before joining the household",
+    async () => {
+      const marcelo = "d0000000-0000-0000-0000-000000000001"
+      const gabriele = "d0000000-0000-0000-0000-000000000002"
+      const household = "d0000000-0000-0000-0000-000000000003"
+      const invitation = "d0000000-0000-0000-0000-000000000004"
+      const gabrieleEmail = "gabriele-accept-check@example.com"
+
+      await db.query("set role app_role")
+      await db.query(
+        "insert into users (id, email, password_hash, name) values ($1, $2, 'hash', 'Marcelo')",
+        [marcelo, "marcelo-accept-check@example.com"],
+      )
+      await db.query(
+        "insert into users (id, email, password_hash, name) values ($1, $2, 'hash', 'Gabriele')",
+        [gabriele, gabrieleEmail],
+      )
+      await db.query("select set_config('app.user_id', $1, false)", [marcelo])
+      await db.query(
+        "insert into households (id, name, base_currency, created_by) values ($1, 'Casa', 'EUR', $2)",
+        [household, marcelo],
+      )
+      await db.query("select set_config('app.household_id', $1, false)", [household])
+      await db.query("insert into household_settings (household_id) values ($1)", [household])
+      await db.query(
+        "insert into household_members (household_id, user_id, role) values ($1, $2, 'owner')",
+        [household, marcelo],
+      )
+      await db.query(
+        `insert into household_invitations
+           (id, household_id, email, token_hash, invited_by, expires_at)
+         values ($1, $2, $3, 'hash', $4, now() + interval '7 days')`,
+        [invitation, household, gabrieleEmail, marcelo],
+      )
+
+      await db.query("select set_config('app.user_id', $1, false)", [gabriele])
+      await db.query("select set_config('app.household_id', '', false)")
+      const found = await db.query("select id from household_invitations where id = $1", [
+        invitation,
+      ])
+      assert.equal(found.rows.length, 1, "the invitee must be able to read their own invitation")
+
+      await db.query(
+        "insert into household_members (household_id, user_id, role) values ($1, $2, 'member')",
+        [household, gabriele],
+      )
+      await db.query(
+        "update household_invitations set status = 'accepted', accepted_by = $1 where id = $2",
+        [gabriele, invitation],
+      )
+      const accepted = await db.query<{ status: string }>(
+        "select status from household_invitations where id = $1",
+        [invitation],
+      )
+      assert.equal(accepted.rows[0]?.status, "accepted")
+
+      await db.query("reset role")
+    },
+  )
+
   yield* Effect.promise(() => db.close())
 
   yield* Effect.sync(() =>

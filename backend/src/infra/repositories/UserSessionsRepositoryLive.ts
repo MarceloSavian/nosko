@@ -13,26 +13,35 @@ export const UserSessionsRepositoryLive = Layer.effect(
       rows.length === 0
         ? Effect.succeed(Option.none())
         : decodeSession(rows[0]).pipe(Effect.map(Option.some))
+    const scopeToUser = (userId: string) => sql`select set_config('app.user_id', ${userId}, true)`
 
     return {
       create: (input) =>
-        sql`INSERT INTO ${sql("userSessions")} ${sql.insert({
-          userId: input.userId,
-          refreshTokenHash: input.refreshTokenHash,
-          deviceLabel: input.deviceLabel,
-          mfaTrustedUntil: input.mfaTrustedUntil,
-          expiresAt: input.expiresAt,
-        })} RETURNING *`.pipe(Effect.flatMap((rows) => decodeSession(rows[0]))),
+        Effect.gen(function* () {
+          yield* scopeToUser(input.userId)
+          const rows = yield* sql`INSERT INTO ${sql("userSessions")} ${sql.insert({
+            userId: input.userId,
+            refreshTokenHash: input.refreshTokenHash,
+            deviceLabel: input.deviceLabel,
+            mfaTrustedUntil: input.mfaTrustedUntil,
+            expiresAt: input.expiresAt,
+          })} RETURNING *`
+          return yield* decodeSession(rows[0])
+        }),
       findById: (id) =>
         sql`SELECT * FROM ${sql("userSessions")} WHERE id = ${id}`.pipe(
           Effect.flatMap(decodeOption),
         ),
       findByRefreshTokenHash: (userId, refreshTokenHash) =>
-        sql`SELECT * FROM ${sql("userSessions")}
+        Effect.gen(function* () {
+          yield* scopeToUser(userId)
+          const rows = yield* sql`SELECT * FROM ${sql("userSessions")}
             WHERE ${sql("userId")} = ${userId}
               AND ${sql("refreshTokenHash")} = ${refreshTokenHash}
               AND ${sql("revokedAt")} IS NULL
-              AND ${sql("expiresAt")} > now()`.pipe(Effect.flatMap(decodeOption)),
+              AND ${sql("expiresAt")} > now()`
+          return yield* decodeOption(rows)
+        }),
       listByUser: (userId) =>
         sql`SELECT * FROM ${sql("userSessions")} WHERE ${sql("userId")} = ${userId} ORDER BY ${sql("createdAt")} DESC`.pipe(
           Effect.flatMap((rows) => Effect.forEach(rows, decodeSession)),

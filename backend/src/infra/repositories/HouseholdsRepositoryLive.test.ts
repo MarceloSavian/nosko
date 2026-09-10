@@ -148,4 +148,32 @@ describe("HouseholdsRepositoryLive", () => {
     )
     expect(queries[0]?.params).toEqual([householdRow.id, householdRow.created_by])
   })
+
+  it("finds a user's household membership by user id", async () => {
+    const { layer, queries } = makeTestSqlClient(() => [memberRow])
+
+    const decoded = await Effect.runPromise(
+      Effect.gen(function* () {
+        const repo = yield* HouseholdsRepository
+        return yield* repo.findMembershipByUserId(householdRow.created_by)
+      }).pipe(Effect.provide(HouseholdsRepositoryLive), Effect.provide(layer)),
+    )
+
+    expect(Option.isSome(decoded)).toBe(true)
+    expect(queries[0]?.sql).toBe('SELECT * FROM "household_members" WHERE "user_id" = $1 LIMIT 1')
+    expect(queries[0]?.params).toEqual([householdRow.created_by])
+  })
+
+  it("returns none when the user has no household membership", async () => {
+    const { layer } = makeTestSqlClient(() => [])
+
+    const decoded = await Effect.runPromise(
+      Effect.gen(function* () {
+        const repo = yield* HouseholdsRepository
+        return yield* repo.findMembershipByUserId("nobody")
+      }).pipe(Effect.provide(HouseholdsRepositoryLive), Effect.provide(layer)),
+    )
+
+    expect(Option.isNone(decoded)).toBe(true)
+  })
 })

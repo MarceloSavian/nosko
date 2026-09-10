@@ -36,9 +36,10 @@ describe("UserSessionsRepositoryLive", () => {
     )
 
     expect(decoded.userId).toBe(sessionRow.user_id)
-    expect(queries[0]?.sql).toBe(
+    expect(queries.map((q) => q.sql)).toEqual([
+      "select set_config('app.user_id', $1, true)",
       'INSERT INTO "user_sessions" ("user_id","refresh_token_hash","device_label","mfa_trusted_until","expires_at") VALUES ($1,$2,$3,$4,$5) RETURNING *',
-    )
+    ])
   })
 
   it("finds a session by id", async () => {
@@ -66,9 +67,10 @@ describe("UserSessionsRepositoryLive", () => {
     )
 
     expect(Option.isSome(decoded)).toBe(true)
-    expect(queries[0]?.sql).toContain('"refresh_token_hash" = $2')
-    expect(queries[0]?.sql).toContain('"revoked_at" IS NULL')
-    expect(queries[0]?.sql).toContain('"expires_at" > now()')
+    expect(queries[0]?.sql).toBe("select set_config('app.user_id', $1, true)")
+    expect(queries[1]?.sql).toContain('"refresh_token_hash" = $2')
+    expect(queries[1]?.sql).toContain('"revoked_at" IS NULL')
+    expect(queries[1]?.sql).toContain('"expires_at" > now()')
   })
 
   it("returns none when the refresh token does not match an active session", async () => {

@@ -34,9 +34,11 @@ describe("AuthTokensRepositoryLive", () => {
     )
 
     expect(decoded.type).toBe("email_verify")
-    expect(queries[0]?.sql).toBe(
+    expect(queries.map((q) => q.sql)).toEqual([
+      "select set_config('app.user_id', $1, true)",
       'INSERT INTO "auth_tokens" ("user_id","type","token_hash","expires_at") VALUES ($1,$2,$3,$4) RETURNING *',
-    )
+    ])
+    expect(queries[0]?.params).toEqual([tokenRow.user_id])
   })
 
   it("finds a valid, unconsumed, unexpired token", async () => {
@@ -50,10 +52,11 @@ describe("AuthTokensRepositoryLive", () => {
     )
 
     expect(Option.isSome(decoded)).toBe(true)
-    expect(queries[0]?.sql).toContain('"user_id" = $1')
-    expect(queries[0]?.sql).toContain('"consumed_at" IS NULL')
-    expect(queries[0]?.sql).toContain('"expires_at" > now()')
-    expect(queries[0]?.params).toEqual([tokenRow.user_id, "email_verify", "sha256-hash"])
+    expect(queries[0]?.sql).toBe("select set_config('app.user_id', $1, true)")
+    expect(queries[1]?.sql).toContain('"user_id" = $1')
+    expect(queries[1]?.sql).toContain('"consumed_at" IS NULL')
+    expect(queries[1]?.sql).toContain('"expires_at" > now()')
+    expect(queries[1]?.params).toEqual([tokenRow.user_id, "email_verify", "sha256-hash"])
   })
 
   it("returns none when no token matches", async () => {

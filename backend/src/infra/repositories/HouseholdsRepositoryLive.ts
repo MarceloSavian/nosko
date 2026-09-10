@@ -64,6 +64,14 @@ export const HouseholdsRepositoryLive = Layer.effect(
         sql`DELETE FROM ${sql("householdMembers")} WHERE ${sql("householdId")} = ${householdId} AND ${sql("userId")} = ${userId}`.pipe(
           Effect.asVoid,
         ),
+      findMembershipByUserId: (userId) =>
+        sql`SELECT * FROM ${sql("householdMembers")} WHERE ${sql("userId")} = ${userId} LIMIT 1`.pipe(
+          Effect.flatMap((rows) =>
+            rows.length === 0
+              ? Effect.succeed(Option.none())
+              : decodeMember(rows[0]).pipe(Effect.map(Option.some)),
+          ),
+        ),
     }
   }),
 )

@@ -26,5 +26,8 @@ export class HouseholdsRepository extends Context.Tag("HouseholdsRepository")<
       householdId: string,
     ) => Effect.Effect<ReadonlyArray<HouseholdMember>, SqlError>
     readonly removeMember: (householdId: string, userId: string) => Effect.Effect<void, SqlError>
+    readonly findMembershipByUserId: (
+      userId: string,
+    ) => Effect.Effect<Option.Option<HouseholdMember>, SqlError>
   }
 >() {}
