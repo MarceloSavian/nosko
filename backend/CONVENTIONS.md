@@ -37,6 +37,33 @@ Durable rules for `@nosko/backend`. Extracted from `documentation/design/archite
 
 - `@effect/rpc` groups per section + `@effect/platform` `HttpApi` groups; return frontend-ready
   view models. Parsers return `Effect`-wrapped results with tagged failures.
+- **Session-mutating auth ops (`login`, `mfaVerify`, `refresh`, `logout`) are `HttpApi`, not
+  RPC** — they're the only ones that write/clear the `nosko_at`/`nosko_rt` cookies, and
+  `HttpApiBuilder`'s response-building lets a handler return a full `HttpServerResponse`
+  (`HttpServerResponse.json(...)` piped through `setAccessTokenCookie`/`setRefreshTokenCookie`/
+  `clearSessionCookies`). Everything else in `auth` and all of `household` is `@effect/rpc`,
+  authenticated by `AuthMiddleware` reading the same cookie from the request headers.
+- **A use-case's `SqlError` that isn't part of the RPC/HttpApi contract's declared error union
+  must become a defect, not leak** — pipe it through `dieOnSqlError`
+  (`presentation/rpc/dieOnSqlError.ts`) at the presentation boundary. The compiler enforces this:
+  a raw `SqlError` in a handler's return type fails to satisfy the group's declared
+  `HandlersFrom<...>` shape.
+- **`app.household_id` is not known upfront for most authenticated requests** — a user's
+  household is discovered per-request from `household_members` (`AuthMiddleware`, via
+  `RequestScope.withAuthenticatedScope`), not carried in the JWT, since it can change (a user can
+  create or join a household after already holding a valid session). The few flows where the
+  identity itself isn't known until mid-use-case either (`signUp`, `login`,
+  `requestPasswordReset`) rely on the affected repositories self-scoping `app.user_id` right
+  before their own write (see `UsersRepositoryLive.create`, `AuthTokensRepositoryLive.create`,
+  `UserSessionsRepositoryLive.create`) rather than the presentation layer knowing the id upfront.
+- **When composing `main/layers.ts`, provide a `PgClient`/`SqlClient`-producing layer
+  (`PgLive`) as its own trailing `.pipe(Layer.provide(PgLive))`, never merged into a
+  `Layer.mergeAll(...)` alongside several other service layers before a single `Layer.provide`.**
+  TypeScript's inference silently fails to discharge `SqlClient` from the remaining requirement
+  when `PgLive`'s dual-tag output (`PgClient | SqlClient`) is bundled into a large union first —
+  the resulting type still shows `SqlClient` as unmet with no explanatory error pointing at the
+  real cause. Splitting the two `Layer.provide` calls (see `provideInfra` in `main/layers.ts`)
+  resolves it and is otherwise semantically identical.
 
 ## Testing
 

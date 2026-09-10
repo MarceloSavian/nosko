@@ -9,7 +9,7 @@ Dependency-ordered decomposition, aligned to the generated UI, `requirements.md`
 | U1 | Infra baseline (Terraform) | Lambda, API GW, S3 static + uploads, SSM, state bucket, strict cost controls | P1 | U0 |
 | U2 | Data + isolation foundation ✅ | Neon migrations (identity/household/settings/accounts incl. joint co-owner/categories) with **owner_user_id + visibility**, **mandatory + forced RLS policies**, and a genuinely restricted **`app_role`** (`NOSUPERUSER NOBYPASSRLS`, created by SQL — Neon's console/CLI role inherits `neon_superuser`/`BYPASSRLS` and must never be used at runtime); `SqlClient` layer with the per-request transaction + `set_config(..., true)`; a first repository slice (users, households, accounts, categories) + a pglite-backed migration/RLS check (`pnpm verify:migrations`) | P1 | U0 |
 | U3 | Auth & Household ✅ | signup/verify/login/MFA (TOTP + email OTP, remember device via the session's own refresh token)/sessions; the `auth_tokens`/`user_sessions`/`household_invitations` repositories (deferred from U2) + `HouseholdsRepository.update`/`listMembers`/`removeMember`; password hashing (argon2id via `hash-wasm`, WASM so no Lambda-arch-specific binary)/TOTP/opaque tokens/JWT in `infra/auth`; SES mailer + bilingual templates in `infra/mailer`; create/invite/accept (max 2 members, already DB-enforced) (E1, E2) | P1 | U2 |
-| U4 | BFF skeleton + error boundary | `RpcServer` (+ minimal `HttpApi`), contracts pkg, typed client, OpenAPI, auth middleware, **household + owner scoping via RLS settings**, top-level error boundary; real Lambda artifact replaces the placeholder | P1 | U2, U3 |
+| U4 | BFF skeleton + error boundary ✅ | `RpcServer` (auth minus its 4 cookie-writing ops, + household) mounted alongside a minimal `HttpApi` (`login`/`mfaVerify`/`refresh`/`logout`, OpenAPI auto-generated) in one router; `@nosko/contracts` `RpcGroup`s/`HttpApi` group; `AuthMiddleware` (wrap-style) verifying the `nosko_at` cookie and opening the per-request RLS transaction (**household scoping via `app.household_id`, discovered from `household_members` since it isn't known upfront**); `SqlError`s not part of a contract's declared union become defects (`dieOnSqlError`) rather than leak; real Lambda artifact (`esbuild` + `archiver`) replaces the placeholder. Two RLS gaps found and fixed along the way (migrations `0008`/`0009`, see below). Typed client deferred to U8 (no consumer yet) | P1 | U2, U3 |
 | U5 | Accounts + FX | register/edit/remove, joint accounts (two owners), visibility toggle, credit-card fields, source/last-import, shared + personal summaries; `fx_rates` + daily ECB fetch (EventBridge) + FxConversion (E3, FR-X-1) | P1 | U4 |
 | U6 | Cycle core | **CycleEngine** (proportional model: contribution shares, estimate, availableAfterPayments, user-defined withdrawals/contributions, savings rate, daily allowance, burn rate, close) + cycles/incomes/member_transfers + fixed bills + recurring rules + `category_caps` (per-cycle; deferred from U2 since it FKs `cycles`) + **RecurringDetector** (E5, E6) | P1 | U5 |
 | U7 | Shared payments | shared payments from joint accounts (no payer/split), base-currency amount at confirmation, category caps, summaries, CSV export (E7) | P1 | U6 |
@@ -34,6 +34,14 @@ proportional model on both Casa and Pessoal screens. U11–U15 branch off after 
   partner session never receives personal rows; a reset RLS scope denies rather than erroring
   (`nullif(current_setting(...), '')` guard); co-owners both read a joint account; a third
   household member is rejected; `app_role` cannot alter table security settings.
+- U4 ✅: two RLS bootstrapping gaps found while wiring the BFF, both now asserted by
+  `pnpm verify:migrations` — (migration `0008`) a member could not discover their own
+  `household_id` on a fresh request (`household_members_select` only matched on `household_id`,
+  which nobody has yet on their first authenticated call after login); (migration `0009`) an
+  invitee could not read or accept their own invitation, nor insert their own membership row,
+  before `app.household_id` was set (`household_members_insert` required it; the fix scopes
+  `household_invitations` by matching invitee email too, and `household_members_insert` by
+  `user_id` alone).
 - U6: CycleEngine reproduces the money-evaluation cycle figures (surplus, byCategory,
   availableAfterPayments) for a fixture dataset; withdrawals are user-defined inputs.
 - U7: shared payments in BRL land in the cycle in EUR with the stored rate; totals vs estimate

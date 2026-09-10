@@ -16,6 +16,18 @@ Phased execution of `design/units-of-work.md` (U0–U15), aligned to the generat
 - **U3** ✅ delivered (auth primitives, mailer, all auth/household use-cases, the repositories
   U2 deferred). Not yet wired to any transport (that's U4) and, like U2, not exercised against a
   live database.
+- **U4** ✅ delivered: `@nosko/contracts` auth/household `RpcGroup`s + a 4-endpoint auth
+  `HttpApi` group; the RPC/HttpApi handlers wired to every U3 use-case; cookie-based session
+  delivery (`nosko_at`/`nosko_rt`, httpOnly/Secure/SameSite=Strict — the frontend never touches a
+  token); `AuthMiddleware` (wrap-style) that verifies the access-token cookie and opens the
+  per-request RLS transaction; `main/layers.ts` + `main/handler.ts` (`LambdaHandler.fromHttpApi`)
+  replacing U1's placeholder; a real `pnpm build` (esbuild + `archiver`) producing
+  `iac/environments/test/artifacts/bff-v1.zip`. Found and fixed two real RLS bootstrapping gaps
+  along the way (migrations `0008`/`0009`): a member couldn't discover their own household
+  membership, and an invitee couldn't read/accept their own invitation, before `app.household_id`
+  was ever set. **Not yet exercised against a live database** (same caveat as U2/U3) and
+  `migration-v1.zip` is still the placeholder — wrapping `migrate.ts` as a Lambda handler was not
+  part of this unit's scope.
 - Everything else: pending.
 
 ## Phase 1 — Foundation + core budget loop (U2–U10)
@@ -41,9 +53,13 @@ Key tasks
    session's own refresh token), refresh/logout/sessions, password reset, and household
    invite/accept/revoke (max 2 members, DB-enforced). Sender verification in SES itself is a
    manual AWS console step, not code.
-3. U4: BFF — `RpcServer` (+ minimal `HttpApi`) in one layered Lambda; `packages/contracts`; typed
-   client; OpenAPI; auth middleware with **household + owner scoping**; top-level error boundary;
-   build script producing `iac/environments/test/artifacts/bff-v1.zip`.
+3. U4 ✅: BFF — `RpcServer` (auth minus the 4 cookie-writing ops, + household) mounted on the
+   same router as a minimal `HttpApi` (auth's `login`/`mfaVerify`/`refresh`/`logout`, the only
+   ops that read/write the session cookies) in one layered Lambda; `AuthMiddleware` opens the
+   per-request RLS transaction (`app.user_id`, and `app.household_id` once discovered); build
+   script producing `iac/environments/test/artifacts/bff-v1.zip`; OpenAPI auto-generated from the
+   `HttpApi` schemas (`HttpApiBuilder.middlewareOpenApi`). The RPC typed client is deferred to
+   when `web` (U8) actually needs it, to avoid building unused plumbing.
 4. U5: accounts domain + repos + `accounts.*` RPC (register, joint co-owner, visibility toggle,
    summaries); `fx_rates` + daily ECB fetch + FxConversion.
 5. U6: **CycleEngine** (contribution shares, estimate, availableAfterPayments, user-defined
@@ -122,7 +138,8 @@ review passed; `prod` deployed; checks clean.
 
 ## Immediate next step
 
-Resume at **U4** (BFF skeleton). Applying U2's Terraform changes to nosko-test (the two-pass
-`app_role` deploy in `iac/README.md`) can happen whenever Marcelo wants a live Neon database;
-neither U3's code nor U4's needs it to keep being written and unit-tested, though U4's real
-Lambda artifact is what U1's placeholder is waiting to be replaced by.
+Resume at **U5** (accounts + FX). Applying U2's Terraform changes to nosko-test (the two-pass
+`app_role` deploy in `iac/README.md`), then re-running `terraform apply` with U4's real
+`bff-v1.zip` (`pnpm --filter @nosko/backend build`) in place of the placeholder, can happen
+whenever Marcelo wants a live Neon database and a real deployed BFF; nothing in U5+ needs that
+to happen first to keep being written and unit-tested.
