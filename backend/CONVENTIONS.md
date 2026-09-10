@@ -64,6 +64,17 @@ Durable rules for `@nosko/backend`. Extracted from `documentation/design/archite
   the resulting type still shows `SqlClient` as unmet with no explanatory error pointing at the
   real cause. Splitting the two `Layer.provide` calls (see `provideInfra` in `main/layers.ts`)
   resolves it and is otherwise semantically identical.
+- **Composing a second, narrower Lambda's layer (e.g. `main/fetchFxRates.ts`) still needs
+  `Layer.mergeAll(...)` for sibling service layers before the trailing `Layer.provide(PgLive)`** —
+  `.pipe(Layer.provide(PgLive), Layer.provide(EcbFetcherLive))` chained provides only discharge
+  requirements, they don't merge `EcbFetcherLive`'s own output into the result, so a handler
+  needing both `FxRatesRepository` and `EcbFetcher` would be left missing the latter.
+- **`pg` decodes `numeric`/`decimal` columns as strings, not numbers**, to avoid float precision
+  loss — any `Schema.Number`-typed field backed by a `numeric` column (e.g. `fx_rates.rate`,
+  `household_settings.box3_rate`/`inflation_rate`) will fail to decode unless the driver is told
+  otherwise. Fixed globally with `types.setTypeParser(1700, Number.parseFloat)` in
+  `infra/config/DatabaseConfig.ts` (OID 1700 = `numeric`) rather than per-field — check this file
+  before adding any new numeric column.
 
 ## Testing
 

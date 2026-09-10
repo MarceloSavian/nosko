@@ -28,6 +28,22 @@ Phased execution of `design/units-of-work.md` (U0–U15), aligned to the generat
   was ever set. **Not yet exercised against a live database** (same caveat as U2/U3) and
   `migration-v1.zip` is still the placeholder — wrapping `migrate.ts` as a Lambda handler was not
   part of this unit's scope.
+- **U5** ✅ delivered: `accounts.*` RPC group (list scoped Casa/Pessoal, create, update,
+  setVisibility, setCoOwner, remove, sharedSummary, personalSummary) wired to an extended
+  `AccountsRepository`; joint accounts force `visibility=shared` on create and refuse to be
+  un-shared (`JointAccountVisibilityLocked`); `fx_rates` table + `FxRatesRepository` + the pure
+  `FxConversion` domain service (`{amountBase, rate}`, falls back to the latest earlier rate);
+  an ECB daily-reference-rate fetcher (`infra/fx/EcbFetcher`) and the `fetchAndStoreDailyRates`
+  use-case; a real `fx-rates-v1` Lambda (`main/fetchFxRates.ts`) on a daily EventBridge schedule
+  (new `schedule_expression` support in the `compute/aws-lambda` module). Also fixed a latent bug
+  found while adding `fx_rates`: Postgres `numeric` columns come back from `pg` as strings, not
+  numbers, so every `Schema.Number`-typed numeric column (including U2/U3's already-shipped
+  `household_settings.box3_rate`/`inflation_rate`, never yet exercised) would have failed to
+  decode — fixed once, globally, via a `pg` type parser in `DatabaseConfig.ts`. Net worth math
+  (`sharedSummary`/`personalSummary`) is a first-pass interpretation of the UI description
+  (liquid = checking/savings/vault, invested = brokerage/investment, credit cards excluded) —
+  worth revisiting once real UI wireframes are consulted at U9/U10. Not yet exercised against a
+  live database or a live ECB fetch.
 - Everything else: pending.
 
 ## Phase 1 — Foundation + core budget loop (U2–U10)
@@ -60,8 +76,8 @@ Key tasks
    script producing `iac/environments/test/artifacts/bff-v1.zip`; OpenAPI auto-generated from the
    `HttpApi` schemas (`HttpApiBuilder.middlewareOpenApi`). The RPC typed client is deferred to
    when `web` (U8) actually needs it, to avoid building unused plumbing.
-4. U5: accounts domain + repos + `accounts.*` RPC (register, joint co-owner, visibility toggle,
-   summaries); `fx_rates` + daily ECB fetch + FxConversion.
+4. U5 ✅: accounts domain + repos + `accounts.*` RPC (register, joint co-owner, visibility
+   toggle, summaries); `fx_rates` + daily ECB fetch (EventBridge) + FxConversion.
 5. U6: **CycleEngine** (contribution shares, estimate, availableAfterPayments, user-defined
    withdrawals/contributions, savings rate, daily allowance, burn rate, close, chaining) +
    cycles/incomes/member_transfers + fixed bills + recurring rules + RecurringDetector; parity
@@ -138,8 +154,8 @@ review passed; `prod` deployed; checks clean.
 
 ## Immediate next step
 
-Resume at **U5** (accounts + FX). Applying U2's Terraform changes to nosko-test (the two-pass
-`app_role` deploy in `iac/README.md`), then re-running `terraform apply` with U4's real
-`bff-v1.zip` (`pnpm --filter @nosko/backend build`) in place of the placeholder, can happen
-whenever Marcelo wants a live Neon database and a real deployed BFF; nothing in U5+ needs that
-to happen first to keep being written and unit-tested.
+Resume at **U6** (Cycle core). Applying U2's Terraform changes to nosko-test (the two-pass
+`app_role` deploy in `iac/README.md`), then re-running `terraform apply` with U4/U5's real
+Lambda artifacts (`pnpm --filter @nosko/backend build` — `bff-v1.zip` and `fx-rates-v1.zip`) in
+place of the placeholders, can happen whenever Marcelo wants a live Neon database and a real
+deployed BFF; nothing in U6+ needs that to happen first to keep being written and unit-tested.

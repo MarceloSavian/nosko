@@ -7,7 +7,10 @@ auth primitives, mailer, and every auth/household use-case (signup, login, MFA, 
 password reset, invitations). U4: the BFF itself — auth (minus its 4 cookie-writing ops) and
 household as one `@effect/rpc` group, the 4 cookie-writing auth ops (`login`/`mfaVerify`/
 `refresh`/`logout`) as a documented `HttpApi` group, `AuthMiddleware` opening the per-request RLS
-transaction, and the real Lambda handler that replaces U1's placeholder.
+transaction, and the real Lambda handler that replaces U1's placeholder. U5: the `accounts.*` RPC
+group (register/edit/remove, joint co-owner, visibility toggle, shared + personal summaries);
+`fx_rates` + the pure `FxConversion` service + a daily ECB fetcher running as its own scheduled
+Lambda (`fetchFxRates.ts`).
 
 ## Layout
 
@@ -17,13 +20,16 @@ src/
   domain/     models (Schema), usecases (ports), services (pure engines), errors (tagged)
   data/       protocols (repository/service port tags), usecases (implementations orchestrating them)
   infra/      config (DatabaseConfig), db (RequestScope, Migrations), repositories (@effect/sql-pg),
-              auth (password hashing, TOTP, opaque tokens, JWT, session cookies), mailer (SES + templates)
+              auth (password hashing, TOTP, opaque tokens, JWT, session cookies), mailer (SES + templates),
+              fx (EcbFetcher — daily ECB reference-rate feed)
   presentation/
-    rpc/      AuthGroupLive, HouseholdGroupLive (the RpcGroup handlers), AuthMiddlewareLive,
-              dieOnSqlError (SqlErrors outside a contract's declared union become defects)
+    rpc/      AuthGroupLive, HouseholdGroupLive, AccountsGroupLive (the RpcGroup handlers),
+              AuthMiddlewareLive, dieOnSqlError (SqlErrors outside a contract's declared union
+              become defects)
     http/     AuthApiLive (the 4 cookie-writing auth endpoints)
-  main/       layers.ts (composes every Live layer), handler.ts (Lambda entry), migrate.ts,
-              verifyMigrations.ts (excluded from unit coverage — see Scripts)
+  main/       layers.ts (composes every Live layer), handler.ts (BFF Lambda entry),
+              fetchFxRates.ts (scheduled Lambda entry), migrate.ts, verifyMigrations.ts (excluded
+              from unit coverage — see Scripts)
   test/       shared test-only helpers: fake repositories, fake mailer, SqlClient testkit
               (excluded from unit coverage)
 ```
@@ -32,10 +38,11 @@ src/
 
 - `pnpm test` — Jest (`@swc/jest`), enforced **100% coverage**.
 - `pnpm typecheck` — TypeScript 7 (`tsc --noEmit`).
-- `pnpm build` — bundles `src/main/handler.ts` with esbuild (one minified `index.mjs`, Node 22
-  ESM) and zips it with `archiver` into `../iac/environments/test/artifacts/bff-v1.zip`, replacing
-  U1's placeholder. Not yet exercised in a real Lambda invocation (needs a live Neon database and
-  a `terraform apply`); `migration-v1.zip` is still the placeholder — wrapping `migrate.ts` as its
+- `pnpm build` — bundles both `src/main/handler.ts` and `src/main/fetchFxRates.ts` with esbuild
+  (one minified `index.mjs` each, Node 22 ESM) and zips each with `archiver` into
+  `../iac/environments/test/artifacts/bff-v1.zip` / `fx-rates-v1.zip`, replacing U1's placeholders.
+  Neither has been exercised in a real Lambda invocation yet (needs a live Neon database and a
+  `terraform apply`); `migration-v1.zip` is still the placeholder — wrapping `migrate.ts` as its
   own Lambda handler is not part of this unit.
 - `pnpm migrate` — runs `migrations/*.ts` against a real Postgres. Needs `DATABASE_URL` (the
   Neon admin/owner connection) and `APP_DB_PASSWORD` (the password to set on `app_role`) in the
