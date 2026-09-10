@@ -22,9 +22,10 @@ jwt_secret = "REPLACE_WITH_A_LONG_RANDOM_SECRET"
 # Verified SES sender for verification / MFA / invite emails.
 # email_from = "noreply@your-domain"
 
-# Optional custom domains (leave unset to use the default CloudFront / API Gateway endpoints).
-# web_domain = "app.example.com"
-# api_domain = "api.example.com"
+# Custom domains (default to the test.nosko.app URLs; the nosko.app Route53 zone
+# lives in the management account, managed via the aws.mgmt provider alias).
+# web_domain = "test.nosko.app"
+# api_domain = "test.api.nosko.app"
 
 # Cost controls. Set budget_email to enable the monthly budget alert (strongly recommended).
 budget_email = "you@example.com"

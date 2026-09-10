@@ -20,5 +20,7 @@ module "api_routing" {
   throttling_rate_limit  = var.throttling_rate_limit
   throttling_burst_limit = var.throttling_burst_limit
 
-  domain_name = var.api_domain
+  # Custom domain (var.api_domain) served via a regional ACM certificate (data.tf).
+  domain_name     = var.api_domain
+  certificate_arn = aws_acm_certificate_validation.api.certificate_arn
 }

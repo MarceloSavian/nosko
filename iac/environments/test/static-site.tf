@@ -3,7 +3,7 @@ module "static_site" {
   project     = var.project
   environment = var.environment
 
-  # Baseline uses the default *.cloudfront.net domain. To attach a custom domain,
-  # set web_domain and pass a us-east-1 ACM certificate_arn.
-  domain_name = var.web_domain
+  # Custom domain (var.web_domain) served via a us-east-1 ACM certificate (data.tf).
+  domain_name     = var.web_domain
+  certificate_arn = aws_acm_certificate_validation.web.certificate_arn
 }

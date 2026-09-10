@@ -63,15 +63,15 @@ variable "email_from" {
 }
 
 variable "web_domain" {
-  description = "Optional custom domain for the SPA (null = CloudFront default domain)"
+  description = "Custom domain for the SPA (nosko.app zone lives in the management account)"
   type        = string
-  default     = null
+  default     = "test.nosko.app"
 }
 
 variable "api_domain" {
-  description = "Optional custom domain for the API (null = API Gateway default endpoint)"
+  description = "Custom domain for the API (nosko.app zone lives in the management account)"
   type        = string
-  default     = null
+  default     = "test.api.nosko.app"
 }
 
 # --- Cost controls (strict by default) ---

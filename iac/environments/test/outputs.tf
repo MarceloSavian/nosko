@@ -15,7 +15,12 @@ output "static_site_distribution_id" {
 
 output "static_site_url" {
   description = "SPA URL"
-  value       = "https://${module.static_site.distribution_domain_name}"
+  value       = "https://${var.web_domain}"
+}
+
+output "api_url" {
+  description = "API custom domain URL"
+  value       = "https://${var.api_domain}"
 }
 
 output "uploads_bucket" {

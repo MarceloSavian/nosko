@@ -46,3 +46,10 @@ provider "aws" {
     }
   }
 }
+
+# The nosko.app Route53 zone lives in the management account. This alias uses the
+# ambient management-account creds (no assume_role) to manage records in that zone.
+provider "aws" {
+  alias  = "mgmt"
+  region = var.aws_region
+}
