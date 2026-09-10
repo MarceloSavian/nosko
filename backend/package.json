@@ -8,7 +8,7 @@
     "migrate": "node src/main/migrate.ts",
     "verify:migrations": "node src/main/verifyMigrations.ts",
     "test": "jest",
-    "build": "echo \"@nosko/backend bundling is set up at U1 (infra); no build yet\""
+    "build": "node scripts/build.mjs"
   },
   "dependencies": {
     "@nosko/contracts": "workspace:*",
@@ -32,7 +32,10 @@
     "@swc/core": "1.16.1",
     "@swc/jest": "0.2.39",
     "@types/node": "26.4.0",
+    "@types/archiver": "8.0.0",
     "@types/pg": "8.23.1",
+    "archiver": "8.0.0",
+    "esbuild": "0.28.2",
     "jest": "30.5.0",
     "typescript": "7.0.2"
   }
