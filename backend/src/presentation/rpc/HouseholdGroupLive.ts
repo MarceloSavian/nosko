@@ -185,7 +185,15 @@ export const HouseholdGroupLive = HouseholdRpcs.toLayer(
           const currentUser = yield* CurrentUser
           const household = yield* requireHousehold(currentUser.householdId)
           const members = yield* households.listMembers(household.id).pipe(dieOnSqlError)
-          return members.map(toMemberView)
+          // household_members.display_name is always null today (nothing sets it) — show the
+          // member's actual account name instead of exposing their raw user id to the UI.
+          return yield* Effect.forEach(members, (member) =>
+            Effect.gen(function* () {
+              const found = yield* users.findById(member.userId).pipe(dieOnSqlError)
+              const user = yield* dieIfMissing(found)
+              return toMemberView({ ...member, displayName: user.name })
+            }),
+          )
         }),
 
       "household.removeMember": (payload) =>

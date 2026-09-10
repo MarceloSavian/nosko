@@ -584,6 +584,36 @@ describe("HouseholdGroupLive", () => {
     expect(Exit.isSuccess(exit)).toBe(true)
     if (Exit.isSuccess(exit)) {
       expect(exit.value).toHaveLength(1)
+      // household_members.display_name is always null today — the view falls back to the
+      // member's actual account name instead of exposing their raw user id.
+      expect(exit.value[0]?.displayName).toBe("Test User")
+    }
+  })
+
+  it("household.listMembers dies if a member's own user row is gone", async () => {
+    const { testLayer, members } = buildTestLayer()
+    const ghostId = "55555555-5555-5555-5555-555555555555"
+    const token = await signAccessToken(marcelo.id)
+
+    const exit = await run(
+      testLayer,
+      Effect.gen(function* () {
+        const client = yield* RpcTest.makeClient(HouseholdRpcs, { flatten: true })
+        const household = yield* createHouseholdAsOwner(client, token, members)
+        members.push({
+          householdId: household.id,
+          userId: ghostId,
+          role: "member",
+          displayName: null,
+          joinedAt: DateTime.unsafeFromDate(new Date()),
+        })
+        return yield* client("household.listMembers", undefined, headersFor(token))
+      }),
+    )
+
+    expect(Exit.isFailure(exit)).toBe(true)
+    if (Exit.isFailure(exit)) {
+      expect(exit.cause._tag).toBe("Die")
     }
   })
 
