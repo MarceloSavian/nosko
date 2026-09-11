@@ -9,7 +9,7 @@ import {
 } from "../../test/fakeRepositories"
 import { CyclesRepository } from "../protocols/CyclesRepository"
 import { RecurringRulesRepository } from "../protocols/RecurringRulesRepository"
-import { createCycleWithScaffold, figuresForAllCycles } from "./Cycles"
+import { createCycleWithScaffold, ensureCycleForDate, figuresForAllCycles } from "./Cycles"
 
 const householdId = "8c9e6679-7425-40de-944b-e07fc1f90ae7"
 
@@ -181,5 +181,41 @@ describe("createCycleWithScaffold", () => {
     )
 
     expect(Exit.isFailure(exit)).toBe(true)
+  })
+})
+
+describe("ensureCycleForDate", () => {
+  it("creates a bare cycle for a historical date, with no fixed-bill scaffolding", async () => {
+    const cyclesFake = makeFakeCyclesRepository()
+
+    const cycle = await Effect.runPromise(
+      ensureCycleForDate({
+        householdId,
+        anchorDay: 23,
+        referenceDate: new Date(Date.UTC(2025, 0, 10)),
+      }).pipe(Effect.provide(cyclesFake.layer)),
+    )
+
+    expect(cycle.cycleKey).toBe("2024-12")
+    expect(cycle.reserveMinor).toBe(0)
+  })
+
+  it("returns the existing cycle instead of creating a duplicate for the same window", async () => {
+    const cyclesFake = makeFakeCyclesRepository()
+    const referenceDate = new Date(Date.UTC(2025, 0, 10))
+
+    const first = await Effect.runPromise(
+      ensureCycleForDate({ householdId, anchorDay: 23, referenceDate }).pipe(
+        Effect.provide(cyclesFake.layer),
+      ),
+    )
+    const second = await Effect.runPromise(
+      ensureCycleForDate({ householdId, anchorDay: 23, referenceDate }).pipe(
+        Effect.provide(cyclesFake.layer),
+      ),
+    )
+
+    expect(second.id).toBe(first.id)
+    expect(cyclesFake.cycles.size).toBe(1)
   })
 })

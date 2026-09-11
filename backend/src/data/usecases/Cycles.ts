@@ -116,3 +116,33 @@ export const createCycleWithScaffold = (input: CreateCycleInput) =>
 
     return cycle
   })
+
+export interface EnsureCycleInput {
+  readonly householdId: string
+  readonly anchorDay: number
+  readonly referenceDate: Date
+}
+
+// Backfills whichever cycle a transaction's booked date falls into, without scaffolding fixed
+// bills from today's active recurring rules onto a historical cycle — unlike
+// createCycleWithScaffold, this is meant for ingesting old statements (import a year of history,
+// get a year of cycles), not for a user starting a fresh one from the app shell.
+export const ensureCycleForDate = (input: EnsureCycleInput) =>
+  Effect.gen(function* () {
+    const cyclesRepo = yield* CyclesRepository
+    const window = computeCycleWindow(input.anchorDay, input.referenceDate)
+    const existing = yield* cyclesRepo.findByCycleKey(input.householdId, window.cycleKey)
+    if (Option.isSome(existing)) {
+      return existing.value
+    }
+    return yield* cyclesRepo.create({
+      householdId: input.householdId,
+      cycleKey: window.cycleKey,
+      title: null,
+      startDate: window.startDate,
+      endDate: window.endDate,
+      reserveMinor: 0,
+      estimateMinor: null,
+      seedOpeningBalanceMinor: null,
+    })
+  })
