@@ -300,10 +300,39 @@ export const dictionaries = {
     "shell.nav.savings": "Savings & investments",
     "shell.nav.projection": "Savings projection",
     "shell.nav.subscriptions": "Subscriptions",
+    "shell.nav.import": "Import statements",
+    "shell.nav.review": "Review import",
     "shell.nav.settings": "Settings",
     "shell.nav.help": "Help & support",
     "shell.comingSoon": "This section is coming soon.",
     "shell.logout": "Sign out",
+
+    "import.title": "Import a statement",
+    "import.subtitle": "Upload a CSV export from your bank — this is how payments get into nosko.",
+    "import.accountLabel": "Account",
+    "import.unsupportedBank":
+      "This bank doesn't support CSV import yet. Add payments manually instead.",
+    "import.fileLabel": "CSV file",
+    "import.submit": "Upload",
+    "import.resultNew": "New",
+    "import.resultDuplicates": "Duplicates skipped",
+    "import.resultTransfers": "Transfers matched",
+    "import.goToReview": "Review imported transactions",
+
+    "review.title": "Review import",
+    "review.subtitle":
+      "Confirm a category for each transaction — confirming a shared one adds it to the household budget.",
+    "review.empty": "Nothing to review right now.",
+    "review.select": "Select",
+    "review.transfer": "Transfer",
+    "review.categoryLabel": "Category",
+    "review.confirm": "Confirm",
+    "review.ignore": "Ignore",
+    "review.selectedCount": "Selected",
+    "review.bulkConfirm": "Confirm selected",
+
+    "myPayments.subtitle": "Your personal spending, imported from your bank statements.",
+    "myPayments.empty": "No confirmed payments yet — import a statement to get started.",
   },
   "pt-BR": {
     "app.title": "nosko",
@@ -603,10 +632,40 @@ export const dictionaries = {
     "shell.nav.savings": "Poupança e investimentos",
     "shell.nav.projection": "Projeção de poupança",
     "shell.nav.subscriptions": "Assinaturas",
+    "shell.nav.import": "Importar extratos",
+    "shell.nav.review": "Revisar importação",
     "shell.nav.settings": "Configurações",
     "shell.nav.help": "Ajuda e suporte",
     "shell.comingSoon": "Esta seção chega em breve.",
     "shell.logout": "Sair",
+
+    "import.title": "Importar extrato",
+    "import.subtitle":
+      "Envie um extrato CSV do seu banco — é assim que os pagamentos entram no nosko.",
+    "import.accountLabel": "Conta",
+    "import.unsupportedBank":
+      "Este banco ainda não tem importação por CSV. Adicione os pagamentos manualmente.",
+    "import.fileLabel": "Arquivo CSV",
+    "import.submit": "Enviar",
+    "import.resultNew": "Novos",
+    "import.resultDuplicates": "Duplicados ignorados",
+    "import.resultTransfers": "Transferências pareadas",
+    "import.goToReview": "Revisar transações importadas",
+
+    "review.title": "Revisar importação",
+    "review.subtitle":
+      "Confirme uma categoria para cada transação — confirmar uma compartilhada adiciona ao orçamento da casa.",
+    "review.empty": "Nada para revisar no momento.",
+    "review.select": "Selecionar",
+    "review.transfer": "Transferência",
+    "review.categoryLabel": "Categoria",
+    "review.confirm": "Confirmar",
+    "review.ignore": "Ignorar",
+    "review.selectedCount": "Selecionados",
+    "review.bulkConfirm": "Confirmar selecionados",
+
+    "myPayments.subtitle": "Seus gastos pessoais, importados dos extratos bancários.",
+    "myPayments.empty": "Nenhum pagamento confirmado ainda — importe um extrato para começar.",
   },
 } as const
 

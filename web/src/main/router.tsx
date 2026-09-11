@@ -6,6 +6,8 @@ import { CyclesListPage } from "../presentation/pages/household/CyclesListPage"
 import { FixedBillsPage } from "../presentation/pages/household/FixedBillsPage"
 import { PaymentsPage } from "../presentation/pages/household/PaymentsPage"
 import { SharedAccountsPage } from "../presentation/pages/household/SharedAccountsPage"
+import { ImportPage } from "../presentation/pages/ingestion/ImportPage"
+import { ReviewQueuePage } from "../presentation/pages/ingestion/ReviewQueuePage"
 import { LandingPage } from "../presentation/pages/LandingPage"
 import { LoginPage } from "../presentation/pages/LoginPage"
 import { MfaChallengePage } from "../presentation/pages/MfaChallengePage"
@@ -14,6 +16,7 @@ import { AccountFormPage } from "../presentation/pages/onboarding/AccountFormPag
 import { AddAccountsPage } from "../presentation/pages/onboarding/AddAccountsPage"
 import { CreateHouseholdPage } from "../presentation/pages/onboarding/CreateHouseholdPage"
 import { MyAccountsPage } from "../presentation/pages/personal/MyAccountsPage"
+import { MyPaymentsPage } from "../presentation/pages/personal/MyPaymentsPage"
 import { PersonalOverviewPage } from "../presentation/pages/personal/PersonalOverviewPage"
 import { ResetPasswordPage } from "../presentation/pages/ResetPasswordPage"
 import { SignUpPage } from "../presentation/pages/SignUpPage"
@@ -55,10 +58,12 @@ export const AppRouter = () => (
             <Route path="/household/summary" element={<ComingSoonPage />} />
             <Route path="/personal" element={<PersonalOverviewPage />} />
             <Route path="/personal/accounts" element={<MyAccountsPage />} />
-            <Route path="/personal/payments" element={<ComingSoonPage />} />
+            <Route path="/personal/payments" element={<MyPaymentsPage />} />
             <Route path="/personal/savings" element={<ComingSoonPage />} />
             <Route path="/personal/projection" element={<ComingSoonPage />} />
             <Route path="/personal/subscriptions" element={<ComingSoonPage />} />
+            <Route path="/import" element={<ImportPage />} />
+            <Route path="/review" element={<ReviewQueuePage />} />
             <Route path="/settings" element={<ComingSoonPage />} />
           </Route>
         </Route>
