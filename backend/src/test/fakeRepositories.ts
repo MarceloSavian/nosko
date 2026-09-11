@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto"
 import { DateTime, Effect, Layer, Option } from "effect"
 import { AccountsRepository } from "../data/protocols/AccountsRepository"
 import { AuthTokensRepository } from "../data/protocols/AuthTokensRepository"
+import { BanksRepository } from "../data/protocols/BanksRepository"
 import { CategoriesRepository } from "../data/protocols/CategoriesRepository"
 import { CategoryCapsRepository } from "../data/protocols/CategoryCapsRepository"
 import { CyclesRepository } from "../data/protocols/CyclesRepository"
@@ -11,10 +12,13 @@ import { HouseholdInvitationsRepository } from "../data/protocols/HouseholdInvit
 import { HouseholdsRepository } from "../data/protocols/HouseholdsRepository"
 import { RecurringRulesRepository } from "../data/protocols/RecurringRulesRepository"
 import { SharedPaymentsRepository } from "../data/protocols/SharedPaymentsRepository"
+import { StatementUploadsRepository } from "../data/protocols/StatementUploadsRepository"
+import { TransactionsRepository } from "../data/protocols/TransactionsRepository"
 import { UserSessionsRepository } from "../data/protocols/UserSessionsRepository"
 import { UsersRepository } from "../data/protocols/UsersRepository"
 import type { Account } from "../domain/models/Account"
 import type { AuthToken } from "../domain/models/AuthToken"
+import type { Bank } from "../domain/models/Bank"
 import type { Category } from "../domain/models/Category"
 import type { CategoryCap } from "../domain/models/CategoryCap"
 import type { Cycle, CycleIncome, MemberTransfer } from "../domain/models/Cycle"
@@ -24,6 +28,8 @@ import type { Household, HouseholdMember, HouseholdSettings } from "../domain/mo
 import type { HouseholdInvitation } from "../domain/models/HouseholdInvitation"
 import type { RecurringRule } from "../domain/models/RecurringRule"
 import type { SharedPayment } from "../domain/models/SharedPayment"
+import type { StatementUpload } from "../domain/models/StatementUpload"
+import type { Transaction } from "../domain/models/Transaction"
 import type { User, UserCredentials } from "../domain/models/User"
 import type { UserSession } from "../domain/models/UserSession"
 
@@ -802,4 +808,164 @@ export const makeFakeCategoriesRepository = (seed: ReadonlyArray<Category> = [])
   })
 
   return { layer, categories }
+}
+
+export const makeFakeBanksRepository = (seed: ReadonlyArray<Bank> = []) => {
+  const banks = new Map<string, Bank>(seed.map((b) => [b.code, b]))
+
+  const layer = Layer.succeed(BanksRepository, {
+    findByCode: (code) => Effect.succeed(Option.fromNullable(banks.get(code))),
+    list: () => Effect.succeed([...banks.values()]),
+  })
+
+  return { layer, banks }
+}
+
+export const makeFakeStatementUploadsRepository = () => {
+  const uploads = new Map<string, StatementUpload>()
+
+  const layer = Layer.succeed(StatementUploadsRepository, {
+    create: (input) => {
+      const id = randomUUID()
+      const record: StatementUpload = {
+        id,
+        householdId: input.householdId,
+        accountId: input.accountId,
+        uploadedBy: input.uploadedBy,
+        fileKey: input.fileKey,
+        originalFilename: input.originalFilename,
+        format: input.format,
+        periodStart: null,
+        periodEnd: null,
+        status: "uploaded",
+        error: null,
+        uploadedAt: now(),
+      }
+      uploads.set(id, record)
+      return Effect.succeed(record)
+    },
+    findById: (id) => Effect.succeed(Option.fromNullable(uploads.get(id))),
+    complete: (id, result) => {
+      const existing = uploads.get(id)
+      if (!existing) return Effect.die(new Error(`upload ${id} not found`))
+      const updated: StatementUpload = {
+        ...existing,
+        periodStart: result.periodStart ? asUtc(result.periodStart) : null,
+        periodEnd: result.periodEnd ? asUtc(result.periodEnd) : null,
+        status: result.status,
+        error: result.error,
+      }
+      uploads.set(id, updated)
+      return Effect.succeed(updated)
+    },
+  })
+
+  return { layer, uploads }
+}
+
+export const makeFakeTransactionsRepository = (seed: ReadonlyArray<Transaction> = []) => {
+  const transactions = new Map<string, Transaction>(seed.map((t) => [t.id, t]))
+
+  const layer = Layer.succeed(TransactionsRepository, {
+    createMany: (inputs) =>
+      Effect.succeed(
+        inputs.map((input) => {
+          const id = randomUUID()
+          const record: Transaction = {
+            id,
+            householdId: input.householdId,
+            accountId: input.accountId,
+            ownerUserId: input.ownerUserId,
+            visibility: input.visibility,
+            uploadId: input.uploadId,
+            externalId: input.externalId,
+            bookedAt: asUtc(input.bookedAt),
+            description: input.description,
+            counterparty: input.counterparty,
+            amountMinor: input.amountMinor,
+            currency: input.currency,
+            direction: input.direction,
+            categoryId: input.categoryId,
+            categoryConfidence: input.categoryConfidence,
+            isTransfer: input.isTransfer,
+            linkedTransactionId: input.linkedTransactionId,
+            matchedRuleId: input.matchedRuleId,
+            status: "staged",
+            sharedPaymentId: null,
+            dedupHash: input.dedupHash,
+            createdAt: now(),
+          }
+          transactions.set(id, record)
+          return record
+        }),
+      ),
+    findById: (id) => Effect.succeed(Option.fromNullable(transactions.get(id))),
+    existingDedupHashes: (householdId) =>
+      Effect.succeed(
+        new Set(
+          [...transactions.values()]
+            .filter((t) => t.householdId === householdId)
+            .map((t) => t.dedupHash),
+        ),
+      ),
+    listStaged: (householdId) =>
+      Effect.succeed(
+        [...transactions.values()].filter(
+          (t) => t.householdId === householdId && t.status === "staged",
+        ),
+      ),
+    listByUpload: (uploadId) =>
+      Effect.succeed([...transactions.values()].filter((t) => t.uploadId === uploadId)),
+    updateCategory: (id, categoryId) => {
+      const existing = transactions.get(id)
+      if (!existing) return Effect.die(new Error(`transaction ${id} not found`))
+      const updated = { ...existing, categoryId }
+      transactions.set(id, updated)
+      return Effect.succeed(updated)
+    },
+    confirm: (id, update) => {
+      const existing = transactions.get(id)
+      if (!existing) return Effect.die(new Error(`transaction ${id} not found`))
+      const updated: Transaction = {
+        ...existing,
+        categoryId: update.categoryId,
+        status: update.status,
+        sharedPaymentId: update.sharedPaymentId,
+      }
+      transactions.set(id, updated)
+      return Effect.succeed(updated)
+    },
+    ignore: (id) => {
+      const existing = transactions.get(id)
+      if (!existing) return Effect.die(new Error(`transaction ${id} not found`))
+      const updated: Transaction = { ...existing, status: "ignored" }
+      transactions.set(id, updated)
+      return Effect.succeed(updated)
+    },
+    linkTransfer: (id, linkedTransactionId) => {
+      const existing = transactions.get(id)
+      if (!existing) return Effect.die(new Error(`transaction ${id} not found`))
+      transactions.set(id, { ...existing, isTransfer: true, linkedTransactionId })
+      return Effect.void
+    },
+    lastCategoryForCounterparty: (ownerUserId, visibility, counterparty) =>
+      Effect.succeed(
+        Option.fromNullable(
+          [...transactions.values()]
+            .filter(
+              (t) =>
+                t.ownerUserId === ownerUserId &&
+                t.visibility === visibility &&
+                t.counterparty === counterparty &&
+                t.categoryId !== null &&
+                t.status === "confirmed",
+            )
+            .sort(
+              (a, b) => DateTime.toEpochMillis(b.bookedAt) - DateTime.toEpochMillis(a.bookedAt),
+            )[0]?.categoryId,
+        ),
+      ),
+  })
+
+  return { layer, transactions }
 }

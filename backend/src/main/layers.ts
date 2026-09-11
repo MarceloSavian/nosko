@@ -12,6 +12,7 @@ import { PgLive } from "../infra/config/DatabaseConfig"
 import { ResendMailerLive } from "../infra/mailer/ResendMailer"
 import { AccountsRepositoryLive } from "../infra/repositories/AccountsRepositoryLive"
 import { AuthTokensRepositoryLive } from "../infra/repositories/AuthTokensRepositoryLive"
+import { BanksRepositoryLive } from "../infra/repositories/BanksRepositoryLive"
 import { CategoriesRepositoryLive } from "../infra/repositories/CategoriesRepositoryLive"
 import { CategoryCapsRepositoryLive } from "../infra/repositories/CategoryCapsRepositoryLive"
 import { CyclesRepositoryLive } from "../infra/repositories/CyclesRepositoryLive"
@@ -21,8 +22,11 @@ import { HouseholdInvitationsRepositoryLive } from "../infra/repositories/Househ
 import { HouseholdsRepositoryLive } from "../infra/repositories/HouseholdsRepositoryLive"
 import { RecurringRulesRepositoryLive } from "../infra/repositories/RecurringRulesRepositoryLive"
 import { SharedPaymentsRepositoryLive } from "../infra/repositories/SharedPaymentsRepositoryLive"
+import { StatementUploadsRepositoryLive } from "../infra/repositories/StatementUploadsRepositoryLive"
+import { TransactionsRepositoryLive } from "../infra/repositories/TransactionsRepositoryLive"
 import { UserSessionsRepositoryLive } from "../infra/repositories/UserSessionsRepositoryLive"
 import { UsersRepositoryLive } from "../infra/repositories/UsersRepositoryLive"
+import { S3FileStorageLive } from "../infra/storage/S3FileStorage"
 import { AuthApiLive } from "../presentation/http/AuthApiLive"
 import { PaymentsApiLive } from "../presentation/http/PaymentsApiLive"
 import { AccountsGroupLive } from "../presentation/rpc/AccountsGroupLive"
@@ -32,6 +36,7 @@ import { BillsGroupLive } from "../presentation/rpc/BillsGroupLive"
 import { CategoriesGroupLive } from "../presentation/rpc/CategoriesGroupLive"
 import { CyclesGroupLive } from "../presentation/rpc/CyclesGroupLive"
 import { HouseholdGroupLive } from "../presentation/rpc/HouseholdGroupLive"
+import { IngestionGroupLive } from "../presentation/rpc/IngestionGroupLive"
 import { PaymentsGroupLive } from "../presentation/rpc/PaymentsGroupLive"
 import { RulesGroupLive } from "../presentation/rpc/RulesGroupLive"
 
@@ -49,6 +54,10 @@ const RestOfInfraLive = Layer.mergeAll(
   CategoryCapsRepositoryLive,
   SharedPaymentsRepositoryLive,
   CategoriesRepositoryLive,
+  BanksRepositoryLive,
+  StatementUploadsRepositoryLive,
+  TransactionsRepositoryLive,
+  S3FileStorageLive,
   PasswordHasherLive,
   TotpServiceLive,
   OpaqueTokensLive,
@@ -69,6 +78,7 @@ const RpcGroupsLive = provideInfra(
     RulesGroupLive,
     PaymentsGroupLive,
     CategoriesGroupLive,
+    IngestionGroupLive,
     AuthMiddlewareLive,
   ),
 )

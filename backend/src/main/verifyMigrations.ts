@@ -395,6 +395,88 @@ const main = Effect.gen(function* () {
     },
   )
 
+  yield* check(
+    "a personal transaction is never visible to the partner, but a shared one is visible to both",
+    async () => {
+      const marcelo = "f0000000-0000-0000-0000-000000000001"
+      const gabriele = "f0000000-0000-0000-0000-000000000002"
+      const household = "f0000000-0000-0000-0000-000000000003"
+      const personalAccount = "f0000000-0000-0000-0000-000000000004"
+      const sharedAccount = "f0000000-0000-0000-0000-000000000005"
+      const personalTxn = "f0000000-0000-0000-0000-000000000006"
+      const sharedTxn = "f0000000-0000-0000-0000-000000000007"
+
+      await db.query("set role app_role")
+      await db.query(
+        "insert into users (id, email, password_hash, name) values ($1, $2, 'hash', 'Marcelo')",
+        [marcelo, "marcelo-txn-check@example.com"],
+      )
+      await db.query(
+        "insert into users (id, email, password_hash, name) values ($1, $2, 'hash', 'Gabriele')",
+        [gabriele, "gabriele-txn-check@example.com"],
+      )
+      await db.query("select set_config('app.user_id', $1, false)", [marcelo])
+      await db.query(
+        "insert into households (id, name, base_currency, created_by) values ($1, 'Casa', 'EUR', $2)",
+        [household, marcelo],
+      )
+      await db.query("select set_config('app.household_id', $1, false)", [household])
+      await db.query("insert into household_settings (household_id) values ($1)", [household])
+      await db.query(
+        "insert into household_members (household_id, user_id, role) values ($1, $2, 'owner')",
+        [household, marcelo],
+      )
+      await db.query("select set_config('app.user_id', $1, false)", [gabriele])
+      await db.query(
+        "insert into household_members (household_id, user_id, role) values ($1, $2, 'member')",
+        [household, gabriele],
+      )
+      await db.query("select set_config('app.user_id', $1, false)", [marcelo])
+      await db.query(
+        `insert into accounts
+           (id, household_id, owner_user_id, visibility, institution, nickname, type, currency)
+         values ($1, $2, $3, 'personal', 'nubank', 'Nubank', 'checking', 'BRL')`,
+        [personalAccount, household, marcelo],
+      )
+      await db.query(
+        `insert into accounts
+           (id, household_id, owner_user_id, ownership, visibility, institution, nickname, type, currency)
+         values ($1, $2, $3, 'joint', 'shared', 'ing', 'ING Conjunta', 'checking', 'EUR')`,
+        [sharedAccount, household, marcelo],
+      )
+      await db.query(
+        `insert into transactions
+           (id, household_id, account_id, owner_user_id, visibility, booked_at, description, amount_minor, currency, direction, dedup_hash)
+         values ($1, $2, $3, $4, 'personal', '2026-01-05', 'Mercado', 5000, 'BRL', 'debit', 'hash-personal')`,
+        [personalTxn, household, personalAccount, marcelo],
+      )
+      await db.query(
+        `insert into transactions
+           (id, household_id, account_id, owner_user_id, visibility, booked_at, description, amount_minor, currency, direction, dedup_hash)
+         values ($1, $2, $3, $4, 'shared', '2026-01-05', 'Aluguel', 150000, 'EUR', 'debit', 'hash-shared')`,
+        [sharedTxn, household, sharedAccount, marcelo],
+      )
+
+      const ownerSeesPersonal = await db.query("select id from transactions where id = $1", [
+        personalTxn,
+      ])
+      assert.equal(ownerSeesPersonal.rows.length, 1, "the owner must see their own transaction")
+
+      await db.query("select set_config('app.user_id', $1, false)", [gabriele])
+      const partnerSeesPersonal = await db.query("select id from transactions where id = $1", [
+        personalTxn,
+      ])
+      assert.equal(partnerSeesPersonal.rows.length, 0, "the partner must never see it")
+
+      const partnerSeesShared = await db.query("select id from transactions where id = $1", [
+        sharedTxn,
+      ])
+      assert.equal(partnerSeesShared.rows.length, 1, "the partner must see the shared transaction")
+
+      await db.query("reset role")
+    },
+  )
+
   yield* Effect.promise(() => db.close())
 
   yield* Effect.sync(() =>
