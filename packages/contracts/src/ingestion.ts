@@ -107,4 +107,7 @@ export const IngestionRpcs = RpcGroup.make(
     success: TransactionView,
     error: Schema.Union(TransactionNotFound, TransactionAlreadyProcessed),
   }).middleware(AuthMiddleware),
+  Rpc.make("ingestion.listMyPayments", {
+    success: Schema.Array(TransactionView),
+  }).middleware(AuthMiddleware),
 )

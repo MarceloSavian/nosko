@@ -19,6 +19,9 @@ export class TransactionsRepository extends Context.Tag("TransactionsRepository"
     readonly listStaged: (
       householdId: string,
     ) => Effect.Effect<ReadonlyArray<Transaction>, SqlError>
+    readonly listConfirmedPersonal: (
+      ownerUserId: string,
+    ) => Effect.Effect<ReadonlyArray<Transaction>, SqlError>
     readonly listByUpload: (uploadId: string) => Effect.Effect<ReadonlyArray<Transaction>, SqlError>
     readonly updateCategory: (
       id: string,

@@ -136,6 +136,15 @@ export const IngestionGroupLive = IngestionRpcs.toLayer(
           ).pipe(dieOnSqlError)
           return toTransactionView(updated)
         }),
+
+      "ingestion.listMyPayments": () =>
+        Effect.gen(function* () {
+          const currentUser = yield* CurrentUser
+          const confirmed = yield* transactions
+            .listConfirmedPersonal(currentUser.userId)
+            .pipe(dieOnSqlError)
+          return confirmed.map(toTransactionView)
+        }),
     }
   }),
 )

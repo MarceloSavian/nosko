@@ -386,4 +386,41 @@ describe("IngestionGroupLive", () => {
       expect(exit.cause._tag).toBe("Die")
     }
   })
+
+  it("ingestion.listMyPayments returns the caller's confirmed personal transactions", async () => {
+    const { testLayer } = buildTestLayer()
+    const token = await signAccessToken(marceloId)
+
+    const exit = await run(
+      testLayer,
+      Effect.gen(function* () {
+        const client = yield* RpcTest.makeClient(IngestionRpcs, { flatten: true })
+        yield* client(
+          "ingestion.upload",
+          {
+            accountId: personalAccountId,
+            originalFilename: "extrato.csv",
+            fileContent: "Data,Valor,Identificador,Descrição\n05/01/2026,50.00,ext-1,Mercado",
+          },
+          headersFor(token),
+        )
+        const staged = yield* client("ingestion.listStaged", undefined, headersFor(token))
+        yield* client(
+          "ingestion.confirm",
+          {
+            transactionId: staged[0]?.id as string,
+            categoryId: "77777777-7777-7777-7777-777777777777",
+          },
+          headersFor(token),
+        )
+        return yield* client("ingestion.listMyPayments", undefined, headersFor(token))
+      }),
+    )
+
+    expect(Exit.isSuccess(exit)).toBe(true)
+    if (Exit.isSuccess(exit)) {
+      expect(exit.value).toHaveLength(1)
+      expect(exit.value[0]?.status).toBe("confirmed")
+    }
+  })
 })

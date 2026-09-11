@@ -914,6 +914,15 @@ export const makeFakeTransactionsRepository = (seed: ReadonlyArray<Transaction> 
           (t) => t.householdId === householdId && t.status === "staged",
         ),
       ),
+    listConfirmedPersonal: (ownerUserId) =>
+      Effect.succeed(
+        [...transactions.values()].filter(
+          (t) =>
+            t.ownerUserId === ownerUserId &&
+            t.visibility === "personal" &&
+            t.status === "confirmed",
+        ),
+      ),
     listByUpload: (uploadId) =>
       Effect.succeed([...transactions.values()].filter((t) => t.uploadId === uploadId)),
     updateCategory: (id, categoryId) => {

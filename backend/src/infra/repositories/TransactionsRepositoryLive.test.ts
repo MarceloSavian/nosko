@@ -119,6 +119,19 @@ describe("TransactionsRepositoryLive", () => {
     expect(queries[0]?.sql).toContain("'staged'")
   })
 
+  it("lists confirmed personal transactions for an owner", async () => {
+    const { layer, queries } = makeTestSqlClient(() => [{ ...baseRow, status: "confirmed" }])
+    const confirmed = await Effect.runPromise(
+      Effect.gen(function* () {
+        const repo = yield* TransactionsRepository
+        return yield* repo.listConfirmedPersonal(ownerUserId)
+      }).pipe(Effect.provide(TransactionsRepositoryLive), Effect.provide(layer)),
+    )
+    expect(confirmed).toHaveLength(1)
+    expect(queries[0]?.sql).toContain("'personal'")
+    expect(queries[0]?.sql).toContain("'confirmed'")
+  })
+
   it("lists transactions by upload id", async () => {
     const { layer, queries } = makeTestSqlClient(() => [baseRow])
     const list = await Effect.runPromise(

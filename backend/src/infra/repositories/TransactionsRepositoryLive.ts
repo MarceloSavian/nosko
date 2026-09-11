@@ -53,6 +53,14 @@ export const TransactionsRepositoryLive = Layer.effect(
         sql`SELECT * FROM ${sql("transactions")} WHERE ${sql("householdId")} = ${householdId} AND ${sql("status")} = 'staged' ORDER BY ${sql("bookedAt")} DESC`.pipe(
           Effect.flatMap((rows) => Effect.forEach(rows, decodeTransaction)),
         ),
+      listConfirmedPersonal: (ownerUserId) =>
+        sql`
+          SELECT * FROM ${sql("transactions")}
+          WHERE ${sql("ownerUserId")} = ${ownerUserId}
+            AND ${sql("visibility")} = 'personal'
+            AND ${sql("status")} = 'confirmed'
+          ORDER BY ${sql("bookedAt")} DESC
+        `.pipe(Effect.flatMap((rows) => Effect.forEach(rows, decodeTransaction))),
       listByUpload: (uploadId) =>
         sql`SELECT * FROM ${sql("transactions")} WHERE ${sql("uploadId")} = ${uploadId} ORDER BY ${sql("bookedAt")} DESC`.pipe(
           Effect.flatMap((rows) => Effect.forEach(rows, decodeTransaction)),
